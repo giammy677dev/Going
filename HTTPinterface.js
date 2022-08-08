@@ -33,7 +33,7 @@ class HTTPinterface {
         this.app.get('/createRoadmap', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
         this.app.get('/login', this.login_page.bind(this)); //LoginRegistrati
-        this.app.get('/profile', this.profile_page.bind(this));//Profilo
+        this.app.get('/profile', this.profile_page.bind(this)); //Profilo
         this.app.get('/diego', this.diego.bind(this));
         this.app.use('/static', express.static('static'));
         this.app.use('/storage', express.static('storage'));
