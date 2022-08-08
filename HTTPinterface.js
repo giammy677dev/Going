@@ -46,14 +46,16 @@ class HTTPinterface {
         this.app.post('/activate', this.activate.bind(this));
     }
 
-    async main_page(req, res) {
+    async main_page(req, res) 
+    {
         if (req.user) {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/Main_Page.html');
     }
 
-    async explore_page(req, res) {
+    async explore_page(req, res) 
+    {
         if (req.user) {
             console.log('user session is alive')
         }
