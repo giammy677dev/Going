@@ -7,13 +7,20 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const path = require('path');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'going',
-    database: 'sakila', //db di default di sql per prove
-    //port: 3306 ?
-});
+var connection;
+try{
+    connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'going',
+        database: 'sakila', //db di default di sql per prove
+        //port: 3306 ?
+    });
+
+}catch(error)
+{
+    console.log(error)
+}
 
 const config = require('./config.js');
 const { response } = require('express');
