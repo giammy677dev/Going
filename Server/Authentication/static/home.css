@@ -1,13 +1,24 @@
 * {
     box-sizing: border-box;
-  }
-  
-  .row {
+}
+
+.row {
     display: flex;
-  }
-  
-  /* Create two equal columns that sits next to each other */
-  .column {
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
     flex: 50%;
     padding: 10px;
-  }
+}
+
+input[type=text] {
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 25px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+}
