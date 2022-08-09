@@ -3,7 +3,7 @@ const user = 'root';
 const password = 'root';
 const database = 'going';
 
-const port = 8888;
+const port = 3000;
 
 module.exports.host = host;
 module.exports.user = user;
