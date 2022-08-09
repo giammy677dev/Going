@@ -54,8 +54,7 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Main_Page.html');
     }
 
-    async explore_page(req, res) 
-    {
+    async explore_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
@@ -91,8 +90,9 @@ class HTTPinterface {
     }
 
     async diego(req, res) {
-        console.log(req.query.DIEGO)
-        res.send(req.query.DIEGO)
+        //console.log(req.query.DIEGO)
+        //res.send(req.query.DIEGO)
+        return res.sendFile(__dirname + '/static/Sito/About.html');
     }
 
     async login(req, res) {
