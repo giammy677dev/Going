@@ -3,18 +3,20 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 //const RequestController = require('./requestController.js');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const session = require('express-session');
 const path = require('path');
 
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'nodelogin'
+    password: 'going',
+    database: 'sakila', //db di default di sql per prove
+    //port: 3306 ?
 });
 
 const config = require('./config.js');
+const { response } = require('express');
 const app = express();
 
 app.use(session({
@@ -63,7 +65,21 @@ class HTTPinterface {
         this.app.get('/auth', this.auth.bind(this)); //Auth
         this.app.post('/logout', this.logout.bind(this));
         this.app.post('/activate', this.activate.bind(this));
-
+        this.app.get('/testdb', function (request, response){
+        console.log(connection)
+        connection.query('SELECT * FROM actor', function (error, results, fields) {
+            // If there is an issue with the query, output the error
+            if (error) throw error;
+            // If the account exists
+            if (results.length > 0) {
+                response.send(results);
+            } else {
+                response.send("error");
+            }
+            response.end();
+        });
+        //return response.sendFile(__dirname + '/static/Main_Page.html');
+        });
 
         // http://localhost:3000/
         this.app.get('/', function (request, response) {
@@ -119,7 +135,7 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
-        return res.sendFile(__dirname + '/static/Main_Page.html');
+        return res.sendFile(__dirname + '/static/main.html');
     }
 
     async explore_page(req, res) {
