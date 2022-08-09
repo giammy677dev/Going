@@ -3,12 +3,31 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 //const RequestController = require('./requestController.js');
+const mysql = require('mysql');
+const session = require('express-session');
+const path = require('path');
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'nodelogin'
+});
 
 const config = require('./config.js');
+const app = express();
+
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'static')));
 
 class HTTPinterface {
-    constructor()
-    {
+    constructor() {
         this.app = express();
         this.server = http.createServer(this.app);
 
@@ -41,13 +60,62 @@ class HTTPinterface {
         //back end calls
         this.app.post('/register', this.register.bind(this));
         this.app.post('/login', this.login.bind(this));
-        this.app.get('/auth', this.auth_page.bind(this)); //Auth
+        this.app.get('/auth', this.auth.bind(this)); //Auth
         this.app.post('/logout', this.logout.bind(this));
         this.app.post('/activate', this.activate.bind(this));
+
+
+        // http://localhost:3000/
+        this.app.get('/', function (request, response) {
+            // Render login template
+            response.sendFile(path.join(__dirname + '/static/login.html'));
+        });
+
+        // http://localhost:3000/auth
+        this.app.post('/auth', function (request, response) {
+            // Capture the input fields
+            let username = request.body.username;
+            let password = request.body.password;
+            // Ensure the input fields exists and are not empty
+            if (username && password) {
+                // Execute SQL query that'll select the account from the database based on the specified username and password
+                connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+                    // If there is an issue with the query, output the error
+                    if (error) throw error;
+                    // If the account exists
+                    if (results.length > 0) {
+                        // Authenticate the user
+                        request.session.loggedin = true;
+                        request.session.username = username;
+                        // Redirect to home page
+                        response.redirect('/home');
+                    } else {
+                        response.send('Incorrect Username and/or Password!');
+                    }
+                    response.end();
+                });
+            } else {
+                response.send('Please enter Username and Password!');
+                response.end();
+            }
+        });
+
+        // http://localhost:3000/home
+        this.app.get('/home', function (request, response) {
+            // If the user is loggedin
+            if (request.session.loggedin) {
+                // Output username
+                response.send('Welcome back, ' + request.session.username + '!');
+            } else {
+                // Not logged in
+                response.send('Please login to view this page!');
+            }
+            response.end();
+        });
+
     }
 
-    async main_page(req, res) 
-    {
+    async main_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
@@ -75,23 +143,14 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Login.html');
     }
 
-    async auth_page(req, res) {
-        if (req.user) {
-            console.log('Auth')
-        }
-        return res.sendFile(__dirname + '/static/auth.html');
-    }
-
-    async profile_page(req, res)
-    {
+    async profile_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/Profile.html');
     }
 
-    async register(req, res) 
-    {
+    async register(req, res) {
         const r = await this.controller.register(req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk);
         res.send(JSON.stringify(r));
     }
@@ -104,6 +163,11 @@ class HTTPinterface {
 
     async login(req, res) {
         const r = await this.controller.login(req.body.userName, req.body.password);
+        res.send(JSON.stringify(r));
+    }
+
+    async auth(req, res) {
+        const r = await this.controller.auth(req.body.userName, req.body.password);
         res.send(JSON.stringify(r));
     }
 
