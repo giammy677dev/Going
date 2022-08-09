@@ -67,7 +67,7 @@ class HTTPinterface {
         this.app.post('/activate', this.activate.bind(this));
         this.app.get('/testdb', function (request, response){
         console.log(connection)
-        connection.query('SELECT * FROM actor', function (error, results, fields) {
+        connection.query('SELECT * FROM utente', function (error, results, fields) {
             // If there is an issue with the query, output the error
             if (error) throw error;
             // If the account exists
@@ -90,6 +90,9 @@ class HTTPinterface {
         // http://localhost:3000/auth
         this.app.post('/auth', function (request, response) {
             // Capture the input fields
+            console.log(request,response);
+            response.send('Please asdasdasdasdasdas Username and Password!');
+            return;
             let username = request.body.username;
             let password = request.body.password;
             // Ensure the input fields exists and are not empty
