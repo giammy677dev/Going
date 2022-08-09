@@ -135,7 +135,7 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
-        return res.sendFile(__dirname + '/static/Main_Page.html');
+        return res.sendFile(__dirname + '/static/main.html');
     }
 
     async explore_page(req, res) {
