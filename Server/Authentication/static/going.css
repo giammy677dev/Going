@@ -1,7 +1,14 @@
+/* DA NON MODIFICARE !!! */
+/*
+Deep Sky Blue – #0160D6
+Surf Blue – #00AAF8
+Orange Red – #F13B13
+*/
 @font-face {
     font-family: "testo";
     src: url("Fragmentcore.otf")
 }
+
 htlm,
 body {
     margin: 0;
@@ -13,10 +20,6 @@ body {
     font-family: "testo";
 }
 
-
-/* Style the body */
-
-/* Header/logo Title */
 .header {
     height: 100px;
     text-align: center;
@@ -24,7 +27,7 @@ body {
     color: white;
     position: fixed;
     width: 100%;
-    top:0px;
+    top: 0px;
 }
 
 /* Increase the font size of the heading */
@@ -40,7 +43,7 @@ body {
     position: fixed;
     width: 100%;
     top: 90px;
-}   
+}
 
 /* Style the navigation bar links */
 .navbar a {
@@ -65,22 +68,15 @@ body {
 
 }
 
-.contenuto{
+.contenuto {
     padding-top: 160px;
     margin-left: 10px;
     margin-right: 10px;
 }
 
-/*
-Deep Sky Blue – #0160D6
-Surf Blue – #00AAF8
-Orange Red – #F13B13
-*/
 .footer {
     color: white;
     padding: 5px;
     text-align: center;
     background-color: #00AAF8;
-  }
-  
-  
+}
