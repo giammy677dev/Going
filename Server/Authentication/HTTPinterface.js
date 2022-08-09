@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const config = require('./config.js');
 
 class HTTPinterface {
-    constructor() {
+    constructor()
+    {
         this.app = express();
         this.server = http.createServer(this.app);
 
@@ -19,7 +20,6 @@ class HTTPinterface {
         this.server.listen(process.env.PORT || this.port, () => {
             console.log(`HTTP auth Server started on port ${this.server.address().port} :)`);
         });
-
     }
 
     initServer() {
