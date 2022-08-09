@@ -41,8 +41,8 @@ class HTTPinterface {
         //back end calls
         this.app.post('/register', this.register.bind(this));
         this.app.post('/login', this.login.bind(this));
+        this.app.get('/auth', this.auth_page.bind(this)); //Auth
         this.app.post('/logout', this.logout.bind(this));
-        this.app.post('/checkToken', this.checkToken.bind(this));
         this.app.post('/activate', this.activate.bind(this));
     }
 
@@ -75,6 +75,13 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Login.html');
     }
 
+    async auth_page(req, res) {
+        if (req.user) {
+            console.log('Auth')
+        }
+        return res.sendFile(__dirname + '/static/auth.html');
+    }
+
     async profile_page(req, res)
     {
         if (req.user) {
@@ -102,11 +109,6 @@ class HTTPinterface {
 
     async logout(req, res) {
         const r = await this.controller.logout(req.body.id, req.body.token);
-        res.send(JSON.stringify(r));
-    }
-
-    async checkToken(req, res) {
-        const r = await this.controller.checkToken(req.body.id, req.body.token);
         res.send(JSON.stringify(r));
     }
 
