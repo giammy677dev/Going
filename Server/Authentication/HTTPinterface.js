@@ -13,7 +13,7 @@ try {
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'going',
+        password: '#Asd123f4',
         database: 'sakila', //db di default di sql per prove
         //port: 3306 ?
     });
@@ -23,6 +23,7 @@ try {
 
 const config = require('./config.js');
 const { res } = require('express');
+const { rmSync } = require('fs');
 const app = express();
 
 app.use(express.json());
@@ -135,10 +136,10 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Profile.html');
     }
 
-    async register(req, res) {
+    /*async register(req, res) {
         const r = await this.controller.register(req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk);
         res.send(JSON.stringify(r));
-    }
+    }*/
 
     async diego(req, res) {
         //console.log(req.query.DIEGO)
@@ -200,6 +201,39 @@ class HTTPinterface {
     async activate(req, res) {
         const r = await this.controller.activate(req.body.id);
         res.send(JSON.stringify(r));
+    }
+
+    async register(req, res) {
+        let username = req.body.username;
+        let password = req.body.password;
+        let email = req.body.email;
+        let birthdate = req.body.birthdate;
+        // Ensure the input fields exists and are not empty
+        console.log(req.body);
+
+        if (username && password && email && birthdate) {
+            password = md5(password);
+            // Execute SQL query that'll insert the account in the database
+            connection.query('INSERT INTO utente (username, password, email, birthdate) VALUES (?, ?, ?, ?)', [username, password, email, birthdate], function (error, results, fields) {
+                console.log(error);
+                // If the account exists
+                if (error) {
+                    if (error.errno == 1062) { //Username o email sono già in uso
+                        res.send('Username or email already in use');
+                    }
+                    else if (error.errno != 0) { //Errore generico
+                        res.send('There was an error');
+                    }
+                }
+                else {
+                    res.send('OK');
+                }
+                res.end();
+            });
+        } else {
+            res.send('Please, ensure the input fields are not empty');
+            res.end();
+        }
     }
 }
 
