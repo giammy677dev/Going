@@ -45,6 +45,8 @@ input[type=submit]{
     text-align: center;
     float: left;
     width: 25%;
+    border: 1px solid grey;
+    width: 50%;
 }
 
 .info{

@@ -1,50 +1,99 @@
-* {
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
-    font-size: 16px;
-}
+
+/* Stile Body */
+
 body {
     background-color: #435165;
 }
-.login {
-    width: 400px;
+
+/* Stile Contenuto */
+
+.container {
+    width: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    margin-top: 140px;
+}
+
+/* Stile Sezioni */
+
+.login{
+    width: 65%;
+    margin: auto;
+    float: center;
+    margin-top: 20px;
     background-color: #ffffff;
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
-    margin: 100px auto;
 }
-.login h1 {
+
+.sign-up{
+    width: 65%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    float: center;
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Stile Scritte */
+
+.login h2,.sign-up h2{
     text-align: center;
     color: #5b6574;
     font-size: 24px;
     padding: 20px 0 20px 0;
     border-bottom: 1px solid #dee0e4;
 }
-.login form {
+
+.sign-up p{
+    margin-left: 18%;
+    text-align: center;
+    color: #5b6574;
+    font-size: 18px;
+    padding: auto;
+    border-bottom: 0px solid #dee0e4;
+}
+
+/* Stile Sezioni Caselle */
+
+.login form, .sign-up form{
+    top: 10%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding-top: 20px;
 }
-.login form label {
+
+.sign-up form label{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
-    background-color: #3274d6;
+    justify-content: left;
+    width: 50%;
+    height: 20%;
     color: #ffffff;
 }
-.login form input[type="password"], .login form input[type="text"] {
-    width: 310px;
+
+/* Stile Caselle Input */
+
+.login form input[type="password"], .login form input[type="text"],.sign-up form input[type="password"],.sign-up form input[type="text"]{
+    width: 60%;
     height: 50px;
     border: 1px solid #dee0e4;
     margin-bottom: 20px;
-    padding: 0 15px;
+    padding: 0 10px;
 }
-.login form input[type="submit"] {
+
+.sign-up form input[type="date"]{
+    width: 20%;
+    height: 50px;
+    border: 1px solid #dee0e4;
+    margin-bottom: 20px;
+    margin-right: 9%;
+}
+
+.login form input[type="submit"],.sign-up form input[type="submit"] {
     width: 100%;
     padding: 15px;
-   margin-top: 20px;
+    margin-top: 20px;
     background-color: #3274d6;
     border: 0;
     cursor: pointer;
@@ -52,7 +101,8 @@ body {
     color: #ffffff;
     transition: background-color 0.2s;
 }
-.login form input[type="submit"]:hover {
-  background-color: #2868c7;
+
+.login form input[type="submit"]:hover, .sign-up form input[type="submit"]:hover{
+    background-color: #2868c7;
     transition: background-color 0.2s;
 }

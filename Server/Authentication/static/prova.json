@@ -1,0 +1,37 @@
+
+    [
+  
+    {
+        "id":1,
+        "citta": "Napoli",
+        "start": "castello dfdsf",
+        "finish": "castello mammt",
+        "durata": "3 h 2 m",
+        "media_valutazioni":3
+    },
+    {
+        "id":2,
+        "citta": "Roma",
+        "start": "castello AO",
+        "finish": "altro castello diAO",
+        "durata": "1 h 2 m",
+        "media_valutazioni":4.2
+    },
+    {   
+        "id":3,
+        "citta": "Milano",
+        "start": "castello ya",
+        "finish": "castello arrivo",
+        "durata": "2 h 9 m",
+        "media_valutazioni":5
+    },
+    {   
+        "id":4,
+        "citta": "torino",
+        "start": "castello torino",
+        "finish": "castello arrivo a torino",
+        "durata": "1 h 5 m",
+        "media_valutazioni":4.7
+    }
+]
+

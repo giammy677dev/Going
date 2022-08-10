@@ -13,7 +13,7 @@ try {
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: '#Asd123f4',
+        password: 'going',
         database: 'sakila', //db di default di sql per prove
         //port: 3306 ?
     });
