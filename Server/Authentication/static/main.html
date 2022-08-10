@@ -7,18 +7,56 @@
     <title>Home</title>
     <link rel="stylesheet" href="/static/going.css">
     <link rel="stylesheet" href="/static/home.css">
-
+    <link rel="text/javascript" href="/static/prova.json">
     <script>
-        
 
 
         function myFunc() {
-            document.getElementById("citta1").innerHTML = "Napoli";
-            document.getElementById("citta2").innerHTML = "Milano";
-            document.getElementById("citta3").innerHTML = "Roma";
-            document.getElementById("citta4").innerHTML = "Torino";
+            const parole = ["citta", "start", "finish", "durata", "star"]
+
+            fetch("/static/prova.json")
+                .then(response => response.json())
+                .then(data => {
+
+
+
+                    for (var i = 0; i < data.length; i++) {
+                        let citta = data[i].citta;
+                        let start = data[i].start;
+                        let finish = data[i].finish;
+                        let durata = data[i].durata;
+                        let media_valutazioni = data[i].media_valutazioni;
+
+                        let j = i + 1
+                        cit = parole[0].concat(j)
+                        st = parole[1].concat(j)
+                        fn = parole[2].concat(j)
+                        dur = parole[3].concat(j)
+                        stel = parole[4].concat(j)
+
+                        document.getElementById(cit).innerText = citta;
+                        document.getElementById(st).innerText = start;
+                        document.getElementById(fn).innerText = finish;
+                        document.getElementById(dur).innerText = durata;
+                        funcStar(media_valutazioni, stel);
+                        /*document.getElementById("media_valutazioni1").innerText = media_valutazioni;*/
+                    }
+
+                })
+
         }
 
+        function funcStar(media_valutazioni, stel) {
+            const html_code = '<img src="/storage/star.jpg" style="width:25px;height: 30px;">'
+            console.log(media_valutazioni)
+
+            for (var k = 0; k < media_valutazioni; k++) {
+                console.log(k)
+                console.log(stel)
+                document.getElementById(stel).innerHTML = html_code;
+            }
+
+        }
     </script>
 
 </head>
@@ -42,9 +80,8 @@
 
     </div>
 
-    
+
     <div class="contenuto">
-        
 
         <div class="row2">
             <div class="column2">
@@ -88,11 +125,7 @@
                             <div class="column4">
                                 <h4>Valutazione media:</h4>
                                 <div id="star1">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+
                                 </div>
 
                             </div>
@@ -122,11 +155,7 @@
                             <div class="column4">
                                 <h4>Valutazione media:</h4>
                                 <div id="star2">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+
                                 </div>
 
                             </div>
@@ -158,11 +187,7 @@
                             <div class="column4">
                                 <h4>Valutazione media:</h4>
                                 <div id="star3">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+
                                 </div>
                             </div>
                         </div>
@@ -192,11 +217,7 @@
                             <div class="column4">
                                 <h4>Valutazione media:</h4>
                                 <div id="star4">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+
                                 </div>
 
                             </div>
