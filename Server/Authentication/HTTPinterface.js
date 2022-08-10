@@ -60,7 +60,8 @@ class HTTPinterface {
         
         //front end pages
         this.app.get('/', this.main_page.bind(this)); //MainPage
-        this.app.get('/createRoadmap', this.createRoadmap_page.bind(this)); //Create Roadmap
+        this.app.get('/about', this.about_page.bind(this)); //about
+        this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
         this.app.get('/login', this.login_page.bind(this)); //LoginRegistrati
         this.app.get('/profile', this.profile_page.bind(this)); //Profilo
@@ -98,6 +99,12 @@ class HTTPinterface {
         }
         return res.sendFile(__dirname + '/static/main.html');
     }
+    async about_page(req, res) {
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        return res.sendFile(__dirname + '/static/about.html');
+    }
 
     async explore_page(req, res) {
         if (req.user) {
@@ -110,7 +117,7 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
-        return res.sendFile(__dirname + '/static/Create_Roadmap.html');
+        return res.sendFile(__dirname + '/static/create.html');
     }
 
     async login_page(req, res) {
