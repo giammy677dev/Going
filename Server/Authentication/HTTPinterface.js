@@ -2,13 +2,13 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-//const reqController = require('./reqController.js');
+const requestController = require('./requestController.js');
 const mysql = require('mysql2');
 const session = require('express-session');
 const path = require('path');
-var md5 = require('md5');
+const md5 = require('md5');
 
-var connection;
+/*var connection;
 try {
     connection = mysql.createConnection({
         host: 'localhost',
@@ -19,7 +19,7 @@ try {
     });
 } catch (error) {
     console.log(error)
-}
+}*/
 
 const config = require('./config.js');
 const { res } = require('express');
@@ -35,7 +35,7 @@ class HTTPinterface {
         this.app = express();
         this.server = http.createServer(this.app);
 
-        //this.controller = new reqController()
+        this.controller = new requestController()
         this.initServer();
 
         this.port = config.port;
@@ -44,8 +44,6 @@ class HTTPinterface {
             console.log(`HTTP auth Server started on port ${this.server.address().port} :)`);
         });
     }
-    //1 ) popolare la tabella del db con cryptati (chiave nota)
-    //2 ) login deve implementare una hash con una chiave nota
 
     initServer() {
         this.app.use(bodyParser.urlencoded({ extended: true }));
@@ -66,16 +64,16 @@ class HTTPinterface {
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
         this.app.get('/login', this.login_page.bind(this)); //LoginRegistrati
         this.app.get('/profile', this.profile_page.bind(this)); //Profilo
-        this.app.get('/diego', this.diego.bind(this));
-        this.app.use('/static', express.static('static'));
-        this.app.use('/storage', express.static('storage'));
+        this.app.get('/diego', this.diego.bind(this)); //Easter Egg
+        this.app.use('/static', express.static('static')); //HTML e CSS pages
+        this.app.use('/storage', express.static('storage')); //Images and other
 
         //back end calls
         this.app.post('/register', this.register.bind(this));
         this.app.post('/login', this.login.bind(this));
-        this.app.post('/auth', this.auth.bind(this)); //Auth
+        this.app.post('/auth', this.auth.bind(this)); //Authentication
         this.app.post('/logout', this.logout.bind(this));
-        this.app.post('/activate', this.activate.bind(this));
+        //this.app.post('/activate', this.activate.bind(this));
         
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -84,14 +82,38 @@ class HTTPinterface {
                 // Output username
                 console.log(req.session);
                 res.send('Welcome back, ' + req.session.username + '!');
-            } else 
-            {
+            }
+            else {
                 // Not logged in
                 res.send('Please login to view this page!');
             }
             res.end();
         });
+    }
 
+    async register(req, res) {
+        const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
+        res.send(JSON.stringify(r));
+    }
+
+    async login(req, res) {
+        const r = await this.controller.login(req.body.username, req.body.password);
+        res.send(JSON.stringify(r));
+    }
+
+    async auth(req, res) {
+        const r = await this.controller.auth(req.body.username, req.body.password);
+        console.log(r);
+        if (r[0] == true) {
+            req.session.loggedin = true;
+            req.session.username = r[1];
+
+            // Redirect to home page
+            res.redirect('/home');
+        }
+        else {
+            res.redirect('/login');
+        }
     }
 
     async main_page(req, res) {
@@ -122,7 +144,6 @@ class HTTPinterface {
     }
 
     async login_page(req, res) {
-
         if (req.user) {
             console.log('user session is alive')
         }
@@ -136,61 +157,10 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Profile.html');
     }
 
-    /*async register(req, res) {
-        const r = await this.controller.register(req.body.userName, req.body.password, req.body.email, req.body.prk, req.body.puk);
-        res.send(JSON.stringify(r));
-    }*/
-
     async diego(req, res) {
         //console.log(req.query.DIEGO)
         //res.send(req.query.DIEGO)
         return res.sendFile(__dirname + '/static/Sito/About.html');
-    }
-
-    async login(req, res) {
-        const r = await this.controller.login(req.body.userName, req.body.password);
-        res.send(JSON.stringify(r));
-    }
-
-    async auth(req, res) {
-        // Capture the input fields
-        
-        //STEP DI DECODIFICA f(k) per evitare sniffing
-        
-        
-        let username = req.body.username;
-        let password = req.body.password;
-        // Ensure the input fields exists and are not empty
-        if (username && password) {
-            console.log(username,password)
-            password = md5(password);
-            console.log(username,password)
-            // Execute SQL query that'll select the account from the database based on the specified username and password
-            connection.query('SELECT * FROM utente WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
-                // If there is an issue with the query, output the error
-                if (error) throw error;
-                // If the account exists
-                if (results.length > 0) {
-                    // Authenticate the user
-
-                    req.session.loggedin = true;
-                    req.session.username = username;
-                    // Redirect to home page
-
-                    
-                    req.session.diego = true;
-                    res.redirect('/home');
-                } else {
-                    res.send('Incorrect Username and/or Password!');
-                }
-                res.end();
-            });
-        } else {
-            res.send('Please enter Username and Password!');
-            res.end();
-        }
-        //const r = await this.controller.auth(req.body.userName, req.body.password);
-        //res.send(JSON.stringify(r));
     }
 
     async logout(req, res) {
@@ -198,43 +168,10 @@ class HTTPinterface {
         res.send(JSON.stringify(r));
     }
 
-    async activate(req, res) {
+    /*async activate(req, res) {
         const r = await this.controller.activate(req.body.id);
         res.send(JSON.stringify(r));
-    }
-
-    async register(req, res) {
-        let username = req.body.username;
-        let password = req.body.password;
-        let email = req.body.email;
-        let birthdate = req.body.birthdate;
-        // Ensure the input fields exists and are not empty
-        console.log(req.body);
-
-        if (username && password && email && birthdate) {
-            password = md5(password);
-            // Execute SQL query that'll insert the account in the database
-            connection.query('INSERT INTO utente (username, password, email, birthdate) VALUES (?, ?, ?, ?)', [username, password, email, birthdate], function (error, results, fields) {
-                console.log(error);
-                // If the account exists
-                if (error) {
-                    if (error.errno == 1062) { //Username o email sono già in uso
-                        res.send('Username or email already in use');
-                    }
-                    else if (error.errno != 0) { //Errore generico
-                        res.send('There was an error');
-                    }
-                }
-                else {
-                    res.send('OK');
-                }
-                res.end();
-            });
-        } else {
-            res.send('Please, ensure the input fields are not empty');
-            res.end();
-        }
-    }
+    }*/
 }
 
 module.exports = HTTPinterface;

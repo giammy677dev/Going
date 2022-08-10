@@ -1,10 +1,9 @@
 const DAO = require('./DAO.js');
-const uuid = require('uuid');
+//const uuid = require('uuid');
 //var nodemailer = require('nodemailer');
 
 const serverIp = 'localhost'
 const serverPort = '8888'
-
 
 class RequestController{
     
@@ -12,9 +11,13 @@ class RequestController{
         this.dao = new DAO();
     }
 
-    async login(username, password){
-        let token = uuid.v4();
-        const data = await this.dao.login(username, password, token);
+    async register(username, password, email, birthdate) {
+        const data = await this.dao.register(username, password, email, birthdate);
+        //return {ok:ok, id:id};
+    }
+
+    async auth(username, password) {
+        const data = await this.dao.auth(username, password);
         return data;
     }
 
@@ -23,16 +26,7 @@ class RequestController{
         return {ok:ok};
     }
 
-    async register(username, password, email, prk, puk){
-        let id = uuid.v4();
-        const ok = await this.dao.register(id, username, password, email, prk, puk, true );
-        if(ok == true){
-            //this.sendEmail(req.body.email, id);
-        }
-        return {ok:ok, id:id};
-    }
-
-    async checkToken(id, token){
+    /*async checkToken(id, token){
         const ok = await this.dao.checkToken(id,token);
         return {ok:ok};
     }
@@ -73,7 +67,7 @@ class RequestController{
                 console.log('Email sent: ' + info.response);
             }
         });
-    }
+    }*/
 }
 
 module.exports = RequestController;
