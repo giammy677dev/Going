@@ -18,33 +18,28 @@ class DAO {
         }
     }
 
-    async register(id, username, password, email, birthdate) {
+    async register(username, password, email, birthdate) {
         // Ensure the input fields exists and are not empty
-        //console.log(req.body);
-
-        if (username && password && email && birthdate) {
-            password = md5(password);
-            // Execute SQL query that'll insert the account in the database
-            connection.query('INSERT INTO utente (username, password, email, birthdate) VALUES (?, ?, ?, ?)', [username, password, email, birthdate], function (error, results, fields) {
-                console.log(error);
-                // If the account exists
-                if (error) {
-                    if (error.errno == 1062) { //Username o email sono già in uso
-                        res.send('Username or email already in use');
-                    }
-                    else if (error.errno != 0) { //Errore generico
-                        res.send('There was an error');
-                    }
+        try {
+            var connection = await this.connect();
+            console.log(username, password, email, birthdate)
+            if (username && password && email && birthdate) {
+                password = md5(password);
+                // Execute SQL query that'll insert the account in the database
+                let registration = await connection.query('INSERT INTO utente (username, password, email, birthdate) VALUES (?, ?, ?, ?)', [username, password, email, birthdate]);
+                return [true, registration[0]];
+            }
+        } catch (error) {
+                if (error.errno == 1062) { //Username o email sono già in uso
+                    //res.send('Username or email already in use');
+                    return [false, 'Username or email already in use'];
                 }
-                else {
-                    res.send('OK');
+                else { //Errore generico
+                    //res.send('There was an error');
+                    return [false, 'There was a generic error'];
                 }
-                res.end();
-            });
-        } else {
-            //res.send('Please, ensure the input fields are not empty');
-            //res.end();
         }
+        
     }
 
     async auth(username, password) {

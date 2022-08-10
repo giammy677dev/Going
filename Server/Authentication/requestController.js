@@ -13,6 +13,7 @@ class RequestController{
 
     async register(username, password, email, birthdate) {
         const data = await this.dao.register(username, password, email, birthdate);
+        return data;
         //return {ok:ok, id:id};
     }
 

@@ -70,7 +70,6 @@ class HTTPinterface {
 
         //back end calls
         this.app.post('/register', this.register.bind(this));
-        this.app.post('/login', this.login.bind(this));
         this.app.post('/auth', this.auth.bind(this)); //Authentication
         this.app.post('/logout', this.logout.bind(this));
         //this.app.post('/activate', this.activate.bind(this));
@@ -92,13 +91,15 @@ class HTTPinterface {
     }
 
     async register(req, res) {
+        console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
-        res.send(JSON.stringify(r));
-    }
-
-    async login(req, res) {
-        const r = await this.controller.login(req.body.username, req.body.password);
-        res.send(JSON.stringify(r));
+        if (r[0] == true) {
+            //Redirect to home page
+            res.redirect('/home');
+        }
+        else {
+            res.redirect('/login');
+        }
     }
 
     async auth(req, res) {

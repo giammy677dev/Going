@@ -1,94 +1,83 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>Login</title>
-    
-		<link href="going.css" rel="stylesheet">
-        <link href="login.css" rel="stylesheet">
 
-		<!-- Sostituire le righe 8 e 9 con:
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1">
+	<title>Login</title>
 
-		<link href="/static/going.css" rel="stylesheet">
-        <link href="/static/login.css" rel="stylesheet">
-		
-		-->
+	<link href="/static/going.css" rel="stylesheet">
+	<link href="/static/login.css" rel="stylesheet">
 
-		<script src="Login.js" type="text/javascript"></script>
-	</head>
+	<script src="/static/Login.js" type="text/javascript"></script>
+</head>
 
-	<body>
+<body>
 
-		<!-- Header -->
+	<!-- Header -->
 
-		<div class="header">
-    		<h1>GOING</h1>
-    		<a href="/">
-				<img class="logo_nostro" src="/storage/logo.png" alt="logo">
-			</a>
-			<p>Where you want to go, the roads you want to take</p>
+	<div class="header">
+		<h1>GOING</h1>
+		<a href="/">
+			<img class="logo_nostro" src="/storage/logo.png" alt="logo">
+		</a>
+		<p>Where you want to go, the roads you want to take</p>
+	</div>
+
+	<div class="navbar">
+		<a href="/">Homepage</a>
+		<a href="/about">About</a>
+		<a href="/explore">Explore</a>
+		<a href="/create">Create</a>
+		<a href="/login" class="right">Sign Up/Login</a>
+	</div>
+
+	<!-- Contenuto Pag-->
+
+	<div class="container">
+
+		<!-- Sezione Registrazione -->
+
+		<div class="sign-up">
+			<h2> Registrazione </h2>
+			<form action="./register" method="post">
+				<input type="text" placeholder="Inserisci Nome Utente" name="username" id="username" required>
+				<input type="password" placeholder="Inserisci Password" name="password" id="password" minlength="8" required>
+				<input type="password" placeholder="Ripeti Password" name="confirmpassword" id="confirmpassword" required>
+				<input type="text" placeholder="Inserisci Email" name="email" id="email" required>
+				<label>
+					<p> Data di nascita </p>
+				</label>
+				<input type="date" name="birthdate" onclick="date_registration()" id="birthdate" required>
+				<input type="submit" value="Registrazione" onclick="validation_Password()">
+			</form>
 		</div>
 
-		<div class="navbar">
-			<a href="/">Homepage</a>
-			<a href="/about">About</a>
-			<a href="/explore">Explore</a>
-			<a href="/create">Create</a>
-			<a href="/login" class="right">Sign Up/Login</a>
+		<!-- Sezione Login -->
+
+		<div class="login">
+			<h2> Login </h2>
+			<form action="./auth" method="post">
+				<input type="text" name="username" placeholder="username" id="username" required>
+				<input type="password" name="password" placeholder="password" id="password" minlength="8" required>
+				<input type="submit" value="Login">
+			</form>
 		</div>
+	</div>
 
-		<!-- Contenuto Pag-->
-		
-		<div class="container">
-			
-			<!-- Sezione Registrazione -->
+	</div>
 
-			<div class="sign-up">
-				<h2> Registrazione </h2>
-				<form action="./auth" method="post">
-					<input type="text" placeholder="Inserisci Email" name="Email" id="email-registration" required>
+	<!-- Sezione Footer -->
 
-					<input type="text" placeholder="Inserisci Nome Utente" name="Name" id="name-registration" required>
+	<div class="footer">
+		<h4>
+			Copyright 2022
+		</h4>
+		<h6>
+			Diego-Gian Marco-Marco-Matteo-Valerio
+		</h6>
+	</div>
 
-					<input type="password" placeholder="Inserisci Password" name="Pass" id="password-registration" minlength="8" required>
+</body>
 
-					<input type="password" placeholder="Ripeti Password" name="Confirm-pass" id="confirmpassword-registration" required>
-
-				 	<label> <p> Data di nascita </p> </label>
-					<input type="date" name="Data" onclick="date_registration()" id="date-registration" required>
-
-					<input type="submit" value="Registrazione" onclick="validation_Password()">
-				</form>
-			</div>
-		
-			<!-- Sezione Login -->
-
-			<div class="login">
-				<h2> Login </h2>
-				<form action="./auth" method="post">
-
-					<input type="text" name="username" placeholder="Username" id="username-login" required>
-
-					<input type="password" name="password" placeholder="Password" id="password-login" minlength="8" required>
-
-					<input type="submit" value="Login">
-					</form>
-				</div>
-			</div>
-		
-		</div>
-
-		<!-- Sezione Footer -->
-
-		<div class="footer">
-			<h4>
-				Copyright 2022
-			</h4>
-			<h6>
-				Diego-Gian Marco-Marco-Matteo-Valerio
-			</h6>
-		</div>
-
-	</body>
 </html>

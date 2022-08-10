@@ -1,13 +1,12 @@
-
 /*Script Verifica Password*/
 
 function validation_Password(){
-    var password = document.getElementById("password-registration")
-    var confirm_password = document.getElementById("confirmpassword-registration");
+    var password = document.getElementById("password")
+    var confirm_password = document.getElementById("confirmpassword");
 
     if(password.value != confirm_password.value) {
         confirm_password.setCustomValidity("Password non uguali");
-    } 
+    }
     else {
         confirm_password.setCustomValidity('');
     }
@@ -26,5 +25,5 @@ function date_registration(){
 
     today = yyyy + '-' + mm + '-' + dd;
 
-    document.getElementById("date-registration").setAttribute("max", today);
+    document.getElementById("birthdate").setAttribute("max", today);
 }
