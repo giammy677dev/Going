@@ -76,7 +76,7 @@ body {
 }
 
 .contenuto {
-    padding-top: 160px;
+    padding-top: 170px;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -86,4 +86,5 @@ body {
     padding: 5px;
     text-align: center;
     background-color: #00AAF8;
+    
 }

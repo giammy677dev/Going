@@ -2,12 +2,13 @@
     box-sizing: border-box;
 }
 
-.row {
+.row2 {
+   
     display: flex;
 }
 
 /* Create two equal columns that sits next to each other */
-.column {
+.column2 {
     flex: 50%;
     padding: 10px;
 }
@@ -28,4 +29,25 @@ input[type=text] {
 input[type=submit]{
     font-size: 66px;
     
+}
+
+.roadmap{
+    border: 2px solid #00AAF8;
+}
+.roadmap h3{
+    text-align: center;
+}
+.row4:after{
+    content: "";
+    display:block;
+    clear: both;
+}
+.column4 {
+    text-align: center;
+    float: left;
+    width: 25%;
+}
+
+.info{
+    text-align: center;
 }
