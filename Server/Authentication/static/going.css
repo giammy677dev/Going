@@ -20,6 +20,7 @@ body {
     font-family: "testo";
 }
 
+
 .header {
     height: 100px;
     text-align: center;
@@ -34,7 +35,13 @@ body {
 .header h1 {
     font-size: 25px;
 }
-
+.logo_nostro{
+    width: 100px;
+        height: 100px;
+        top: 5px;
+        position: fixed;
+        left: 20px;
+}
 /* Style the top navigation bar */
 .navbar {
     border-style: solid;

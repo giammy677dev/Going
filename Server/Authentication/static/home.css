@@ -21,10 +21,11 @@ input[type=text] {
     background-position: 12px 10px;
     background-repeat: no-repeat;
     padding: 12px 20px 12px 40px;
-    width: 50%;
+    width: 60%;
 
     
 }
 input[type=submit]{
-    font-size: 50px;
+    font-size: 66px;
+    
 }
