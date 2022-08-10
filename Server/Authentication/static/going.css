@@ -37,10 +37,10 @@ body {
 }
 .logo_nostro{
     width: 100px;
-        height: 100px;
-        top: 5px;
-        position: fixed;
-        left: 20px;
+    height: 100px;
+    top: 5px;
+    position: fixed;
+    left: 20px;
 }
 /* Style the top navigation bar */
 .navbar {
