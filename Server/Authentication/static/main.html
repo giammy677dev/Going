@@ -8,9 +8,22 @@
     <link rel="stylesheet" href="/static/going.css">
     <link rel="stylesheet" href="/static/home.css">
 
+    <script>
+        
+
+
+        function myFunc() {
+            document.getElementById("citta1").innerHTML = "Napoli";
+            document.getElementById("citta2").innerHTML = "Milano";
+            document.getElementById("citta3").innerHTML = "Roma";
+            document.getElementById("citta4").innerHTML = "cjksbdcjb";
+        }
+
+    </script>
+
 </head>
 
-<body>
+<body onload="myFunc()">
 
     <div class="header">
         <h1>GOING</h1>
@@ -29,8 +42,9 @@
 
     </div>
 
+    
     <div class="contenuto">
-
+        
 
         <div class="row2">
             <div class="column2">
@@ -54,145 +68,157 @@
         <div class="row2">
             <div class="column2">
                 <div class="roadmap">
-                    <h3 id="citta1">
-                        Nome_Citta
-                    </h3>
-                    <div class="row4">
-                        <div class="column4">
-                            <h4 >Start: <h4 id="start1">partenza</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Finish: <h4  id="finish1">arrivo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Durata: <h4  id="durata1">tempo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Valutazione media:</h4>
-                            <div id="star1">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                    <a id="link1" href="#">
+                        <h3 id="citta1">
+                            Nome_Citta
+                        </h3>
+                        <div class="row4">
+                            <div class="column4">
+                                <h4>Start: <h4 id="start1">partenza</h4>
+                                </h4>
                             </div>
+                            <div class="column4">
+                                <h4>Finish: <h4 id="finish1">arrivo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Durata: <h4 id="durata1">tempo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Valutazione media:</h4>
+                                <div id="star1">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="column2">
                 <div class="roadmap">
-                    <h3 id="citta2">
-                        Nome_Citta
-                    </h3>
-                    <div class="row4">
-                        <div class="column4">
-                            <h4>Start: <h4  id="start2">partenza</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4 >Finish: <h4 id="finish2">arrivo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4 >Durata: <h4 id="durata2">tempo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Valutazione media:</h4>
-                            <div id="star2">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                                <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                    <a id="link2" href="#">
+                        <h3 id="citta2">
+                            Nome_Citta
+                        </h3>
+                        <div class="row4">
+                            <div class="column4">
+                                <h4>Start: <h4 id="start2">partenza</h4>
+                                </h4>
                             </div>
+                            <div class="column4">
+                                <h4>Finish: <h4 id="finish2">arrivo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Durata: <h4 id="durata2">tempo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Valutazione media:</h4>
+                                <div id="star2">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
         <div class="row2">
             <div class="column2">
                 <div class="roadmap">
-                    <h3 id="citta1">
-                        Nome_Citta
-                    </h3>
-                    <div class="row4">
-                        <div class="column4">
-                            <h4>Start: <h4 id="start3">partenza</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Finish: <h4 id="finish3">arrivo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4 >Durata: <h4 id="durata3">tempo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Valutazione media:</h4>
-                            <div id="star3">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                    <a id="link3" href="#">
+                        <h3 id="citta3">
+                            Nome_Citta
+                        </h3>
+                        <div class="row4">
+                            <div class="column4">
+                                <h4>Start: <h4 id="start3">partenza</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Finish: <h4 id="finish3">arrivo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Durata: <h4 id="durata3">tempo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Valutazione media:</h4>
+                                <div id="star3">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="column2">
-                <div class="roadmap">
-                    <h3 id="citta1">
-                        Nome_Citta
-                    </h3>
-                    <div class="row4">
-                        <div class="column4">
-                            <h4>Start: <h4 id="start4">partenza</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Finish: <h4 id="finish4">arrivo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Durata: <h4 id="durata4">tempo</h4>
-                            </h4>
-                        </div>
-                        <div class="column4">
-                            <h4>Valutazione media:</h4>
-                            <div id="star4">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
-                            </div>
 
+                <div class="roadmap">
+                    <a id="link4" href="#">
+                        <h3 id="citta4">
+                            Nome_Citta
+                        </h3>
+                        <div class="row4">
+                            <div class="column4">
+                                <h4>Start: <h4 id="start4">partenza</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Finish: <h4 id="finish4">arrivo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Durata: <h4 id="durata4">tempo</h4>
+                                </h4>
+                            </div>
+                            <div class="column4">
+                                <h4>Valutazione media:</h4>
+                                <div id="star4">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                    <img src="/storage/star.jpeg" alt="star1" style="width:25px;height: 30px;">
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
             </div>
         </div>
+
+
 
         <div class="info">
             <h2>Quante Roadmap create! E quanta bella gente registrata!</h2>
 
             <h4>
                 <img src="/storage/marker.png" alt="marker" style="width:40px;height: 60px;">
-                <h5>320 roadmap</h5>
+                <h5 id="numero_rm">320 roadmap</h5>
             </h4>
             <h4>
                 <img src="/storage/user.jpg" alt="user" style="width:70px;height: 70px;">
-                <h5>320 roadmap</h5>
+                <h5 id="numero_ut">120 utenti registrati</h5>
             </h4>
 
         </div>

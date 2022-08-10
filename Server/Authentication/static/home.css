@@ -3,7 +3,6 @@
 }
 
 .row2 {
-   
     display: flex;
 }
 
@@ -50,4 +49,9 @@ input[type=submit]{
 
 .info{
     text-align: center;
+}
+
+.roadmap a{
+    text-decoration: none;
+    color: black;
 }
