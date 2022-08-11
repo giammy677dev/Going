@@ -8,12 +8,10 @@ const session = require('express-session');
 const path = require('path');
 const config = require('./config.js');
 const { res } = require('express');
-const { rmSync } = require('fs');
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'static')));
 
 class HTTPinterface {
     constructor() {
@@ -41,7 +39,7 @@ class HTTPinterface {
             resave: true,
             saveUninitialized: true
         }));
-        
+
         //front end pages
         this.app.get('/', this.main_page.bind(this)); //MainPage
         this.app.get('/about', this.about_page.bind(this)); //about
@@ -58,7 +56,7 @@ class HTTPinterface {
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         //this.app.post('/activate', this.activate.bind(this));
-        
+
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -77,16 +75,22 @@ class HTTPinterface {
 
     async register(req, res) {
         console.log(req.body);
-        return await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
+        const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
+        return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
     }
 
-    async login(req, res) {
-        const r = await this.controller.auth(req.body.username, req.body.password);
-        if (r.ok) {
+    async login(req, res)
+    {
+        const r = await this.controller.login(req.body.username, req.body.password);
+        console.log(r)
+        if (r.ok)
+        {
             req.session.loggedin = true;
             req.session.username = r.data.username;
+            //req.session.userType = 0, 1, 2, 3.  
+            //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
-        return r;
+        return res.send(JSON.stringify(r));;
     }
 
     async main_page(req, res) {
@@ -96,7 +100,8 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/main.html');
     }
     async about_page(req, res) {
-        if (req.user) {
+        if (req.user)
+        {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/about.html');
@@ -136,9 +141,16 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Sito/About.html');
     }
 
-    async logout(req, res) {
-        const r = await this.controller.logout(req.body.id, req.body.token);
-        res.send(JSON.stringify(r));
+    async logout(req, res)
+    {
+        if(req.body.username == req.session.username){ //richiesta giusta
+            req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
+            req.session.username = ''
+            //non uso req.session = {} perché nella sessione possono esserci anche altre info!
+            return res.send({ok:true})
+        }
+        return res.send({ok:false})
+        //nessuna chiamata al DB.
     }
 }
 
