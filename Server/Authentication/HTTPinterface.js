@@ -141,8 +141,7 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/Sito/About.html');
     }
 
-    async logout(req, res)
-    {
+    async logout(req, res) {
         if(req.body.username == req.session.username){ //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''

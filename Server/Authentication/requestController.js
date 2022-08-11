@@ -32,12 +32,6 @@ class RequestController{
             return {ok: false, error: -1, data: {username: ''}};
         }
     }
-
-    async logout(username){
-        
-        const ok = await this.dao.logout(id,token);
-        return {ok:ok};
-    }
 }
 
 module.exports = RequestController;

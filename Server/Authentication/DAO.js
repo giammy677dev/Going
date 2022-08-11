@@ -46,28 +46,6 @@ class DAO {
         } catch (error) {
             return [false, error.errno, default_dict];
         }
-        
-    }
-
-    //logout user removin his token
-    async logout(id, token) {
-        try {
-            var connection = await this.connect();
-            let result = await connection.query("SELECT * FROM user WHERE id = ? AND token = ?", [id, token]);
-            result = result[0]
-            if (result.length == 1) {
-                await connection.query("UPDATE user SET token = NULL WHERE id = ? AND token = ?", [id, token]);
-                await connection.end();
-                return true;
-            } else {
-                await connection.end();
-                return false;
-            }
-        } catch (err) {
-            console.log(err);
-            await connection.end();
-            return false;
-        }
     }
 }
 
