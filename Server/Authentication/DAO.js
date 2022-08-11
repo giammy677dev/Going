@@ -39,12 +39,22 @@ class DAO {
                 // Authenticate the user
                 return [true, 0, {username: results[0].username}];
             }
-            else
-            {
+            else {
                 return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
             }
         } catch (error) {
             return [false, error.errno, default_dict];
+        }
+    }
+
+    async searchUser(username) {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll insert the account in the database
+            var result = await connection.query('SELECT username FROM utente WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            return [true, 0, {results: result[0]}];
+        } catch (error) {
+            return [false, error.errno, {results: []}];
         }
     }
 }
