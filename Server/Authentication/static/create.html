@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="/static/create.css">
 
 </head>
+<script>
+  function ricercaCitta() {
+    /*
+    mappa da richiedere con dati in campo
+    */
+  }
+</script>
 
 <body>
 
@@ -31,31 +38,61 @@
 
   <div class="contenuto">
     <h2 style="text-align:center">
-      Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) !!!</div>
+      Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) </div>
     </h2>
 
-    <div class="creation">
-      <form>
+    <div class="container_up">
+
+      <div class="title_vis">
         <label>
           Titolo
-          <input type="text" name="titolo" id="titolo" required>
-        </label><br>
-        <label>
-          Descrizione
-          <input type="text" name="descrizione" id="descrizione" required>
+          <input type="text" name="titolo" id="titolo" style="width: 75%;" required>
         </label><br>
         <label class="visibilita">Scegli la visibilita<br>
+
           <input type="radio" id="pub" name="visibilita" value="Pubblica" checked>
           <label for="pub">Pubblica</label><br>
           <input type="radio" id="priv" name="visibilita" value="Privata">
           <label for="priv">Privata</label><br>
         </label>
-      </form>
+
+
+      </div>
+
+      <div class="description">
+        <label>
+          Descrizione<br>
+          <input type="text" name="descrizione" id="descrizione" required>
+        </label><br>
+
+      </div>
+
     </div>
+    <h2 style="text-align:center">
+      Cerca la città in cui vuoi fare una bella Roadmap<br>
+      <input type="text" name="citta_search" id="citta_search" placeholder="" method="get">
+      <input type="submit" value="Avvia Ricerca" onclick="ricercaCitta()">
+    </h2>
+
+    <div class="container_middle">
+      <div class="mappa_rm">
+        Mappa qua spauna
+      </div>
+
+      <div class="lista">
+        <h2 style="text-align:center">
+          Lista stage
+
+        </h2>
+        <div class="lista_stage">
+          --elenco puntatato da far poppare
+        </div>
+      </div>
+    </div>
+
+
     -- DA FARE<br>
 
-    -- centrare blocco ma poi da destra incolonnato<br>
-    -- inserisci descrizione con blocco testo dinamico<br>
     --barra ricerca città e onlcik mappa li<br>
     --mappa dove<br>
     --lista stage dove e durata modificabile<br>
@@ -66,6 +103,15 @@
 
 
     --submit
+
+    <!--
+    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+    <label for="vehicle1"> I have a bike</label><br>
+    <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+    <label for="vehicle2"> I have a car</label><br>
+    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+    <label for="vehicle3"> I have a boat</label>
+-->
   </div>
   <div class="footer">
 

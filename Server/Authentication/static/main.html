@@ -13,14 +13,62 @@
         --Stelle mezze, non funziona bene
         --append uno dopo l'altra in coda, con come pila
     -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
-
-    </script>
     <script>
 
+        // /*
+        //         function richiestaRMMain() {
+        //     const parole = ["citta", "start", "finish", "durata", "star"]
+        //     /*qua richiesta per avere alcune roadmap*/
 
-        function myFunc() {
+        //     /*var username = document.getElementById("username1").value;
+        //     var password = document.getElementById("password1").value;*/
+        //     /*var xhr = new XMLHttpRequest();
+        //     xhr.open("GET", '/ricercaMain', true);
+        //     xhr.onload = function (event) {
+        //         const r = JSON.parse(event.target.responseText);
+
+        //         if (r.ok === true) {
+
+        //             /*
+        //             console.log(r.data[i].citta)
+        //             r.data.lenght
+        //             */
+        //             for (var i = 0; i <r.data.lenght; i++) {
+        //                 let citta = r.data[i].citta;
+        //                 let start = r.data[i].start;
+        //                 let finish = r.data[i].finish;
+        //                 let durata = r.data[i].durata;
+        //                 let media_valutazioni = r.data[i].media_valutazioni;
+
+        //                 let j = i + 1
+        //                 cit = parole[0].concat(j)
+        //                 st = parole[1].concat(j)
+        //                 fn = parole[2].concat(j)
+        //                 dur = parole[3].concat(j)
+        //                 stel = parole[4].concat(j)
+
+        //                 document.getElementById(cit).innerText = citta;
+        //                 document.getElementById(st).innerText = start;
+        //                 document.getElementById(fn).innerText = finish;
+        //                 document.getElementById(dur).innerText = durata;
+        //                 funcStar(media_valutazioni, stel);
+        //             }
+        //         }
+        //         else {
+        //             alert("login non avvenuto con successo")
+        //         }
+        //     }
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+        //     xhr.send();
+        //     /*xhr.send(JSON.stringify({
+        //         username: username,
+        //         password: password
+        //     }))*/
+
+        // }
+
+
+        function richiestaRMMain() {
             const parole = ["citta", "start", "finish", "durata", "star"]
             /*qua richiesta per avere alcune roadmap*/
             fetch("/static/prova.json")
@@ -47,7 +95,6 @@
                         document.getElementById(dur).innerText = durata;
                         funcStar(media_valutazioni, stel);
 
-                        /*document.getElementById("media_valutazioni1").innerText = media_valutazioni;*/
                     }
 
                 })
@@ -103,7 +150,7 @@
 
 </head>
 
-<body onload="myFunc()">
+<body onload="richiestaRMMain()">
 
     <div class="header">
         <h1>GOING</h1>
@@ -131,11 +178,11 @@
             <div class="column2">
                 <h2>GOING dove vuoi!</h2>
 
-                <form class="research">
-                    <input type="text" name="main_search" id="main_search" name="search"
-                        placeholder="Cerca Roadmap o Utenti" method="get">
-                    <input type="submit" value="Avvia Ricerca">
-                </form>
+
+                <input type="text" name="main_search" id="main_search" 
+                    placeholder="Cerca Roadmap o Utenti" method="get">
+                <input type="submit" value="Avvia Ricerca" onclick="ricercaMain()">
+
 
                 <img src="/storage/walking.gif" alt="walking" style="width:70%;height: 70%;">
 
