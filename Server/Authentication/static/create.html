@@ -2,45 +2,73 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <title>Home</title>
-    <link rel="stylesheet" href="/static/going.css">
-    <link rel="stylesheet" href="/static/create.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+  <title>Home</title>
+  <link rel="stylesheet" href="/static/going.css">
+  <link rel="stylesheet" href="/static/create.css">
 
 </head>
 
 <body>
-    
+
   <div class="header">
     <h1>GOING</h1>
     <a href="/">
-        <img class="logo_nostro"src="/storage/logo.png" alt="logo">
-        </a>
-        <p>Where you want to go, the roads you want to take</p>
-    </div>
+      <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+    </a>
+    <p>Where you want to go, the roads you want to take</p>
+  </div>
 
-    <div class="navbar">
-        <a href="/">Homepage</a>
-        <a href="/about">About</a>
-        <a href="/explore">Explore</a>
-        <a href="/create">Create</a>
-        <a href="/login" class="right">Sign Up/Login</a>
-
-    </div>
-  
-  <div class="contenuto">
-    <p> Diego </p>
+  <div class="navbar">
+    <a href="/">Homepage</a>
+    <a href="/about">About</a>
+    <a href="/explore">Explore</a>
+    <a href="/create">Create</a>
+    <a href="/login" class="right">Sign Up/Login</a>
 
   </div>
+
+  <div class="contenuto">
+    <h2 style="text-align:center">
+      Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) !!!</div>
+    </h2>
+
+    <div class="creation">
+      <form>
+        <label>
+          Titolo
+          <input type="text" name="titolo" id="titolo" required>
+        </label><br>
+        <label>
+          Descrizione
+          <input type="text" name="descrizione" id="descrizione" required>
+        </label><br>
+        <label class="visibilita">Scegli la visibilita<br>
+          <input type="radio" id="pub" name="visibilita" value="Pubblica" checked>
+          <label for="pub">Pubblica</label><br>
+          <input type="radio" id="priv" name="visibilita" value="Privata">
+          <label for="priv">Privata</label><br>
+        </label>
+      </form>
+    </div>
+    -- inserisci Titolo
+
+    -- inserisci città
+    -- inserisci descrizione
+
+
+
+    --submit
+  </div>
   <div class="footer">
-    
+
     <h4>
-        Copyright 2022
+      Copyright 2022
     </h4>
-    
+
     <h6>
-        Diego-Gian Marco-Marco-Matteo-Valerio
+      Diego-Gian Marco-Marco-Matteo-Valerio
     </h6>
   </div>
 </body>
