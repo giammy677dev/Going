@@ -55,7 +55,7 @@ class HTTPinterface {
 
         //back end calls
         this.app.post('/register', this.register.bind(this));
-        this.app.post('/auth', this.auth.bind(this)); //Authentication
+        this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         //this.app.post('/activate', this.activate.bind(this));
         
@@ -77,28 +77,16 @@ class HTTPinterface {
 
     async register(req, res) {
         console.log(req.body);
-        const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
-        if (r[0] == true) {
-            //Redirect to home page
-            res.redirect('/home');
-        }
-        else {
-            res.redirect('/login');
-        }
+        return await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
     }
 
-    async auth(req, res) {
+    async login(req, res) {
         const r = await this.controller.auth(req.body.username, req.body.password);
-        if (r[0] == true) {
+        if (r.ok) {
             req.session.loggedin = true;
-            req.session.username = r[1];
-
-            // Redirect to home page
-            res.redirect('/home');
+            req.session.username = r.data.username;
         }
-        else {
-            res.redirect('/login');
-        }
+        return r;
     }
 
     async main_page(req, res) {

@@ -1,4 +1,5 @@
 const DAO = require('./DAO.js');
+const md5 = require('md5');
 
 class RequestController{
     
@@ -7,14 +8,27 @@ class RequestController{
     }
 
     async register(username, password, email, birthdate) {
-        const data = await this.dao.register(username, password, email, birthdate);
-        return data;
-        //return {ok:ok, id:id};
+        //Ensure the input fields exists and are not empty
+        if (username && password && email && birthdate) {
+            password = md5(password);
+            const data = await this.dao.register(username, password, email, birthdate);
+            return {ok: data[0], error: data[1]};
+        }
+        else {
+            return {ok: false, error: -2}
+        }
     }
 
-    async auth(username, password) {
-        const data = await this.dao.auth(username, password);
-        return data;
+    async login(username, password) {
+        //Ensure the input fields exists and are not empty
+        if (username && password) {
+            password = md5(password);
+            const data = await this.dao.auth(username, password);
+            return {ok: data[0], error: data[1], data: data[2]}
+        }
+        else {
+            return {ok: false, error: -1, data: {username: ''}};
+        }
     }
 
     async logout(id, token){
