@@ -28,6 +28,7 @@ class DAO {
     }
 
     async login(username, password) {
+        const default_dict={username: ''}
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
@@ -38,9 +39,14 @@ class DAO {
                 // Authenticate the user
                 return [true, 0, {username: results[0].username}];
             }
+            else
+            {
+                return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
+            }
         } catch (error) {
-            return [false, error.errno, {username: ''}];
+            return [false, error.errno, default_dict];
         }
+        
     }
 
     //logout user removin his token
