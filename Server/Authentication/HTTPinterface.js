@@ -6,21 +6,6 @@ const requestController = require('./requestController.js');
 const mysql = require('mysql2');
 const session = require('express-session');
 const path = require('path');
-const md5 = require('md5');
-
-/*var connection;
-try {
-    connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'going',
-        database: 'sakila', //db di default di sql per prove
-        //port: 3306 ?
-    });
-} catch (error) {
-    console.log(error)
-}*/
-
 const config = require('./config.js');
 const { res } = require('express');
 const { rmSync } = require('fs');
@@ -104,7 +89,6 @@ class HTTPinterface {
 
     async auth(req, res) {
         const r = await this.controller.auth(req.body.username, req.body.password);
-        console.log(r);
         if (r[0] == true) {
             req.session.loggedin = true;
             req.session.username = r[1];
@@ -168,11 +152,6 @@ class HTTPinterface {
         const r = await this.controller.logout(req.body.id, req.body.token);
         res.send(JSON.stringify(r));
     }
-
-    /*async activate(req, res) {
-        const r = await this.controller.activate(req.body.id);
-        res.send(JSON.stringify(r));
-    }*/
 }
 
 module.exports = HTTPinterface;
