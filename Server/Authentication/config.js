@@ -1,6 +1,6 @@
 const host = 'localhost';
 const user = 'root';
-const password = '#Asd123f4';
+const password = 'going';
 const database = 'sakila';
 const port = 3000;
 

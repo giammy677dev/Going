@@ -1,4 +1,3 @@
-//const uuid = require('uuid');
 var mysql = require('mysql2/promise');
 const config = require('./config.js');
 const md5 = require('md5');
@@ -36,7 +35,7 @@ class DAO {
                 }
                 else { //Errore generico
                     //res.send('There was an error');
-                    return [false, 'There was a generic error'];
+                    return [false, 'There was an error'];
                 }
         }
         
@@ -96,36 +95,6 @@ class DAO {
             return false;
         }
     }
-
-    /*async checkToken(id, token){
-        try{
-            var connection = await this.connect();
-            let result = await connection.query("SELECT * FROM user WHERE id = ? AND token = ?", [id, token]);
-            result = result[0]
-            if(result.length == 1){
-                await connection.end();
-                return true;
-            }else{
-                await connection.end();
-                return false;
-            }
-        }catch(err){
-            console.log(err);
-            await connection.end();
-        }
-    }
-
-      async confirmAccount(id){
-        try{
-            var connection = await this.connect();
-            await connection.query("UPDATE user SET confirm = 1 WHERE id = ?", [id]);
-            await connection.end();
-            return true;
-        }catch(err){
-            await connection.end();
-            return false;        
-        }
-    }*/
 }
 
 module.exports = DAO
