@@ -93,6 +93,17 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));;
     }
 
+    async logout(req, res) {
+        if(req.body.username == req.session.username){ //richiesta giusta
+            req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
+            req.session.username = ''
+            //non uso req.session = {} perché nella sessione possono esserci anche altre info!
+            return res.send({ok:true})
+        }
+        return res.send({ok:false})
+        //nessuna chiamata al DB.
+    }
+
     async main_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
@@ -139,17 +150,6 @@ class HTTPinterface {
         //console.log(req.query.DIEGO)
         //res.send(req.query.DIEGO)
         return res.sendFile(__dirname + '/static/Sito/About.html');
-    }
-
-    async logout(req, res) {
-        if(req.body.username == req.session.username){ //richiesta giusta
-            req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
-            req.session.username = ''
-            //non uso req.session = {} perché nella sessione possono esserci anche altre info!
-            return res.send({ok:true})
-        }
-        return res.send({ok:false})
-        //nessuna chiamata al DB.
     }
 }
 
