@@ -23,7 +23,9 @@ class RequestController{
         //Ensure the input fields exists and are not empty
         if (username && password) {
             password = md5(password);
-            const data = await this.dao.auth(username, password);
+            const data = await this.dao.login(username, password);
+            console.log(data)
+            console.log({ok: data[0], error: data[1], data: data[2]})
             return {ok: data[0], error: data[1], data: data[2]}
         }
         else {
@@ -31,7 +33,8 @@ class RequestController{
         }
     }
 
-    async logout(id, token){
+    async logout(username){
+        
         const ok = await this.dao.logout(id,token);
         return {ok:ok};
     }
