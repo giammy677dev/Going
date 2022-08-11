@@ -21,13 +21,20 @@ input[type=text] {
     background-position: 12px 10px;
     background-repeat: no-repeat;
     padding: 12px 20px 12px 40px;
-    width: 60%;
-
-    
+    width: 50%;
 }
 input[type=submit]{
-    font-size: 66px;
-    
+    width: 30%;
+    background-color: #3274d6;
+    border: 5px solid;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    transition: background-color 0.2s;
+}
+input[type="submit"]:hover{
+    background-color: #2868c7;
+    transition: background-color 0.2s;
 }
 
 .roadmap{
