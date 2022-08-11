@@ -17,9 +17,7 @@
             fetch("/static/prova.json")
                 .then(response => response.json())
                 .then(data => {
-
-
-
+                    console.log(data)
                     for (var i = 0; i < data.length; i++) {
                         let citta = data[i].citta;
                         let start = data[i].start;
@@ -39,6 +37,7 @@
                         document.getElementById(fn).innerText = finish;
                         document.getElementById(dur).innerText = durata;
                         funcStar(media_valutazioni, stel);
+
                         /*document.getElementById("media_valutazioni1").innerText = media_valutazioni;*/
                     }
 
@@ -46,16 +45,50 @@
 
         }
 
-        function funcStar(media_valutazioni, stel) {
-            const html_code = '<img src="/storage/star.jpg" style="width:25px;height: 30px;">'
-            console.log(media_valutazioni)
 
-            for (var k = 0; k < media_valutazioni; k++) {
-                console.log(k)
-                console.log(stel)
-                document.getElementById(stel).innerHTML = html_code;
+        function funcStar(media_valutazioni, stel) {
+            let ok = true
+            console.log(ok,":inizio")
+            var isInt=Number.isInteger(media_valutazioni)
+            if (isInt===false) {
+                ok = false
+             console.log(ok,":non intero")
+
+            }
+            
+            if (ok === false) {
+            console.log(ok,":controllo se + di 0.5")
+
+                const decimalStr = media_valutazioni.toString().split('.')[1];
+                var decimal = Number(decimalStr)
+                if(decimal<0.5){
+                    ok=true
+            console.log(ok,":meno di 0.5 quindi no star")
+
+                }
             }
 
+
+            const html_code = '<img src="/storage/star.jpg" style="width:25px;height: 30px;">'
+            const stella = document.getElementById(stel);
+            console.log(media_valutazioni, " : ", stel)
+            for (var k = 0; k < media_valutazioni; k++) {
+                
+                stella.insertAdjacentHTML("afterend", html_code)
+            }
+            if(ok===false){
+                const html_stella_mezza='<img src="/storage/half_star.png" style="width:25px;height: 30px;">'
+                stella.insertAdjacentHTML("afterend", html_stella_mezza)
+            console.log(ok,":qua per una mezza stella")
+                
+            }
+            
+            for (k; k < 5; k++) {
+            console.log(ok,":qua per stella vuota")
+
+                const html_stella_vuota='<img src="/storage/star_vuota.png" style="width:25px;height: 30px;">'
+                stella.insertAdjacentHTML("afterend", html_stella_vuota)
+            }
         }
     </script>
 
@@ -83,20 +116,24 @@
 
     <div class="contenuto">
 
+
+
         <div class="row2">
             <div class="column2">
                 <h2>GOING dove vuoi!</h2>
+
                 <form class="research">
                     <input type="text" name="main_search" id="main_search" name="search"
                         placeholder="Cerca Roadmap o Utenti" method="get">
                     <input type="submit" value="Avvia Ricerca">
                 </form>
-                <img src="/storage/walking.gif" alt="walking" style="width:200px;height: 300px;">
+
+                <img src="/storage/walking.gif" alt="walking" style="width:70%;height: 70%;">
 
 
             </div>
             <div class="column2">
-                <img src="/storage/roadmap.jpg" alt="roadmap" style="width:600px;height: 500px;border-style: solid;">
+                <img src="/storage/roadmap.jpg" alt="roadmap" style="width:90%;height: 90%;border-style: solid;">
             </div>
         </div>
 
@@ -256,3 +293,5 @@
         </h6>
     </div>
 </body>
+
+</html>

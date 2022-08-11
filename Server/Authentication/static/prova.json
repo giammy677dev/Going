@@ -15,7 +15,7 @@
         "start": "castello AO",
         "finish": "altro castello diAO",
         "durata": "1 h 2 m",
-        "media_valutazioni":4.2
+        "media_valutazioni":4
     },
     {   
         "id":3,
@@ -31,7 +31,7 @@
         "start": "castello torino",
         "finish": "castello arrivo a torino",
         "durata": "1 h 5 m",
-        "media_valutazioni":4.7
+        "media_valutazioni":2
     }
 ]
 
