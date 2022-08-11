@@ -55,7 +55,7 @@ class HTTPinterface {
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
-        //this.app.post('/activate', this.activate.bind(this));
+        this.app.get('/searchUser', this.searchUser.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -90,7 +90,7 @@ class HTTPinterface {
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
-        return res.send(JSON.stringify(r));;
+        return res.send(JSON.stringify(r));
     }
 
     async logout(req, res) {
@@ -102,6 +102,11 @@ class HTTPinterface {
         }
         return res.send({ok:false})
         //nessuna chiamata al DB.
+    }
+
+    async searchUser(req, res) {
+        const r = await this.controller.searchUser(req.query.username);
+        return res.send(JSON.stringify(r));
     }
 
     async main_page(req, res) {
