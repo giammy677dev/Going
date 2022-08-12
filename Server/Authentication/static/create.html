@@ -10,27 +10,51 @@
 
 </head>
 <script>
+
+  function myFunc() {
+    //come prendere valore radiobutton di visibilità
+    var my = document.querySelector('input[name="visibilita"]:checked').value;
+    console.log(my)
+    //come prendere valore/i select list di tag
+    var selectedValue = document.getElementById("lista_tag").selectedOptions;
+    var values = Array.from(selectedValue).map(({ value }) => value);
+    console.log(values);
+  }
   function ricercaCitta() {
     /*
-    mappa da richiedere con dati in campo
+    mappa da richiedere con dati in campo id="citta_search"
     */
   }
-  function myFunc(){
-    //come prendere valore radiobutton
-    var my =document.querySelector('input[name="visibilita"]:checked').value;
-    
-    console.log(my)
+ 
+  function creationRM() {
+
+  }
+
+
+  function tagList() {
+    const tag = ["Cultura", "Tracking", "Sport", "Aria Aperta", "tag1", "tag2", "tag3", "tag1", "tag2", "tag3"]
+
+    const root = document.getElementById("lista_tag")
+    for (var i = 0; i < tag.length; i++) {
+      let now = tag[i]
+      let html_code = '<option value="' + now + '">' + now + '</option>'
+      root.insertAdjacentHTML("beforeend", html_code)
+    }
+
   }
 </script>
 
-<body>
+<body onload="tagList()">
 
   <div class="header">
-    <h1>GOING</h1>
     <a href="/">
+      <h1>GOING</h1>
+
+
       <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+
+      <p>Where you want to go, the roads you want to take</p>
     </a>
-    <p>Where you want to go, the roads you want to take</p>
   </div>
 
   <div class="navbar">
@@ -43,6 +67,14 @@
   </div>
 
   <div class="contenuto">
+    <br>--DA FARE--<br>
+    <br>--SERVE API GOOGLE MAP PER--<br>
+
+    1)barra ricerca città permette onclick mappa su quella citta<br>
+    2)lista stage onclick mappa con durata modificabile<br>
+    3)mappa onclick ma non marker->new stage<br>
+    4)new stage deve avere un box ad hoc per tutti campi stage e tasto di submit
+    <br>
     <h2 style="text-align:center">
       Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) </div>
     </h2>
@@ -97,27 +129,39 @@
     </div>
 
 
-    -- DA FARE<br>
-
-    --barra ricerca città e onlcik mappa li<br>
-    --mappa dove<br>
-    --lista stage dove e durata modificabile<br>
-    --mappa->new stage<br>
-    --spazietto per durata RM totale, come somma durata stages+piedi<br>
-    --submit globale come?<br>
+    <div class="container_bottom">
+      <div class="hidden_new_stage">
+        Hidden new stage
 
 
 
-    --submit
+      </div>
+      <div class="tag_list">
+        <label for="lista_tag">Aggiungi tag alla Roadmap <br>(se vuoi
+          fare una scelta multipla usa Ctrl su Windows o Command su Mac)</label><br>
+        <select name="lista_tag" id="lista_tag" multiple>
 
-    <!--
-    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-    <label for="vehicle1"> I have a bike</label><br>
-    <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-    <label for="vehicle2"> I have a car</label><br>
-    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-    <label for="vehicle3"> I have a boat</label>
--->
+
+        </select>
+      </div>
+      <div class="submit_global">
+
+        <div class="durata">
+          Durata complessiva: <div class="somma_totale">valore qua di somma totale</div>
+        </div>
+
+        <input type="submit" value="Crea Roadmap!" onclick="creationRM()">
+
+      </div>
+
+    </div>
+
+
+
+
+
+    
+
   </div>
   <div class="footer">
 

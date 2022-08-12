@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <title>Home</title>
     <link rel="stylesheet" href="/static/going.css">
-    <link rel="stylesheet" href="/static/home.css">
+    <link rel="stylesheet" href="/static/main.css">
     <link rel="text/javascript" href="/static/prova.json">
     <!--
         COSE DA SISTEMARE IN MAIN
@@ -27,7 +27,7 @@
         //     xhr.onload = function (event) {
         //         const r = JSON.parse(event.target.responseText);
 
-        //         if (r.ok === true) {
+        //         if (r.ok == true) {
 
         //             /*
         //             console.log(r.data[i].citta)
@@ -106,13 +106,13 @@
             let ok = true
             console.log(ok, ":inizio")
             var isInt = Number.isInteger(media_valutazioni)
-            if (isInt === false) {
+            if (isInt == false) {
                 ok = false
                 console.log(ok, ":non intero")
 
             }
 
-            if (ok === false) {
+            if (ok == false) {
                 console.log(ok, ":controllo se + di 0.5")
 
                 const decimalStr = media_valutazioni.toString().split('.')[1];
@@ -130,11 +130,11 @@
             console.log(media_valutazioni, " : ", stel)
             for (var k = 0; k < media_valutazioni; k++) {
 
-                stella.insertAdjacentHTML("afterend", html_code)
+                stella.insertAdjacentHTML("beforeend", html_code)
             }
-            if (ok === false) {
+            if (ok == false) {
                 const html_stella_mezza = '<img src="/storage/half_star.png" style="width:25px;height: 30px;">'
-                stella.insertAdjacentHTML("afterend", html_stella_mezza)
+                stella.insertAdjacentHTML("beforeend", html_stella_mezza)
                 console.log(ok, ":qua per una mezza stella")
 
             }
@@ -143,7 +143,7 @@
                 console.log(ok, ":qua per stella vuota")
 
                 const html_stella_vuota = '<img src="/storage/star_vuota.png" style="width:25px;height: 30px;">'
-                stella.insertAdjacentHTML("afterend", html_stella_vuota)
+                stella.insertAdjacentHTML("beforeend", html_stella_vuota)
             }
         }
     </script>
