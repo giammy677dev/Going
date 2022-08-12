@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1">
-  <title>Home</title>
+  <title>Create</title>
   <link rel="stylesheet" href="/static/going.css">
   <link rel="stylesheet" href="/static/create.css">
 
@@ -14,6 +14,12 @@
     /*
     mappa da richiedere con dati in campo
     */
+  }
+  function myFunc(){
+    //come prendere valore radiobutton
+    var my =document.querySelector('input[name="visibilita"]:checked').value;
+    
+    console.log(my)
   }
 </script>
 
@@ -70,7 +76,7 @@
     </div>
     <h2 style="text-align:center">
       Cerca la città in cui vuoi fare una bella Roadmap<br>
-      <input type="text" name="citta_search" id="citta_search" placeholder="" method="get">
+      <input type="text" name="citta_search" id="citta_search" placeholder="">
       <input type="submit" value="Avvia Ricerca" onclick="ricercaCitta()">
     </h2>
 
