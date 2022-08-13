@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <title>Home</title>
   <link rel="stylesheet" href="/static/going.css">
-  <link rel="stylesheet" href="/static/explore.css">
+  <link rel="stylesheet" href="/static/Explore.css">
 
 </head>
 
@@ -15,9 +15,42 @@
   /*
   
   */
+
+  /*function myFunc() {
+    const parole = ["citta", "start", "finish", "durata", "star"]
+  
+    fetch("/static/prova.json")
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        for (var i = 0; i < data.length; i++) {
+          let citta = data[i].citta;
+          let start = data[i].start;
+          let finish = data[i].finish;
+          let durata = data[i].durata;
+          let media_valutazioni = data[i].media_valutazioni;
+
+          let j = i + 1
+          cit = parole[0].concat(j)
+          st = parole[1].concat(j)
+          fn = parole[2].concat(j)
+          dur = parole[3].concat(j)
+          stel = parole[4].concat(j)
+
+          document.getElementById(cit).innerText = citta;
+          document.getElementById(st).innerText = start;
+          document.getElementById(fn).innerText = finish;
+          document.getElementById(dur).innerText = durata;
+          funcStar(media_valutazioni, stel);
+
+        }
+
+      })
+onload="myFunc()"
+  }*/
 </script>
 
-<body>
+<body >
 
   <div class="header">
     <a href="/">
@@ -31,19 +64,25 @@
   </div>
 
   <div class="navbar">
-    <a href="/">Explore</a>
+    <a href="/">Homepage</a>
     <a href="/about">About</a>
     <a href="/explore">Explore</a>
     <a href="/create">Create</a>
-    <a href="/login" class="right">Sign Up/Login</a>
+    <a href="/logout" class="right">Logout</a>
 
   </div>
 
   <div class="contenuto">
+    <br>--DA FARE--<br>
+
+
+    1)Tabella verticale per le roadmap, header fisso, scroll laterale verso dx<br>
+    1)scroll laterale verso dx anche per gli utenti<br>
+
     <h2 style="text-align: center;">
       Esplora il mondo attraverso le nostre Roadmap o con gli occhi dei nostri Roadmappers!!<br>
       <div class="search-container">
-        <input type="text" placeholder="Inserisci una parola..." name="search">
+        <input type="text" placeholder="Inserisci una qualsiasi parola, numero, tag..." name="search">
         <button type="submit"><img src="/storage/search.png" style="width:20px;height: 20px;"></button>
       </div>
     </h2>
@@ -63,16 +102,53 @@
           </div>
 
         </a>
+        <!--style="display: none;"-->
+        <table class="styled-table">
+          <thead>
+              <tr>
+                  <th>Titolo</th>
+                  <th>Città</th>
 
-        <div class="pagination"><!--mettere centrato aaaaa e poi margini sballati-->
-          <a href="#">&laquo;</a>
-          <a href="#">1</a>
-          <a class="active" href="#">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">5</a>
-          <a href="#">6</a>
-          <a href="#">&raquo;</a>
+                  <th>Durata</th>
+                  <th>Poi start</th>
+                  <th>Poi arrivo</th>
+                  <th>Lista tag</th>
+                  <th>Media con le stelline</th>
+                  <th>Visita!!</th>
+              </tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                  <td>Dombnm nmmnnn <br><a href="/">Link(?)</a></td>
+                  <td>6000</td>
+                  <td>6000</td>
+                  <td>6000</td></a>
+                  <td><button type="submit">Link</button></td>
+              </tr>
+
+              <tr>
+                  <td>Melissa</td>
+                  <td>5150</td>
+                  <td>6000</td>
+                  <td>6000</td>
+              </tr>
+              
+              
+          </tbody>
+      </table>
+
+
+
+
+        <div class="center">
+          <ul class="pagination">
+            <li><a href="#">«</a></li>
+            <li><a href="#" class="active">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">»</a></li>
+          </ul>
         </div>
 
 
@@ -88,18 +164,17 @@
           </div>
         </a>
 
-        <div class="pagination">
-          <a href="#">&laquo;</a>
-          <a href="#">1</a>
-          <a class="active" href="#">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">5</a>
-          <a href="#">6</a>
-          <a href="#">&raquo;</a>
+
+
+        <div class="center">
+          <ul class="pagination">
+            <li><a href="#">«</a></li>
+            <li><a href="#" class="active">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">»</a></li>
+          </ul>
         </div>
-
-
       </div>
 
 
@@ -109,7 +184,6 @@
 
 
     </div>
-
 
 
 

@@ -62,12 +62,11 @@ input[type="submit"]:hover{
 
 .mappa_rm {
     width: 100%;
+    height: fit-content;
     margin: auto;
     float: center;
     margin-top: 20px;
     border: 3px solid black;
-    padding: 10px;
-
 }
 
 .lista {
@@ -118,6 +117,7 @@ input[type="submit"]:hover{
     font-weight: bold;
     color: #ffffff;
     transition: background-color 0.2s;
+    font-size: 15px;
 }
 
 .footer{

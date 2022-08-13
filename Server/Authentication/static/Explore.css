@@ -26,43 +26,84 @@ input[type=text] {
 }
 
 .container {
-    width: auto;
+    width:auto;
     display: grid;
     grid-template-columns: 3fr 1fr;
     gap: 20px;
+    padding-bottom: 10px;
 }
 
 .result_ut {
-    border: 3px solid rgb(12, 12, 248)
+    border: 3px solid rgb(12, 12, 248);
+    height: fit-content;
 }
 
 .result_rm {
     border: 3px solid rgb(4, 253, 75);
-
-}
-
-.pagination{
-    padding: 10px;
+    height: fit-content;
 }
 
 
-.pagination a {
+div.center {
+    text-align: center;
+    padding-top: 100px;
+}
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {
+    display: inline;
+}
+
+ul.pagination li a {
     color: black;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
     transition: background-color .3s;
-    
+   
 }
 
-.pagination a.active {
-    background-color: dodgerblue;
-    color: white;
+ul.pagination li a.active {
+    background-color: #00AAF8;
+    color: black;
+    border: 1px solid white;
 }
 
-.pagination a:hover:not(.active) {
-    background-color: #ddd;
+ul.pagination li a:hover:not(.active) {
+    background-color: #00AAF8;
 }
-.bottom{
+.bottom {
     text-align: center;
+}
+
+
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+}
+.styled-table thead tr {
+    background-color:#00AAF8;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+.styled-table tbody tr:hover {
+    background-color: rgb(4, 253, 75);
+    color:white;
 }
