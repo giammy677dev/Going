@@ -1,6 +1,5 @@
 const DAO = require('./DAO.js');
 const md5 = require('md5');
-const axios = require('axios');
 
 class RequestController {
 
