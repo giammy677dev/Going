@@ -46,11 +46,18 @@
         }
 
       })
-onload="myFunc()"
+
   }*/
+  function myFunc() {
+    const html_code = '<div class="item"> <a href = "/roadmpam/id_roadmap" > titolo senza emoji<br>🏙 Napoli<br> ⏱ 120min<br><img src="/storage/star.jpg" style="width:20px;height: 20px;">Qua stelline solo<br></a></div>'
+    const posto = document.getElementById("items");
+    posto.insertAdjacentHTML("beforeend", html_code)
+
+
+  }
 </script>
 
-<body >
+<body>
 
   <div class="header">
     <a href="/">
@@ -76,114 +83,78 @@ onload="myFunc()"
     <br>--DA FARE--<br>
 
 
-    1)Tabella verticale per le roadmap, header fisso, scroll laterale verso dx<br>
+
     1)scroll laterale verso dx anche per gli utenti<br>
 
     <h2 style="text-align: center;">
       Esplora il mondo attraverso le nostre Roadmap o con gli occhi dei nostri Roadmappers!!<br>
       <div class="search-container">
         <input type="text" placeholder="Inserisci una qualsiasi parola, numero, tag..." name="search">
-        <button type="submit"><img src="/storage/search.png" style="width:20px;height: 20px;"></button>
+        <button type="submit"><img src="/storage/search.png" style="width:20px;height: 20px;"
+            onclick="myFunc()"></button>
       </div>
     </h2>
 
 
 
 
-    <div class="container">
-      <div class="result_rm" id="result_rm">
-        <!--template rm result-->
-        <a href="/viewroadmap/(id_rm)" style="color: black;text-decoration: none;">
-          <div id="id_rm" name="id_rm" style="text-align: center;">
-            COME FARE I SORT SU DETERMINATI CAMPI???=>https://www.youtube.com/watch?v=8SL_hM1a0yo<br>
-            CAPIRE QUALI SONO I CAMPI DA FAR VEDERE!!<br>
-            --citta--utente creazionista--valutazione media con stelline--lista tag--numero poi--poi partenza e arrivo
-            MASSIMO DI 10 RISULTATI-->FARE UN MENU SOTTO PER LE PAGINE
+
+
+
+    <div class="grid-container">
+      <main class="grid-item main">
+
+        <div class="items" id="items">
+          Template RM (onload non c'è ne sono, poi con onclick tasto, query e si costruiscono)->
+          <div class="item ">
+            <a href="/roadmpam/id_roadmap">
+              titolo senza emoji<br>
+              🏙 Napoli<br>
+              ⏱ 120min<br>
+              <img src="/storage/star.jpg" style="width:20px;height: 20px;">Qua stelline solo<br>
+            </a>
           </div>
 
-        </a>
-        <!--style="display: none;"-->
-        <table class="styled-table">
-          <thead>
-              <tr>
-                  <th>Titolo</th>
-                  <th>Città</th>
-
-                  <th>Durata</th>
-                  <th>Poi start</th>
-                  <th>Poi arrivo</th>
-                  <th>Lista tag</th>
-                  <th>Media con le stelline</th>
-                  <th>Visita!!</th>
-              </tr>
-          </thead>
-          <tbody>
-            
-              <tr>
-                  <td>Dombnm nmmnnn <br><a href="/">Link(?)</a></td>
-                  <td>6000</td>
-                  <td>6000</td>
-                  <td>6000</td></a>
-                  <td><button type="submit">Link</button></td>
-              </tr>
-
-              <tr>
-                  <td>Melissa</td>
-                  <td>5150</td>
-                  <td>6000</td>
-                  <td>6000</td>
-              </tr>
-              
-              
-          </tbody>
-      </table>
 
 
-
-
-        <div class="center">
-          <ul class="pagination">
-            <li><a href="#">«</a></li>
-            <li><a href="#" class="active">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">»</a></li>
-          </ul>
         </div>
 
-
-
-
-      </div>
-
-      <div class="result_ut" id="result_ut">
-        <!--template utente result-->
-        <a href="/profile/(ut_us)" style="color: black;text-decoration: none;">
-          <div id="ut_us" name="ut_us" style=" text-align: center;">
-            <img src="" style="width:20px;height: 20px; margin-top: 7px;">//FOTO UTENTE// (ut_us)
-          </div>
-        </a>
-
-
-
-        <div class="center">
-          <ul class="pagination">
-            <li><a href="#">«</a></li>
-            <li><a href="#" class="active">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">»</a></li>
-          </ul>
-        </div>
-      </div>
-
-
-
-
-
-
-
+      </main>
     </div>
+
+  
+  <div class="grid-container-user">
+      <main class="grid-item main-user">
+
+        <div class="items-user">
+          Template USER->
+          <div class="item-user">
+            <a href="/user/id_user">
+
+              <img src="/storage/user.jpg" style="width:20px;height: 20px;">Immagine profilo<br>
+              username<br>
+            </a>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
 
 
 
