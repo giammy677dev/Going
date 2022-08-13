@@ -8,11 +8,42 @@
 	<meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
 	<link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
 	<link rel="stylesheet" href="/static/style_home.css" type="text/css" />
-	<script type="text/javascript" src="jsHome.js" language="Javascript"></script>
 	<!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 </HEAD>
 <body>
+
+    <div id="log">    
+                    <p>
+                        <h2>EFFETTUA IL LOGIN</h2>
+                    </p>
+                        
+                
+        
+                    <form method="post" action="">
+                        <p>
+                            <label for="username"><span>Username</span>
+                                <p><input type="text" name="username" id="username" /></p>
+                            </label>
+                        </p>
+                        <p>
+                            <label for="password"><span>Password</span>
+                                <p><input type="password" name="password" id="password" /></p>
+                            </label>
+                        </p>
+                        
+                        <p>
+                            <input class="pulsantiForm" type="submit" name="invia" value="Login"/>
+                            <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm" value="Annulla"/>
+                        </p>
+                        
+                    </form>
+                        
+                    <p class="noReg">
+                        Non sei ancora registrato? <a href="registrati.php">Registrati qui</a>
+                    </p>
+                    
+        </div>	
 
     <div class="primoPiano">
 		               
@@ -30,7 +61,7 @@
                         </div>
 
                         <div class="pulsantiLog">
-                            <a class="pre-login" onclick="mostraLogin()">Accedi</a>
+                            <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
                             <a class="pre-login" href="Registrati.php">Registrati</a>
                             <a class="post-login" id="logout" href="logout.php">Logout</a>
                         </div>
@@ -213,7 +244,7 @@
 
     <div class="sfondo">
 		<video autoplay loop muted>
-		<source src="/storage/sfondoImg2.mp4" type="video/mp4"/>
+		<source src="/storage/sfondoImg.mp4" type="video/mp4"/>
 		</video>
 	</div>
 	
