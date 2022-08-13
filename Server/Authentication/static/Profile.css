@@ -1,0 +1,51 @@
+
+/* Stile Body */
+
+body {
+    background-color: #435165;
+}
+
+/* Stile Contenuto */
+
+.container {
+    width: auto;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
+    margin-top: 140px;
+}
+
+/* Stile Sezioni */
+
+.image,.info{
+    width: auto;
+    float: left;
+    margin-left: 5%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+}
+
+.roadmap-bar,.roadmap-view{
+    width: auto;
+    float: center;
+    margin-right: 2%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 5px solid coral;
+    border-color: coral;
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Stile Sezione Immagine */
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border: solid 2px red;
+    overflow: hidden;
+    border-radius: 50%;
+    border-width: 50%;
+}

@@ -32,7 +32,7 @@
 		<a href="/login" class="right">Sign Up/Login</a>
 	</div>
 
-	<!-- Contenuto Pag-->
+	<!-- Contenuto Pagina-->
 
 	<div class="container">
 
@@ -40,32 +40,29 @@
 
 		<div class="sign-up">
 			<h2> Registrazione </h2>
-			<form action="./register" method="post">
-				<input type="text" placeholder="Inserisci Nome Utente" name="username" id="username" required>
-				<input type="password" placeholder="Inserisci Password" name="password" id="password" minlength="8" required>
-				<input type="password" placeholder="Ripeti Password" name="confirmpassword" id="confirmpassword" required>
-				<input type="text" placeholder="Inserisci Email" name="email" id="email" required>
-				<label>
-					<p> Data di nascita </p>
-				</label>
-				<input type="date" name="birthdate" onclick="date_registration()" id="birthdate" required>
-				<input type="submit" value="Registrazione" onclick="validation_Password()">
-			</form>
+			<input class="form" type="text" placeholder="Inserisci Nome Utente" name="Username" id="username">
+			<input class="form" type="password" placeholder="Inserisci Password" name="Password" id="password">
+			<input class="form" type="password" placeholder="Ripeti Password" name="Confirmpassword"
+				id="confirmpassword">
+			<input class="form" type="text" placeholder="Inserisci Email" name="Email" id="email">
+
+			<p> Data di nascita </p>
+			<input class="form" type="date" name="Birthdate" onclick="date_registration()" id="birthdate">
+
+			<input class="form" type="submit" value="Registrazione" onclick="validation_registration()">
 		</div>
 
 		<!-- Sezione Login -->
 
 		<div class="login">
 			<h2> Login </h2>
-			<form action="./auth" method="post">
-				<input type="text" name="username" placeholder="Username" id="username" required>
-				<input type="password" name="password" placeholder="Password" id="password" minlength="8" required>
-				<input type="submit" value="Login">
-			</form>
+			<input class="form" type="text" name="Username_login" placeholder="Username" id="username_login">
+			<input class="form" type="password" name="Password_login" placeholder="Password" id="password_login">
+			<input class="form" type="submit" value="Login" onclick="validation_login()">
 		</div>
+
 	</div>
 
-	
 
 	<!-- Sezione Footer -->
 
