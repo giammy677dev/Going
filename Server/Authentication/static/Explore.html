@@ -2,45 +2,133 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <title>Home</title>
-    <link rel="stylesheet" href="/static/going.css">
-    <link rel="stylesheet" href="/static/explore.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+  <title>Home</title>
+  <link rel="stylesheet" href="/static/going.css">
+  <link rel="stylesheet" href="/static/explore.css">
 
 </head>
 
-<body>
-    
-  <div class="header">
-    <h1>GOING</h1>
-    <a href="/">
-        <img class="logo_nostro"src="/storage/logo.png" alt="logo">
-        </a>
-        <p>Where you want to go, the roads you want to take</p>
-    </div>
-
-    <div class="navbar">
-        <a href="/">Homepage</a>
-        <a href="/about">About</a>
-        <a href="/explore">Explore</a>
-        <a href="/create">Create</a>
-        <a href="/login" class="right">Sign Up/Login</a>
-
-    </div>
+<script>
+  //onclick su submit e poppa in result_rm e result_ut
+  /*
   
-  <div class="contenuto">
-    <p> Diego </p>
+  */
+</script>
+
+<body>
+
+  <div class="header">
+    <a href="/">
+      <h1>GOING</h1>
+
+
+      <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+
+      <p>Where you want to go, the roads you want to take</p>
+    </a>
+  </div>
+
+  <div class="navbar">
+    <a href="/">Explore</a>
+    <a href="/about">About</a>
+    <a href="/explore">Explore</a>
+    <a href="/create">Create</a>
+    <a href="/login" class="right">Sign Up/Login</a>
 
   </div>
+
+  <div class="contenuto">
+    <h2 style="text-align: center;">
+      Esplora il mondo attraverso le nostre Roadmap o con gli occhi dei nostri Roadmappers!!<br>
+      <div class="search-container">
+        <input type="text" placeholder="Inserisci una parola..." name="search">
+        <button type="submit"><img src="/storage/search.png" style="width:20px;height: 20px;"></button>
+      </div>
+    </h2>
+
+
+
+
+    <div class="container">
+      <div class="result_rm" id="result_rm">
+        <!--template rm result-->
+        <a href="/viewroadmap/(id_rm)" style="color: black;text-decoration: none;">
+          <div id="id_rm" name="id_rm" style="text-align: center;">
+            COME FARE I SORT SU DETERMINATI CAMPI???=>https://www.youtube.com/watch?v=8SL_hM1a0yo<br>
+            CAPIRE QUALI SONO I CAMPI DA FAR VEDERE!!<br>
+            --citta--utente creazionista--valutazione media con stelline--lista tag--numero poi--poi partenza e arrivo
+            MASSIMO DI 10 RISULTATI-->FARE UN MENU SOTTO PER LE PAGINE
+          </div>
+
+        </a>
+
+        <div class="pagination"><!--mettere centrato aaaaa e poi margini sballati-->
+          <a href="#">&laquo;</a>
+          <a href="#">1</a>
+          <a class="active" href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#">6</a>
+          <a href="#">&raquo;</a>
+        </div>
+
+
+
+
+      </div>
+
+      <div class="result_ut" id="result_ut">
+        <!--template utente result-->
+        <a href="/profile/(ut_us)" style="color: black;text-decoration: none;">
+          <div id="ut_us" name="ut_us" style=" text-align: center;">
+            <img src="" style="width:20px;height: 20px; margin-top: 7px;">//FOTO UTENTE// (ut_us)
+          </div>
+        </a>
+
+        <div class="pagination">
+          <a href="#">&laquo;</a>
+          <a href="#">1</a>
+          <a class="active" href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#">6</a>
+          <a href="#">&raquo;</a>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+  </div>
+
+
+
   <div class="footer">
-    
+
     <h4>
-        Copyright 2022
+      Copyright 2022
     </h4>
-    
+
     <h6>
-        Diego-Gian Marco-Marco-Matteo-Valerio
+      Diego-Gian Marco-Marco-Matteo-Valerio
     </h6>
   </div>
 </body>

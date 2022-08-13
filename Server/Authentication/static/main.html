@@ -6,21 +6,72 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <title>Home</title>
     <link rel="stylesheet" href="/static/going.css">
-    <link rel="stylesheet" href="/static/home.css">
+    <link rel="stylesheet" href="/static/main.css">
     <link rel="text/javascript" href="/static/prova.json">
     <!--
         COSE DA SISTEMARE IN MAIN
         --Stelle mezze, non funziona bene
-        --append uno dopo l'altra in coda, con come pila
+        
     -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
-
-    </script>
     <script>
 
+        // /*
+        //         function richiestaRMMain() {
+        //     const parole = ["citta", "start", "finish", "durata", "star"]
+        //     /*qua richiesta per avere alcune roadmap*/
 
-        function myFunc() {
+        //     /*var username = document.getElementById("username1").value;
+        //     var password = document.getElementById("password1").value;*/
+        //     /*var xhr = new XMLHttpRequest();
+        //     xhr.open("GET", '/ricercaMain', true);
+        //     xhr.onload = function (event) {
+        //         const r = JSON.parse(event.target.responseText);
+
+        //         if (r.ok == true) {
+
+        //             /*
+        //             console.log(r.data[i].citta)
+        //             r.data.lenght
+        //             */
+        //             for (var i = 0; i <r.data.lenght; i++) {
+        //                 let citta = r.data[i].citta;
+        //                 let start = r.data[i].start;
+        //                 let finish = r.data[i].finish;
+        //                 let durata = r.data[i].durata;
+        //                 let media_valutazioni = r.data[i].media_valutazioni;
+
+        //                 let j = i + 1
+        //                 cit = parole[0].concat(j)
+        //                 st = parole[1].concat(j)
+        //                 fn = parole[2].concat(j)
+        //                 dur = parole[3].concat(j)
+        //                 stel = parole[4].concat(j)
+
+        //                 document.getElementById(cit).innerText = citta;
+        //                 document.getElementById(st).innerText = start;
+        //                 document.getElementById(fn).innerText = finish;
+        //                 document.getElementById(dur).innerText = durata;
+        //                 funcStar(media_valutazioni, stel);
+        //             }
+        //         }
+        //         else {
+        //             alert("login non avvenuto con successo")
+        //         }
+        //     }
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+        //     xhr.send();
+        //     /*xhr.send(JSON.stringify({
+        //         username: username,
+        //         password: password
+        //     }))*/
+
+        // }
+        
+        function ricercaMain(){
+            
+        }
+
+        function richiestaRMMain() {
             const parole = ["citta", "start", "finish", "durata", "star"]
             /*qua richiesta per avere alcune roadmap*/
             fetch("/static/prova.json")
@@ -47,7 +98,6 @@
                         document.getElementById(dur).innerText = durata;
                         funcStar(media_valutazioni, stel);
 
-                        /*document.getElementById("media_valutazioni1").innerText = media_valutazioni;*/
                     }
 
                 })
@@ -59,13 +109,13 @@
             let ok = true
             console.log(ok, ":inizio")
             var isInt = Number.isInteger(media_valutazioni)
-            if (isInt === false) {
+            if (isInt == false) {
                 ok = false
                 console.log(ok, ":non intero")
 
             }
 
-            if (ok === false) {
+            if (ok == false) {
                 console.log(ok, ":controllo se + di 0.5")
 
                 const decimalStr = media_valutazioni.toString().split('.')[1];
@@ -83,11 +133,11 @@
             console.log(media_valutazioni, " : ", stel)
             for (var k = 0; k < media_valutazioni; k++) {
 
-                stella.insertAdjacentHTML("afterend", html_code)
+                stella.insertAdjacentHTML("beforeend", html_code)
             }
-            if (ok === false) {
+            if (ok == false) {
                 const html_stella_mezza = '<img src="/storage/half_star.png" style="width:25px;height: 30px;">'
-                stella.insertAdjacentHTML("afterend", html_stella_mezza)
+                stella.insertAdjacentHTML("beforeend", html_stella_mezza)
                 console.log(ok, ":qua per una mezza stella")
 
             }
@@ -96,21 +146,24 @@
                 console.log(ok, ":qua per stella vuota")
 
                 const html_stella_vuota = '<img src="/storage/star_vuota.png" style="width:25px;height: 30px;">'
-                stella.insertAdjacentHTML("afterend", html_stella_vuota)
+                stella.insertAdjacentHTML("beforeend", html_stella_vuota)
             }
         }
     </script>
 
 </head>
 
-<body onload="myFunc()">
+<body onload="richiestaRMMain()">
 
     <div class="header">
-        <h1>GOING</h1>
         <a href="/">
+            <h1>GOING</h1>
+
+
             <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+
+            <p>Where you want to go, the roads you want to take</p>
         </a>
-        <p>Where you want to go, the roads you want to take</p>
     </div>
 
     <div class="navbar">
@@ -131,11 +184,11 @@
             <div class="column2">
                 <h2>GOING dove vuoi!</h2>
 
-                <form class="research">
-                    <input type="text" name="main_search" id="main_search" name="search"
-                        placeholder="Cerca Roadmap o Utenti" method="get">
-                    <input type="submit" value="Avvia Ricerca">
-                </form>
+
+                <input type="text" name="main_search" id="main_search" placeholder="Cerca Roadmap o Utenti"
+                    method="get">
+                <input type="submit" value="Avvia Ricerca" onclick="ricercaMain()">
+
 
                 <img src="/storage/walking.gif" alt="walking" style="width:70%;height: 70%;">
 

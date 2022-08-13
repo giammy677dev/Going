@@ -7,7 +7,7 @@
         "start": "castello dfdsf",
         "finish": "castello mammt",
         "durata": "3 h 2 m",
-        "media_valutazioni":3
+        "media_valutazioni":1
     },
     {
         "id":2,
@@ -15,7 +15,7 @@
         "start": "castello AO",
         "finish": "altro castello diAO",
         "durata": "1 h 2 m",
-        "media_valutazioni":4
+        "media_valutazioni":2
     },
     {   
         "id":3,
@@ -23,7 +23,7 @@
         "start": "castello ya",
         "finish": "castello arrivo",
         "durata": "2 h 9 m",
-        "media_valutazioni":5
+        "media_valutazioni":3
     },
     {   
         "id":4,
@@ -31,7 +31,7 @@
         "start": "castello torino",
         "finish": "castello arrivo a torino",
         "durata": "1 h 5 m",
-        "media_valutazioni":2
+        "media_valutazioni":4
     }
 ]
 

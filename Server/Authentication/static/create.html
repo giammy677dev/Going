@@ -4,20 +4,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1">
-  <title>Home</title>
+  <title>Create</title>
   <link rel="stylesheet" href="/static/going.css">
   <link rel="stylesheet" href="/static/create.css">
 
 </head>
 
-<body>
+<script src="/static/create.js" type="text/javascript"></script>
+<script>
+
+  function myFunc() {
+    //come prendere valore radiobutton di visibilità
+    var my = document.querySelector('input[name="visibilita"]:checked').value;
+    console.log(my)
+    //come prendere valore/i select list di tag
+    var selectedValue = document.getElementById("lista_tag").selectedOptions;
+    var values = Array.from(selectedValue).map(({ value }) => value);
+    console.log(values);
+  }
+  function ricercaCitta() {
+    /*
+    mappa da richiedere con dati in campo id="citta_search"
+    */
+  }
+ 
+  function creationRM() {
+
+  }
+
+</script>
+
+<body onload="tagList()">
 
   <div class="header">
-    <h1>GOING</h1>
     <a href="/">
+      <h1>GOING</h1>
+
+
       <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+
+      <p>Where you want to go, the roads you want to take</p>
     </a>
-    <p>Where you want to go, the roads you want to take</p>
   </div>
 
   <div class="navbar">
@@ -30,42 +57,101 @@
   </div>
 
   <div class="contenuto">
+    <br>--DA FARE--<br>
+    <br>--SERVE API GOOGLE MAP PER--<br>
+
+    1)barra ricerca città permette onclick mappa su quella citta<br>
+    2)lista stage onclick mappa con durata modificabile<br>
+    3)mappa onclick ma non marker->new stage<br>
+    4)new stage deve avere un box ad hoc per tutti campi stage e tasto di submit
+    <br>
     <h2 style="text-align:center">
-      Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) !!!</div>
+      Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) </div>
     </h2>
 
-    <div class="creation">
-      <form>
+    <div class="container_up">
+
+      <div class="title_vis">
         <label>
           Titolo
-          <input type="text" name="titolo" id="titolo" required>
-        </label><br>
-        <label>
-          Descrizione
-          <input type="text" name="descrizione" id="descrizione" required>
+          <input type="text" name="titolo" id="titolo" style="width: 75%;" required>
         </label><br>
         <label class="visibilita">Scegli la visibilita<br>
+
           <input type="radio" id="pub" name="visibilita" value="Pubblica" checked>
           <label for="pub">Pubblica</label><br>
           <input type="radio" id="priv" name="visibilita" value="Privata">
           <label for="priv">Privata</label><br>
         </label>
-      </form>
+
+
+      </div>
+
+      <div class="description">
+        <label>
+          Descrizione<br>
+          <input type="text" name="descrizione" id="descrizione" required>
+        </label><br>
+
+      </div>
+
     </div>
-    -- DA FARE<br>
+    <h2 style="text-align:center">
+      Cerca la città in cui vuoi fare una bella Roadmap<br>
+      <input type="text" name="citta_search" id="citta_search" placeholder="">
+      <input type="submit" value="Avvia Ricerca" onclick="ricercaCitta()">
+    </h2>
 
-    -- centrare blocco ma poi da destra incolonnato<br>
-    -- inserisci descrizione con blocco testo dinamico<br>
-    --barra ricerca città e onlcik mappa li<br>
-    --mappa dove<br>
-    --lista stage dove e durata modificabile<br>
-    --mappa->new stage<br>
-    --spazietto per durata RM totale, come somma durata stages+piedi<br>
-    --submit globale come?<br>
+    <div class="container_middle">
+      <div class="mappa_rm">
+        Mappa qua spauna
+      </div>
+
+      <div class="lista">
+        <h2 style="text-align:center">
+          Lista stage
+
+        </h2>
+        <div class="lista_stage">
+          --elenco puntatato da far poppare
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container_bottom">
+      <div class="hidden_new_stage">
+        Hidden new stage
 
 
 
-    --submit
+      </div>
+      <div class="tag_list">
+        <label for="lista_tag">Aggiungi tag alla Roadmap <br>(se vuoi
+          fare una scelta multipla usa Ctrl su Windows o Command su Mac)</label><br>
+        <select name="lista_tag" id="lista_tag" multiple>
+
+
+        </select>
+      </div>
+      <div class="submit_global">
+
+        <div class="durata">
+          Durata complessiva: <div class="somma_totale">valore qua di somma totale</div>
+        </div>
+
+        <input type="submit" value="Crea Roadmap!" onclick="creationRM()">
+
+      </div>
+
+    </div>
+
+
+
+
+
+    
+
   </div>
   <div class="footer">
 
