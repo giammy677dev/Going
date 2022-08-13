@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="/static/create.css">
 
 </head>
-
 <script src="/static/create.js" type="text/javascript"></script>
+<script type="module" src="/static/create_roadmap.js"></script>
+<link rel="stylesheet" href="/static/roadmap.css">
 <script>
 
   function myFunc() {
@@ -104,7 +105,18 @@
 
     <div class="container_middle">
       <div class="mappa_rm">
-        Mappa qua spauna
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkhHdG46Po1AyvEnEsk8PALxscMRpEYCs&callback=initMap&v=weekly"
+        defer></script>
       </div>
 
       <div class="lista">

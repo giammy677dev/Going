@@ -1,5 +1,6 @@
 const DAO = require('./DAO.js');
 const md5 = require('md5');
+const axios = require('axios');
 
 class RequestController {
 
@@ -19,7 +20,8 @@ class RequestController {
         }
     }
 
-    async login(username, password) {
+    async login(username, password)
+    {
         //Ensure the input fields exists and are not empty
         if (username && password) {
             password = md5(password);
@@ -33,7 +35,8 @@ class RequestController {
         }
     }
 
-    async searchUser(username) {
+    async searchUser(username)
+    {
         if (!username || username == null) { //username nullo
             return { ok: false, error: -4, data: { username: '' } }
         }

@@ -10,6 +10,7 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -56,6 +57,7 @@ class HTTPinterface {
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
+        this.app.get('/getMap', this.getMap.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -92,8 +94,14 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
+    async getMap(req, res)
+    {
+        const r = await this.controller.getMap();
+        return res.send(r);
+    }
 
-    async logout(req, res) {
+    async logout(req, res)
+    {
         if(req.body.username == req.session.username){ //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
@@ -104,12 +112,14 @@ class HTTPinterface {
         //nessuna chiamata al DB.
     }
 
-    async searchUser(req, res) {
+    async searchUser(req, res)
+    {
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }
 
-    async main_page(req, res) {
+    async main_page(req, res)
+    {
         if (req.user) {
             console.log('user session is alive')
         }
