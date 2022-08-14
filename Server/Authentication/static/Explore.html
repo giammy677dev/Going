@@ -92,6 +92,9 @@
           }
           //if(r.data.results.lenght)
           if (result.length > 0) {
+            const html_code = '<div id="result">Risultati: '+result.length+'!!!</div>'
+            const posto = document.getElementById("items-user");
+            posto.insertAdjacentHTML("beforeend", html_code)
             for (var i = 0; i < result.length; i++) {
               const html_code = '<a class="link_user" href="/user/' + result[i].username + '"><div class="item-user" ><img src="/storage/' + result[i].username + '.jpg" style="width:20px;height: 20px;"><br>' + result[i].username + '<br></div></a>'
               const posto = document.getElementById("items-user");
