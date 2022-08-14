@@ -99,7 +99,7 @@
             }
           }
           else {
-            const html_code = '<div id="result">Nothing!!!</div>'
+            const html_code = '<div id="result">Nothing con username '+ricerca+'!!!</div>'
             const posto = document.getElementById("items-user");
             posto.insertAdjacentHTML("beforeend", html_code)
           }
@@ -158,8 +158,7 @@
       <div class="search-container">
         <input type="text" placeholder="Inserisci una qualsiasi parola, numero, tag..." name="search" id="search"
           required>
-        <button type="submit"><img src="/storage/search.png" style="width:20px;height: 20px;"
-            onclick="myFunc()"></button>
+        <button type="submit" onclick="myFunc()"><img src="/storage/search.png" style="width:20px;height: 20px;"></button>
       </div>
     </h2>
 
