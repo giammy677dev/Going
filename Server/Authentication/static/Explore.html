@@ -16,39 +16,8 @@
   
   */
 
-  /*function myFunc() {
-    const parole = ["citta", "start", "finish", "durata", "star"]
-  
-    fetch("/static/prova.json")
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        for (var i = 0; i < data.length; i++) {
-          let citta = data[i].citta;
-          let start = data[i].start;
-          let finish = data[i].finish;
-          let durata = data[i].durata;
-          let media_valutazioni = data[i].media_valutazioni;
 
-          let j = i + 1
-          cit = parole[0].concat(j)
-          st = parole[1].concat(j)
-          fn = parole[2].concat(j)
-          dur = parole[3].concat(j)
-          stel = parole[4].concat(j)
-
-          document.getElementById(cit).innerText = citta;
-          document.getElementById(st).innerText = start;
-          document.getElementById(fn).innerText = finish;
-          document.getElementById(dur).innerText = durata;
-          funcStar(media_valutazioni, stel);
-
-        }
-
-      })
-
-  }*/
-  function myFunc() {
+  function searchUser() {
     var ricerca = document.getElementById("search").value;
 
     if (ricerca == "") {
@@ -64,36 +33,37 @@
 
         if (r.ok == true) {
           alert("ok db ")
-         
 
+          element = document.getElementById("numero");
+          if (element != null) {
+            element.outerHTML = "";
+          }
 
-
-          
           var elements = document.getElementsByClassName("item-user");
           console.log(elements.length)
-          
+
           for (var i = 0; i < elements.length; i++) {
             console.log(elements[i])
             console.log(i)
-            elements[i].innerHTML=""
-            
+            elements[i].innerHTML = ""
+
           }
           elements = document.getElementsByClassName("link_user");
           for (var i = 0; i < elements.length; i++) {
             console.log(elements[i])
             console.log(i)
-            elements[i].innerHTML=""
-            
+            elements[i].innerHTML = ""
+
           }
-       
+
           element = document.getElementById("result");
           if (element != null) {
             element.outerHTML = "";
           }
-          //if(r.data.results.lenght)
+
           if (result.length > 0) {
-            const html_code = '<div id="result">Risultati: '+result.length+'!!!</div>'
-            const posto = document.getElementById("items-user");
+            const html_code = '<div id="numero" style="text-align: center; font-size:25px"><h4>Risultati utenti ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
+            const posto = document.getElementById("pop_res");
             posto.insertAdjacentHTML("beforeend", html_code)
             for (var i = 0; i < result.length; i++) {
               const html_code = '<a class="link_user" href="/user/' + result[i].username + '"><div class="item-user" ><img src="/storage/' + result[i].username + '.jpg" style="width:20px;height: 20px;"><br>' + result[i].username + '<br></div></a>'
@@ -102,11 +72,11 @@
             }
           }
           else {
-            const html_code = '<div id="result">Nothing con username '+ricerca+'!!!</div>'
+            const html_code = '<div id="result" style="font-size:25px">Nothing con username ' + ricerca + '!!!</div>'
             const posto = document.getElementById("items-user");
             posto.insertAdjacentHTML("beforeend", html_code)
           }
-          //location.href = "/profile";
+
         }
         else if (r.ok == false) {
           console.log(r)
@@ -116,9 +86,7 @@
 
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send()
-      /*xhr.send(JSON.stringify({
-        ricerca: username,
-      }));*/
+
     }
 
 
@@ -151,31 +119,23 @@
 
   <div class="contenuto">
     <br>--DA FARE--<br>
-
-
-
-    1)scroll laterale verso dx anche per gli utenti<br>
+    1)dato db con roadmap->onclick searcRoamap()<br>
 
     <h2 style="text-align: center;">
       Esplora il mondo attraverso le nostre Roadmap o con gli occhi dei nostri Roadmappers!!<br>
       <div class="search-container">
         <input type="text" placeholder="Inserisci una qualsiasi parola, numero, tag..." name="search" id="search"
           required>
-        <button type="submit" onclick="myFunc()"><img src="/storage/search.png" style="width:20px;height: 20px;"></button>
+        <button type="submit" onclick="searchUser()"><img src="/storage/search.png"
+            style="width:20px;height: 20px;"></button>
       </div>
     </h2>
-
-
-
-
-
-
 
     <div class="grid-container">
       <main class="grid-item main">
 
         <div class="items" id="items">
-          Template RM (onload non c'è ne sono, poi con onclick tasto, query e si costruiscono)->
+          Template RM->
           <a href="/roadmpam/id_roadmap">
             <div class="item ">
 
@@ -193,12 +153,16 @@
       </main>
     </div>
 
+    <div id="pop_res">
+
+    </div>
 
     <div class="grid-container-user">
+
       <main class="grid-item main-user">
 
         <div class="items-user" id="items-user">
-          Template USER->
+
 
 
         </div>
