@@ -9,12 +9,13 @@ function initMap() {
     var submitBtn = document.createElement('input');
     submitBtn.type = "button"
     submitBtn.value = "SUBMIT ROADMAP"
-    submitBtn.addEventListener('click', function () {
+   // submitBtn.addEventListener('click', function () {
         submitRoadmap(roadmap);
     });
-    document.getElementById('submit_btn').appendChild(submitBtn);
+    //document.getElementById('submit_btn').appendChild(submitBtn);
     new ClickEventHandler(map, origin);
 }
+
 function isIconMouseEvent(e) {
     return "placeId" in e;
 }
