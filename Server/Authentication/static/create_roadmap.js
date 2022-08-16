@@ -1,6 +1,10 @@
+let customMarker = './storage/markerDiego.png'
+var db_markers=[];
+var map;
+
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
-    var map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: 18,
         center: origin
     });
@@ -9,12 +13,54 @@ function initMap() {
     var submitBtn = document.createElement('input');
     submitBtn.type = "button"
     submitBtn.value = "SUBMIT ROADMAP"
-   // submitBtn.addEventListener('click', function () {
+    submitBtn.addEventListener('click', function () {
         submitRoadmap(roadmap);
     });
-    //document.getElementById('submit_btn').appendChild(submitBtn);
+    document.getElementById('submit_btn').appendChild(submitBtn);
+
+    map.addListener('zoom_changed', function () {
+        var zoom = map.getZoom();
+        console.log(zoom)
+        // iterate over markers and call setVisible
+        for (var i = 0; i < db_markers.length; i++) {
+            if (zoom <= 5) {
+                db_markers[i].setVisible(false);
+            }
+            else {
+                db_markers[i].setVisible(true);
+            }
+        }
+    });
+    // Create a <script> tag and set the USGS URL as the source.
+    const script = document.createElement("script");
+
+    // This example uses a local copy of the GeoJSON stored at
+    // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+    script.src =
+        "https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js";
+    document.getElementsByTagName("head")[0].appendChild(script);
+
     new ClickEventHandler(map, origin);
 }
+
+// Loop through the results array and place a marker for each set of coordinates.
+const eqfeed_callback = function (results) {
+    for (let i = 0; i < results.features.length; i++) {
+        console.log("test");
+        const coords = results.features[i].geometry.coordinates;
+        const latLng = new google.maps.LatLng(coords[1], coords[0]);
+
+        let marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            icon: customMarker,
+            visible: false
+        });
+
+        db_markers.push(marker); //Aggiungo il marker all'array markers
+    }
+}
+
 
 function isIconMouseEvent(e) {
     return "placeId" in e;
@@ -221,3 +267,4 @@ var ClickEventHandler = /** @class */ (function () {
     return ClickEventHandler;
 }());
 window.initMap = initMap;
+window.eqfeed_callback = eqfeed_callback;
