@@ -4,9 +4,9 @@ var markers = [];
 
 // Initialize and add the map
 function initMap() {
-    // The location of Uluru
+    // The location of Italy
     const italy = { lat: 40.733334, lng: 14.533333 };
-    // The map, centered at Uluru
+    // The map, centered at Italy
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 4,
         center: italy,
@@ -71,7 +71,7 @@ const eqfeed_callback = function (results) {
             visible: false
         });
 
-        markers.push(marker);
+        markers.push(marker); //Aggiungo il marker all'array markers
     }
 }
 
