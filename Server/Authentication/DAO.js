@@ -22,7 +22,6 @@ class DAO {
             // Execute SQL query that'll insert the account in the database
             await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin) VALUES (?, ?, ?, ?, 0)', [username, password, email, birthdate]);
             return [true, 0];
-            console.log("QUERY finisce")
         } catch (error) {
             return [false, error.errno];
         }
@@ -33,7 +32,7 @@ class DAO {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT * FROM utente WHERE username = ? AND password = ?', [username, password]);
+            let selection = await connection.query('SELECT * FROM utenteregeistrato WHERE username = ? AND password = ?', [username, password]);
             let results = selection[0];
             // If the account exists
             if (results.length > 0) {
@@ -52,7 +51,7 @@ class DAO {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
-            var result = await connection.query('SELECT username FROM utente WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            var result = await connection.query('SELECT username FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
             return [true, 0, {results: result[0]}];
         } catch (error) {
             return [false, error.errno, {results: []}];
