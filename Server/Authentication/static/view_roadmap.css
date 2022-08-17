@@ -1,0 +1,106 @@
+.descrizione{
+  text-align: left;
+}
+
+/* Stile Punteggio */
+
+.rate {
+  float: left;
+  height: 46px;
+  padding: 0 10px;
+}
+
+.rate:not(:checked)>input {
+  position: absolute;
+  top: -9999px;
+}
+
+.rate:not(:checked)>label {
+  float: right;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 30px;
+  color: #ccc;
+}
+
+.rate:not(:checked)>label:before {
+  content: url(/storage/cocktailVuotoPiccolo.png);
+}
+
+.rate>input:checked~label {
+  content: url(/storage/cocktailPienoPiccolo.png);
+}
+
+/* Stile Cuore */
+
+.heart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 50vh;
+  padding: 20px 15px;
+}
+
+.heart-like-button {
+  position: relative;
+  width: 20px;
+  height: 10px;
+}
+
+.heart-like-button:before {
+  position: absolute;
+  top: 0;
+  left: 80px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+  width: 80px;
+  height: 125px;
+  border-radius: 40px 40px 0 0;
+  background-color: #574136;
+  content: "";
+  cursor: pointer;
+  transition: background .4s;
+}
+.heart-like-button:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin :100% 100%;
+  width: 80px;
+  height: 125px;
+  border-radius: 40px 40px 0 0;
+  background-color: #574136;
+  content: "";
+  cursor: pointer;
+  transition: background .4s;
+}
+
+.heart-like-button.liked::before,
+.heart-like-button.liked::after {
+  background-color: #d65076;
+}
+.heart-like-button.liked {
+  animation: liked .4s ease;
+}
+@keyframes liked {
+  0% {
+    transform: scale(.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media screen and (max-width: 480px) {
+  .heart {
+    height: auto;
+  }
+}
