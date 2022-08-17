@@ -36,20 +36,14 @@
         }
 
         var elements = document.getElementsByClassName("item-user");
-        console.log(elements.length)
-
         for (var i = 0; i < elements.length; i++) {
-          console.log(elements[i])
-          console.log(i)
           elements[i].innerHTML = ""
 
         }
+
         elements = document.getElementsByClassName("link_user");
         for (var i = 0; i < elements.length; i++) {
-          console.log(elements[i])
-          console.log(i)
           elements[i].innerHTML = ""
-
         }
 
         element = document.getElementById("result");
@@ -88,7 +82,7 @@
     var ricerca = document.getElementById("barra_ricerca").value;
 
     if (ricerca == "") {
-      alert(" campi  nullo")
+      alert(" campo  nullo")
     }
     else {
       richiestaDBUtente(ricerca), richiestaDBRoadmap(ricerca)
@@ -98,12 +92,10 @@
   function fromMain() {
 
     const queryString = window.location.search;
-    console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     const ricerca = urlParams.get('ricerca')
 
     if (ricerca != null) {
-      console.log(ricerca);
       document.getElementById("barra_ricerca").value = ricerca;
       richiestaDBUtente(ricerca)
       richiestaDBRoadmap(ricerca)
