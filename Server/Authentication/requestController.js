@@ -46,6 +46,12 @@ class RequestController {
         const data = await this.dao.getExNovoStages();
         return { ok: data[0], error: data[1], data: data[2]}
     }
+
+    async getDataUser(id) {
+        const data = await this.dao.getDataUser(id);
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
 }
 
 module.exports = RequestController;

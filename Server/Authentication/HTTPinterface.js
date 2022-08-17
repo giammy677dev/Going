@@ -59,7 +59,8 @@ class HTTPinterface {
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
-        this.app.post('/getExNovoStages', this.getExNovoStages.bind(this))
+        this.app.post('/getExNovoStages', this.getExNovoStages.bind(this));
+        this.app.get('/getDataUser', this.getDataUser.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -89,6 +90,8 @@ class HTTPinterface {
         if (r.ok) {
             req.session.loggedin = true;
             req.session.username = r.data.username;
+            req.session.id = r.data.id;
+            req.session.isAdmin = r.data.isAdmin;
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
@@ -117,11 +120,19 @@ class HTTPinterface {
         return res.send(r);
     }
 
+    async getDataUser(req, res) {
+        if (req.session.loggedin) {
+            const r = await this.controller.getDataUser(req.session.id);
+            console.log(r)
+            return res.send(r);
+        } 
+    }
+
     async searchUser(req, res) {
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }
-
+    
     async main_page(req, res)
     {
         if (req.user) {

@@ -73,6 +73,17 @@ class DAO {
             return [false, error.errno, {placeId: '', nome: ''}];
         }
     }
+
+    async getDataUser(id) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT * FROM utenteregistrato WHERE id = ?', [id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, {results: []}];
+        }
+    }
 }
 
 module.exports = DAO
