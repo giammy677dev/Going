@@ -53,7 +53,7 @@ function getExNovoStages() {
 }
 
 // Loop through the results array and place a marker for each set of coordinates.
-function drawExNovoStages (results) {
+function drawExNovoStages(results) {
     for (let i = 0; i < results.length; i++) {
         const latitudine = results[i].latitudine;
         const longitudine = results[i].longitudine;
@@ -179,16 +179,24 @@ var ClickEventHandler = /** @class */ (function () {
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
             stage_index++;
-
-            stage.name = StageName.value;
-            stage.durata = durataElement.value;
+            /*Inserire ex novo*/
+            stage.index = stage_index
+            stage.latitudine = latLng.lat()
+            stage.longitudine = latLng.lng()
+            stage.nome = StageName.value;
+            stage.durata = parseInt(durataElement.value);
+            stage.isExNovo = 1
             console.log(PhotoFile)
-            stage.photo = PhotoFile.value;
+            stage.fotoURL = PhotoFile.value;
             roadmap.push(stage)
-            stage.formatted_address = -1;
+            stage.localita = -1;
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
+            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+
+            var prec = parseInt(document.getElementById("somma_totale").innerText)
+            prec = stage.durata + prec
+            document.getElementById("somma_totale").innerText = prec
 
             me.infowindow.close();
         });
@@ -225,17 +233,26 @@ var ClickEventHandler = /** @class */ (function () {
 
         inputElement.addEventListener('click', function () {
             markers[stage_index].setVisible(true);
-            markers[stage_index].setTitle(stage.name)
+            markers[stage_index].setTitle(stage.nome)
             stage_index++;
-
-            stage.durata = parseInt(durataElement.value); //error coverage = 1 ?
-            stage.latLng = latLng;
-            stage.place_id = placeId;
+            /*inserire cose nodo gia esistente*/
+            
+            stage.durata = parseInt(durataElement.value);
+            stage.latitudine = latLng.lat();
+            stage.longitudine = latLng.lng();
+            stage.placeId = placeId;
+            stage.isExNovo = 0
             console.log(stage)
             roadmap.push(stage);
 
             //addToRoadmapVisual(stage);
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
+            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+
+
+            var prec = parseInt(document.getElementById("somma_totale").innerText)
+            prec = stage.durata + prec
+            document.getElementById("somma_totale").innerText = prec
+
             me.infowindow.close();
         });
 
@@ -250,11 +267,11 @@ var ClickEventHandler = /** @class */ (function () {
                 place &&
                 place.geometry &&
                 place.geometry.location) {
-                stage.name = place.name;
-                stage.formatted_addess = place.formatted_address;
+                stage.nome = place.name;
+                stage.localita = place.formatted_address;
                 stage.website = place.website;
                 console.log(place.photos)
-                stage.photo = place.photos[0].getUrl();
+                stage.fotoURL = place.photos[0].getUrl();
             }
         });
 
