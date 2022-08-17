@@ -32,7 +32,7 @@ class DAO {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT * FROM utenteregeistrato WHERE username = ? AND password = ?', [username, password]);
+            let selection = await connection.query('SELECT * FROM utenteregistrato WHERE username = ? AND password = ?', [username, password]);
             let results = selection[0];
             // If the account exists
             if (results.length > 0) {
