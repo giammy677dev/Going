@@ -42,8 +42,8 @@ class HTTPinterface {
         }));
 
         //front end pages
-        this.app.get('/', this.main_page.bind(this)); //MainPage
-        //this.app.get('/', this.home_page.bind(this)); //HomePage
+        //this.app.get('/', this.main_page.bind(this)); //MainPage
+        this.app.get('/', this.home_page.bind(this)); //HomePage
         this.app.get('/about', this.about_page.bind(this)); //about
         this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
