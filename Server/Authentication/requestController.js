@@ -19,13 +19,11 @@ class RequestController {
         }
     }
 
-    async login(username, password)
-    {
+    async login(username, password) {
         //Ensure the input fields exists and are not empty
         if (username && password) {
             password = md5(password);
             const data = await this.dao.login(username, password);
-            console.log(data)
             console.log({ ok: data[0], error: data[1], data: data[2] })
             return { ok: data[0], error: data[1], data: data[2] }
         }
@@ -34,8 +32,7 @@ class RequestController {
         }
     }
 
-    async searchUser(username)
-    {
+    async searchUser(username) {
         if (!username || username == null) { //username nullo
             return { ok: false, error: -4, data: { username: '' } }
         }
@@ -43,6 +40,11 @@ class RequestController {
             const data = await this.dao.searchUser(username);
             return { ok: true, error: data[1], data: data[2] };
         }
+    }
+
+    async getExNovoStages() {
+        const data = await this.dao.getExNovoStages();
+        return { ok: data[0], error: data[1], data: data[2]}
     }
 }
 

@@ -1,6 +1,6 @@
 var map;
 let customMarker = './storage/markerDiego.png'
-var db_markers=[];
+var db_markers = [];
 
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
@@ -30,25 +30,34 @@ function initMap() {
             }
         }
     });
-    
-    // Create a <script> tag and set the USGS URL as the source.
-    const script = document.createElement("script");
 
-    // This example uses a local copy of the GeoJSON stored at
-    // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
-    script.src =
-        "https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js";
-    document.getElementsByTagName("head")[0].appendChild(script);
-
+    getExNovoStages(); //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
     new ClickEventHandler(map, origin);
 }
 
+function getExNovoStages() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/getExNovoStages', true);
+    xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+        if (r.ok == true) {
+            drawExNovoStages(r.data) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
+        }
+        else if (r.ok == false) {
+            alert("Nodi non trovati")
+        }
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(null);
+}
+
 // Loop through the results array and place a marker for each set of coordinates.
-const eqfeed_callback = function (results) {
-    for (let i = 0; i < results.features.length; i++) {
-        console.log("test");
-        const coords = results.features[i].geometry.coordinates;
-        const latLng = new google.maps.LatLng(coords[1], coords[0]);
+function drawExNovoStages (results) {
+    for (let i = 0; i < results.length; i++) {
+        const latitudine = results[i].latitudine;
+        const longitudine = results[i].longitudine;
+        const latLng = new google.maps.LatLng(latitudine, longitudine);
 
         let marker = new google.maps.Marker({
             position: latLng,
@@ -60,7 +69,6 @@ const eqfeed_callback = function (results) {
         db_markers.push(marker); //Aggiungo il marker all'array markers
     }
 }
-
 
 function isIconMouseEvent(e) {
     return "placeId" in e;
@@ -151,7 +159,7 @@ var ClickEventHandler = /** @class */ (function () {
         inputElement.type = "button"
         inputElement.value = "Aggiungi stage"
         spn.appendChild(inputElement);
-        
+
         markers[stage_index] = new google.maps.Marker({
             position: latLng,
             map: this.map,
@@ -167,7 +175,7 @@ var ClickEventHandler = /** @class */ (function () {
         });
 
         inputElement.addEventListener('click', function () {
-            
+
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
             stage_index++;
@@ -181,7 +189,7 @@ var ClickEventHandler = /** @class */ (function () {
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
             document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
-            
+
             me.infowindow.close();
         });
 
@@ -262,4 +270,3 @@ var ClickEventHandler = /** @class */ (function () {
 }());
 
 window.initMap = initMap;
-window.eqfeed_callback = eqfeed_callback;

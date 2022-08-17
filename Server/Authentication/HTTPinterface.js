@@ -59,6 +59,7 @@ class HTTPinterface {
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
+        this.app.post('/getExNovoStages', this.getExNovoStages.bind(this))
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -82,12 +83,10 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
     }
 
-    async login(req, res)
-    {
+    async login(req, res) {
         const r = await this.controller.login(req.body.username, req.body.password);
         console.log(r)
-        if (r.ok)
-        {
+        if (r.ok) {
             req.session.loggedin = true;
             req.session.username = r.data.username;
             //req.session.userType = 0, 1, 2, 3.  
@@ -95,14 +94,13 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
-    async getMap(req, res)
-    {
+
+    async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
     }
 
-    async logout(req, res)
-    {
+    async logout(req, res) {
         if(req.body.username == req.session.username){ //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
@@ -113,8 +111,13 @@ class HTTPinterface {
         //nessuna chiamata al DB.
     }
 
-    async searchUser(req, res)
-    {
+    async getExNovoStages(req, res) {
+        const r = await this.controller.getExNovoStages();
+        console.log(r)
+        return res.send(r);
+    }
+
+    async searchUser(req, res) {
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }

@@ -28,16 +28,16 @@ class DAO {
     }
 
     async login(username, password) {
-        const default_dict={username: ''}
+        const default_dict = {id: '', username: '', isAdmin: 0}
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT * FROM utenteregeistrato WHERE username = ? AND password = ?', [username, password]);
+            let selection = await connection.query('SELECT * FROM utenteregistrato WHERE username = ? AND password = ?', [username, password]);
             let results = selection[0];
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
-                return [true, 0, {username: results[0].username}];
+                return [true, 0, {id: results[0].id, username: results[0].username, isAdmin: results[0].isAdmin}];
             }
             else {
                 return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
@@ -55,6 +55,22 @@ class DAO {
             return [true, 0, {results: result[0]}];
         } catch (error) {
             return [false, error.errno, {results: []}];
+        }
+    }
+
+    async getExNovoStages() {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT * FROM stage WHERE isExNovo = 1');
+            let results = selection[0];
+            if (results.length > 0) {
+                return [true, 0, results];
+            }
+            else {
+                return [false, -5, {placeId: '', nome: ''}]; //Non ci sono nodi ex novo nel database
+            }
+        } catch (error) {
+            return [false, error.errno, {placeId: '', nome: ''}];
         }
     }
 }
