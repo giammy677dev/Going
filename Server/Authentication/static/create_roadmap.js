@@ -103,12 +103,10 @@ var ClickEventHandler = /** @class */ (function () {
             event.stop();
             console.log(event);
             if (event.placeId) {
-
                 this.openAddBox(event.placeId, event.latLng);
             }
         }
         else {
-            //console.log("")
             this.openCreateBox(event.latLng); //ex novo node
         }
     };
@@ -138,7 +136,7 @@ var ClickEventHandler = /** @class */ (function () {
         PhotoFile.id = "stage-photo";
         spn.appendChild(PhotoFile);
 
-        stage.place_id = -1; //backend fixes this
+        stage.place_id = -1;
         stage.latLng = latLng;
 
         var WebsiteLabel = document.createElement('p');
@@ -190,9 +188,10 @@ var ClickEventHandler = /** @class */ (function () {
             stage.fotoURL = PhotoFile.value;
             roadmap.push(stage)
             stage.localita = -1;
+            stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+            document.getElementById('stage_list').innerHTML += "🏁" + stage.placeId + " -> " + stage.nome + " -> " + stage.durata + "<br>"
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
             prec = stage.durata + prec
@@ -244,10 +243,8 @@ var ClickEventHandler = /** @class */ (function () {
             stage.isExNovo = 0
             console.log(stage)
             roadmap.push(stage);
-
             //addToRoadmapVisual(stage);
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
-
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
             prec = stage.durata + prec
@@ -285,5 +282,16 @@ var ClickEventHandler = /** @class */ (function () {
     };
     return ClickEventHandler;
 }());
+
+function generatePlaceIdExNovoNode() { //Gian Marco
+    var generatedPlaceId = "";
+    let possibility = "!#$%&()*+,-./0123456789:;<=>?@[]^_{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let placeIdLength = 27; //lunghezza fissata dei placeId
+
+    for (let i = 0; i < placeIdLength; i++) {
+        generatedPlaceId += possibility.charAt(Math.floor(Math.random() * possibility.length));
+    }
+    return generatedPlaceId;
+}
 
 window.initMap = initMap;

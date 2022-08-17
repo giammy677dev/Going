@@ -140,7 +140,6 @@ class HTTPinterface {
 
     async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
-        console.log(r)
         return res.send(r);
     }
 
