@@ -1,6 +1,6 @@
+var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers=[];
-var map;
 
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
@@ -9,7 +9,6 @@ function initMap() {
         center: origin
     });
 
-    
     var submitBtn = document.createElement('input');
     submitBtn.type = "button"
     submitBtn.value = "SUBMIT ROADMAP"
@@ -31,6 +30,7 @@ function initMap() {
             }
         }
     });
+    
     // Create a <script> tag and set the USGS URL as the source.
     const script = document.createElement("script");
 
@@ -130,11 +130,9 @@ var ClickEventHandler = /** @class */ (function () {
         PhotoFile.id = "stage-photo";
         spn.appendChild(PhotoFile);
 
-
         stage.place_id = -1; //backend fixes this
         stage.latLng = latLng;
 
-        
         var WebsiteLabel = document.createElement('p');
         WebsiteLabel.textContent = "website"
         spn.appendChild(WebsiteLabel);
@@ -148,7 +146,6 @@ var ClickEventHandler = /** @class */ (function () {
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
         spn.appendChild(durataElement);
-
 
         var inputElement = document.createElement('input');
         inputElement.type = "button"
@@ -175,7 +172,6 @@ var ClickEventHandler = /** @class */ (function () {
             markers[stage_index].setTitle(StageName.value)
             stage_index++;
 
-
             stage.name = StageName.value;
             stage.durata = durataElement.value;
             console.log(PhotoFile)
@@ -189,11 +185,9 @@ var ClickEventHandler = /** @class */ (function () {
             me.infowindow.close();
         });
 
-
         me.infowindow = new google.maps.InfoWindow({
             content: spn
         });
-
 
         me.infowindow.setPosition(latLng);
         me.infowindow.open(me.map);
@@ -266,5 +260,6 @@ var ClickEventHandler = /** @class */ (function () {
     };
     return ClickEventHandler;
 }());
+
 window.initMap = initMap;
 window.eqfeed_callback = eqfeed_callback;

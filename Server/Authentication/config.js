@@ -1,7 +1,7 @@
 const host = 'localhost';
 const user = 'root';
 const password = 'going';
-const database = 'sakila';
+const database = 'mydb';
 const port = 3000;
 
 module.exports.host = host;

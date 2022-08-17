@@ -20,8 +20,9 @@ class DAO {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
-            await connection.query('INSERT INTO utente (username, password, email, birthdate) VALUES (?, ?, ?, ?)', [username, password, email, birthdate]);
+            await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin) VALUES (?, ?, ?, ?, 0)', [username, password, email, birthdate]);
             return [true, 0];
+            console.log("QUERY finisce")
         } catch (error) {
             return [false, error.errno];
         }
