@@ -28,7 +28,7 @@ class DAO {
     }
 
     async login(username, password) {
-        const default_dict = {id: '', username: '', isAdmin: 0}
+        const default_dict = { id: '', username: '', isAdmin: 0 }
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
@@ -37,7 +37,7 @@ class DAO {
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
-                return [true, 0, {id: results[0].id, username: results[0].username, isAdmin: results[0].isAdmin}];
+                return [true, 0, { id: results[0].id, username: results[0].username, isAdmin: results[0].isAdmin }];
             }
             else {
                 return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
@@ -47,14 +47,57 @@ class DAO {
         }
     }
 
+    async addRoadmap(titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id) {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll insert the account in the database
+            console.log('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id)', [titolo, isPublic, durataComplessiva, localita, descrizione, null, dataCreazione, utenteRegistrato_id])
+            const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, NULL, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id]);
+            return [true, 0, res[0]];
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+    }
+    async addNewStages(stages) {
+        try {
+            var connection = await this.connect();
+            for (var i = 0; i < stages.length; i++) {
+                var stage = stages[i];
+                console.log(stage);
+                // Execute SQL query that'll insert the account in the database
+                console.log('INSERT INTO stage (isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL])
+                const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                console.log(res)
+            }
+            return [true, 0, res[0]];
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+    }
+
+    async instantiateRoadmap(roadmap_id, user_id, stages) {
+        try {
+            var connection = await this.connect();
+            for (var i = 0; i < stages.length; i++) {
+                var stage = stages[i];
+                // Execute SQL query that'll insert the account in the database
+                const res = await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata) VALUES(?, ?, ?, ?)',  [roadmap_id, user_id, stage.placeId, stage.durata]);
+                return [true, 0, res[0]];
+            }
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+
+    }
+
     async searchUser(username) {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
             var result = await connection.query('SELECT username FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
-            return [true, 0, {results: result[0]}];
+            return [true, 0, { results: result[0] }];
         } catch (error) {
-            return [false, error.errno, {results: []}];
+            return [false, error.errno, { results: [] }];
         }
     }
 
@@ -67,10 +110,10 @@ class DAO {
                 return [true, 0, results];
             }
             else {
-                return [false, -5, {placeId: '', nome: ''}]; //Non ci sono nodi ex novo nel database
+                return [false, -5, { placeId: '', nome: '' }]; //Non ci sono nodi ex novo nel database
             }
         } catch (error) {
-            return [false, error.errno, {placeId: '', nome: ''}];
+            return [false, error.errno, { placeId: '', nome: '' }];
         }
     }
 
@@ -81,7 +124,7 @@ class DAO {
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
-            return [false, error.errno, {results: []}];
+            return [false, error.errno, { results: [] }];
         }
     }
 }
