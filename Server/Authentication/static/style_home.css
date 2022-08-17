@@ -59,6 +59,11 @@
       text-align: center;
       text-decoration: none;
   }
+
+  #Homepage{
+      color: white;
+      font-weight: 500;
+  }
   
   .menuBar a:hover {
       color: white;
@@ -208,30 +213,27 @@
       color: #fff;
       border-bottom: 1px solid #a6290f;
   }
-  
-  .containerSocial {
-      position: relative;
-      /*color: white;*/
-      display: block;
-      /*margin-left: 5%;*/
-      margin-top: 30px;
-      /*top: 50%;*/
-      /*right: 2%;*/
-      left: 25%;
-      /*transform: translate(-50%, -50%);*/
+
+  .paragrafoSocial{
+    text-align: center;
+    margin-top: 30px;
   }
   
-  .containerSocial a {
+  .paragrafoSocial a {
+    text-align: center;
+  }
+  
+  .paragrafoSocial a {
       margin-top: 50%;
       margin-left: 30px;
   }
   
-  .containerSocial img:hover {
+  .paragrafoSocial img:hover {
       -webkit-filter: drop-shadow(1px 1px 8px #c82d0e);
       filter: drop-shadow(1px 1px 8px #c82d0e);
   }
   
-  .containerSocial img{
+  .paragrafoSocial img{
       height: 50px;
   }
   
@@ -247,10 +249,6 @@
 .sfondo video {
 	width: 100%;
 }
-
-
-
-
 
 
   .split {
@@ -285,18 +283,6 @@
   .sx {
     background-color:rgba(48, 32, 32, 0.53);
   }
-
- 
-
-
-
-
-
-
-
-
-
-
 
 .grid-container {
 	display: grid;
@@ -349,13 +335,14 @@
     font-size: 20px;
     margin-top: 20px;
     margin-left: 10px;
-    border: thin #c82d0e solid;
+    border: thin #000000 solid;
     text-transform: uppercase;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     cursor: pointer;
-    background-color: #7e534a00;
+    background-color: #000000c8;
+    border-radius: 25px;
 }
 
 #tastoRicerca:hover {
