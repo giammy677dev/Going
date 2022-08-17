@@ -1,5 +1,6 @@
 *{
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
   }
   
   html{
@@ -89,13 +90,14 @@
   
   .pulsantiLog {
     display: block;
-    margin-top: 50px;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    /*margin-top: 50px;*/
+    position: absolute;
+    /*top: 50%;*/
+    left: 30%;
+    /*transform: translate(-50%, -50%);*/
     width: 80%;
     padding: 20px;
+    font-family: "Poppins", sans-serif;
   }
   
   .pulsantiLog a {
@@ -103,7 +105,7 @@
       font-size: 20px;
       /*padding: 5px 10%;*/
       margin-top: 20px;
-      border: thin #d25c18 solid;
+      border: thin #c82d0e solid;
       text-transform: uppercase;
       text-align: center;
       color: rgba(255, 255, 255, 0.7);
@@ -119,7 +121,7 @@
   }
   
   .pulsantiLog a:hover {
-      background-color: #3c0e0e;
+      background-color: #651515;
       border: thin white solid;
       color: white;
       font-weight: 500;
@@ -208,23 +210,25 @@
   }
   
   .containerSocial {
-      color: white;
-      margin-left: 5%;
-      position: absolute;
-      top: 50%;
-      right: 2%;
-      -ms-transform: translateY(-50%);
-      transform: translateY(-50%);
+      position: relative;
+      /*color: white;*/
+      display: block;
+      /*margin-left: 5%;*/
+      margin-top: 30px;
+      /*top: 50%;*/
+      /*right: 2%;*/
+      left: 25%;
+      /*transform: translate(-50%, -50%);*/
   }
   
   .containerSocial a {
-      display: block;
       margin-top: 50%;
+      margin-left: 30px;
   }
   
   .containerSocial img:hover {
-      -webkit-filter: drop-shadow(1px 1px 8px #18d26e);
-      filter: drop-shadow(1px 1px 8px #18d26e);
+      -webkit-filter: drop-shadow(1px 1px 8px #c82d0e);
+      filter: drop-shadow(1px 1px 8px #c82d0e);
   }
   
   .containerSocial img{
@@ -277,19 +281,12 @@
     width: 80%;
     padding: 20px;
   }
-
-  .rx {
-    
-  }
   
   .sx {
     background-color:rgba(48, 32, 32, 0.53);
   }
 
-  .centered img {
-    width: 150px;
-    border-radius: 50%;
-  }
+ 
 
 
 
@@ -337,4 +334,39 @@
    
     margin: 80px;
 
+}
+
+.boxRicerca{
+    margin-top: 20px;
+}
+
+.boxRicerca input{
+    /*background-color: #7e534a75;*/
+    color:rgba(0, 0, 0, 0.8)
+}
+
+#tastoRicerca {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    border: thin #c82d0e solid;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #7e534a00;
+}
+
+#tastoRicerca:hover {
+    background-color: #651515;
+    border: thin white solid;
+    color: white;
+    font-weight: 500;
+}
+
+#main_search{
+    font-size: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);
 }

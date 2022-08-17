@@ -46,6 +46,7 @@
         </div>	
 
     <div class="primoPiano">
+
 		               
                 <div class="split left">
                     <div class="centered sx">
@@ -53,23 +54,35 @@
 			            <H2>Programma la tua esperienza di viaggio creando la tua <span class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
                         <div class="menuRow">
                             <div class="menuBar">
-                                <a id="Homepage" href="Home.php">Homepage</a>
-                                <a id="About" href="Info.php" title="Leggi informazioni utili per giocare al meglio!">About</a>
-                                <a id="Explore" href="gioca.php" title="Inizia subito a giocare!">Explore</a>
-                                <a id="Create" href="classifica.php" title="Guarda la classifica!">Create</a>
+                                <a id="Homepage" href="/">Homepage</a>
+                                <a id="About" href="/about" title="Leggi informazioni utili per giocare al meglio!">About</a>
+                                <a id="Explore" href="/explore" title="Inizia subito a giocare!">Explore</a>
+                                <a id="Create" href="/create" title="Guarda la classifica!">Create</a>
                             </div>
                         </div>
 
-                        <div class="pulsantiLog">
-                            <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
-                            <a class="pre-login" href="Registrati.php">Registrati</a>
-                            <a class="post-login" id="logout" href="logout.php">Logout</a>
+                        <div class="boxRicerca">
+                            <input type="text" name="main_search" id="main_search" placeholder="Cerca Roadmap/Utenti" method="get">
+                            <input type="submit" value="Ricerca" id="tastoRicerca" onclick="ricercaMain()">
+                        </div>
+
+                        <div class="containerSocial">
+                            <a title="Visita profilo Instagram" target="_blank" href="https://www.instagram.com//"><img src="/storage/Instagram.png" type="image/png"/></a>
+                            <a title="Inviaci una mail" href="mailto:@gmail.com"><img src="/storage/Mail.png" type="image/png"/></a>
+                            <a title="Visita pagina facebook" target="_blank" href="https://www.facebook.com/"><img src="/storage/Facebook.png" type="image/png"/></a>
                         </div>
                 </div>
                 
                 <div class="split right">
+
+                    <div class="pulsantiLog">
+                        <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
+                        <a class="pre-login" href="/login">Registrati</a>
+                        <a class="post-login" id="logout" href="logout.php">Logout</a>
+                    </div>
+
                     <div class="centered rx">
-                        <H2>Le Roadmap più amate</H2>
+                        <H2>Le Roadmap più amate:</H2>
 
                     <!--    <div class="row2">
                             <div class="column2">
