@@ -45,6 +45,7 @@ class RequestController {
             roadmap.durataComplessiva = -1
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, user_id);
             const roadmap_id = data1[2].insertId
+            
             await this.dao.addNewStages(roadmap.stages);
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages);
             return {ok: data3[0], error:data3[1]}
@@ -63,6 +64,12 @@ class RequestController {
         }
     }
 
+    async getBestRoadmap() {
+        const data = await this.dao.getBestRoadmap();
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
+
     async getExNovoStages() {
         const data = await this.dao.getExNovoStages();
         return { ok: data[0], error: data[1], data: data[2]}
@@ -79,6 +86,11 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
+
+    async getRoadmapUser(id) {
+        const data = await this.dao.getRoadmapUser(id);
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
 
 }
 

@@ -59,20 +59,22 @@ class DAO {
         }
     }
     async addNewStages(stages) {
-        try {
-            var connection = await this.connect();
-            for (var i = 0; i < stages.length; i++) {
-                var stage = stages[i];
-                console.log(stage);
-                // Execute SQL query that'll insert the account in the database
-                console.log('INSERT INTO stage (isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL])
-                const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+
+        var connection = await this.connect();
+        for (var i = 0; i < stages.length; i++) {
+            var stage = stages[i];
+            console.log(stage);
+            // Execute SQL query that'll insert the account in the database
+            console.log('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL])
+            try {
+                const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 console.log(res)
+            } catch (error) {
+                return [false, error.errno, {}];
             }
-            return [true, 0, res[0]];
-        } catch (error) {
-            return [false, error.errno, {}];
         }
+        return [true, 0];
+
     }
 
     async instantiateRoadmap(roadmap_id, user_id, stages) {
@@ -81,9 +83,9 @@ class DAO {
             for (var i = 0; i < stages.length; i++) {
                 var stage = stages[i];
                 // Execute SQL query that'll insert the account in the database
-                const res = await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata) VALUES(?, ?, ?, ?)',  [roadmap_id, user_id, stage.placeId, stage.durata]);
-                return [true, 0, res[0]];
+                const res = await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata) VALUES(?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata]);
             }
+            return [true, 0, res[0]];
         } catch (error) {
             return [false, error.errno, {}];
         }
@@ -101,11 +103,23 @@ class DAO {
         }
     }
 
+    async getBestRoadmap() {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll insert the account in the database
+            var result = await connection.query('SELECT * FROM roadmap WHERE punteggio>4 ORDER BY RAND() LIMIT 3');
+            return [true, 0, result[0]];
+        } catch (error) {
+            return [false, error.errno, { result: [] }];
+        }
+    }
+
     async getExNovoStages() {
         try {
             var connection = await this.connect();
             let selection = await connection.query('SELECT * FROM stage WHERE isExNovo = 1');
             let results = selection[0];
+
             if (results.length > 0) {
                 return [true, 0, results];
             }
@@ -121,6 +135,17 @@ class DAO {
         try {
             var connection = await this.connect();
             let selection = await connection.query('SELECT username,email,birthdate FROM utenteregistrato WHERE id = ?', [id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async getRoadmapUser(id) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Utente FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
