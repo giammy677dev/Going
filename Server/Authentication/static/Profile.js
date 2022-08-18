@@ -1,28 +1,26 @@
 
   window.onload=function(){
     document.getElementById("Default").click();
-    
-    var x=get_data();
+    data_user();
   };
 
-  function get_data(){
+  function data_user(){ 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/getDataUser', true);
 
+    xhr.open("GET", '/getDataUser', true);
+  
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
-      
-      console.log(r.ok);
+  
       if (r.ok == true) {
-        alert("Ho i dati di " + username)
+          document.getElementById("info_username").innerText = r.data[0].username;
+          document.getElementById("info_email").innerText = r.data[0].email;
+          document.getElementById("info_birthdate").innerText = r.data[0].birthdate;
+          document.getElementById("avatar").src = "/avatar/"+r.data[0].username+".jpg";
       }
     }
 
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        username: username,
-        password: password
-    }));
+    xhr.send();
 }
 
 function open_view(pageName, elmnt, color) {

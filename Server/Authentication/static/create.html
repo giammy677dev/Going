@@ -15,18 +15,10 @@
 <script>
   var nodes = []
   function addToRoadmapVisual(stage) {
-    document.getElementById('stage_list').innerHTML += "🏁"+stage.name + " -> " + stage.durata + "<br>"
+    document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
   }
 
-  function myFunc() {
-    //come prendere valore radiobutton di visibilità
-    var my = document.querySelector('input[name="visibilita"]:checked').value;
-    console.log(my)
-    //come prendere valore/i select list di tag
-    var selectedValue = document.getElementById("lista_tag").selectedOptions;
-    var values = Array.from(selectedValue).map(({ value }) => value);
-    console.log(values);
-  }
+
   function ricercaCitta() {
     /*
     mappa da richiedere con dati in campo id="citta_search"
@@ -34,7 +26,68 @@
   }
 
   function submitRoadmap(roadmap) {
-    console.log(roadmap);
+    var tagValue, title, description,dateNow
+    allTime=parseInt(document.getElementById("somma_totale").innerText)
+    var isPub=1
+    var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
+    console.log("visibilità: ",visibilita)
+    if(visibilita=="Privata"){
+      isPub=0
+    }
+    console.log("isPub: ",isPub)
+    var selectedValue = document.getElementById("lista_tag").selectedOptions;
+    tagValue = Array.from(selectedValue).map(({ value }) => value);
+    console.log("tag values: ",tagValue);
+
+    title = document.getElementById("titolo").value
+    console.log("titolo: ",title);
+    description = document.getElementById("descrizione").value
+    console.log("descrizione: ",description);
+
+    console.log("lenght rm: ",roadmap.length);
+    console.log(roadmap)
+
+    
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log(today)
+
+    if (title == "") {
+      alert("Titolo vuoto")
+    }
+    else if(roadmap.length<2){
+      alert("almeno due stage")
+    }
+    else {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", '/createRoadmap', true);
+      xhr.onload = function (event) {
+
+        const r = JSON.parse(event.target.responseText);
+
+        if (r.ok == true) {
+          
+        }
+        else if (r.ok == false) {
+          alert("Problemi creazione roadmap")
+        }
+      }
+
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        titolo: title,
+        descrizione: description,
+        isPublic: isPub,
+        //durata: allTime,
+        dataCreazione: today,
+        citta:"Napoli",
+        indirizzo: roadmap[0].formatted_addess,
+        stages: roadmap
+      }));
+    }
   }
 
 </script>
@@ -152,13 +205,13 @@
       <div class="submit_global">
 
         <div class="durata">
-          Durata complessiva: <div class="somma_totale">valore qua di somma totale</div>
+          Durata complessiva in minuti: <div id="somma_totale" class="somma_totale">0</div> 
         </div>
 
         <div id="submit_btn">
-          
+
         </div>
-        
+
 
       </div>
 

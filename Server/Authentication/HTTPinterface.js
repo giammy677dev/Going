@@ -10,7 +10,6 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,6 +51,7 @@ class HTTPinterface {
         this.app.get('/diego', this.diego.bind(this)); //Easter Egg
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
+        this.app.use('/avatar', express.static('avatar')); //avatars
 
         //back end calls
         this.app.post('/register', this.register.bind(this));
@@ -62,6 +62,7 @@ class HTTPinterface {
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.post('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
+        this.app.post('/createRoadmap', this.createRoadmap.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -91,7 +92,7 @@ class HTTPinterface {
         if (r.ok) {
             req.session.loggedin = true;
             req.session.username = r.data.username;
-            req.session.id = r.data.id;
+            req.session.user_id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
@@ -105,15 +106,37 @@ class HTTPinterface {
     }
 
     async logout(req, res) {
-        if(req.body.username == req.session.username){ //richiesta giusta
+        if (req.body.username == req.session.username) { //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
             //non uso req.session = {} perché nella sessione possono esserci anche altre info!
-            return res.send({ok:true})
+            return res.send({ ok: true })
         }
-        return res.send({ok:false})
+        return res.send({ ok: false })
         //nessuna chiamata al DB.
     }
+
+    async createRoadmap(req, res) {
+        //create roadmap deve fare 3 cose
+        /*
+        1) aggiungere roadmap con i parametri specificati dall'utente all'entità ROADMAP
+        2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
+        3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity.
+        */
+
+        if (req.session.loggedin || true) {  //OR TRUE SI DEVE TOGLIERE!!
+            //const user_id = req.session.id; //qua da aggiustare in login!!
+            const user_id = 1;
+            const r = await this.controller.createRoadmap(user_id, req.body);
+            //const 
+            if (r.ok) {
+                console.log("test")
+            }
+            return res.send(JSON.stringify(r))
+        }
+        return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
+    }
+
 
     async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
@@ -123,10 +146,10 @@ class HTTPinterface {
 
     async getDataUser(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getDataUser(req.session.id);
+            const r = await this.controller.getDataUser(req.session.user_id);
             console.log(r)
-            return res.send(r);
-        } 
+            return res.send(JSON.stringify(r));
+        }
     }
 
     async searchUser(req, res) {
@@ -147,8 +170,7 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/main.html');
     }
 
-    async home_page(req, res)
-    {
+    async home_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
@@ -156,8 +178,7 @@ class HTTPinterface {
     }
 
     async about_page(req, res) {
-        if (req.user)
-        {
+        if (req.user) {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/about.html');
