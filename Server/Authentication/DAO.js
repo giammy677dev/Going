@@ -66,7 +66,7 @@ class DAO {
                 console.log(stage);
                 // Execute SQL query that'll insert the account in the database
                 console.log('INSERT INTO stage (isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL])
-                const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 console.log(res)
             }
             return [true, 0, res[0]];
@@ -82,8 +82,8 @@ class DAO {
                 var stage = stages[i];
                 // Execute SQL query that'll insert the account in the database
                 const res = await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata) VALUES(?, ?, ?, ?)',  [roadmap_id, user_id, stage.placeId, stage.durata]);
-                return [true, 0, res[0]];
             }
+            return [true, 0, res[0]];
         } catch (error) {
             return [false, error.errno, {}];
         }

@@ -286,10 +286,21 @@ var ClickEventHandler = /** @class */ (function () {
                 place.geometry.location) {
                 stage.nome = place.name;
                 stage.indirizzo = place.formatted_address;
-                stage.website = place.website;
-                console.log("all info: ",place)
+                try {
+                    stage.website = place.website;
+                }
+                catch(error) {
+                    stage.website = '';
+                }
+                
+                //console.log("all info: ",place)
                 stage.citta=place.address_components[2].long_name
-                stage.fotoURL = place.photos[0].getUrl();
+                try {
+                    stage.fotoURL = place.photos[0].getUrl();
+                }
+                catch(error) {
+                    stage.fotoURL = '';
+                }
             }
         });
 
