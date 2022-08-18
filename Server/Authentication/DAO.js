@@ -58,6 +58,17 @@ class DAO {
         }
     }
 
+    async getBestRoadmap() {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll insert the account in the database
+            var result = await connection.query('SELECT * FROM roadmap WHERE punteggio>4 ORDER BY RAND() LIMIT 3');
+            return [true, 0, result[0]];
+        } catch (error) {
+            return [false, error.errno, {result: []}];
+        }
+    }
+
     async getExNovoStages() {
         try {
             var connection = await this.connect();
