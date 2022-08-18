@@ -51,6 +51,7 @@ class HTTPinterface {
         this.app.get('/diego', this.diego.bind(this)); //Easter Egg
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
+        this.app.use('/avatar', express.static('avatar')); //avatars
 
         //back end calls
         this.app.post('/register', this.register.bind(this));
@@ -122,12 +123,11 @@ class HTTPinterface {
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity.
         */
 
-        if (req.session.loggedin || true) { 
+        if (req.session.loggedin || true) {  //OR TRUE SI DEVE TOGLIERE!!
             //const user_id = req.session.id; //qua da aggiustare in login!!
             const user_id = 1;
             const r = await this.controller.createRoadmap(user_id, req.body);
             //const 
-            //
             if (r.ok) {
                 console.log("test")
             }

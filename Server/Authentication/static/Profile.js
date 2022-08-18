@@ -16,6 +16,7 @@
           document.getElementById("info_username").innerText = r.data[0].username;
           document.getElementById("info_email").innerText = r.data[0].email;
           document.getElementById("info_birthdate").innerText = r.data[0].birthdate;
+          document.getElementById("avatar").src = "/avatar/"+r.data[0].username+".jpg";
       }
     }
 
