@@ -10,8 +10,8 @@ function initMap() {
     });
 
     var submitBtn = document.createElement('input');
-    submitBtn.type = "button"
-    submitBtn.value = "SUBMIT ROADMAP"
+    submitBtn.type = "submit"
+    submitBtn.value = "Conferma creazione"
     submitBtn.addEventListener('click', function () {
         submitRoadmap(roadmap);
     });
@@ -153,8 +153,17 @@ var ClickEventHandler = /** @class */ (function () {
         durataElement.id = "durata";
         spn.appendChild(durataElement);
 
+        var desLabel = document.createElement('p');
+        desLabel.textContent = "descrizione (opzionale)"
+        spn.appendChild(desLabel);
+
+        var descrElement = document.createElement('input');
+        descrElement.id = "descrizione";
+        descrElement.value=" "
+        spn.appendChild(descrElement);
+
         var inputElement = document.createElement('input');
-        inputElement.type = "button"
+        inputElement.type = "submit"
         inputElement.value = "Aggiungi stage"
         spn.appendChild(inputElement);
 
@@ -184,10 +193,11 @@ var ClickEventHandler = /** @class */ (function () {
             stage.nome = StageName.value;
             stage.durata = parseInt(durataElement.value);
             stage.isExNovo = 1
+            stage.descrizione=descrElement.value
             console.log(PhotoFile)
             stage.fotoURL = PhotoFile.value;
             roadmap.push(stage)
-            stage.localita = -1;
+            stage.indirizzo = -1;
             stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
@@ -219,8 +229,15 @@ var ClickEventHandler = /** @class */ (function () {
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
 
+        var desShow = document.createElement('p');
+        desShow.textContent = "descrizione (opzionale)"
+        var desElement = document.createElement('input');
+        desElement.id = "descrizone";
+        desElement.value=" "
+
+
         var inputElement = document.createElement('input');
-        inputElement.type = "button"
+        inputElement.type = "submit"
         inputElement.value = "Aggiungi stage"
 
         markers[stage_index] = new google.maps.Marker({
@@ -241,6 +258,7 @@ var ClickEventHandler = /** @class */ (function () {
             stage.longitudine = latLng.lng();
             stage.placeId = placeId;
             stage.isExNovo = 0
+            stage.descrizione=desElement.value
             console.log(stage)
             roadmap.push(stage);
             //addToRoadmapVisual(stage);
@@ -257,6 +275,8 @@ var ClickEventHandler = /** @class */ (function () {
 
         spn.append(durataShow);
         spn.appendChild(durataElement);
+        spn.append(desShow);
+        spn.appendChild(desElement);
         spn.appendChild(inputElement);
 
         this.placesService.getDetails({ placeId: placeId }, function (place, status) {
@@ -265,9 +285,10 @@ var ClickEventHandler = /** @class */ (function () {
                 place.geometry &&
                 place.geometry.location) {
                 stage.nome = place.name;
-                stage.localita = place.formatted_address;
+                stage.indirizzo = place.formatted_address;
                 stage.website = place.website;
-                console.log(place.photos)
+                console.log("all info: ",place)
+                stage.citta=place.address_components[2].long_name
                 stage.fotoURL = place.photos[0].getUrl();
             }
         });

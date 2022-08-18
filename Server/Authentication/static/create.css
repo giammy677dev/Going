@@ -38,19 +38,16 @@ input[type="text"]{
 }
 
 input[type=submit]{
-    width: 10%;
-    background-color: #3274d6;
-    border: 5px solid;
+    background-color: #00AAF8;
+    color: white;
+    border-radius: 15px;
+    border: 1px white;
     cursor: pointer;
-    font-weight: bold;
-    color: #ffffff;
-    transition: background-color 0.2s;
+    font-size: 15px;
+    padding: 10px;
+    margin-top: 5px;
+    height: min-content;
 }
-input[type="submit"]:hover{
-    background-color: #2868c7;
-    transition: background-color 0.2s;
-}
-
 
 .container_middle {
     top:10px;
@@ -79,12 +76,11 @@ input[type="submit"]:hover{
 }
 
 .container_bottom{
-    padding-top:35px;
+    padding:20px;
     width: auto;
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
-    gap: 20px;
-    height: 100%;
+    float: right;
+   
 }
 
 .tag_list select{
@@ -101,23 +97,12 @@ input[type="submit"]:hover{
 
 .somma_totale{
     border: 2px solid black;
-    width: 55%;
+    width: 50%;
     padding: 5px;
 }
 
 .durata{
     font-size: 20px;
-}
-
-.submit_global input[type="submit"]{
-    width: 55%;
-    background-color: #3274d6;
-    border: 5px solid;
-    cursor: pointer;
-    font-weight: bold;
-    color: #ffffff;
-    transition: background-color 0.2s;
-    font-size: 15px;
 }
 
 .footer{
