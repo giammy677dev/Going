@@ -13,10 +13,10 @@
 <script type="module" src="/static/create_roadmap.js"></script>
 <link rel="stylesheet" href="/static/roadmap.css">
 <script>
-  var nodes = []
-  function addToRoadmapVisual(stage) {
+  
+  /*function addToRoadmapVisual(stage) {
     document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
-  }
+  }*/
 
 
   function ricercaCitta() {
@@ -35,9 +35,7 @@
       isPub=0
     }
     console.log("isPub: ",isPub)
-    var selectedValue = document.getElementById("lista_tag").selectedOptions;
-    tagValue = Array.from(selectedValue).map(({ value }) => value);
-    console.log("tag values: ",tagValue);
+
 
     title = document.getElementById("titolo").value
     console.log("titolo: ",title);
@@ -81,10 +79,8 @@
         titolo: title,
         descrizione: description,
         isPublic: isPub,
-        //durata: allTime,
         dataCreazione: today,
-        citta:"Napoli",
-        indirizzo: roadmap[0].formatted_addess,
+        localita: roadmap[0].citta,
         stages: roadmap
       }));
     }
@@ -116,12 +112,8 @@
 
   <div class="contenuto">
     <br>--DA FARE--<br>
-    <br>--SERVE API GOOGLE MAP PER--<br>
-
-    1)barra ricerca città permette onclick mappa su quella citta<br>
-    2)lista stage onclick mappa con durata modificabile<br>
-    3)mappa onclick ma non marker->new stage<br>
-    4)new stage deve avere un box ad hoc per tutti campi stage e tasto di submit
+    barra ricerca città permette onclick mappa su quella citta<br>
+    
     <br>
     <h2 style="text-align:center">
       Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) </div>
@@ -188,13 +180,8 @@
 
 
     <div class="container_bottom">
-      <div class="hidden_new_stage">
-        Hidden new stage
-
-
-
-      </div>
-      <div class="tag_list">
+      
+      <div class="tag_list" style="display: none;">
         <label for="lista_tag">Aggiungi tag alla Roadmap <br>(se vuoi
           fare una scelta multipla usa Ctrl su Windows o Command su Mac)</label><br>
         <select name="lista_tag" id="lista_tag" multiple>
@@ -205,7 +192,7 @@
       <div class="submit_global">
 
         <div class="durata">
-          Durata complessiva in minuti: <div id="somma_totale" class="somma_totale">0</div> 
+          Durata complessiva<br>(in minuti)<br> <div id="somma_totale" class="somma_totale">0</div> 
         </div>
 
         <div id="submit_btn">
