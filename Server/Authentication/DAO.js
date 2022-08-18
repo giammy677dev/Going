@@ -77,11 +77,11 @@ class DAO {
     async getDataUser(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT * FROM utenteregistrato WHERE id = ?', [id]);
+            let selection = await connection.query('SELECT username,email,birthdate FROM utenteregistrato WHERE id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
-            return [false, error.errno, {results: []}];
+            return [false, error.errno, {results: result[0]}];
         }
     }
 }

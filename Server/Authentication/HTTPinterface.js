@@ -10,7 +10,6 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -89,8 +88,8 @@ class HTTPinterface {
         console.log(r)
         if (r.ok) {
             req.session.loggedin = true;
+            req.session.user_id = r.data.id;
             req.session.username = r.data.username;
-            req.session.id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
@@ -122,10 +121,10 @@ class HTTPinterface {
 
     async getDataUser(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getDataUser(req.session.id);
+            const r = await this.controller.getDataUser(req.session.user_id);
             console.log(r)
-            return res.send(r);
-        } 
+            return res.send(JSON.stringify(r));
+        }
     }
 
     async searchUser(req, res) {
