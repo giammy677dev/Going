@@ -70,7 +70,7 @@ class DAO {
                 const res = await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, stage.isExNovo, stage.latitudine, stage.longitudine, stage.indirizzo, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 console.log(res)
             } catch (error) {
-                return [false, error.errno, {}];
+                //return [false, error.errno, {}];
             }
         }
         return [true, 0];
