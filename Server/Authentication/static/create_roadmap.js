@@ -286,20 +286,18 @@ var ClickEventHandler = /** @class */ (function () {
                 place.geometry.location) {
                 stage.nome = place.name;
                 stage.indirizzo = place.formatted_address;
-                try {
+                stage.citta=place.address_components[2].long_name
+                if(place.website!==undefined){
                     stage.website = place.website;
                 }
-                catch(error) {
-                    stage.website = '';
+                else{
+                    stage.website = " "
                 }
-                
-                //console.log("all info: ",place)
-                stage.citta=place.address_components[2].long_name
-                try {
+                if(place.photos!==undefined){
                     stage.fotoURL = place.photos[0].getUrl();
                 }
-                catch(error) {
-                    stage.fotoURL = '';
+                else{
+                    stage.fotoURL = " "
                 }
             }
         });
