@@ -46,7 +46,7 @@ class HTTPinterface {
         this.app.get('/about', this.about_page.bind(this)); //about
         this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
-        this.app.get('/login', this.login_page.bind(this)); //LoginRegistrati
+        this.app.get('/signup', this.signup_page.bind(this)); //Registrati
         this.app.get('/profile', this.profile_page.bind(this)); //Profilo
         this.app.get('/diego', this.diego.bind(this)); //Easter Egg
         this.app.use('/static', express.static('static')); //HTML e CSS pages
@@ -198,11 +198,11 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/create.html');
     }
 
-    async login_page(req, res) {
+    async signup_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
-        return res.sendFile(__dirname + '/static/Login.html');
+        return res.sendFile(__dirname + '/static/Signup.html');
     }
 
     async profile_page(req, res) {
