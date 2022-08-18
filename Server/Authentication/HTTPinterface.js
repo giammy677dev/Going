@@ -58,6 +58,7 @@ class HTTPinterface {
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
+        this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.post('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
@@ -156,7 +157,13 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async main_page(req, res) {
+    async getBestRoadmap(req, res) {
+        const r = await this.controller.getBestRoadmap();
+        return res.send(JSON.stringify(r));
+    }
+    
+    async main_page(req, res)
+    {
         if (req.user) {
             console.log('user session is alive')
         }

@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 </HEAD>
 
-<body>
+<body onload="caricaRoadmap()">
 
     <div id="log">    
                     <p>
@@ -53,7 +53,7 @@
                 <div class="split left">
                     <div class="centered sx">
                         <H1>Going</H1> 
-			            <H2>Programma la tua esperienza di viaggio creando la tua <span class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
+			            <H2>Programma la tua <span class="inEvidenza">esperienza di viaggio</span> creando la tua <span class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
                         <div class="menuRow">
                             <div class="menuBar">
                                 <a id="Homepage" href="/">Homepage</a>
@@ -85,139 +85,13 @@
                     <div class="centered rx">
                         <H2>Le Roadmap più amate:</H2>
 
-                    <!--    <div class="row2">
-                            <div class="column2">
-                                <div class="roadmap">
-                                    <a id="link1" href="#">
-                                        <h3 id="citta1">
-                                            Nome_Citta
-                                        </h3>
-                                        <div class="row4">
-                                            <div class="column4">
-                                                <h4>Start: <h4 id="start1">partenza</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Finish: <h4 id="finish1">arrivo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Durata: <h4 id="durata1">tempo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Valutazione media:</h4>
-                                                <div id="star1">
-                
-                                                </div>
-                
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="column2">
-                                <div class="roadmap">
-                                    <a id="link2" href="#">
-                                        <h3 id="citta2">
-                                            Nome_Citta
-                                        </h3>
-                                        <div class="row4">
-                                            <div class="column4">
-                                                <h4>Start: <h4 id="start2">partenza</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Finish: <h4 id="finish2">arrivo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Durata: <h4 id="durata2">tempo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Valutazione media:</h4>
-                                                <div id="star2">
-                
-                                                </div>
-                
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row2">
-                            <div class="column2">
-                                <div class="roadmap">
-                                    <a id="link3" href="#">
-                                        <h3 id="citta3">
-                                            Nome_Citta
-                                        </h3>
-                                        <div class="row4">
-                                            <div class="column4">
-                                                <h4>Start: <h4 id="start3">partenza</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Finish: <h4 id="finish3">arrivo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Durata: <h4 id="durata3">tempo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Valutazione media:</h4>
-                                                <div id="star3">
-                
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="column2">
-                
-                                <div class="roadmap">
-                                    <a id="link4" href="#">
-                                        <h3 id="citta4">
-                                            Nome_Citta
-                                        </h3>
-                                        <div class="row4">
-                                            <div class="column4">
-                                                <h4>Start: <h4 id="start4">partenza</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Finish: <h4 id="finish4">arrivo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Durata: <h4 id="durata4">tempo</h4>
-                                                </h4>
-                                            </div>
-                                            <div class="column4">
-                                                <h4>Valutazione media:</h4>
-                                                <div id="star4">
-                
-                                                </div>
-                
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                
-                            </div>
-                        </div>
--->
-
                         <div class="grid-container">
 					
                             <div> 
-                                <span class="titolo-contatti">Titolo Roadmap</span>
-                                        <p>Valutazione media:          durata:</p>
-                                        <p>start:                     finish: </p>    
+                                
+                                        <div id="prova">
+
+                                        </div>   
                             </div>
                             
                             <div> 
@@ -225,7 +99,6 @@
                                         <p>Valutazione media:          durata:</p>
                                         <p>start:                     finish: </p>    
                             </div>
-                                
                             
                             <div> 
                                 <span class="titolo-contatti">Titolo Roadmap</span>

@@ -61,6 +61,12 @@ class RequestController {
         }
     }
 
+    async getBestRoadmap() {
+        const data = await this.dao.getBestRoadmap();
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
+
     async getExNovoStages() {
         const data = await this.dao.getExNovoStages();
         return { ok: data[0], error: data[1], data: data[2]}
