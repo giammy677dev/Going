@@ -138,6 +138,17 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
+    async getRoadmapUser(id) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Utente FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
 }
 
 module.exports = DAO

@@ -62,7 +62,9 @@ class HTTPinterface {
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.post('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
+        this.app.get('/getRoadmapUser', this.getRoadmapUser.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
+
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -147,6 +149,14 @@ class HTTPinterface {
     async getDataUser(req, res) {
         if (req.session.loggedin) {
             const r = await this.controller.getDataUser(req.session.user_id);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getRoadmapUser(req, res) {
+        if (req.session.loggedin) {
+            const r = await this.controller.getRoadmapUser(req.session.user_id);
             console.log(r)
             return res.send(JSON.stringify(r));
         }
