@@ -1,4 +1,5 @@
 const DAO = require('./DAO.js');
+const MapsHandler = require('./MapsHandler.js');
 const md5 = require('md5');
 const { ExitStatus } = require('typescript');
 
@@ -6,6 +7,7 @@ class RequestController {
 
     constructor() {
         this.dao = new DAO();
+        this.mapsHandler = new MapsHandler();
     }
 
     async register(username, password, email, birthdate) {
@@ -70,6 +72,13 @@ class RequestController {
         const data = await this.dao.getDataUser(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
+
+    async getPlaceInfo(id) {
+        const data = await this.mapsHandler.getPlaceDetails(id);
+        console.log(data)
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
 
 }
 
