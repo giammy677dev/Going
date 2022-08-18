@@ -191,7 +191,7 @@ var ClickEventHandler = /** @class */ (function () {
             stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.placeId + " -> " + stage.nome + " -> " + stage.durata + "<br>"
+            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
             prec = stage.durata + prec
