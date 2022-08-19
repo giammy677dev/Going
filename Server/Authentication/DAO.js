@@ -95,8 +95,17 @@ class DAO {
     async searchUser(username) {
         try {
             var connection = await this.connect();
-            // Execute SQL query that'll insert the account in the database
             var result = await connection.query('SELECT username FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            return [true, 0, { results: result[0] }];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+    async searchRoadmap(ricerca) {
+        console.log("db dao interface",ricerca)
+        try {
+            var connection = await this.connect();
+            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', [ricerca,ricerca,ricerca]);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];

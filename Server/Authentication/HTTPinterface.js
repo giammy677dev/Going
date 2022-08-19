@@ -58,6 +58,7 @@ class HTTPinterface {
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
+        this.app.get('/searchRoadmap', this.searchRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
@@ -65,6 +66,8 @@ class HTTPinterface {
         this.app.get('/getRoadmapUser', this.getRoadmapUser.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
+        
+
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -174,7 +177,14 @@ class HTTPinterface {
 
 
     async searchUser(req, res) {
+        
         const r = await this.controller.searchUser(req.query.username);
+        return res.send(JSON.stringify(r));
+    }
+
+    async searchRoadmap(req, res) {
+        console.log("db http interface",req)
+        const r = await this.controller.searchRoadmap(req.query.ricerca);
         return res.send(JSON.stringify(r));
     }
 

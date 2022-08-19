@@ -63,6 +63,18 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+    async searchRoadmap(ricerca) {
+        console.log("db req contr interface",ricerca)
+        if (!ricerca || ricerca == null) { //ricerca nulla
+            return { ok: false, error: -4, data: { ricerca: '' } }
+        }
+        else {
+            const data = await this.dao.searchRoadmap(ricerca);
+
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    
 
     async getBestRoadmap() {
         const data = await this.dao.getBestRoadmap();
