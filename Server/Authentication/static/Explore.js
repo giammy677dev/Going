@@ -31,7 +31,7 @@ function richiestaDBRoadmap(ricerca) {
                 element.outerHTML = "";
             }
             if (result.length > 0) {
-                const html_code = '<div id="numero_rm" style="text-align: center; font-size:25px"><h4>Risultati sulle roadmap ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
+                const html_code = '<div id="numero_rm" style="text-align: center; font-size:25px"><h4>Ricerca roadmap ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
                 const posto = document.getElementById("pop_res_rm");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
@@ -42,7 +42,7 @@ function richiestaDBRoadmap(ricerca) {
             }
             else {
                 const html_code = '<div id="result_rm" style="font-size:25px">Nothing roadmap con ricerca: ' + ricerca + '!!!</div>'
-                const posto = document.getElementById("item");
+                const posto = document.getElementById("items");
                 posto.insertAdjacentHTML("beforeend", html_code)
             }
 
@@ -52,7 +52,7 @@ function richiestaDBRoadmap(ricerca) {
             alert("Problemi col db")
         }
     }
-
+    xhr.send()
     console.log("fine db rm",ricerca)
 }
 function richiestaDBUtente(ricerca) {
@@ -89,7 +89,7 @@ function richiestaDBUtente(ricerca) {
             }
 
             if (result.length > 0) {
-                const html_code = '<div id="numero" style="text-align: center; font-size:25px"><h4>Risultati utenti ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
+                const html_code = '<div id="numero" style="text-align: center; font-size:25px"><h4>Ricerca utenti ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
                 const posto = document.getElementById("pop_res");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
@@ -111,7 +111,6 @@ function richiestaDBUtente(ricerca) {
         }
     }
 
-    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send()
 }
 

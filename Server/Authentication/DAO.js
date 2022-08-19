@@ -102,10 +102,10 @@ class DAO {
         }
     }
     async searchRoadmap(ricerca) {
-        console.log("db dao interface",ricerca)
+       
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', [ricerca,ricerca,ricerca]);
+            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', ['%'+ricerca+'%','%'+ricerca+'%','%'+ricerca+'%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];

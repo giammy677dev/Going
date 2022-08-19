@@ -64,7 +64,7 @@ class RequestController {
         }
     }
     async searchRoadmap(ricerca) {
-        console.log("db req contr interface",ricerca)
+        
         if (!ricerca || ricerca == null) { //ricerca nulla
             return { ok: false, error: -4, data: { ricerca: '' } }
         }

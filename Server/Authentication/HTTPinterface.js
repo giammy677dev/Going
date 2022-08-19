@@ -183,7 +183,6 @@ class HTTPinterface {
     }
 
     async searchRoadmap(req, res) {
-        console.log("db http interface",req)
         const r = await this.controller.searchRoadmap(req.query.ricerca);
         return res.send(JSON.stringify(r));
     }
