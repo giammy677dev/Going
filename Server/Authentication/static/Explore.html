@@ -34,13 +34,17 @@
 
   </div>
 
+  
+
   <div class="contenuto">
+
 
     <h2 style="text-align: center;">
       Esplora il mondo attraverso le nostre Roadmap o con gli occhi dei nostri Roadmappers!!<br>
       <div class="search-container">
-        <input type="text" id="barra_ricerca" placeholder="Inserisci una qualsiasi parola, numero, citta..." name="search">
-        <button type="submit" onclick="searchExplore()"><img src="/storage/search.png"
+        <input type="text" id="barra_ricerca" placeholder="Inserisci una qualsiasi parola, numero, citta..."
+          name="search">
+        <button type="submit" id="searchExplore" onclick="searchExplore()"><img src="/storage/search.png"
             style="width:20px;height: 20px;"></button>
       </div>
     </h2>
@@ -54,8 +58,8 @@
       <main class="grid-item main">
 
         <div class="items" id="items">
-          
-          
+
+
         </div>
 
       </main>
@@ -113,4 +117,14 @@
       Diego-Gian Marco-Marco-Matteo-Valerio
     </h6>
   </div>
+
+  <script>
+    var input = document.getElementById("barra_ricerca");
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("searchExplore").click();
+      }
+    });
+  </script>
 </body>

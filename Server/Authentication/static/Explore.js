@@ -1,4 +1,3 @@
-
 function richiestaDBRoadmap(ricerca) {
     
     var xhr = new XMLHttpRequest();
@@ -35,7 +34,7 @@ function richiestaDBRoadmap(ricerca) {
                 const posto = document.getElementById("pop_res_rm");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
-                    const html_code = '<a class="link_rm" href="/view_roadmap/' + result[i].id + '"><div class="item">'+result[i].titolo+'<br>🏙' +result[i].localita+'<br>⏱'+result[i].durataComplessiva+'min<br><img src="/storage/star.jpg" style="width:20px;height: 20px;">Qua stelline solo:'+result[i].punteggio+'<br></div></a>'
+                    const html_code = '<a class="link_rm" href="/view_roadmap?id=' + result[i].id + '"><div class="item">'+result[i].titolo+'<br>🏙' +result[i].localita+'<br>⏱'+result[i].durataComplessiva+'min<br><img src="/storage/star.jpg" style="width:20px;height: 20px;">Qua stelline solo:'+result[i].punteggio+'<br></div></a>'
                     const posto = document.getElementById("items");
                     posto.insertAdjacentHTML("beforeend", html_code)
                 }
@@ -93,7 +92,7 @@ function richiestaDBUtente(ricerca) {
                 const posto = document.getElementById("pop_res");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
-                    const html_code = '<a class="link_user" href="/profile/' + result[i].username + '"><div class="item-user" ><img src="/avatar/' + result[i].username + '.jpg" style="width:40px;height: 40px;"><br>' + result[i].username + '<br></div></a>'
+                    const html_code = '<a class="link_user" href="/profile?username=' + result[i].username + '"><div class="item-user" ><img src="/avatar/' + result[i].username + '" style="width:40px;height: 40px;"><br>' + result[i].username + '<br></div></a>'
                     const posto = document.getElementById("items-user");
                     posto.insertAdjacentHTML("beforeend", html_code)
                 }
