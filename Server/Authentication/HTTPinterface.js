@@ -65,6 +65,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapUser', this.getRoadmapUser.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
+        this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -96,6 +97,7 @@ class HTTPinterface {
             req.session.username = r.data.username;
             req.session.user_id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
+            req.session.placeDetails = {}
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
@@ -125,15 +127,17 @@ class HTTPinterface {
         2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity.
         */
-
-        if (req.session.loggedin || true) {  //OR TRUE SI DEVE TOGLIERE!!
+        console.log(req.session)
+        if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
             //const user_id = req.session.id; //qua da aggiustare in login!!
             const user_id = 1;
-            const r = await this.controller.createRoadmap(user_id, req.body);
+            
+            const r = await this.controller.createRoadmap(user_id, req.body, req.session.placeDetails);
             //const 
             if (r.ok) {
                 console.log("test")
             }
+            //req.session.placeDetails = {} //svuotamento session troppo piccola?
             return res.send(JSON.stringify(r))
         }
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
@@ -164,12 +168,31 @@ class HTTPinterface {
     }
 
     async getPlaceInfo(req, res) {
-        //if (req.session.loggedin) { // da mettere!
+        if (req.session.loggedin) { // da mettere!
+            const isExNovo=0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
-            console.log(r)
-            console.log("test")
+            if(r.ok){
+                req.session.placeDetails[req.query.placeId] = [r.data,isExNovo];
+            }
+            
             return res.send(JSON.stringify(r));
-        //}
+        }
+    }
+
+    async getPlaceFromCoords(req, res) {
+        if (req.session.loggedin || true) { // da mettere!
+            const isExNovo=1;
+            const r = await this.controller.getPlaceFromCoords(req.query.lat,req.query.lng);
+            if(r.ok)
+            {
+                console.log(r.data.place_id)
+                if(req.session.placeDetails === null)
+                    req.session.placeDetails = {}
+                
+                req.session.placeDetails[r.data.place_id] = [r.data,isExNovo];
+            }
+            return res.send(JSON.stringify(r));
+        }
     }
 
 

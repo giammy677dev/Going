@@ -31,18 +31,18 @@ function initMap() {
         }
     });
 
-    getExNovoStages(); //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
+    //getExNovoStages(); //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
     new ClickEventHandler(map, origin);
 }
 
-function getExNovoStages() {
+function getExNovoStages(t) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/getExNovoStages', true);
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
         console.log(r)
         if (r.ok == true) {
-            drawExNovoStages(r.data) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
+            drawExNovoStages(r.data,t) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
         }
         else if (r.ok == false) {
             alert("Nodi non trovati")
@@ -53,8 +53,7 @@ function getExNovoStages() {
     xhr.send(null);
 }
 
-function getPlaceDetails(placeId)
-{
+function getPlaceDetails(placeId) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
     xhr.onload = function (event) {
@@ -71,10 +70,11 @@ function getPlaceDetails(placeId)
 }
 
 // Loop through the results array and place a marker for each set of coordinates.
-function drawExNovoStages(results) {
+function drawExNovoStages(results,t) {
     for (let i = 0; i < results.length; i++) {
         const latitudine = results[i].latitudine;
         const longitudine = results[i].longitudine;
+        const placeId = results[i].placeId;
         const latLng = new google.maps.LatLng(latitudine, longitudine);
 
         let marker = new google.maps.Marker({
@@ -84,6 +84,12 @@ function drawExNovoStages(results) {
             visible: false
         });
 
+        t.latLng = latLng;
+        t.placeId = placeId;
+        t.ExistingNode=true;
+        //marker.addListener("click", t.handleClick.bind(this));
+        marker.addListener("click", () => { console.log(results[i])})
+        //marker.addListener("click", console.log(results).bind(this));
         db_markers.push(marker); //Aggiungo il marker all'array markers
     }
 }
@@ -106,13 +112,16 @@ var ClickEventHandler = /** @class */ (function () {
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
         this.infowindow.setContent(this.infowindowContent);
+        getExNovoStages(this);
         // Listen for clicks on the map.
         this.map.addListener("click", this.handleClick.bind(this));
     }
     ClickEventHandler.prototype.handleClick = function (event) {
         console.log("You clicked on: " + event.latLng);
+        console.log(event)
         // If the event has a placeId, use it.
         if (isIconMouseEvent(event)) { //POI
+            console.log(event)
             console.log("You clicked on place:" + event.placeId);
             // Calling e.stop() on the event prevents the default info window from
             // showing.
@@ -129,11 +138,31 @@ var ClickEventHandler = /** @class */ (function () {
         }
     };
     ClickEventHandler.prototype.openCreateBox = function (latLng) {
-        //if clicking existing marker
         var me = this;
         me.infowindow.close();
         var stage = {}
+        var to_send_stage = {}
+
         var spn = document.createElement("span");
+        var placeId;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", '/getPlaceFromCoords?lat=' + latLng.lat() + "&lng=" + latLng.lng(), true);
+        xhr.onload = function (event) {
+            const r = JSON.parse(event.target.responseText);
+            if (r.ok == true) {
+                var place = r.data;
+                console.log(place.formatted_address);
+                placeId = place.place_id;
+                var AddressLabel = document.createElement('p');
+                AddressLabel.textContent = "Indirizzo:\n\n" + place.formatted_address;
+                spn.appendChild(AddressLabel);
+            }
+            else if (r.ok == false) {
+                console.log("nodi non trovati")
+                return {}
+            }
+        }
+        xhr.send();
 
         var StageTitle = document.createElement('p');
         StageTitle.textContent = 'Stai creando un nuovo stage! Descrivilo:';
@@ -200,23 +229,29 @@ var ClickEventHandler = /** @class */ (function () {
         });
 
         inputElement.addEventListener('click', function () {
-
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
             stage_index++;
             /*Inserire ex novo*/
             stage.index = stage_index
-            stage.latitudine = latLng.lat()
-            stage.longitudine = latLng.lng()
+            //stage.latitudine = latLng.lat()
+            //stage.longitudine = latLng.lng()
             stage.nome = StageName.value;
             stage.durata = parseInt(durataElement.value);
-            stage.isExNovo = 1
             stage.descrizione = descrElement.value
             console.log(PhotoFile)
+            stage.placeId = placeId;
             stage.fotoURL = PhotoFile.value;
-            roadmap.push(stage)
-            stage.indirizzo = -1;
-            stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
+            to_send_stage.placeId = stage.placeId;
+            to_send_stage.descrizione = stage.descrizione;
+            to_send_stage.titolo = stage.titolo;
+            to_send_stage.fotoURL = stage.fotoURL;
+            to_send_stage.website = stage.website;
+            to_send_stage.durata = stage.durata;
+            to_send_stage.nome = stage.nome;
+            roadmap.push(to_send_stage)
+
+            //stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
@@ -241,6 +276,7 @@ var ClickEventHandler = /** @class */ (function () {
         me.infowindow.close();
 
         var stage = {}
+        var to_send_stage = {}
 
         var durataShow = document.createElement('p');
         durataShow.textContent = "Quanto ore devi sostare questo nodo?"
@@ -252,7 +288,6 @@ var ClickEventHandler = /** @class */ (function () {
         var desElement = document.createElement('input');
         desElement.id = "descrizone";
         desElement.value = " "
-
 
         var inputElement = document.createElement('input');
         inputElement.type = "submit"
@@ -272,13 +307,13 @@ var ClickEventHandler = /** @class */ (function () {
             /*inserire cose nodo gia esistente*/
 
             stage.durata = parseInt(durataElement.value);
-            stage.latitudine = latLng.lat();
-            stage.longitudine = latLng.lng();
+            to_send_stage.durata = stage.durata;
             stage.placeId = placeId;
-            stage.isExNovo = 0
+            to_send_stage.placeId = stage.placeId;
             stage.descrizione = desElement.value
+            to_send_stage.descrizione = stage.descrizione;
             console.log(stage)
-            roadmap.push(stage);
+            roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
 
@@ -330,33 +365,6 @@ var ClickEventHandler = /** @class */ (function () {
         }
         xhr.send();
 
-        //getPlaceDetails(placeId)
-
-        
-
-        /*this.placesService.getDetails({ placeId: placeId }, function (place, status) {
-            if (status === "OK" &&
-                place &&
-                place.geometry &&
-                place.geometry.location) {
-                stage.nome = place.name;
-                stage.indirizzo = place.formatted_address;
-                stage.citta=place.address_components[2].long_name
-                if(place.website!==undefined){
-                    stage.website = place.website;
-                }
-                else{
-                    stage.website = " "
-                }
-                if(place.photos!==undefined){
-                    stage.fotoURL = place.photos[0].getUrl();
-                }
-                else{
-                    stage.fotoURL = " "
-                }
-            }
-        });*/
-
         me.infowindow = new google.maps.InfoWindow({
             content: spn
             //content: "Sei sicuro di voler aggiungere questo nodo? <br>DURATA: <input id=\"durata\"></input><br><button onclick=\"addToRoadmap('placeId')\" type=\"button\">AGGIUNGI</button>"
@@ -368,15 +376,5 @@ var ClickEventHandler = /** @class */ (function () {
     return ClickEventHandler;
 }());
 
-function generatePlaceIdExNovoNode() { //Gian Marco
-    var generatedPlaceId = "";
-    let possibility = "!#$%&()*+,-./0123456789:;<=>?@[]^_{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let placeIdLength = 27; //lunghezza fissata dei placeId
-
-    for (let i = 0; i < placeIdLength; i++) {
-        generatedPlaceId += possibility.charAt(Math.floor(Math.random() * possibility.length));
-    }
-    return generatedPlaceId;
-}
 
 window.initMap = initMap;
