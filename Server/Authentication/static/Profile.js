@@ -2,18 +2,12 @@
   // Script Avvio Pagina
 
   window.onload=function(){
-    document.getElementById("Default").click();
+    document.getElementById("bar_roadmap_create").click();
     data_user();
-    roadmap_user();
+    number_roadmap_create();
+    number_roadmap_seguite();
+    number_roadmap_preferite();
   };
-
-  // Script Visualizzazione Data Corretta
-
-  function correct_day(day){
-    return day.substring(8,10)+"/"+day.substring(5,7)+"/"+day.substring(0,4)
-  }
-
-  // Vedere bene formato data
 
   // Script Dati Utente
 
@@ -25,29 +19,64 @@
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
 
+      var day = new Date(r.data[0].birthdate);
+      var month = day.getMonth()+1;
+   
       if (r.ok == true) {
           document.getElementById("info_username").innerText = r.data[0].username;
           document.getElementById("info_email").innerText = "Email = "+r.data[0].email;
-          document.getElementById("info_birthdate").innerText = "Compleanno = "+correct_day(r.data[0].birthdate);
-          document.getElementById("avatar").src = "/avatar/"+r.data[0].username+".jpg";
+          document.getElementById("info_birthdate").innerText = "Compleanno = "+day.getDate()+"/"+month+"/"+day.getFullYear();
+          document.getElementById("avatar").src = r.data[0].avatar;
       }
     }
 
     xhr.send();
   }
 
-  // Script Roadmap Utente
+  // Script Numero di Roadmap create,seguite e preferite dall'utente
 
-  function roadmap_user(){ 
+  function number_roadmap_create(){ 
     var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", '/getRoadmapUser', true);
+    xhr.open("GET", '/getNumberRoadmapCreate', true);
   
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
 
       if (r.ok == true) {
-          document.getElementById("info_roadmap_user").innerText = "Roadmap Create = "+r.data[0].Roadmap_Utente;
+          document.getElementById("bar_roadmap_create").innerText = "Roadmap Create ("+r.data[0].Roadmap_Utente+")";
+      }
+    }
+
+    xhr.send();
+  }
+
+  function number_roadmap_seguite(){ 
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", '/getNumberRoadmapSeguite', true);
+  
+    xhr.onload = function (event) {
+      const r = JSON.parse(event.target.responseText);
+
+      if (r.ok == true) {
+          document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+r.data[0].Roadmap_Seguite+")";
+      }
+    }
+
+    xhr.send();
+  }
+
+  function number_roadmap_preferite(){ 
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", '/getNumberRoadmapPreferite', true);
+  
+    xhr.onload = function (event) {
+      const r = JSON.parse(event.target.responseText);
+
+      if (r.ok == true) {
+          document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Preferite ("+r.data[0].Roadmap_Preferite+")";
       }
     }
 

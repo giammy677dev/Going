@@ -6,7 +6,18 @@ function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 18,
-        center: origin
+        center: origin,
+        mapTypeControlOptions: {
+            mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
+          },
+          disableDefaultUI: true,
+          mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
+          scaleControl: true,
+          zoomControl: true,
+          zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.LARGE
+          },
+          mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
     var submitBtn = document.createElement('input');

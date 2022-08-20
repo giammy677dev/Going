@@ -37,10 +37,7 @@
 
 	<div class="container">
 		
-		<!-- Informazioni Utente 
-		p id="info_roadmap_user_preferite"> </p>
-				<p id="info_roadmap_user_seguite"> </p>
-		-->
+		<!-- Informazioni Utente -->
 
 		<div class="card">
 			<img class="images" id="avatar" src="" width="200" 
@@ -50,18 +47,20 @@
 				<p> <b id="info_username"> </b></p>
 				<p id="info_email"> </p>
 				<p id="info_birthdate"> </p>
-				<p id="info_roadmap_user"> </p>
 			</div>
 		</div>
 
-		
 		<!-- Informazioni Roadmap -->
 
 		<div class="roadmap">
-			<button class="tablink" onclick="open_view('roadmap_create', this, 'red')" id="Default">Roadmap
-				Create</button>
-			<button class="tablink" onclick="open_view('roadmap_seguite', this, 'green')">Roadmap Seguite</button>
-			<button class="tablink" onclick="open_view('roadmap_preferite', this, 'blue')">Roadmap Preferite</button>
+
+			<!-- Navbar Sezione Roadmap -->
+
+			<button class="tablink" id="bar_roadmap_create" onclick="open_view('roadmap_create', this, 'red')"></button>
+			<button class="tablink" id="bar_roadmap_seguite" onclick="open_view('roadmap_seguite', this, 'green')"></button>
+			<button class="tablink" id="bar_roadmap_preferite" onclick="open_view('roadmap_preferite', this, 'blue')"></button>
+
+			<!-- Sezione Roadmap create -->
 
 			<div id="roadmap_create" class="tabcontent">
 				<div class="row">
@@ -83,6 +82,8 @@
 				</div>		
 			</div>
 
+			<!-- Sezione Roadmap seguite -->
+
 			<div id="roadmap_seguite" class="tabcontent">
 				<div class="row">
 					<div class="column">
@@ -102,6 +103,8 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- Sezione Roadmap  -->
 
 			<div id="roadmap_preferite" class="tabcontent">
 				<div class="row">

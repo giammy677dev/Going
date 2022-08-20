@@ -104,9 +104,18 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
+    async getNumberRoadmapCreate(id) {
+        const data = await this.dao.getNumberRoadmapCreate(id);
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
 
-    async getRoadmapUser(id) {
-        const data = await this.dao.getRoadmapUser(id);
+    async getNumberRoadmapSeguite(id) {
+        const data = await this.dao.getNumberRoadmapSeguite(id);
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
+    async getNumberRoadmapPreferite(id) {
+        const data = await this.dao.getNumberRoadmapPreferite(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
