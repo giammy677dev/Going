@@ -301,10 +301,16 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage)
 
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
+<<<<<<< Updated upstream
             //addToRoadmapVisual(stage);
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+=======
+            //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
+            document.getElementById('lines').insertAdjacentHTML='<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').insertAdjacentHTML= '<div class="card"><h4>ORA</h4><p>Titolo stage</p></div>'
+>>>>>>> Stashed changes
 
-            if (roadmap.length >= 2) {
+        if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
             }
 
@@ -373,8 +379,9 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
-            
+            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML+= '<div class="card"><h4>ORA</h4><p>Titolo stage</p></div>'
+
             if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
             }
