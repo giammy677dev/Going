@@ -67,7 +67,7 @@
         const r = JSON.parse(event.target.responseText);
 
         if (r.ok == true) {
-          
+          alert("creata la roadmap")
         }
         else if (r.ok == false) {
           alert("Problemi creazione roadmap")
@@ -79,7 +79,6 @@
         titolo: title,
         descrizione: description,
         isPublic: isPub,
-        dataCreazione: today,
         localita: roadmap[0].citta,
         stages: roadmap
       }));

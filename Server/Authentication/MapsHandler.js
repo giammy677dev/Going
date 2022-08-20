@@ -13,7 +13,6 @@ class MapsHandler {
     }
 
     async getPlaceDetails(place_id) {
-        console.log(place_id)
         try {
             var data_from_google = await client.placeDetails({
                 params: {
@@ -24,8 +23,10 @@ class MapsHandler {
                 timeout: 1000, // milliseconds
             });
             data_from_google = data_from_google.data.result;
-            console.log(data_from_google)
-            data_from_google.foto = this.getPhotoUrl(data_from_google.photos[0].photo_reference)
+            if(data_from_google.photos !== undefined)
+                data_from_google.foto = this.getPhotoUrl(data_from_google.photos[0].photo_reference)
+            else
+                data_from_google.foto = "FOTO DI DEFAULT QUI"
             return [
                 true, 0, data_from_google
             ]
@@ -34,6 +35,28 @@ class MapsHandler {
         }
         return { ok: false, error: -1 } //errore? -1?
     }
+
+    async getPlaceFromCoords(lat,lng) {
+        try {
+            //var locat = new google.maps.LatLng(lat, lng);
+
+            var data_from_google = await client.geocode({
+                params: {
+                    latlng:lat+","+lng,
+                    key: API_KEY,
+                    //fields:['icon'] if necessary
+                },
+                timeout: 1000, // milliseconds
+            });
+            const res = (data_from_google.data.results[0]);
+            console.log(res)
+            return [true,0, res]
+        } catch (error) {
+            console.log(error)
+        }
+        return [false,-1,{}] //errore? -1?
+    }
+
 
 }
 module.exports = MapsHandler
