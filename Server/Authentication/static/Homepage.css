@@ -1,99 +1,99 @@
-*{
+* {
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
-  }
-  
-  html{
-    height: 100%;
-  }
-  
-  body {
-      font-family: Arial;
-      font-size: 20px;
-      height: 100%;
-      margin: 0px;
-      top: 0;
-      position: fixed;
-      /*background: #040404 url(../img/bg.jpg) top right no-repeat;
-      background-size: cover;*/
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 100vh;
-  }
-  
-  .primoPiano {
-      font-family: Arial;
-      font-size: 12px;
-      height: 100%;
-      margin: 0px;
-  }
-  
-  .container {
-      color: white;
-      margin-left: 5%;
-      position: absolute;
-      top: 50%;
-      -ms-transform: translateY(-50%);
-      transform: translateY(-50%);
-  }
-  
-  .menuBar{
-      margin: 0;
-      margin-top: 30px;
-      padding: 0;
-      display: flex;
-      list-style: none;
-      align-items: center;
-      background-color: #af2d1375;
-  }
-  
-  .menuBar a {
-      flex: 1;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0;
-      font-family: "Poppins", sans-serif;
-      font-size: 18px;
-      color: rgba(255, 255, 255, 0.7);
-      text-align: center;
-      text-decoration: none;
-  }
+}
 
-  #Homepage{
-      color: white;
-      font-weight: 500;
-  }
-  
-  .menuBar a:hover {
-      color: white;
-      font-weight: 500;
-  }
-  
-  .primoPiano H1{
-      font-size: 80px;
-      margin: 0;
-      padding: 0;
-      line-height: 1;
-      color: white;
-      font-family: "Poppins", sans-serif;
-  }
-  
-  .primoPiano H2{
-      margin-bottom: .5rem;
-      font-weight: 500;
-      line-height: 1.2;
-      font-family: "Raleway", sans-serif;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 24px;
-  }
-  
-  #home {
-      color: white;
-      font-weight: 500;
-  }
-  
-  .pulsantiLog {
+html {
+    height: 100%;
+}
+
+body {
+    font-family: Arial;
+    font-size: 20px;
+    height: 100%;
+    margin: 0px;
+    top: 0;
+    position: fixed;
+    /*background: #040404 url(../img/bg.jpg) top right no-repeat;
+      background-size: cover;*/
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 100vh;
+}
+
+.primoPiano {
+    font-family: Arial;
+    font-size: 12px;
+    height: 100%;
+    margin: 0px;
+}
+
+.container {
+    color: white;
+    margin-left: 5%;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.menuBar {
+    margin: 0;
+    margin-top: 30px;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    background-color: #af2d1375;
+}
+
+.menuBar a {
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    text-decoration: none;
+}
+
+#Homepage {
+    color: white;
+    font-weight: 500;
+}
+
+.menuBar a:hover {
+    color: white;
+    font-weight: 500;
+}
+
+.primoPiano H1 {
+    font-size: 80px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+.primoPiano H2 {
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: "Raleway", sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+}
+
+#home {
+    color: white;
+    font-weight: 500;
+}
+
+.pulsantiLog {
     display: block;
     /*margin-top: 50px;*/
     position: absolute;
@@ -103,227 +103,233 @@
     width: 80%;
     padding: 20px;
     font-family: "Poppins", sans-serif;
-  }
-  
-  .pulsantiLog a {
-      /*margin-right: 10%; */
-      font-size: 20px;
-      /*padding: 5px 10%;*/
-      margin-top: 20px;
-      border: thin #c82d0e solid;
-      text-transform: uppercase;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      cursor: pointer;
-  }
-  
-  .pre-login { 
-      width: 40%;
-      padding: 5px 10%;
-      margin-right: 0.5%;
-      margin-left: 0.5%;
-  }
-  
-  .pulsantiLog a:hover {
-      background-color: #651515;
-      border: thin white solid;
-      color: white;
-      font-weight: 500;
-  }
-  
-  /*---------*/
-  
-  .post-login {
-      display: none;
-  }
-  
-  #logout {
-      margin-right: 0px;
-      padding: 5px 10%;
-  }
-  
-  .msgBenvenuto{
-      font-size: 0.7em;
-      color: white;
-      margin-left: 5%;
-  }
-  
-  /*---------*/
-  #log{
-      font-size: 26px;
-      display: none;
-      z-index: 2;
-      font-family: serif;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.92);
-      position: absolute;
-      width: 70%;
-      height: 80%;
-      margin: 5% 15%;
-      text-align: center;
-      font-family: "Poppins", sans-serif;
-      border: thin #d24618 solid;
-      overflow: auto;
-  }
-  
-  .pulsantiForm { 
-      font-size: 20px;
-      padding: 5px 30px;
-      margin-top: 10px;
-      text-align: center;
-      cursor: pointer;
-      background-color: #a02113;
-      color: white;
-  }
-  
-  .pulsantiForm:hover{ 
-      /*box-shadow: 0px 0px 10px #18d26e;*/
-      box-shadow: 0px 0px 10px white;
-  }
-  
-  input[type="text"], input[type="password"] {
-      font-size: 30px;
-      border-radius: 4px;
-  }
-  
-  input[type="text"]:focus, input[type="password"]:focus {
-      border: medium solid #d21818;
-  }
-  
-  .noReg{
-      font-size: 20px;
-  }
-  
-  .noReg a {
-      color: #d24018;
-  }
-  
-  .inEvidenza {
-      color: #fff;
-      border-bottom: 2px solid #a6290f;
-  }
-  
-  .inEvidenza2 {
-      color: #fff;
-      border-bottom: 1px solid #a6290f;
-  }
+}
 
-  .paragrafoSocial{
+.pulsantiLog a {
+    /*margin-right: 10%; */
+    font-size: 20px;
+    /*padding: 5px 10%;*/
+    margin-top: 20px;
+    border: thin #c82d0e solid;
+    text-transform: uppercase;
     text-align: center;
-    margin-top: 30px;
-  }
-  
-  .paragrafoSocial a {
-    text-align: center;
-  }
-  
-  .paragrafoSocial a {
-      margin-top: 50%;
-      margin-left: 30px;
-  }
-  
-  .paragrafoSocial img:hover {
-      -webkit-filter: drop-shadow(1px 1px 8px #c82d0e);
-      filter: drop-shadow(1px 1px 8px #c82d0e);
-  }
-  
-  .paragrafoSocial img{
-      height: 50px;
-  }
-  
-  .sfondo {
-      z-index: -1;
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-  }
-  
-.sfondo video {
-	width: 100%;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pre-login {
+    width: 40%;
+    padding: 5px 10%;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+}
+
+.pulsantiLog a:hover {
+    background-color: #651515;
+    border: thin white solid;
+    color: white;
+    font-weight: 500;
+}
+
+/*---------*/
+
+.post-login {
+    display: none;
+    width: 40%;
+    padding: 5px 10%;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
 }
 
 
-  .split {
+
+.msgBenvenuto {
+    font-size: 0.7em;
+    color: white;
+    margin-left: 5%;
+}
+
+/*---------*/
+#log,
+#logout {
+    font-size: 26px;
+    display: none;
+    z-index: 2;
+    font-family: serif;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.92);
+    position: absolute;
+    width: 70%;
+    height: fit-content;
+    margin: 5% 15%;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    border: thin #d24618 solid;
+    overflow: auto;
+}
+
+.pulsantiForm,
+.pulsantiout {
+    font-size: 20px;
+    padding: 5px 30px;
+    margin-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #a02113;
+    color: white;
+}
+
+.pulsantiForm:hover,
+.pulsantiout:hover {
+    /*box-shadow: 0px 0px 10px #18d26e;*/
+    box-shadow: 0px 0px 10px white;
+}
+
+input[type="text"],
+input[type="password"] {
+    font-size: 30px;
+    border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border: medium solid #d21818;
+}
+
+.noReg {
+    font-size: 20px;
+}
+
+.noReg a {
+    color: #d24018;
+}
+
+.inEvidenza {
+    color: #fff;
+    border-bottom: 2px solid #a6290f;
+}
+
+.inEvidenza2 {
+    color: #fff;
+    border-bottom: 1px solid #a6290f;
+}
+
+.paragrafoSocial {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.paragrafoSocial a {
+    text-align: center;
+}
+
+.paragrafoSocial a {
+    margin-top: 50%;
+    margin-left: 30px;
+}
+
+.paragrafoSocial img:hover {
+    -webkit-filter: drop-shadow(1px 1px 8px #c82d0e);
+    filter: drop-shadow(1px 1px 8px #c82d0e);
+}
+
+.paragrafoSocial img {
+    height: 50px;
+}
+
+.sfondo {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.sfondo video {
+    width: 100%;
+}
+
+
+.split {
     height: 100%;
     position: fixed;
     z-index: 1;
     top: 0;
     overflow-x: hidden;
     padding-top: 20px;
-  }
-  
-  .left {
+}
+
+.left {
     left: 0;
     width: 55%;
-  }
-  
-  .right {
-    background-color:rgba(49, 49, 49, 0.53);
+}
+
+.right {
+    background-color: rgba(49, 49, 49, 0.53);
     right: 0;
     width: 45%;
-  }
-  
-  .centered {
+}
+
+.centered {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
     padding: 20px;
-  }
-  
-  .sx {
-    background-color:rgba(48, 32, 32, 0.53);
-  }
-
-.grid-container {
-	display: grid;
-	grid-gap: 10%;
-	padding: 10px;
-    padding-bottom: 40px;
-	/*background-color: yellow;*/
-	
 }
 
-.grid-container > div {
-	padding: 2px;
-	background-color: rgba(255, 255, 255, 0.08);
-	text-align: center;
-	transition: all ease-in-out 0.3s;
+.sx {
+    background-color: rgba(48, 32, 32, 0.53);
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 10%;
+    padding: 10px;
+    padding-bottom: 40px;
+    /*background-color: yellow;*/
+
+}
+
+.grid-container>div {
+    padding: 2px;
+    background-color: rgba(255, 255, 255, 0.08);
+    text-align: center;
+    transition: all ease-in-out 0.3s;
 }
 
 .grid-container div:hover {
-	background-color: #af2d1375;
+    background-color: #af2d1375;
 }
 
 .testo-contatti {
-	color: white;
-	font-size: 20px;
+    color: white;
+    font-size: 20px;
 }
 
 .titolo-contatti {
-	font-size: 25px;
-	color: #ffffff;
+    font-size: 25px;
+    color: #ffffff;
 }
 
 
-.imag{
+.imag {
     display: inline-block;
-   
+
     margin: 80px;
 
 }
 
-.boxRicerca{
+.boxRicerca {
     margin-top: 20px;
 }
 
-.boxRicerca input{
+.boxRicerca input {
     /*background-color: #7e534a75;*/
-    color:rgba(0, 0, 0, 0.8)
+    color: rgba(0, 0, 0, 0.8)
 }
 
 #tastoRicerca {
@@ -347,7 +353,7 @@
     font-weight: 500;
 }
 
-#search{
+#search {
     font-size: 20px;
     border-radius: 6px;
     box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);
