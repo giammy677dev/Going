@@ -54,6 +54,7 @@ class HTTPinterface {
         this.app.use('/avatar', express.static('avatar')); //avatars
 
         //back end calls
+        this.app.get('/isLogWho', this.isLogWho.bind(this));
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
@@ -84,6 +85,19 @@ class HTTPinterface {
         });
     }
 
+    async isLogWho(req,res){
+        var r
+        if (req.session.loggedin) {
+            r = {ok:true,whoLog:req.session.user_id}
+            console.log(r)
+            return res.send(JSON.stringify(r))
+        }
+        else{
+            r = {ok:false,whoLog:null}
+            console.log(r)
+            return res.send(JSON.stringify(r))
+        }
+    }
     async register(req, res) {
         console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
