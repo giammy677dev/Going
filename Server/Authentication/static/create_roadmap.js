@@ -1,6 +1,9 @@
 var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers = [];
+var roadmap = []; //lista degli stage
+var markers = [];
+var stage_index = 0;
 
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
@@ -9,15 +12,15 @@ function initMap() {
         center: origin,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
-          },
-          disableDefaultUI: true,
-          mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
-          scaleControl: true,
-          zoomControl: true,
-          zoomControlOptions: {
+        },
+        disableDefaultUI: true,
+        mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
+        scaleControl: true,
+        zoomControl: true,
+        zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
-          },
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+        },
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
     var submitBtn = document.createElement('input');
@@ -42,7 +45,6 @@ function initMap() {
         }
     });
 
-    //getExNovoStages(); //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
     new ClickEventHandler(map, origin);
 }
 
@@ -53,7 +55,7 @@ function getExNovoStages(t) {
         const r = JSON.parse(event.target.responseText);
         console.log(r)
         if (r.ok == true) {
-            drawExNovoStages(r.data,t) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
+            drawExNovoStages(r.data, t) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
         }
         else if (r.ok == false) {
             alert("Nodi non trovati")
@@ -81,7 +83,7 @@ function getPlaceDetails(placeId) {
 }
 
 // Loop through the results array and place a marker for each set of coordinates.
-function drawExNovoStages(results,t) {
+function drawExNovoStages(results, t) {
     for (let i = 0; i < results.length; i++) {
         const latitudine = results[i].latitudine;
         const longitudine = results[i].longitudine;
@@ -97,20 +99,50 @@ function drawExNovoStages(results,t) {
 
         t.latLng = latLng;
         t.placeId = placeId;
-        t.ExistingNode=true;
+        t.ExistingNode = true;
         //marker.addListener("click", t.handleClick.bind(this));
-        marker.addListener("click", () => { console.log(results[i])})
+        marker.addListener("click", () => { console.log(results[i]) })
         //marker.addListener("click", console.log(results).bind(this));
         db_markers.push(marker); //Aggiungo il marker all'array markers
     }
 }
 
+function calculateDistance(first_marker, second_marker) {
+    //console.log('Latitudine 1: '+first_marker.latitudine);
+    //console.log('Latitudine 2: '+second_marker.latitudine);
+    let directionsService = new google.maps.DirectionsService();
+    let directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map); // Existing map object displays directions
+    // Create route from existing points used for markers
+    const route = {
+        origin: {lat: first_marker.latitudine, lng: first_marker.longitudine},
+        destination: {lat: second_marker.latitudine, lng: second_marker.longitudine},
+        travelMode: 'DRIVING'
+    }
+
+    directionsService.route(route,
+        function (response, status) { // anonymous function to capture directions
+            console.log('STATUS: '+status)
+            if (status !== 'OK') {
+                window.alert('Directions request failed due to ' + status);
+                return;
+            } else {
+                directionsRenderer.setDirections(response); // Add route to the map
+                var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+                if (!directionsData) {
+                    window.alert('Directions request failed');
+                    return;
+                }
+                else {
+                    //document.getElementById('msg').innerHTML += " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
+                }
+            }
+        });
+}
+
 function isIconMouseEvent(e) {
     return "placeId" in e;
 }
-var roadmap = []; //lista degli stage
-var markers = [];
-var stage_index = 0;
 
 var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
@@ -139,7 +171,6 @@ var ClickEventHandler = /** @class */ (function () {
             // If you call stop here when there is no placeId you will prevent some
             // other map click event handlers from receiving the event.
             event.stop();
-            console.log(event);
             if (event.placeId) {
                 this.openAddBox(event.placeId, event.latLng);
             }
@@ -242,17 +273,16 @@ var ClickEventHandler = /** @class */ (function () {
         inputElement.addEventListener('click', function () {
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
-            stage_index++;
-            /*Inserire ex novo*/
+            
+            /*Nodo ex novo*/
             stage.index = stage_index
-            //stage.latitudine = latLng.lat()
-            //stage.longitudine = latLng.lng()
             stage.nome = StageName.value;
             stage.durata = parseInt(durataElement.value);
             stage.descrizione = descrElement.value
-            console.log(PhotoFile)
             stage.placeId = placeId;
             stage.fotoURL = PhotoFile.value;
+            stage.latitudine = latLng.lat();
+            stage.longitudine = latLng.lng();
             to_send_stage.placeId = stage.placeId;
             to_send_stage.descrizione = stage.descrizione;
             to_send_stage.titolo = stage.titolo;
@@ -260,12 +290,19 @@ var ClickEventHandler = /** @class */ (function () {
             to_send_stage.website = stage.website;
             to_send_stage.durata = stage.durata;
             to_send_stage.nome = stage.nome;
+            to_send_stage.latitudine = latLng.lat();
+            to_send_stage.longitudine = latLng.lng();
             roadmap.push(to_send_stage)
 
-            //stage.placeId = generatePlaceIdExNovoNode(); //Gian Marco (c'era -1)
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+
+            if (roadmap.length >= 2) {
+                calculateDistance(roadmap[stage_index - 1], stage);
+            }
+
+            stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
             prec = stage.durata + prec
@@ -314,19 +351,29 @@ var ClickEventHandler = /** @class */ (function () {
         inputElement.addEventListener('click', function () {
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(stage.nome)
-            stage_index++;
-            /*inserire cose nodo gia esistente*/
 
+            /*Nodo gia esistente*/
             stage.durata = parseInt(durataElement.value);
             to_send_stage.durata = stage.durata;
             stage.placeId = placeId;
             to_send_stage.placeId = stage.placeId;
             stage.descrizione = desElement.value
             to_send_stage.descrizione = stage.descrizione;
+            stage.latitudine = latLng.lat();
+            stage.longitudine = latLng.lng();
+            to_send_stage.latitudine = latLng.lat();
+            to_send_stage.longitudine = latLng.lng();
+
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
+            
+            if (roadmap.length >= 2) {
+                calculateDistance(roadmap[stage_index - 1], stage);
+            }
+
+            stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
             prec = stage.durata + prec
@@ -343,8 +390,8 @@ var ClickEventHandler = /** @class */ (function () {
         spn.appendChild(desElement);
         spn.appendChild(inputElement);
 
-
         console.log(placeId)
+
         var xhr = new XMLHttpRequest();
         xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
         xhr.onload = function (event) {
@@ -386,6 +433,5 @@ var ClickEventHandler = /** @class */ (function () {
     };
     return ClickEventHandler;
 }());
-
 
 window.initMap = initMap;

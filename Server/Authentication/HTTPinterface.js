@@ -214,6 +214,7 @@ class HTTPinterface {
 
     async getPlaceFromCoords(req, res) {
         if (req.session.loggedin || true) { // da mettere!
+            console.log('sono dentro')
             const isExNovo=1;
             const r = await this.controller.getPlaceFromCoords(req.query.lat,req.query.lng);
             if(r.ok)
