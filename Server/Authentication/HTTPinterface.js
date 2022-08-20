@@ -91,12 +91,12 @@ class HTTPinterface {
         var r
         if (req.session.loggedin) {
             r = {ok:true,whoLog:req.session.user_id}
-            console.log(r)
+            
             return res.send(JSON.stringify(r))
         }
         else{
             r = {ok:false,whoLog:null}
-            console.log(r)
+           
             return res.send(JSON.stringify(r))
         }
     }

@@ -1,115 +1,135 @@
 <!DOCTYPE HTML>
 <HTML>
+
 <HEAD>
-	<title>Going</title>
-	<meta charset="utf-8" />
-	<meta name="description" content="bla bla.... viaggi... bla bla">
-	<meta name="author" content="Mennillo Orlando Perillo Russo Maraniello" />
-	<meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
-	<link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
-	<link rel="stylesheet" href="/static/Homepage.css" type="text/css" />
+    <title>Going</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="bla bla.... viaggi... bla bla">
+    <meta name="author" content="Mennillo Orlando Perillo Russo Maraniello" />
+    <meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
+    <link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
+    <link rel="stylesheet" href="/static/Homepage.css" type="text/css" />
     <script src="/static/Homepage.js" type="text/javascript"></script>
     <script src="/static/Login.js" type="text/javascript"></script>
-    <script src="/static/going.js" type="text/javascript"></script>
-	<!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 </HEAD>
 
 <body onload="caricaRoadmap(),check()">
 
-    <div id="log">    
-                    <p>
-                        <h2>EFFETTUA IL LOGIN</h2>
-                    </p>
-                        
-                
-                        <p>
-                            <label for="username"><span class="inEvidenza">Username</span>
-                                <p><input type="text" name="username" id="username_login" /></p>
-                            </label>
-                        </p>
-                        <p>
-                            <label for="password"><span class="inEvidenza">Password</span>
-                                <p><input type="password" name="password" id="password_login" /></p>
-                            </label>
-                        </p>
-                        
-                        <p>
-                            <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()"/>
-                            <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm" value="Annulla"/>
-                        </p>
-                        
-                        
-                    <p class="noReg">
-                        Non sei ancora registrato? <a href="/signup">Registrati qui</a>
-                    </p>
-                    
-        </div>	
+    <div id="log">
+        <p>
+        <h2>EFFETTUA IL LOGIN</h2>
+        </p>
+
+
+        <p>
+            <label for="username"><span class="inEvidenza">Username</span>
+                <p><input type="text" name="username" id="username_login" /></p>
+            </label>
+        </p>
+        <p>
+            <label for="password"><span class="inEvidenza">Password</span>
+                <p><input type="password" name="password" id="password_login" /></p>
+            </label>
+        </p>
+
+        <p>
+            <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
+            <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
+                value="Annulla" />
+        </p>
+
+
+        <p class="noReg">
+            Non sei ancora registrato? <a href="/signup">Registrati qui</a>
+        </p>
+
+    </div>
+
+    <div id="logout">
+        <p>
+        <h2>VUOI EFFETTUARE IL LOGOUT?</h2>
+        </p>
+
+
+        <input class="pulsantiout" type="submit" name="Logout" value="Logout" onclick="logout()" />
+        <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiout"
+            value="Annulla" />
+
+    </div>
+
 
     <div class="primoPiano">
 
-		               
-                <div class="split left">
-                    <div class="centered sx">
-                        <H1>Going</H1> 
-			            <H2>Programma la tua <span class="inEvidenza">esperienza di viaggio</span> creando la tua <span class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
-                        <div class="menuRow">
-                            <div class="menuBar">
-                                <a id="Homepage" href="/">Homepage</a>
-                                <a id="About" href="/about" title="Leggi informazioni utili per giocare al meglio!">About</a>
-                                <a id="Explore" href="/explore" title="Inizia subito a giocare!">Explore</a>
-                                <a id="Create" href="/create" title="Guarda la classifica!">Create</a>
+
+        <div class="split left">
+            <div class="centered sx">
+                <H1>Going</H1>
+                <H2>Programma la tua <span class="inEvidenza">esperienza di viaggio</span> creando la tua <span
+                        class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
+                <div class="menuRow">
+                    <div class="menuBar">
+                        <a id="Homepage" href="/">Homepage</a>
+                        <a id="About" href="/about" title="Leggi informazioni utili per giocare al meglio!">About</a>
+                        <a id="Explore" href="/explore" title="Inizia subito a giocare!">Explore</a>
+                        <a id="Create" href="/create" title="Guarda la classifica!">Create</a>
+                    </div>
+                </div>
+
+                <div class="boxRicerca">
+                    <input type="text" name="search" id="search" placeholder="Cerca Roadmap/Utenti" method="get">
+                    <input type="submit" value="Ricerca" id="tastoRicerca" onclick="ricercaHome()">
+                </div>
+                <p class="paragrafoSocial">
+                    <a title="Visita profilo Instagram" target="_blank" href="https://www.instagram.com//"><img
+                            src="/storage/Instagram.png" type="image/png" /></a>
+                    <a title="Inviaci una mail" href="mailto:@gmail.com"><img src="/storage/Mail.png"
+                            type="image/png" /></a>
+                    <a title="Visita pagina facebook" target="_blank" href="https://www.facebook.com/"><img
+                            src="/storage/Facebook.png" type="image/png" /></a>
+                </p>
+            </div>
+
+            <div class="split right">
+
+                <div class="pulsantiLog">
+                    <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
+                    <a class="pre-login" href="/signup">Registrati</a>
+                    <a class="post-login" onclick="document.getElementById('logout').style.display='block'">Logout</a>
+                    <a class="post-login" href="/profile">Profile</a>
+                </div>
+
+                <div class="centered rx">
+                    <H2>Le Roadmap più amate:</H2>
+
+                    <div class="grid-container">
+
+                        <div>
+
+                            <div id="prova">
+
                             </div>
                         </div>
 
-                        <div class="boxRicerca">
-                            <input type="text" name="search" id="search" placeholder="Cerca Roadmap/Utenti" method="get">
-                            <input type="submit" value="Ricerca" id="tastoRicerca" onclick="ricercaHome()">
+                        <div>
+                            <span class="titolo-contatti">Titolo Roadmap</span>
+                            <p>Valutazione media: durata:</p>
+                            <p>start: finish: </p>
                         </div>
-                        <p class="paragrafoSocial">
-                                <a title="Visita profilo Instagram" target="_blank" href="https://www.instagram.com//"><img src="/storage/Instagram.png" type="image/png"/></a>
-                                <a title="Inviaci una mail" href="mailto:@gmail.com"><img src="/storage/Mail.png" type="image/png"/></a>
-                                <a title="Visita pagina facebook" target="_blank" href="https://www.facebook.com/"><img src="/storage/Facebook.png" type="image/png"/></a>
-                        </p>
-                </div>
-                
-                <div class="split right">
 
-                    <div class="pulsantiLog">
-                        <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
-                        <a class="pre-login" href="/signup">Registrati</a>
-                        <a class="post-login" id="logout" href="logout">Logout</a>
-                        <a class="post-login" id="profile" href="/profile">Profile</a>
+                        <div>
+                            <span class="titolo-contatti">Titolo Roadmap</span>
+                            <p>Valutazione media: durata:</p>
+                            <p>start: finish: </p>
+                        </div>
+
                     </div>
 
-                    <div class="centered rx">
-                        <H2>Le Roadmap più amate:</H2>
 
-                        <div class="grid-container">
-					
-                            <div> 
-                                
-                                        <div id="prova">
-
-                                        </div>   
-                            </div>
-                            
-                            <div> 
-                                <span class="titolo-contatti">Titolo Roadmap</span>
-                                        <p>Valutazione media:          durata:</p>
-                                        <p>start:                     finish: </p>    
-                            </div>
-                            
-                            <div> 
-                                <span class="titolo-contatti">Titolo Roadmap</span>
-                                        <p>Valutazione media:          durata:</p>
-                                        <p>start:                     finish: </p>    
-                            </div>
-                            
-                        </div>
-
-
-                        <!--
+                    <!--
                         <div class="info">
                 
                             <div class="imag">
@@ -123,18 +143,19 @@
                 
                         </div>
                     -->
-                    </div>
                 </div>
-                    
-	</div>
-	
+            </div>
 
-    <div class="sfondo">
-		<video autoplay loop muted>
-		<source src="/storage/sfondoImg.mp4" type="video/mp4"/>
-		</video>
-	</div>
-	
-	
+        </div>
+
+
+        <div class="sfondo">
+            <video autoplay loop muted>
+                <source src="/storage/sfondoImg.mp4" type="video/mp4" />
+            </video>
+        </div>
+
+
 </body>
+
 </HTML>
