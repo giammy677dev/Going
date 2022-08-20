@@ -54,15 +54,22 @@ class HTTPinterface {
         this.app.use('/avatar', express.static('avatar')); //avatars
 
         //back end calls
+        this.app.get('/isLogWho', this.isLogWho.bind(this));
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
+        this.app.get('/searchRoadmap', this.searchRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
-        this.app.post('/getExNovoStages', this.getExNovoStages.bind(this));
+        this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
+        this.app.get('/getNumberRoadmapCreate', this.getNumberRoadmapCreate.bind(this));
+        this.app.get('/getNumberRoadmapSeguite', this.getNumberRoadmapSeguite.bind(this));
+        this.app.get('/getNumberRoadmapPreferite', this.getNumberRoadmapPreferite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
+        this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
+        this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -80,6 +87,19 @@ class HTTPinterface {
         });
     }
 
+    async isLogWho(req,res){
+        var r
+        if (req.session.loggedin) {
+            r = {ok:true,whoLog:req.session.user_id}
+            
+            return res.send(JSON.stringify(r))
+        }
+        else{
+            r = {ok:false,whoLog:null}
+           
+            return res.send(JSON.stringify(r))
+        }
+    }
     async register(req, res) {
         console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
@@ -94,6 +114,7 @@ class HTTPinterface {
             req.session.username = r.data.username;
             req.session.user_id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
+            req.session.placeDetails = {}
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
@@ -106,9 +127,15 @@ class HTTPinterface {
     }
 
     async logout(req, res) {
-        if (req.body.username == req.session.username) { //richiesta giusta
+        console.log("req.session=",req.session)
+        console.log("req.session.user_id=",req.session.user_id)
+        console.log("req.body=",req.body)
+        
+        if (req.body.id == req.session.user_id) { //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
+            req.session.user_id = '0'
+            console.log("req.session=",req.session)
             //non uso req.session = {} perché nella sessione possono esserci anche altre info!
             return res.send({ ok: true })
         }
@@ -123,15 +150,17 @@ class HTTPinterface {
         2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity.
         */
-
-        if (req.session.loggedin || true) {  //OR TRUE SI DEVE TOGLIERE!!
+        console.log(req.session)
+        if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
             //const user_id = req.session.id; //qua da aggiustare in login!!
             const user_id = 1;
-            const r = await this.controller.createRoadmap(user_id, req.body);
+            
+            const r = await this.controller.createRoadmap(user_id, req.body, req.session.placeDetails);
             //const 
             if (r.ok) {
                 console.log("test")
             }
+            //req.session.placeDetails = {} //svuotamento session troppo piccola?
             return res.send(JSON.stringify(r))
         }
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
@@ -140,9 +169,10 @@ class HTTPinterface {
 
     async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
-        console.log(r)
+        console.log(r);
         return res.send(r);
     }
+
 
     async getDataUser(req, res) {
         if (req.session.loggedin) {
@@ -152,8 +182,68 @@ class HTTPinterface {
         }
     }
 
+    async getNumberRoadmapCreate(req, res) {
+        if (req.session.loggedin) {
+            const r = await this.controller.getNumberRoadmapCreate(req.session.user_id);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getNumberRoadmapSeguite(req, res) {
+        if (req.session.loggedin) {
+            const r = await this.controller.getNumberRoadmapSeguite(req.session.user_id);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getNumberRoadmapPreferite(req, res) {
+        if (req.session.loggedin) {
+            const r = await this.controller.getNumberRoadmapPreferite(req.session.user_id);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getPlaceInfo(req, res) {
+        if (req.session.loggedin) { // da mettere!
+            const isExNovo=0;
+            const r = await this.controller.getPlaceInfo(req.query.placeId);
+            if(r.ok){
+                req.session.placeDetails[req.query.placeId] = [r.data,isExNovo];
+            }
+            
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getPlaceFromCoords(req, res) {
+        if (req.session.loggedin || true) { // da mettere!
+            console.log('sono dentro')
+            const isExNovo=1;
+            const r = await this.controller.getPlaceFromCoords(req.query.lat,req.query.lng);
+            if(r.ok)
+            {
+                console.log(r.data.place_id)
+                if(req.session.placeDetails === null)
+                    req.session.placeDetails = {}
+                
+                req.session.placeDetails[r.data.place_id] = [r.data,isExNovo];
+            }
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+
     async searchUser(req, res) {
+        
         const r = await this.controller.searchUser(req.query.username);
+        return res.send(JSON.stringify(r));
+    }
+
+    async searchRoadmap(req, res) {
+        const r = await this.controller.searchRoadmap(req.query.ricerca);
         return res.send(JSON.stringify(r));
     }
 

@@ -55,5 +55,6 @@ function date_registration() {
 
     today = yyyy + '-' + mm + '-' + dd;
 
+    document.getElementById("birthdate").setAttribute("min","1900-01-01");
     document.getElementById("birthdate").setAttribute("max", today);
 }
