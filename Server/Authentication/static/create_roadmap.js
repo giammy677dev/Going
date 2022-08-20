@@ -108,8 +108,15 @@ function drawExNovoStages(results, t) {
 }
 
 function calculateDistance(first_marker, second_marker) {
-    //console.log('Latitudine 1: '+first_marker.latitudine);
-    //console.log('Latitudine 2: '+second_marker.latitudine);
+    var selectedMode;
+    if (document.getElementById("driving_mode").checked) {
+        selectedMode = document.getElementById("driving_mode").value;
+    }
+    else {
+        selectedMode = document.getElementById("walking_mode").value;
+    }
+    console.log('Modalità: '+selectedMode);
+
     let directionsService = new google.maps.DirectionsService();
     let directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map); // Existing map object displays directions
@@ -117,7 +124,7 @@ function calculateDistance(first_marker, second_marker) {
     const route = {
         origin: {lat: first_marker.latitudine, lng: first_marker.longitudine},
         destination: {lat: second_marker.latitudine, lng: second_marker.longitudine},
-        travelMode: 'DRIVING'
+        travelMode: google.maps.TravelMode[selectedMode] //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
     }
 
     directionsService.route(route,
@@ -134,6 +141,7 @@ function calculateDistance(first_marker, second_marker) {
                     return;
                 }
                 else {
+                    //TO-DO: Dobbiamo aggiungere la durata
                     //document.getElementById('msg').innerHTML += " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
                 }
             }
@@ -148,9 +156,7 @@ var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
         this.origin = origin;
         this.map = map;
-        //this.directionsService = new google.maps.DirectionsService();
-        //this.directionsRenderer = new google.maps.DirectionsRenderer();
-        //this.directionsRenderer.setMap(map);
+        
         this.placesService = new google.maps.places.PlacesService(map);
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
@@ -295,7 +301,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage)
 
             //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
-            //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
+            //addToRoadmapVisual(stage);
             document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
 
             if (roadmap.length >= 2) {
