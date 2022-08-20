@@ -17,3 +17,18 @@ function heart(){
       alert("Mi piace, Punteggio="+point)
     }
   };
+
+  function checked(){
+    const button = document.querySelector(".checked-like-button");
+      var point =0;
+  
+    if (button.classList.contains("liked")) {
+      button.classList.remove("liked");
+      point=0
+      alert("Non la seguo più, Punteggio="+point)
+    } else {
+      button.classList.add("liked");
+      point=1
+      alert("La seguo, Punteggio="+point)
+    }
+  };

@@ -8,8 +8,6 @@
 .container {
     width: auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
     margin-top: 140px;
     margin-bottom: 20px;
 
