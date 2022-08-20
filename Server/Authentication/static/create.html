@@ -13,7 +13,7 @@
 <script type="module" src="/static/create_roadmap.js"></script>
 <link rel="stylesheet" href="/static/roadmap.css">
 <script>
-  
+
   /*function addToRoadmapVisual(stage) {
     document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
   }*/
@@ -26,26 +26,26 @@
   }
 
   function submitRoadmap(roadmap) {
-    var tagValue, title, description,dateNow
-    allTime=parseInt(document.getElementById("somma_totale").innerText)
-    var isPub=1
+    var tagValue, title, description, dateNow
+    allTime = parseInt(document.getElementById("somma_totale").innerText)
+    var isPub = 1
     var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
-    console.log("visibilità: ",visibilita)
-    if(visibilita=="Privata"){
-      isPub=0
+    console.log("visibilità: ", visibilita)
+    if (visibilita == "Privata") {
+      isPub = 0
     }
-    console.log("isPub: ",isPub)
+    console.log("isPub: ", isPub)
 
 
     title = document.getElementById("titolo").value
-    console.log("titolo: ",title);
+    console.log("titolo: ", title);
     description = document.getElementById("descrizione").value
-    console.log("descrizione: ",description);
+    console.log("descrizione: ", description);
 
-    console.log("lenght rm: ",roadmap.length);
+    console.log("lenght rm: ", roadmap.length);
     console.log(roadmap)
 
-    
+
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -56,7 +56,7 @@
     if (title == "") {
       alert("Titolo vuoto")
     }
-    else if(roadmap.length<2){
+    else if (roadmap.length < 2) {
       alert("almeno due stage")
     }
     else {
@@ -112,7 +112,7 @@
   <div class="contenuto">
     <br>--DA FARE--<br>
     barra ricerca città permette onclick mappa su quella citta<br>
-    
+
     <br>
     <h2 style="text-align:center">
       Benvenuto nella pagina creazione Roadmap <div id="nome_utente"> (inserimento username del loggato) </div>
@@ -149,6 +149,11 @@
       Cerca la città in cui vuoi fare una bella Roadmap<br>
       <input type="text" name="citta_search" id="citta_search" placeholder="">
       <input type="submit" value="Avvia Ricerca" onclick="ricercaCitta()">
+
+      <input type="radio" id="driving_mode" name="fav_language" value="DRIVING">
+      <label for="driving_mode">Macchina</label><br>
+      <input type="radio" id="walking_mode" name="fav_language" value="WALKING" checked>
+      <label for="walking_mode">A piedi</label><br>
     </h2>
 
     <div class="container_middle">
@@ -179,7 +184,7 @@
 
 
     <div class="container_bottom">
-      
+
       <div class="tag_list" style="display: none;">
         <label for="lista_tag">Aggiungi tag alla Roadmap <br>(se vuoi
           fare una scelta multipla usa Ctrl su Windows o Command su Mac)</label><br>
@@ -191,7 +196,8 @@
       <div class="submit_global">
 
         <div class="durata">
-          Durata complessiva<br>(in minuti)<br> <div id="somma_totale" class="somma_totale">0</div> 
+          Durata complessiva<br>(in minuti)<br>
+          <div id="somma_totale" class="somma_totale">0</div>
         </div>
 
         <div id="submit_btn">
