@@ -106,16 +106,27 @@
   }
   
   .pulsantiLog a {
-      /*margin-right: 10%; */
+    /*
       font-size: 20px;
-      /*padding: 5px 10%;*/
       margin-top: 20px;
       border: thin #c82d0e solid;
       text-transform: uppercase;
       text-align: center;
       color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
+      cursor: pointer;*/
+
+      font-size: 20px;
+      margin-top: 20px;
+      margin-left: 10px;
+      border: thin #000000 solid;
+      text-transform: uppercase;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
       cursor: pointer;
+      background-color: #000000c8;
+      border-radius: 25px;
   }
   
   .pre-login { 
@@ -284,15 +295,40 @@
 	grid-gap: 10%;
 	padding: 10px;
     padding-bottom: 40px;
+    font-size: 12px;
+    color:#fff;
 	/*background-color: yellow;*/
 	
 }
 
+.grid-container .inEvidenza{
+	font-size: 20px;
+    font-weight: bold ;
+}
+
+.interno{
+    font-size: 15px;
+    font-weight: initial ;
+    margin-left: 15px;
+}
+
 .grid-container > div {
 	padding: 2px;
-	background-color: rgba(255, 255, 255, 0.08);
+	
+    background-color: rgba(48, 32, 32, 0.400);
 	text-align: center;
 	transition: all ease-in-out 0.3s;
+    border-radius: 25px;
+    box-shadow: 0 1px 4px 1px rgb(255 255 255 / 53%);
+    /*border: thin  rgba(69, 3, 3, 0.915) solid;*/
+    /*vecchio stile*/
+    /*background-color: rgba(255, 255, 255, 0.08);*/
+    /*box-shadow: 0 1px 1px 2px rgba(8, 8, 8, 0.599);*/
+}
+
+.grid-container a {
+	text-decoration: none;
+    color: white;
 }
 
 .grid-container div:hover {
@@ -352,3 +388,4 @@
     border-radius: 6px;
     box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);
 }
+
