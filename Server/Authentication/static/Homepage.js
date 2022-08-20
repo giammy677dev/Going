@@ -1,3 +1,6 @@
+var ok=false
+var user_id=0
+
 function check() {
   var xhr = new XMLHttpRequest();
 
@@ -10,6 +13,8 @@ function check() {
     if (r.ok == true) {
       console.log("sei loggato!!! con questo id", r.whoLog)
       console.log(r)
+      ok=r.ok
+      user_id=r.whoLog
       var elements = document.getElementsByClassName("pre-login");
       for (var i = 0; i < elements.length; i++) {
         elements[i].style.display='none'
@@ -29,19 +34,22 @@ function check() {
 
 function logout(){
   var xhr = new XMLHttpRequest();
-
-  xhr.open("GET", '/logout', true);
+  
+  xhr.open("POST", '/logout', true);
+  
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok == true) {
-      console.log("ok sloggato")
-      location.href("/")
+      location.href = "/";
     }
     else if(r.ok==false){
       console.log("ops problemi")
     }
   }
-  xhr.send();
+  xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        id: user_id
+      }));
 }
 
 function ricercaHome() {

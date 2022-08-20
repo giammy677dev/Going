@@ -127,9 +127,15 @@ class HTTPinterface {
     }
 
     async logout(req, res) {
-        if (req.body.username == req.session.username) { //richiesta giusta
+        console.log("req.session=",req.session)
+        console.log("req.session.user_id=",req.session.user_id)
+        console.log("req.body=",req.body)
+        
+        if (req.body.id == req.session.user_id) { //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
+            req.session.user_id = '0'
+            console.log("req.session=",req.session)
             //non uso req.session = {} perché nella sessione possono esserci anche altre info!
             return res.send({ ok: true })
         }
