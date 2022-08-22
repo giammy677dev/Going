@@ -25,6 +25,7 @@
     /*
     mappa da richiedere con dati in campo id="citta_search"
     */
+    console.log("ciao citta, posto cercato")
   }
 
   function submitRoadmap(roadmap) {
@@ -70,6 +71,7 @@
 
         if (r.ok == true) {
           alert("creata la roadmap")
+          location.href = '/profile'
         }
         else if (r.ok == false) {
           alert("Problemi creazione roadmap")

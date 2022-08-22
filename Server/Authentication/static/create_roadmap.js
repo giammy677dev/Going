@@ -360,7 +360,7 @@ var ClickEventHandler = /** @class */ (function () {
         spn.appendChild(WebsiteElement);
 
         var durataShow = document.createElement('p');
-        durataShow.textContent = "Quanto ore devi sostare questo nodo?"
+        durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
         spn.appendChild(durataShow);
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
@@ -421,7 +421,7 @@ var ClickEventHandler = /** @class */ (function () {
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -453,7 +453,7 @@ var ClickEventHandler = /** @class */ (function () {
         var to_send_stage = {}
 
         var durataShow = document.createElement('p');
-        durataShow.textContent = "Quanto ore devi sostare questo nodo?"
+        durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
 
@@ -494,7 +494,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);

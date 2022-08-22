@@ -175,7 +175,7 @@ input[type="text"]{
 
 .timeline .box .container .lines {
     margin-left: 40px;
-    margin-top: 15px;
+    margin-top: -19px;
 }
 
 .timeline .box .container .lines .dot {
@@ -186,7 +186,7 @@ input[type="text"]{
 }
 
 .timeline .box .container .lines .line {
-    height: 100px;
+    height: 125px;
     width: 2px;
     background: #d1d6e6;
     margin-left: 5.3px;
@@ -223,7 +223,7 @@ input[type="text"]{
     font-family: Open Sans;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 22px;
     color: #2b2862;
 }
@@ -237,13 +237,11 @@ input[type="text"]{
 }
 
 .timeline .box .bottom .btn {
-    width: 249px;
-    height: 62px;
-    background: #ffffff40;
+    width: 250px;
+    height: 55px;
     mix-blend-mode: normal;
     cursor: pointer;
-    border: 1px solid #8260d780;
-    border-radius: 5px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -252,16 +250,17 @@ input[type="text"]{
     font-weight: bold;
     font-size: 14px;
     line-height: 19px;
-    color: #2b2862;
+    color: white;
     margin-left: 53px;
     transition: 0.3s;
-    background: #2b2862;
-    color: #fff;
-    border-color: #2b2862;
+    background: #00AAF8;
 }
 
 .timeline .box .bottom .btn:hover {
     transform: scale(1.03);
+    color: #00AAF8;
+    background-color: white;
+
 }
 
 /*<!------------------------------------------------------------->*/
@@ -270,16 +269,17 @@ input[type="text"]{
 a.boxclose{
     float: right; 
     position: relative;
-   
-    color: blue;
+    color: #00AAF8;
     font-size: 20px;
     font-weight: bold;
     margin-right: 10px;
 }
 
 a.boxclose:hover{
-    color:red;
+    color:white;
     cursor: pointer;
+    background-color: #00AAF8;
+    border: 2px #00AAF8;
 }
 /*-----*/
 .mappa_rm {
