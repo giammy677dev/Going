@@ -129,13 +129,13 @@
       border-radius: 25px;
   }
   
-  .pre-login { 
+  .windowButton { 
       width: 40%;
       padding: 5px 10%;
       margin-right: 0.5%;
       margin-left: 0.5%;
   }
-  
+
   .pulsantiLog a:hover {
       background-color: #651515;
       border: thin white solid;
@@ -145,13 +145,22 @@
   
   /*---------*/
   
-  .post-login {
-      display: none;
-  }
-  
   #logout {
-      margin-right: 0px;
-      padding: 5px 10%;
+      display: none;
+      font-size: 26px;
+      display: none;
+      z-index: 2;
+      font-family: serif;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.92);
+      position: absolute;
+      width: 70%;
+      height: 30%;
+      margin: 5% 15%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      border: thin #d24618 solid;
+      overflow: auto;
   }
   
   .msgBenvenuto{

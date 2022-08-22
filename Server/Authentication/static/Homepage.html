@@ -55,8 +55,8 @@
         </p>
 
 
-        <input class="pulsantiout" type="submit" name="Logout" value="Logout" onclick="logout()" />
-        <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiout"
+        <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
+        <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
             value="Annulla" />
 
     </div>
@@ -87,15 +87,14 @@
                                 <a title="Inviaci una mail" href="mailto:@gmail.com"><img src="/storage/Mail.png" type="image/png"/></a>
                                 <a title="Visita pagina facebook" target="_blank" href="https://www.facebook.com/"><img src="/storage/Facebook.png" type="image/png"/></a>
                         </p>
+                    </div>
                 </div>
                 
                 <div class="split right">
 
                 <div class="pulsantiLog">
-                    <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
-                    <a class="pre-login" href="/signup">Registrati</a>
-                    <a class="post-login" onclick="document.getElementById('logout').style.display='block'">Logout</a>
-                    <a class="post-login" href="/profile">Profile</a>
+                    <a class="windowButton" id="firstButtLog" onclick="document.getElementById('log').style.display='block'">Accedi</a>
+                    <a class="windowButton" id="secondButtLog" href="/signup">Registrati</a>
                 </div>
 
                     <div class="centered rx">
