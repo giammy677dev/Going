@@ -48,6 +48,39 @@ function initMap() {
     new ClickEventHandler(map, origin);
 }
 
+function asPath(encodedPolyObject) {
+    return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
+}
+function asLatLng(latLngObject) {
+    return new google.maps.LatLng(latLngObject.lat, latLngObject.lng);
+}
+
+function asBounds(boundsObject) {
+    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest),asLatLng(boundsObject.northeast));
+}
+
+function typecastRoutes(routes)
+{
+    routes.forEach(function(route){
+        route.bounds = asBounds(route.bounds);
+        // I don't think `overview_path` is used but it exists on the
+        // response of DirectionsService.route()
+        routes.overview_path = asPath(route.overview_polyline);
+
+        route.legs.forEach(function(leg){
+            leg.start_location = asLatLng(leg.start_location);
+            leg.end_location   = asLatLng(leg.end_location);
+
+            leg.steps.forEach(function(step){
+                step.start_location = asLatLng(step.start_location);
+                step.end_location   = asLatLng(step.end_location);
+                step.path = asPath(step.polyline);
+            });
+        });
+    });
+    return routes;
+}
+
 function getExNovoStages(t) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/getExNovoStages', true);
@@ -107,6 +140,62 @@ function drawExNovoStages(results, t) {
     }
 }
 
+function backendDistance(marker1, marker2) {
+
+    //CI DEVE ESSERE UNA MODALITA' PER OGNI COPPIA DI NODI?
+    var renderer = new google.maps.DirectionsRenderer();
+    var selectedMode;
+    if (document.getElementById("driving_mode").checked) {
+        selectedMode = document.getElementById("driving_mode").value;
+    }
+    else {
+        selectedMode = document.getElementById("walking_mode").value;
+    }
+    console.log('Modalità: ' + selectedMode);
+
+    const route = {
+        origin: { lat: marker1.latitudine, lng: marker1.longitudine },
+        destination: { lat: marker2.latitudine, lng: marker2.longitudine },
+        travelMode: selectedMode //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
+    }
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/getRoute', true);
+    xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+        console.log(r)
+        if (r.ok == true) {
+            const response = r.data;
+            const status = response.status;
+            if (status !== 'OK') {
+                window.alert('Directions request failed due to ' + status);
+                return;
+            } else {
+
+                
+                var routes = typecastRoutes(response.routes)
+                renderer.setOptions({
+                    directions: {
+                        routes: routes,
+                        // "ub" is important and not returned by web service it's an
+                        // object containing "origin", "destination" and "travelMode"
+                        request: route
+                    },
+                    map:map
+                });
+            }
+        }
+        else if (r.ok == false) {
+            alert("Nodi non trovati")
+        }
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(route));
+
+}
+
 function calculateDistance(first_marker, second_marker) {
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
@@ -115,25 +204,28 @@ function calculateDistance(first_marker, second_marker) {
     else {
         selectedMode = document.getElementById("walking_mode").value;
     }
-    console.log('Modalità: '+selectedMode);
+    console.log('Modalità: ' + selectedMode);
 
     let directionsService = new google.maps.DirectionsService();
     let directionsRenderer = new google.maps.DirectionsRenderer();
+    console.log(directionsRenderer)
     directionsRenderer.setMap(map); // Existing map object displays directions
     // Create route from existing points used for markers
     const route = {
-        origin: {lat: first_marker.latitudine, lng: first_marker.longitudine},
-        destination: {lat: second_marker.latitudine, lng: second_marker.longitudine},
-        travelMode: google.maps.TravelMode[selectedMode] //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
+        origin: { lat: first_marker.latitudine, lng: first_marker.longitudine },
+        destination: { lat: second_marker.latitudine, lng: second_marker.longitudine },
+        travelMode: selectedMode //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
     }
+
 
     directionsService.route(route,
         function (response, status) { // anonymous function to capture directions
-            console.log('STATUS: '+status)
+            console.log('STATUS: ' + status)
             if (status !== 'OK') {
                 window.alert('Directions request failed due to ' + status);
                 return;
             } else {
+                console.log(response)
                 directionsRenderer.setDirections(response); // Add route to the map
                 var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
                 if (!directionsData) {
@@ -152,11 +244,12 @@ function isIconMouseEvent(e) {
     return "placeId" in e;
 }
 
+
 var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
         this.origin = origin;
         this.map = map;
-        
+
         this.placesService = new google.maps.places.PlacesService(map);
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
@@ -199,7 +292,6 @@ var ClickEventHandler = /** @class */ (function () {
             const r = JSON.parse(event.target.responseText);
             if (r.ok == true) {
                 var place = r.data;
-                console.log(place.formatted_address);
                 placeId = place.place_id;
                 var AddressLabel = document.createElement('p');
                 AddressLabel.textContent = "Indirizzo:\n\n" + place.formatted_address;
@@ -279,7 +371,7 @@ var ClickEventHandler = /** @class */ (function () {
         inputElement.addEventListener('click', function () {
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
-            
+
             /*Nodo ex novo*/
             stage.index = stage_index
             stage.nome = StageName.value;
@@ -302,11 +394,12 @@ var ClickEventHandler = /** @class */ (function () {
 
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
-        if (roadmap.length >= 2) {
-                calculateDistance(roadmap[stage_index - 1], stage);
+            if (roadmap.length >= 2) {
+                //calculateDistance(roadmap[stage_index - 1], stage);
+                backendDistance(roadmap[stage_index - 1], stage);
             }
 
             stage_index++;
@@ -374,11 +467,12 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
-                calculateDistance(roadmap[stage_index - 1], stage);
+                //calculateDistance(roadmap[stage_index - 1], stage);
+                backendDistance(roadmap[stage_index - 1], stage);
             }
 
             stage_index++;
@@ -408,7 +502,7 @@ var ClickEventHandler = /** @class */ (function () {
                 var place = r.data;
                 stage.nome = place.name;
                 stage.indirizzo = place.formatted_address;
-                stage.citta = place.address_components[2].long_name
+                //stage.citta = place.address_components[2].long_name
                 if (place.website !== undefined) {
                     stage.website = place.website;
                 }
@@ -416,7 +510,7 @@ var ClickEventHandler = /** @class */ (function () {
                     stage.website = null
                 }
                 if (place.foto !== undefined) {
-                    stage.fotoURL = place.foto
+                    stage.fotoURL = place.fotoURL
                 }
                 else {
                     stage.fotoURL = null
