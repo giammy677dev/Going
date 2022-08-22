@@ -116,144 +116,118 @@ body {
       text-decoration: none;
       cursor: pointer;*/
 
-    font-size: 20px;
-    margin-top: 20px;
-    margin-left: 10px;
-    border: thin #000000 solid;
-    text-transform: uppercase;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    cursor: pointer;
-    background-color: #000000c8;
-    border-radius: 25px;
-}
+      font-size: 20px;
+      margin-top: 20px;
+      margin-left: 10px;
+      border: thin #000000 solid;
+      text-transform: uppercase;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      cursor: pointer;
+      background-color: #000000c8;
+      border-radius: 25px;
+  }
+  
+  .windowButton { 
+      width: 40%;
+      padding: 5px 10%;
+      margin-right: 0.5%;
+      margin-left: 0.5%;
+  }
 
-.pre-login {
-    width: 40%;
-    padding: 5px 10%;
-    margin-right: 0.5%;
-    margin-left: 0.5%;
-}
-
-.pulsantiLog a:hover {
-    background-color: #651515;
-    border: thin white solid;
-    color: white;
-    font-weight: 500;
-}
-
-/*---------*/
-
-.post-login {
-    display: none;
-    width: 40%;
-    padding: 5px 10%;
-    margin-right: 0.5%;
-    margin-left: 0.5%;
-}
-
-#logout {
-    font-size: 26px;
-    display: none;
-    z-index: 2;
-    font-family: serif;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.92);
-    position: absolute;
-    width: 70%;
-    height: fit-content;
-    padding-bottom: 25px;
-    margin: 5% 15%;
-    text-align: center;
-    font-family: "Poppins", sans-serif;
-    border: thin #d24618 solid;
-    overflow: auto;
-}
-
-.pulsantiout {
-    font-size: 20px;
-    padding: 5px 30px;
-    margin-top: 10px;
-    text-align: center;
-    cursor: pointer;
-    background-color: #a02113;
-    color: white;
-}
-
-.pulsantiForm:out {
-    /*box-shadow: 0px 0px 10px #18d26e;*/
-    box-shadow: 0px 0px 10px white;
-}
-
-
-.msgBenvenuto {
-    font-size: 0.7em;
-    color: white;
-    margin-left: 5%;
-}
-
-/*---------*/
-#log {
-    font-size: 26px;
-    display: none;
-    z-index: 2;
-    font-family: serif;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.92);
-    position: absolute;
-    width: 70%;
-    height: 80%;
-    margin: 5% 15%;
-    text-align: center;
-    font-family: "Poppins", sans-serif;
-    border: thin #d24618 solid;
-    overflow: auto;
-}
-
-.pulsantiForm {
-    font-size: 20px;
-    padding: 5px 30px;
-    margin-top: 10px;
-    text-align: center;
-    cursor: pointer;
-    background-color: #a02113;
-    color: white;
-}
-
-.pulsantiForm:hover {
-    /*box-shadow: 0px 0px 10px #18d26e;*/
-    box-shadow: 0px 0px 10px white;
-}
-
-input[type="text"],
-input[type="password"] {
-    font-size: 30px;
-    border-radius: 4px;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border: medium solid #d21818;
-}
-
-.noReg {
-    font-size: 20px;
-}
-
-.noReg a {
-    color: #d24018;
-}
-
-.inEvidenza {
-    color: #fff;
-    border-bottom: 2px solid #a6290f;
-}
-
-.inEvidenza2 {
-    color: #fff;
-    border-bottom: 1px solid #a6290f;
-}
+  .pulsantiLog a:hover {
+      background-color: #651515;
+      border: thin white solid;
+      color: white;
+      font-weight: 500;
+  }
+  
+  /*---------*/
+  
+  #logout {
+      display: none;
+      font-size: 26px;
+      display: none;
+      z-index: 2;
+      font-family: serif;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.92);
+      position: absolute;
+      width: 70%;
+      height: 30%;
+      margin: 5% 15%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      border: thin #d24618 solid;
+      overflow: auto;
+  }
+  
+  .msgBenvenuto{
+      font-size: 0.7em;
+      color: white;
+      margin-left: 5%;
+  }
+  
+  /*---------*/
+  #log{
+      font-size: 26px;
+      display: none;
+      z-index: 2;
+      font-family: serif;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.92);
+      position: absolute;
+      width: 70%;
+      height: 80%;
+      margin: 5% 15%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      border: thin #d24618 solid;
+      overflow: auto;
+  }
+  
+  .pulsantiForm { 
+      font-size: 20px;
+      padding: 5px 30px;
+      margin-top: 10px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #a02113;
+      color: white;
+  }
+  
+  .pulsantiForm:hover{ 
+      /*box-shadow: 0px 0px 10px #18d26e;*/
+      box-shadow: 0px 0px 10px white;
+  }
+  
+  input[type="text"], input[type="password"] {
+      font-size: 30px;
+      border-radius: 4px;
+  }
+  
+  input[type="text"]:focus, input[type="password"]:focus {
+      border: medium solid #d21818;
+  }
+  
+  .noReg{
+      font-size: 20px;
+  }
+  
+  .noReg a {
+      color: #d24018;
+  }
+  
+  .inEvidenza {
+      color: #fff;
+      border-bottom: 2px solid #a6290f;
+  }
+  
+  .inEvidenza2 {
+      color: #fff;
+      border-bottom: 1px solid #a6290f;
+  }
 
 .paragrafoSocial {
     text-align: center;

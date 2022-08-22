@@ -55,8 +55,8 @@
         </p>
 
 
-        <input class="pulsantiout" type="submit" name="Logout" value="Logout" onclick="logout()" />
-        <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiout"
+        <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
+        <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
             value="Annulla" />
 
     </div>
@@ -64,20 +64,19 @@
 
     <div class="primoPiano">
 
-
-        <div class="split left">
-            <div class="centered sx">
-                <H1>Going</H1>
-                <H2>Programma la tua <span class="inEvidenza">esperienza di viaggio</span> creando la tua <span
-                        class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
-                <div class="menuRow">
-                    <div class="menuBar">
-                        <a id="Homepage" href="/">Homepage</a>
-                        <a id="About" href="/about" title="Leggi informazioni utili">About</a>
-                        <a id="Explore" href="/explore" title="Cerca roadmap e utenti">Explore</a>
-                        <a id="Create" href="/create" title="Crea una nuova Roadmap!">Create</a>
-                    </div>
-                </div>
+		               
+                <div class="split left">
+                    <div class="centered sx">
+                        <H1>Going</H1> 
+			            <H2>Programma la tua <span class="inEvidenza">esperienza di viaggio</span> creando la tua <span class="inEvidenza">roadmap</span> oppure scegliendo tra le più belle della community!</H2>
+                        <div class="menuRow">
+                            <div class="menuBar">
+                                <a id="Homepage" href="/">Homepage</a>
+                                <a id="About" href="/about" title="Leggi informazioni utili">About</a>
+                                <a id="Explore" href="/explore" title="Cerca roadmap e utenti">Explore</a>
+                                <a id="Create" href="/create" title="Crea una nuova Roadmap!">Create</a>
+                            </div>
+                        </div>
 
                 <div class="boxRicerca">
                     <input type="text" name="search" id="search" placeholder="Cerca Roadmap/Utenti" method="get">
@@ -91,15 +90,14 @@
                     <a title="Visita pagina facebook" target="_blank" href="https://www.facebook.com/"><img
                             src="/storage/Facebook.png" type="image/png" /></a>
                 </p>
-            </div>
+                </div>
+                </div>
 
             <div class="split right">
 
                 <div class="pulsantiLog">
-                    <a class="pre-login" onclick="document.getElementById('log').style.display='block'">Accedi</a>
-                    <a class="pre-login" href="/signup">Registrati</a>
-                    <a class="post-login" onclick="document.getElementById('logout').style.display='block'">Logout</a>
-                    <a class="post-login" href="/profile">Profile</a>
+                    <a class="windowButton" id="firstButtLog" onclick="document.getElementById('log').style.display='block'">Accedi</a>
+                    <a class="windowButton" id="secondButtLog" href="/signup">Registrati</a>
                 </div>
 
                 <div class="centered rx">

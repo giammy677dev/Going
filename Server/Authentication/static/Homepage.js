@@ -15,14 +15,14 @@ function check() {
       console.log(r)
       ok=r.ok
       user_id=r.whoLog
-      var elements = document.getElementsByClassName("pre-login");
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display='none'
-      }
-      elements = document.getElementsByClassName("post-login");
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display='inline'
-      }
+      
+      console.log(document.getElementById("firstButtLog"))
+      document.getElementById("firstButtLog").innerHTML = "Logout";
+      document.getElementById("firstButtLog").setAttribute("onclick","document.getElementById('logout').style.display='block'");
+
+      console.log(document.getElementById("secondButtLog"))
+      document.getElementById("secondButtLog").innerHTML = "Profile";
+      document.getElementById("secondButtLog").setAttribute("href","/profile");
     }
     else if (r.ok == false) {
       console.log("non sei loggato!!!")
