@@ -21,7 +21,7 @@ function check() {
       }
       elements = document.getElementsByClassName("post-login");
       for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display='block'
+        elements[i].style.display='inline'
       }
     }
     else if (r.ok == false) {
@@ -50,16 +50,6 @@ function logout(){
       xhr.send(JSON.stringify({
         id: user_id
       }));
-}
-
-function ricercaHome() {
-  var ricerca = document.getElementById("search").value;
-  if (ricerca == "") {
-    alert(" campo nullo")
-  }
-  else {
-    location.href = "/explore?ricerca=" + ricerca;
-  }
 }
 
 function ricercaHome() {
