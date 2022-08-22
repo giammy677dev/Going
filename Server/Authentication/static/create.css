@@ -270,11 +270,16 @@ input[type="text"]{
 a.boxclose{
     float: right; 
     position: relative;
-    cursor:pointer;
-    color: black;
+   
+    color: blue;
     font-size: 20px;
     font-weight: bold;
     margin-right: 10px;
+}
+
+a.boxclose:hover{
+    color:red;
+    cursor: pointer;
 }
 /*-----*/
 .mappa_rm {
