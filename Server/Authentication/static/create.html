@@ -17,6 +17,9 @@
     document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
   }*/
 
+  function deleteStage(stage_index){
+    console.log("ciao stage da eliminare: ", stage_index)
+  }
 
   function ricercaCitta() {
     /*
@@ -86,7 +89,24 @@
 
 </script>
 
-<body onload="check()">
+<div id="info_nolog">
+
+  <p>
+  <h2>NON TI SEI AUTENTICATO NEL SISTEMA!!</h2>
+  </p>
+  <p>
+  <h4>Torna alla home o Registrati</h4>
+  </p>
+
+  
+  <input class="pulsantiForm" type="submit" name="home" value="Home" onclick="location.href = '/'">
+  <input type="submit" class="pulsantiForm" value="Registrati" onclick="location.href ='/signup'">
+
+
+</div>
+
+
+<body id="all_page" onload="check()">
 
   <div class="header">
     <a href="/">
@@ -108,31 +128,10 @@
 
   </div>
 
+  
 
-  <div id="info_nolog">
-
-    <p>
-    <h2>NON TI SEI AUTENTICATO NEL SISTEMA!!</h2>
-    </p>
-
-    <p>
-    <h4>Torna alla home o Registrati</h4>
-    </p>
-
-
-
-    <p><a href="/">Home</a></p>
-    <p>
-      <a href="/signup">Registrati qui</a>
-    </p>
-
-
-
-
-
-  </div>
-
-  <div class="contenuto">
+  <div class="contenuto" id="contenuto">
+    
     <br>--DA FARE--<br>
     barra ricerca città permette onclick mappa su quella citta<br>
 
@@ -228,9 +227,12 @@
 
 
 
-                <div id="submit_btn">
-
+                <div class="bottom">
+                  
+                  <div class="btn" id="submit_btn">Conferma Creazione Roadmap</div>
+                  
                 </div>
+              </div>
               </div>
 
 
@@ -243,7 +245,7 @@
 
 
     <div class="container_bottom">
-
+      
 
 
 
@@ -260,7 +262,7 @@
   <div class="footer">
 
     <h4>
-      Copyright 2022
+      Copyright 2022 
     </h4>
 
     <h6>

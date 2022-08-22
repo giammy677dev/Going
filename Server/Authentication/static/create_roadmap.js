@@ -1,4 +1,4 @@
-var user_id=0
+var user_id = 0
 function check() {
     var xhr = new XMLHttpRequest();
 
@@ -10,12 +10,14 @@ function check() {
 
         if (r.ok == true) {
             console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
-            user_id=r.whoLog
+            user_id = r.whoLog
         }
         else if (r.ok == false) {
-            
-            location.href = "/";
-
+            document.getElementById('contenuto').style.filter='blur(10px)'
+            document.getElementById('all_page').style.overflow='hidden'
+            document.getElementById('all_page').style.height='100%'
+            document.getElementById('all_page').style.margin='0'
+            document.getElementById('info_nolog').style.display = 'block'
         }
     }
     xhr.send();
@@ -50,13 +52,10 @@ function initMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    var submitBtn = document.createElement('input');
-    submitBtn.type = "submit"
-    submitBtn.value = "Conferma creazione"
-    submitBtn.addEventListener('click', function () {
+
+    document.getElementById("submit_btn").addEventListener('click', function () {
         submitRoadmap(roadmap);
     });
-    document.getElementById('submit_btn').appendChild(submitBtn);
 
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
@@ -402,7 +401,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
