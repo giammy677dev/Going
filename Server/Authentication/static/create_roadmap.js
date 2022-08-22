@@ -300,11 +300,12 @@ var ClickEventHandler = /** @class */ (function () {
             to_send_stage.longitudine = latLng.lng();
             roadmap.push(to_send_stage)
 
-            //stage.formatted_addess = place.formatted_address; lo calcola placeAddress
-            //addToRoadmapVisual(stage);
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
 
-            if (roadmap.length >= 2) {
+            //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
+            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+
+        if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
             }
 
@@ -373,8 +374,9 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('stage_list').innerHTML += "🏁" + stage.nome + " -> " + stage.durata + "<br>"
-            
+            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+
             if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
             }
