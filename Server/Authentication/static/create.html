@@ -7,10 +7,10 @@
   <title>Create</title>
   <link rel="stylesheet" href="/static/going.css">
   <link rel="stylesheet" href="/static/create.css">
-
+  <script src="/static/create_roadmap.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/static/roadmap.css">
 </head>
-<script type="module" src="/static/create_roadmap.js"></script>
-<link rel="stylesheet" href="/static/roadmap.css">
+
 <script>
 
   /*function addToRoadmapVisual(stage) {
@@ -86,7 +86,7 @@
 
 </script>
 
-<body>
+<body onload="check()">
 
   <div class="header">
     <a href="/">
@@ -105,6 +105,30 @@
     <a href="/explore">Explore</a>
     <a href="/create">Create</a>
     <a href="/login" class="right">Sign Up/Login</a>
+
+  </div>
+
+
+  <div id="info_nolog">
+
+    <p>
+    <h2>NON TI SEI AUTENTICATO NEL SISTEMA!!</h2>
+    </p>
+
+    <p>
+    <h4>Torna alla home o Registrati</h4>
+    </p>
+
+
+
+    <p><a href="/">Home</a></p>
+    <p>
+      <a href="/signup">Registrati qui</a>
+    </p>
+
+
+
+
 
   </div>
 
@@ -147,7 +171,7 @@
     <h2 style="text-align:center">
       Cerca la città in cui vuoi fare una bella Roadmap<br>
       <input type="text" name="citta_search" id="citta_search" placeholder="">
-      <input type="submit" value="Avvia Ricerca" onclick="ricercaCitta()">
+      <input type="submit" value="Avvia Ricerca" id="btn_search" onclick="ricercaCitta()">
 
       <input type="radio" id="driving_mode" name="fav_language" value="DRIVING">
       <label for="driving_mode">Macchina</label><br>
@@ -222,7 +246,7 @@
 
 
 
-     
+
 
     </div>
 
@@ -243,4 +267,15 @@
       Diego-Gian Marco-Marco-Matteo-Valerio
     </h6>
   </div>
+  <script>
+    var input = document.getElementById("citta_search");
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("btn_search").click();
+      }
+    });
+  </script>
 </body>
+
+</html>

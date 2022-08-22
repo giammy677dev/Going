@@ -1,3 +1,30 @@
+var user_id=0
+function check() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", '/isLogWho', true);
+    xhr.onload = function (event) {
+
+        const r = JSON.parse(event.target.responseText);
+
+
+        if (r.ok == true) {
+            console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
+            user_id=r.whoLog
+        }
+        else if (r.ok == false) {
+            
+            location.href = "/";
+
+        }
+    }
+    xhr.send();
+}
+
+
+
+
+
 var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers = [];
@@ -58,7 +85,7 @@ function getExNovoStages(t) {
             drawExNovoStages(r.data, t) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
         }
         else if (r.ok == false) {
-            alert("Nodi non trovati")
+            console.log("Nodi non trovati")
         }
     }
 
@@ -115,21 +142,21 @@ function calculateDistance(first_marker, second_marker) {
     else {
         selectedMode = document.getElementById("walking_mode").value;
     }
-    console.log('Modalità: '+selectedMode);
+    console.log('Modalità: ' + selectedMode);
 
     let directionsService = new google.maps.DirectionsService();
     let directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map); // Existing map object displays directions
     // Create route from existing points used for markers
     const route = {
-        origin: {lat: first_marker.latitudine, lng: first_marker.longitudine},
-        destination: {lat: second_marker.latitudine, lng: second_marker.longitudine},
+        origin: { lat: first_marker.latitudine, lng: first_marker.longitudine },
+        destination: { lat: second_marker.latitudine, lng: second_marker.longitudine },
         travelMode: google.maps.TravelMode[selectedMode] //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
     }
 
     directionsService.route(route,
         function (response, status) { // anonymous function to capture directions
-            console.log('STATUS: '+status)
+            console.log('STATUS: ' + status)
             if (status !== 'OK') {
                 window.alert('Directions request failed due to ' + status);
                 return;
@@ -156,7 +183,7 @@ var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
         this.origin = origin;
         this.map = map;
-        
+
         this.placesService = new google.maps.places.PlacesService(map);
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
@@ -279,7 +306,7 @@ var ClickEventHandler = /** @class */ (function () {
         inputElement.addEventListener('click', function () {
             markers[stage_index].setVisible(true);
             markers[stage_index].setTitle(StageName.value)
-            
+
             /*Nodo ex novo*/
             stage.index = stage_index
             stage.nome = StageName.value;
@@ -302,10 +329,10 @@ var ClickEventHandler = /** @class */ (function () {
 
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
-        if (roadmap.length >= 2) {
+            if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
             }
 
@@ -374,8 +401,8 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('lines').innerHTML+='<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML+= '<div class="card"><h4>'+stage.nome+'</h4><p>'+stage.durata+'</p></div>'
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 calculateDistance(roadmap[stage_index - 1], stage);
