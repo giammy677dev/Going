@@ -248,7 +248,7 @@ input[type="text"]{
     font-family: Open Sans;
     font-style: normal;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 19px;
     color: white;
     margin-left: 53px;
@@ -260,7 +260,7 @@ input[type="text"]{
     transform: scale(1.03);
     color: #00AAF8;
     background-color: white;
-
+    border-radius: 50%;
 }
 
 /*<!------------------------------------------------------------->*/
@@ -279,7 +279,7 @@ a.boxclose:hover{
     color:white;
     cursor: pointer;
     background-color: #00AAF8;
-    border: 2px #00AAF8;
+    border-radius: 50%;
 }
 /*-----*/
 .mappa_rm {
