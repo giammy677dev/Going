@@ -1,7 +1,196 @@
-.descrizione{
-  text-align: left;
+.container_top {
+  grid-template-columns: 1fr 3fr 1fr;
+  width: auto;
+  display: grid;
+  gap: 10px;
+}
+.container_middle{
+  margin-top: 200px;
+  margin-bottom:100px;
+  display: block;
+}
+.result_query{
+  box-shadow: 0 4px 8px 0 #00AAF8;
+  transition: 0.3s;
+  color: black;
+  height: 100%;
+  width: 100%;
+}
+.result_query:hover {
+  box-shadow: 0 8px 16px 0 #00AAF8;
+  background-color: #00AAF8;
+  color: white;
+}
+.res {
+  padding: 2px 10px;
+  font-weight: 900;
+  font-size: 20px;
+}
+.res .titolo{
+  font-size:25px;
+  padding: 10px;
+}
+.res .titolo:hover{
+  color:black;
+}
+.res .data{
+  font-size: 10px;
+}
+.res .descrizione{
+  font-style: italic;
+  font-size: 17px;
 }
 
+
+.map {
+  width: 100%;
+  height: fit-content;
+  margin: auto;
+  float: center;
+  border: 3px solid black;
+}
+
+/*<!--ROBA PROVA----------------------------------------------------------->*/
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+
+.all {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Mulish", sans-serif;
+    width: 440px;
+}
+
+.body-cards {
+    display: flex;
+    justify-content: right;
+    transform: scale(0.8) translateY(-50px);
+}
+
+.cardTop {
+    width: 500px;
+    height: 250px;
+    background: #00AAF8;
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    align-items: flex-end;
+}
+
+.timeline {
+    width: 355px;
+    height: fit-content;
+    background: #ecf1f524;
+    mix-blend-mode: normal;
+    overflow: hidden;
+    position: absolute;
+    top: 110px;
+    margin-left: 70px;
+    box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.566816);
+    border-radius: 10px;
+}
+
+.timeline h3 {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 30px;
+    color: #ffffff;
+    margin-left: 66px;
+    margin-top: 40px;
+}
+
+.timeline .durata {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timeline label {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    margin-left: 66px;
+    margin-top: 10px;
+    color: #ffffff;
+}
+
+.timeline .box {
+    width: 100%;
+    height: fit-content;
+    background: #fbfcfd;
+    margin-top: 99.5px;
+}
+
+.timeline .box .container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+}
+
+.timeline .box .container .lines {
+    margin-left: 40px;
+    margin-top: -19px;
+}
+
+.timeline .box .container .lines .dot {
+    width: 14px;
+    height: 14px;
+    background: #d1d6e6;
+    border-radius: 7px;
+}
+
+.timeline .box .container .lines .line {
+    height: 125px;
+    width: 2px;
+    background: #d1d6e6;
+    margin-left: 5.3px;
+}
+
+.timeline .box .container .cards {
+    margin-left: 12px;
+    transform: translateY(-50px);
+}
+
+.timeline .box .container .cards .card {
+    width: 250px;
+    height: 110px;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 16px 15px -10px rgba(105, 96, 215, 0.0944602);
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+}
+
+.timeline .box .container .cards .card h4 {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 19px;
+    margin-bottom: 5px;
+    color: #2b2862;
+}
+
+.timeline .box .container .cards .card p {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 22px;
+    color: #2b2862;
+}
+
+
+
+/*<!------------------------------------------------------------->*/
 /* Stile Punteggio */
 
 .rate {
@@ -60,12 +249,13 @@
   cursor: pointer;
   transition: background .4s;
 }
+
 .heart-like-button:after {
   position: absolute;
   top: 0;
   left: 0;
   transform: rotate(45deg);
-  transform-origin :100% 100%;
+  transform-origin: 100% 100%;
   width: 30px;
   height: 50px;
   border-radius: 40px 40px 0 0;
@@ -79,20 +269,25 @@
 .heart-like-button.liked::after {
   background-color: #FF0000;
 }
+
 .heart-like-button.liked {
   animation: liked .4s ease;
 }
+
 @keyframes liked {
   0% {
     transform: scale(.8);
   }
+
   50% {
     transform: scale(1.1);
   }
+
   100% {
     transform: scale(1);
   }
 }
+
 @media screen and (max-width: 480px) {
   .heart {
     height: auto;
@@ -108,7 +303,7 @@
   align-items: center;
 }
 
-.checked-like-button{
+.checked-like-button {
   position: relative;
   width: 20px;
   height: 10px;
@@ -127,12 +322,13 @@
   cursor: pointer;
   transition: background .4s;
 }
+
 .checked-like-button:after {
   position: absolute;
   top: -13px;
   left: 0;
   transform: rotate(40deg);
-  transform-origin :100% 100%;
+  transform-origin: 100% 100%;
   width: 10px;
   height: 40px;
   background-color: #574136;
@@ -145,6 +341,7 @@
 .checked-like-button.liked::after {
   background-color: #00FF00;
 }
+
 .checked-like-button.liked {
   animation: liked .4s ease;
 }
@@ -153,13 +350,16 @@
   0% {
     transform: scale(.8);
   }
+
   50% {
     transform: scale(1.1);
   }
+
   100% {
     transform: scale(1);
   }
 }
+
 @media screen and (max-width: 480px) {
   .checked {
     height: auto;

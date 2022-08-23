@@ -65,6 +65,18 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+    async viewRoadmap(id){
+        
+        if (!id || id == null) { //rm nullo
+            return { ok: false, error: -4, data: { id: '' } }
+        }
+        else {
+            const data = await this.dao.viewRoadmap(id);
+            
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    
     async searchRoadmap(ricerca) {
 
         if (!ricerca || ricerca == null) { //ricerca nulla

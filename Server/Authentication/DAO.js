@@ -15,6 +15,21 @@ class DAO {
             console.log(err);
         }
     }
+    async viewRoadmap(id) {
+        
+        try{
+            var connection=await this.connect();
+            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=? AND isPublic=1', [id])
+            var id_utente=result_rm[0][0].utenteRegistrato_id
+            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+            
+            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0] }];
+        }
+        catch(error){
+            return [false, error.errno];
+        }
+    }
+    
 
     async register(username, password, email, birthdate) {
         try {
@@ -57,7 +72,7 @@ class DAO {
             return [false, error.errno, {}];
         }
     }
-    async addNewStages(stages,session_data) {
+    async addNewStages(stages, session_data) {
 
         var connection = await this.connect();
         for (var i = 0; i < stages.length; i++) {
@@ -120,7 +135,7 @@ class DAO {
             if (results.length > 0) {
                 // Authenticate the user
                 console.log(results)
-                return [true, 0, {found:true,result:results[0]}];
+                return [true, 0, { found: true, result: results[0] }];
             }
             else {
                 return [false, -1, {}];
@@ -130,13 +145,13 @@ class DAO {
         }
     }
 
-    async placeLatLngExists(lat,lng) {
+    async placeLatLngExists(lat, lng) {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
 
             //qui forse ci deve essere un certo scostamento di errore da tollerare
-            let selection = await connection.query('SELECT placeId FROM stage WHERE lat = ? AND lng = ?', [lat,lng]);
+            let selection = await connection.query('SELECT placeId FROM stage WHERE lat = ? AND lng = ?', [lat, lng]);
             let results = selection[0];
             // If the account exists
             if (results.length > 0) {
@@ -153,10 +168,10 @@ class DAO {
 
 
     async searchRoadmap(ricerca) {
-       
+
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', ['%'+ricerca+'%','%'+ricerca+'%','%'+ricerca+'%']);
+            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -213,7 +228,7 @@ class DAO {
         }
     }
 
-    
+
     async getNumberRoadmapSeguite(id) {
         try {
             var connection = await this.connect();

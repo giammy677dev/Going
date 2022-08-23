@@ -71,7 +71,10 @@ class HTTPinterface {
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
+        this.app.get('/view_roadmap', this.view_roadmap.bind(this));
+        this.app.get('/viewrm', this.viewrm.bind(this));
 
+       
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -122,7 +125,17 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
-
+    async view_roadmap(req,res){
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        return res.sendFile(__dirname + '/static/view_roadmap.html');
+    }
+    async viewrm(req,res){
+        const r = await this.controller.viewRoadmap(req.query.id);
+        return res.send(JSON.stringify(r));
+    }
+    
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
