@@ -43,6 +43,7 @@ class HTTPinterface {
         //front end pages
         //this.app.get('/', this.main_page.bind(this)); //MainPage
         this.app.get('/', this.home_page.bind(this)); //HomePage
+        this.app.get('/info', this.info_page.bind(this)); //info
         this.app.get('/about', this.about_page.bind(this)); //about
         this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
@@ -265,6 +266,13 @@ class HTTPinterface {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/Homepage.html');
+    }
+
+    async info_page(req, res) {
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        return res.sendFile(__dirname + '/static/info.html');
     }
 
     async about_page(req, res) {
