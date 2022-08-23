@@ -23,6 +23,9 @@ function check() {
     xhr.send();
 }
 
+function deleteStage(stage_index){
+    console.log("ciao stage da eliminare: ", stage_index)
+}
 
 
 

@@ -302,7 +302,7 @@ class HTTPinterface {
             return res.sendFile(__dirname + '/static/create.html');
             console.log('user session is alive')
         }else{
-
+            return res.sendFile(__dirname + '/static/create.html');
         }
         
     }
