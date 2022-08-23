@@ -102,6 +102,7 @@
 }
 
 .timeline .box .container .cards {
+    margin-top: 20px;
     margin-left: 12px;
     transform: translateY(-50px);
 }
@@ -176,3 +177,12 @@
 }
 
 /*<!--ROBA PROVA----------------------------------------------------------->*/
+a.boxclose{
+    float: right; 
+    position: relative;
+    cursor:pointer;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}

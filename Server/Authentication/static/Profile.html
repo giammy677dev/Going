@@ -40,8 +40,9 @@
 		<!-- Informazioni Utente -->
 
 		<div class="card">
-			<img class="images" id="avatar" src="" width="200" 
-			height="200" alt="Avatar">
+			<img class="images" id="avatar" width="200" height="200" alt="Avatar">
+
+			<button onclick="load_choice_avatar()" id="button_choice_avatar"> Modifica il tuo Avatar </button>
 
 			<div class="info">
 				<p> <b id="info_username"> </b></p>
@@ -49,6 +50,47 @@
 				<p id="info_birthdate"> </p>
 			</div>
 		</div>
+
+		<div id="choice_avatar">    
+			<p> <h2>Modifica Avatar</h2> </p>
+			
+			<p> Il tuo Avatar : </p>
+			<img class="button_avatar" id="avatar_choice">
+		
+			<p> Possibili scelte : </p>
+
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_1"> <img id="avatar_provisoral" src="/avatar/Avatar_1.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_2"> <img id="avatar_provisoral" src="/avatar/Avatar_2.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_3"> <img id="avatar_provisoral" src="/avatar/Avatar_3.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_4"> <img id="avatar_provisoral" src="/avatar/Avatar_4.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_5"> <img id="avatar_provisoral" src="/avatar/Avatar_5.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_6"> <img id="avatar_provisoral" src="/avatar/Avatar_6.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_7"> <img id="avatar_provisoral" src="/avatar/Avatar_7.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_8"> <img id="avatar_provisoral" src="/avatar/Avatar_8.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_9"> <img id="avatar_provisoral" src="/avatar/Avatar_9.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_10"> <img id="avatar_provisoral" src="/avatar/Avatar_10.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_11"> <img id="avatar_provisoral" src="/avatar/Avatar_11.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_12"> <img id="avatar_provisoral" src="/avatar/Avatar_12.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_13"> <img id="avatar_provisoral" src="/avatar/Avatar_13.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_14"> <img id="avatar_provisoral" src="/avatar/Avatar_14.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_15"> <img id="avatar_provisoral" src="/avatar/Avatar_15.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_16"> <img id="avatar_provisoral" src="/avatar/Avatar_16.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_17"> <img id="avatar_provisoral" src="/avatar/Avatar_17.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_18"> <img id="avatar_provisoral" src="/avatar/Avatar_18.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_19"> <img id="avatar_provisoral" src="/avatar/Avatar_19.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_20"> <img id="avatar_provisoral" src="/avatar/Avatar_20.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_21"> <img id="avatar_provisoral" src="/avatar/Avatar_21.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_22"> <img id="avatar_provisoral" src="/avatar/Avatar_22.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_23"> <img id="avatar_provisoral" src="/avatar/Avatar_23.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_24"> <img id="avatar_provisoral" src="/avatar/Avatar_24.png"> </button>
+			
+			<p>
+				<input onclick="change_avatar()" type="submit" name="invia" value="Invia">
+				<input type="button" onclick="document.getElementById('choice_avatar').style.display='none'" value="Annulla"/>
+			</p>
+				
+			</p>		
+		</div>	
 
 		<!-- Informazioni Roadmap -->
 

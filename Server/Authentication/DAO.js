@@ -15,13 +15,28 @@ class DAO {
             console.log(err);
         }
     }
+    async viewRoadmap(id) {
+        
+        try{
+            var connection=await this.connect();
+            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=? AND isPublic=1', [id])
+            var id_utente=result_rm[0][0].utenteRegistrato_id
+            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+            
+            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0] }];
+        }
+        catch(error){
+            return [false, error.errno];
+        }
+    }
+    
 
     async register(username, password, email, birthdate) {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
-            await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin) VALUES (?, ?, ?, ?, 0)', [username, password, email, birthdate]);
-            return [true, 0];
+            const res = await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin, avatar) VALUES (?, ?, ?, ?, 0, "/avatar/Avatar_0.png")', [username, password, email, birthdate]);
+            return [true, 0, res[0]];
         } catch (error) {
             return [false, error.errno];
         }
@@ -57,7 +72,7 @@ class DAO {
             return [false, error.errno, {}];
         }
     }
-    async addNewStages(stages,session_data) {
+    async addNewStages(stages, session_data) {
 
         var connection = await this.connect();
         for (var i = 0; i < stages.length; i++) {
@@ -70,12 +85,11 @@ class DAO {
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    console.log('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website,stored_stage.photos[0].photoReference])
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.photos[0].photoReference]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 }
             } catch (error) {
                 console.log(error)
@@ -110,11 +124,54 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
-    async searchRoadmap(ricerca) {
-       
+
+    async placeIDExists(placeID) {
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', ['%'+ricerca+'%','%'+ricerca+'%','%'+ricerca+'%']);
+            // Execute SQL query that'll select the account from the database based on the specified username and password
+            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione,website,fotoURL as foto FROM stage WHERE placeId = ?', [placeID]);
+            let results = selection[0];
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                console.log(results)
+                return [true, 0, { found: true, result: results[0] }];
+            }
+            else {
+                return [false, -1, {}];
+            }
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+    }
+
+    async placeLatLngExists(lat, lng) {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll select the account from the database based on the specified username and password
+
+            //qui forse ci deve essere un certo scostamento di errore da tollerare
+            let selection = await connection.query('SELECT placeId FROM stage WHERE lat = ? AND lng = ?', [lat, lng]);
+            let results = selection[0];
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                return [true, 0];
+            }
+            else {
+                return [false, -1];
+            }
+        } catch (error) {
+            return [false, error.errno, default_dict];
+        }
+    }
+
+
+    async searchRoadmap(ricerca) {
+
+        try {
+            var connection = await this.connect();
+            var result = await connection.query('SELECT titolo,durataComplessiva,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durataComplessiva LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -171,7 +228,7 @@ class DAO {
         }
     }
 
-    
+
     async getNumberRoadmapSeguite(id) {
         try {
             var connection = await this.connect();
@@ -193,6 +250,18 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
+    async updateAvatar(id,new_avatar) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('UPDATE utenteregistrato SET avatar = ? WHERE id = ?', [new_avatar, id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
 }
 
 module.exports = DAO

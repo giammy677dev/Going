@@ -12,6 +12,33 @@ class MapsHandler {
         return url
     }
 
+    async getRoute(stage1,stage2,travelMode)
+    {
+        console.log(stage1)
+        console.log(stage2)
+        console.log(travelMode)
+        try {
+            var data_from_google = await client.directions({
+                params: {
+                    origin: {lat: stage1.lat, lng: stage1.lng},
+                    destination: {lat: stage2.lat, lng: stage2.lng},
+                    mode: travelMode.toLowerCase(),
+                    key: API_KEY,
+                    //fields:['icon'] if necessary
+                },
+                timeout: 1000, // milliseconds
+            });
+            data_from_google = data_from_google.data;
+            
+            return [
+                true, 0, data_from_google
+            ]
+        } catch (error) {
+            console.log(error)
+        }
+        return { ok: false, error: -1 } //errore? -1?
+    }
+
     async getPlaceDetails(place_id) {
         try {
             var data_from_google = await client.placeDetails({
@@ -20,13 +47,16 @@ class MapsHandler {
                     key: API_KEY,
                     //fields:['icon'] if necessary
                 },
-                timeout: 1000, // milliseconds
+                timeout: 10000, // milliseconds. qual è il timeout di default?
             });
             data_from_google = data_from_google.data.result;
-            if(data_from_google.photos !== undefined)
-                data_from_google.foto = this.getPhotoUrl(data_from_google.photos[0].photo_reference)
-            else
-                data_from_google.foto = "FOTO DI DEFAULT QUI"
+            if(data_from_google.photos !== undefined){
+                data_from_google.foto = data_from_google.photos[0].photo_reference
+                data_from_google.fotoURL = this.getPhotoUrl(data_from_google.foto)
+            }else{
+                data_from_google.foto = "NO"
+                data_from_google.fotoURL = null
+            }
             return [
                 true, 0, data_from_google
             ]
