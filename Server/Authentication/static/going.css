@@ -56,6 +56,7 @@ body {
     position: fixed;
     width: 100%;
     top: 90px;
+    right: 0px;left: 0px;
 }
 
 /* Style the navigation bar links */

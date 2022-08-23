@@ -27,7 +27,7 @@ class RequestController {
         if (username && password) {
             password = md5(password);
             const data = await this.dao.login(username, password);
-            console.log({ ok: data[0], error: data[1], data: data[2] })
+            //console.log({ ok: data[0], error: data[1], data: data[2] })
             return { ok: data[0], error: data[1], data: data[2] }
         }
         else {
@@ -35,10 +35,13 @@ class RequestController {
         }
     }
 
-    async createRoadmap(user_id, roadmap, session_data) {
-        console.log(roadmap)
-        if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null){// && roadmap.stages) { //la roadmap è non nulla
+    async createRoadmap(user_id, roadmap, session_data, distance_data) {
+        //console.log(roadmap)
+        if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {// && roadmap.stages) { //la roadmap è non nulla
             //dao params: titolo, visibilità, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id
+
+
+            //calcola durata complessiva 
 
 
             //fatte in blocco. se succede qualcosa va fatto il revert di tutto. ROLLBACK SI PUO' FARE???
@@ -47,10 +50,10 @@ class RequestController {
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, user_id);
             const roadmap_id = data1[2].insertId
-            
-            await this.dao.addNewStages(roadmap.stages,session_data);
-            const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages); //salvo solo la sessione. e la rimozione?
-            return {ok: data3[0], error:data3[1]}
+
+            await this.dao.addNewStages(roadmap.stages, session_data);
+            const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
+            return { ok: data3[0], error: data3[1] }
         }
 
         return {ok: false, error:-5} //return error!
@@ -65,6 +68,18 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+    async viewRoadmap(id){
+        
+        if (!id || id == null) { //rm nullo
+            return { ok: false, error: -4, data: { id: '' } }
+        }
+        else {
+            const data = await this.dao.viewRoadmap(id);
+            
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    
     async searchRoadmap(ricerca) {
         
         if (!ricerca || ricerca == null) { //ricerca nulla
@@ -95,13 +110,33 @@ class RequestController {
     }
 
     async getPlaceInfo(id) {
+        //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
+        //a google maps api!!
+
+        const localHit = await this.dao.placeIDExists(id);
+        if (localHit[0] && localHit[2].found)
+        {
+            console.log("place exists in db!")
+            return { ok: localHit[0], error: localHit[1], data: localHit[2].result }
+        }
         const data = await this.mapsHandler.getPlaceDetails(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
-    async getPlaceFromCoords(lat,lng) {
-        const data = await this.mapsHandler.getPlaceFromCoords(lat,lng);
-        return { ok: data[0], error: data[1], data: data[2]}
+    async getRoute(placeId1, placeId2, travelMode) {
+        const data = await this.mapsHandler.getRoute(placeId1, placeId2, travelMode);
+        //console.log(data)
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+
+    async getPlaceFromCoords(lat, lng) {
+
+        //stesso discorso di placeinfo!! c'è bisogno di una chiamata al db pe vedere se già esiste. se già esiste è inutile 
+        //fare chiamate a google
+
+        const data = await this.mapsHandler.getPlaceFromCoords(lat, lng);
+        return { ok: data[0], error: data[1], data: data[2] }
     }
 
     async getNumberRoadmapCreate(id) {
