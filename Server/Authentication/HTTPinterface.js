@@ -43,6 +43,7 @@ class HTTPinterface {
         //front end pages
         //this.app.get('/', this.main_page.bind(this)); //MainPage
         this.app.get('/', this.home_page.bind(this)); //HomePage
+        this.app.get('/info', this.info_page.bind(this)); //info
         this.app.get('/about', this.about_page.bind(this)); //about
         this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
@@ -71,6 +72,13 @@ class HTTPinterface {
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
+
+        this.app.get('/view_roadmap', this.view_roadmap.bind(this));
+        this.app.get('/viewrm', this.viewrm.bind(this));
+
+       
+
+        this.app.post('/updateAvatar', this.updateAvatar.bind(this));
 
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
@@ -101,9 +109,17 @@ class HTTPinterface {
             return res.send(JSON.stringify(r))
         }
     }
+
     async register(req, res) {
         console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
+        console.log(r);
+        if (r.ok) {
+            req.session.loggedin = true;
+            req.session.user_id = r.data.insertId;
+            req.session.username = req.body.username;
+        }
+
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
     }
 
@@ -115,6 +131,7 @@ class HTTPinterface {
             req.session.username = r.data.username;
             req.session.user_id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
+            req.session.avatar = r.data.avatar;
             req.session.placeDetails = {}
             req.session.distanceDetails = {}
             //req.session.userType = 0, 1, 2, 3.  
@@ -122,7 +139,17 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
-
+    async view_roadmap(req,res){
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        return res.sendFile(__dirname + '/static/view_roadmap.html');
+    }
+    async viewrm(req,res){
+        const r = await this.controller.viewRoadmap(req.query.id);
+        return res.send(JSON.stringify(r));
+    }
+    
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
@@ -248,6 +275,13 @@ class HTTPinterface {
         }
     }
 
+    async updateAvatar(req, res) {
+        if (req.session.loggedin) {   
+            const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
 
     async searchUser(req, res) {
 
@@ -264,8 +298,9 @@ class HTTPinterface {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
-
-    async main_page(req, res) {
+    
+    async main_page(req, res)
+    {
         if (req.user) {
             console.log('user session is alive')
         }
@@ -277,6 +312,13 @@ class HTTPinterface {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/Homepage.html');
+    }
+
+    async info_page(req, res) {
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        return res.sendFile(__dirname + '/static/info.html');
     }
 
     async about_page(req, res) {
@@ -297,10 +339,10 @@ class HTTPinterface {
         if (req.session.loggedin !== undefined & req.session.loggedin == true) {
             return res.sendFile(__dirname + '/static/create.html');
             console.log('user session is alive')
-        } else {
-
+        }else{
+            return res.sendFile(__dirname + '/static/create.html');
         }
-
+        
     }
 
     async signup_page(req, res) {

@@ -4,7 +4,7 @@
 <HEAD>
     <title>Going</title>
     <meta charset="utf-8" />
-    <meta name="description" content="bla bla.... viaggi... bla bla">
+    <meta name="description" content="Programma la tua esperienza di viaggio creando la tua roadmap oppure scegliendo tra le più belle della community!">
     <meta name="author" content="Mennillo Orlando Perillo Russo Maraniello" />
     <meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
     <link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
@@ -37,7 +37,7 @@
         </p>
 
         <p>
-            <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
+            <input class="pulsantiForm" id="log_puls" type="submit" name="invia" value="Login" onclick="validation_login()" />
             <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
                 value="Annulla" />
         </p>
@@ -62,6 +62,7 @@
     </div>
 
 
+
     <div class="primoPiano">
 
 		               
@@ -72,6 +73,7 @@
                         <div class="menuRow">
                             <div class="menuBar">
                                 <a id="Homepage" href="/">Homepage</a>
+                                <a id="Info" href="/info">Info</a>
                                 <a id="About" href="/about" title="Leggi informazioni utili">About</a>
                                 <a id="Explore" href="/explore" title="Cerca roadmap e utenti">Explore</a>
                                 <a id="Create" href="/create" title="Crea una nuova Roadmap!">Create</a>
@@ -141,6 +143,22 @@
                     event.preventDefault();
                     document.getElementById("tastoRicerca").click();
                 }
+            });
+            var logus_in = document.getElementById("username_login");
+            logus_in.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.getElementById("log_puls").click();
+                }
+            
+            });
+            var logpw_in = document.getElementById("password_login");
+            logpw_in.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.getElementById("log_puls").click();
+                }
+            
             });
         </script>
 </body>

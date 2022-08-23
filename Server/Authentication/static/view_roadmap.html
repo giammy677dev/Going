@@ -32,11 +32,88 @@
   </div>
 
   <div class="contenuto">
-    <div class="descrizione">
-      <h2> Nome Roadmap </h2>
+    <br>--DA FARE--<br>
+    3)box recensioni utenti da db<br>5)query per stage nella roadmap che poppano nella lista a tendina e vanno sulla mappa<br>
+    <div class="container_top">
+      <div class="result_query" id="result_query">
+        <div class="res" id="res">
+          <div class="titolo" id="titolo"></div><br>
+          <div class="citta" id="citta"></div><br>
+          <div class="durata" id="durata"></div><br>
+          <div class="utente" id="utente"></div><br>
+          <div class="rating" id="rating"></div><br>
+          <div class="descrizione" id="descrizione"></div><br>
+          <div class="data" id="data"></div>
+        </div>
+      </div>
+
+      <div class="map" id="map">
+        <h2>mappa spauna qua</h2>
+      </div>
+
+      <div class="all">
+        <div class="body-cards">
+          <div class="main">
+
+            <div class="cardTop">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z"
+                fill="#FF768E" />
+              </svg>
+            </div>
+
+
+            <div class="timeline">
+              <h3>Durata totale MA MAGARA IN ORIZZONTALE SOTTO????  </h3>
+              <label class="durata" id="somma_totale">0</label>
+              <div class="box">
+
+                <div class="container">
+
+                  <div class="lines" id="lines">
+                    <div class="dot"></div>
+                    <div class="line"></div>
+                    <div class="dot"></div>
+                    <div class="line"></div>
+                  </div>
+
+                  <div class="cards" id="cards">
+                  <div class="card">
+
+
+                    <h4>Prova titolo</h4>
+                    <p>Via e durata</p>
+                  </div>
+                  <div class="card">
+
+
+                    <h4>Prova titolo</h4>
+                    <p>Via e durata</p>
+                  </div>
+
+                </div>
+
+
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="rate">
+
+  </div>
+
+  <div class="container_middle">
+    <div id="rate"class="rate">
       <input type="radio" id="star5" name="rate" value="5" onclick="rating(value)">
       <label for="star5" title="text"> </label>
       <input type="radio" id="star4" name="rate" value="4" onclick="rating(value)">
@@ -49,28 +126,32 @@
       <label for="star1" title="text"> </label>
     </div>
 
-    <div class="heart">
+    <div id="heart"class="heart">
       <i class="heart-like-button" onclick="heart()"> </i>
-    </div> 
-
-    <div class="checked">
-      <i class="checked-like-button" onclick="checked()"> </i>
     </div>
 
+    <div id="checked"class="checked">
+      <i class="checked-like-button" onclick="checked()"> </i>
+    </div>
+    
+    <div id="forka" class="forka">
+      <input type="submit" value="Forka la Roadmap" onclick="forkaggio()">
+    </div>
   </div>
 
-  
-  <!-- <div class="footer">
-    
+
+  </div>
+
+  <div class="footer">
+
     <h4>
-        Copyright 2022
+      Copyright 2022
     </h4>
-    
+
     <h6>
-        Diego-Gian Marco-Marco-Matteo-Valerio
+      Diego-Gian Marco-Marco-Matteo-Valerio
     </h6>
-
   </div>
--->
-
 </body>
+
+</html>

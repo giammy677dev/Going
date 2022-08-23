@@ -15,7 +15,7 @@ class RequestController {
         if (username && password && email && birthdate) {
             password = md5(password);
             const data = await this.dao.register(username, password, email, birthdate);
-            return { ok: data[0], error: data[1] };
+            return { ok: data[0], error: data[1], data: data[2]};
         }
         else {
             return { ok: false, error: -2 }
@@ -68,6 +68,18 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+    async viewRoadmap(id){
+        
+        if (!id || id == null) { //rm nullo
+            return { ok: false, error: -4, data: { id: '' } }
+        }
+        else {
+            const data = await this.dao.viewRoadmap(id);
+            
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    
     async searchRoadmap(ricerca) {
 
         if (!ricerca || ricerca == null) { //ricerca nulla
@@ -139,6 +151,11 @@ class RequestController {
 
     async getNumberRoadmapPreferite(id) {
         const data = await this.dao.getNumberRoadmapPreferite(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateAvatar(id, new_avatar) {
+        const data = await this.dao.updateAvatar(id, new_avatar);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

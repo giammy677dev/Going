@@ -15,13 +15,28 @@ class DAO {
             console.log(err);
         }
     }
+    async viewRoadmap(id) {
+        
+        try{
+            var connection=await this.connect();
+            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=? AND isPublic=1', [id])
+            var id_utente=result_rm[0][0].utenteRegistrato_id
+            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+            
+            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0] }];
+        }
+        catch(error){
+            return [false, error.errno];
+        }
+    }
+    
 
     async register(username, password, email, birthdate) {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
-            await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin) VALUES (?, ?, ?, ?, 0)', [username, password, email, birthdate]);
-            return [true, 0];
+            const res = await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin, avatar) VALUES (?, ?, ?, ?, 0, "/avatar/Avatar_0.png")', [username, password, email, birthdate]);
+            return [true, 0, res[0]];
         } catch (error) {
             return [false, error.errno];
         }
@@ -240,6 +255,18 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
+    async updateAvatar(id,new_avatar) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('UPDATE utenteregistrato SET avatar = ? WHERE id = ?', [new_avatar, id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
 }
 
 module.exports = DAO
