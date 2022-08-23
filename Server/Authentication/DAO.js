@@ -70,12 +70,11 @@ class DAO {
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    console.log('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website,stored_stage.photos[0].photoReference])
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.photos[0].photoReference]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoURL) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 }
             } catch (error) {
                 console.log(error)
@@ -110,6 +109,49 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
+    async placeIDExists(placeID) {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll select the account from the database based on the specified username and password
+            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione,website,fotoURL as foto FROM stage WHERE placeId = ?', [placeID]);
+            let results = selection[0];
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                console.log(results)
+                return [true, 0, {found:true,result:results[0]}];
+            }
+            else {
+                return [false, -1, {}];
+            }
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+    }
+
+    async placeLatLngExists(lat,lng) {
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll select the account from the database based on the specified username and password
+
+            //qui forse ci deve essere un certo scostamento di errore da tollerare
+            let selection = await connection.query('SELECT placeId FROM stage WHERE lat = ? AND lng = ?', [lat,lng]);
+            let results = selection[0];
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                return [true, 0];
+            }
+            else {
+                return [false, -1];
+            }
+        } catch (error) {
+            return [false, error.errno, default_dict];
+        }
+    }
+
+
     async searchRoadmap(ricerca) {
        
         try {

@@ -70,6 +70,7 @@ class HTTPinterface {
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
+        this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
     
         // http://localhost:3000/home
@@ -125,6 +126,7 @@ class HTTPinterface {
             req.session.isAdmin = r.data.isAdmin;
             req.session.avatar = r.data.avatar;
             req.session.placeDetails = {}
+            req.session.distanceDetails = {}
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
         }
@@ -220,6 +222,7 @@ class HTTPinterface {
         if (req.session.loggedin) { // da mettere!
             const isExNovo=0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
+            console.log(r)
             if(r.ok){
                 req.session.placeDetails[req.query.placeId] = [r.data,isExNovo];
             }
@@ -227,6 +230,19 @@ class HTTPinterface {
             return res.send(JSON.stringify(r));
         }
     }
+
+    async getRoute(req, res) {
+        if (req.session.loggedin || true) { // da mettere!
+            const r = await this.controller.getRoute(req.body.origin,req.body.destination,req.body.travelMode);
+            if(r.ok){ //va salvato nella sessione
+                req.session.placeDetails
+                //req.session.distanceDetails[req.body.origin]
+            }
+            
+            return res.send(JSON.stringify(r));
+        }
+    }
+
 
     async getPlaceFromCoords(req, res) {
         if (req.session.loggedin || true) { // da mettere!
@@ -298,10 +314,13 @@ class HTTPinterface {
     }
 
     async createRoadmap_page(req, res) {
-        if (req.user) {
+        if (req.session.loggedin !== undefined & req.session.loggedin == true) {
+            return res.sendFile(__dirname + '/static/create.html');
             console.log('user session is alive')
+        }else{
+            return res.sendFile(__dirname + '/static/create.html');
         }
-        return res.sendFile(__dirname + '/static/create.html');
+        
     }
 
     async signup_page(req, res) {

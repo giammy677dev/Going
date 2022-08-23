@@ -1,0 +1,120 @@
+/*Nuovo Header*/
+
+.row1 {
+	height: 100px;
+	width: 100%;
+	position: fixed;
+	opacity: 0.9;
+	top: 0px;
+	left: 0px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+#logo-header {
+	height: 100%;
+}
+
+.coloumn-headersx {
+	float: left;
+	width: 30%;
+	height: 100%;
+	background-color: black;
+	font-family: "Poppins", sans-serif;
+}
+
+.coloumn-headerdx {
+	float: left;
+	width: 70%;
+	height: 100%;
+	background-color: black;
+	font-family: "Poppins", sans-serif;
+	/*border: solid 2px blue;*/
+}
+
+.coloumnLogo {
+	float: left;
+	/*width: 25%;*/
+	text-align: center;
+	height: 100%;
+	background-color: black;
+	font-family: "Poppins", sans-serif;
+}
+
+.coloumnTitolo {
+	float: left;
+	width: 60%;
+	text-align: center;
+	height: 100%;
+	background-color: black;
+	font-family: "Poppins", sans-serif;
+	/*border: solid 2px red;*/
+}
+
+.coloumn img {
+	/*float: left;*/
+	margin-left: 5%;
+}
+
+.topnav {
+	margin-top: 3%;
+	align-items: center;
+}
+
+.topnav a {
+	line-height: 1;
+	display: inline-block;
+	text-decoration:none;
+	color: rgba(255, 255, 255, 0.7);
+	font-size: 18px;
+	padding: 10px;
+	text-align: center;
+  margin-left: 30px;
+}
+
+.topnav a:after {
+	display: block;
+	content: "";
+	height: 2px;
+	width: 0%;
+	transition: width .3s ease-in-out;
+	background-color: #18b6d2;
+}
+
+.topnav a:hover:after {
+	width: 60%;
+}
+
+.coloumnTitolo p {
+	color: white;
+	font-size: 30px;
+	font-weight: 700;
+	text-align: center;
+	font-family: "Poppins", sans-serif;
+}
+
+#logout_header {
+	
+	margin-left: 18%;
+	
+}
+
+
+#logout_header:after {
+	display: none;
+}
+/* fine header */
+
+.button_header{
+    border: thin solid #18c9d2;
+	display: inline-block;
+	transition: all ease-in-out 0.3s;
+    text-decoration: none;
+}
+
+.button_header:hover {
+	background-color: #117077;
+	color: white;
+	border: thin solid white;
+    text-decoration: none;
+}
