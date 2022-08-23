@@ -46,3 +46,4 @@ function logout(){
       console.log("ops problemi")
     }
   }
+} 
