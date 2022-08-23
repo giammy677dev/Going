@@ -12,16 +12,16 @@ class MapsHandler {
         return url
     }
 
-    async getRoute(stage1,stage2,travelMode)
+    async getRoute(placeId1,placeId2,travelMode)
     {
-        console.log(stage1)
-        console.log(stage2)
-        console.log(travelMode)
+        //console.log(stage1)
+        //console.log(stage2)
+        //console.log(travelMode)
         try {
             var data_from_google = await client.directions({
-                params: {
-                    origin: {lat: stage1.lat, lng: stage1.lng},
-                    destination: {lat: stage2.lat, lng: stage2.lng},
+                params: { 
+                    origin: "place_id:"+placeId1,
+                    destination: "place_id:"+placeId2,
                     mode: travelMode.toLowerCase(),
                     key: API_KEY,
                     //fields:['icon'] if necessary
@@ -79,7 +79,7 @@ class MapsHandler {
                 timeout: 1000, // milliseconds
             });
             const res = (data_from_google.data.results[0]);
-            console.log(res)
+            //console.log(res)
             return [true,0, res]
         } catch (error) {
             console.log(error)

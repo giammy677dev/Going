@@ -27,7 +27,7 @@ class RequestController {
         if (username && password) {
             password = md5(password);
             const data = await this.dao.login(username, password);
-            console.log({ ok: data[0], error: data[1], data: data[2] })
+            //console.log({ ok: data[0], error: data[1], data: data[2] })
             return { ok: data[0], error: data[1], data: data[2] }
         }
         else {
@@ -35,10 +35,13 @@ class RequestController {
         }
     }
 
-    async createRoadmap(user_id, roadmap, session_data) {
-        console.log(roadmap)
+    async createRoadmap(user_id, roadmap, session_data, distance_data) {
+        //console.log(roadmap)
         if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {// && roadmap.stages) { //la roadmap è non nulla
             //dao params: titolo, visibilità, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id
+
+
+            //calcola durata complessiva 
 
 
             //fatte in blocco. se succede qualcosa va fatto il revert di tutto. ROLLBACK SI PUO' FARE???
@@ -49,7 +52,7 @@ class RequestController {
             const roadmap_id = data1[2].insertId
 
             await this.dao.addNewStages(roadmap.stages, session_data);
-            const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages); //salvo solo la sessione. e la rimozione?
+            const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
             return { ok: data3[0], error: data3[1] }
         }
 
@@ -99,7 +102,8 @@ class RequestController {
         //a google maps api!!
 
         const localHit = await this.dao.placeIDExists(id);
-        if (localHit[0] && localHit[2].found){
+        if (localHit[0] && localHit[2].found)
+        {
             console.log("place exists in db!")
             return { ok: localHit[0], error: localHit[1], data: localHit[2].result }
         }
@@ -107,9 +111,9 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoute(stage1, stage2, travelMode) {
-        const data = await this.mapsHandler.getRoute(stage1, stage2, travelMode);
-        console.log(data)
+    async getRoute(placeId1, placeId2, travelMode) {
+        const data = await this.mapsHandler.getRoute(placeId1, placeId2, travelMode);
+        //console.log(data)
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
@@ -118,13 +122,7 @@ class RequestController {
 
         //stesso discorso di placeinfo!! c'è bisogno di una chiamata al db pe vedere se già esiste. se già esiste è inutile 
         //fare chiamate a google
-        //forse??
-        const localHit = await this.dao.placeIDExists(id);
-        if (localHit[0] && localHit[2].found){
-            console.log("place exists in db!")
-            return { ok: localHit[0], error: localHit[1], data: localHit[2].result }
-        }
-        
+
         const data = await this.mapsHandler.getPlaceFromCoords(lat, lng);
         return { ok: data[0], error: data[1], data: data[2] }
     }

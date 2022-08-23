@@ -8,31 +8,59 @@ function check() {
         const r = JSON.parse(event.target.responseText);
 
 
-        if (r.ok == true) {
+        if (r.ok == true)
+        {
             console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
             user_id = r.whoLog
         }
         else if (r.ok == false) {
-            document.getElementById('contenuto').style.filter='blur(10px)'
-            document.getElementById('all_page').style.overflow='hidden'
-            document.getElementById('all_page').style.height='100%'
-            document.getElementById('all_page').style.margin='0'
+            document.getElementById('contenuto').style.filter = 'blur(10px)'
+            document.getElementById('all_page').style.overflow = 'hidden'
+            document.getElementById('all_page').style.height = '100%'
+            document.getElementById('all_page').style.margin = '0'
             document.getElementById('info_nolog').style.display = 'block'
         }
     }
     xhr.send();
 }
 
-
-
-
-
 var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers = [];
 var roadmap = []; //lista degli stage
 var markers = [];
+var distance_renderers = [];
 var stage_index = 0;
+
+function deleteStage(stage_index) {
+    //qua va il comando di rimozione del box grafico nel roadmap
+    
+    //rimozione markaer dalla mappa
+    markers[stage_index].setMap(null);
+
+    //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
+    if(stage_index == 0){
+        distance_renderers[stage_index].setMap(null);
+    }else if(stage_index==roadmap.length-1){
+        distance_renderers[stage_index-1].setMap(null);
+        stage_index--;
+    }else{
+        distance_renderers[stage_index].setMap(null);
+        distance_renderers[stage_index-1].setMap(null);
+        //si calcola distanza tra A->C
+        backendDistance(roadmap[stage_index],roadmap[stage_index+2])
+        stage_index--;
+    }
+    distance_renderers.splice(stage_index+1, 1);
+
+    
+
+    
+    roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
+     //tolto un elemento!
+    console.log(roadmap)
+}
+
 
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
@@ -82,24 +110,23 @@ function asLatLng(latLngObject) {
 }
 
 function asBounds(boundsObject) {
-    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest),asLatLng(boundsObject.northeast));
+    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast));
 }
 
-function typecastRoutes(routes)
-{
-    routes.forEach(function(route){
+function typecastRoutes(routes) {
+    routes.forEach(function (route) {
         route.bounds = asBounds(route.bounds);
         // I don't think `overview_path` is used but it exists on the
         // response of DirectionsService.route()
         routes.overview_path = asPath(route.overview_polyline);
 
-        route.legs.forEach(function(leg){
+        route.legs.forEach(function (leg) {
             leg.start_location = asLatLng(leg.start_location);
-            leg.end_location   = asLatLng(leg.end_location);
+            leg.end_location = asLatLng(leg.end_location);
 
-            leg.steps.forEach(function(step){
+            leg.steps.forEach(function (step) {
                 step.start_location = asLatLng(step.start_location);
-                step.end_location   = asLatLng(step.end_location);
+                step.end_location = asLatLng(step.end_location);
                 step.path = asPath(step.polyline);
             });
         });
@@ -169,7 +196,7 @@ function drawExNovoStages(results, t) {
 function backendDistance(marker1, marker2) {
 
     //CI DEVE ESSERE UNA MODALITA' PER OGNI COPPIA DI NODI?
-    var renderer = new google.maps.DirectionsRenderer();
+    
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
         selectedMode = document.getElementById("driving_mode").value;
@@ -180,9 +207,9 @@ function backendDistance(marker1, marker2) {
     console.log('Modalità: ' + selectedMode);
 
     const route = {
-        origin: { lat: marker1.latitudine, lng: marker1.longitudine },
-        destination: { lat: marker2.latitudine, lng: marker2.longitudine },
-        travelMode: selectedMode //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
+        origin: marker1.placeId,
+        destination: marker2.placeId,
+        travelMode: selectedMode
     }
 
 
@@ -198,17 +225,15 @@ function backendDistance(marker1, marker2) {
                 window.alert('Directions request failed due to ' + status);
                 return;
             } else {
-
-                
-                var routes = typecastRoutes(response.routes)
-                renderer.setOptions({
+                distance_renderers[stage_index-2] = new google.maps.DirectionsRenderer();
+                distance_renderers[stage_index-2].setOptions({
                     directions: {
-                        routes: routes,
+                        routes: typecastRoutes(response.routes),
                         // "ub" is important and not returned by web service it's an
                         // object containing "origin", "destination" and "travelMode"
                         request: route
                     },
-                    map:map
+                    map: map
                 });
             }
         }
@@ -328,8 +353,8 @@ var ClickEventHandler = /** @class */ (function () {
                 return {}
             }
         }
-        xhr.send();
 
+        xhr.send();
         var StageTitle = document.createElement('p');
         StageTitle.textContent = 'Stai creando un nuovo stage! Descrivilo:';
         spn.appendChild(StageTitle);
@@ -494,7 +519,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
