@@ -70,7 +70,8 @@ class HTTPinterface {
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
-
+        this.app.post('/updateAvatar', this.updateAvatar.bind(this));
+    
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -100,9 +101,17 @@ class HTTPinterface {
             return res.send(JSON.stringify(r))
         }
     }
+
     async register(req, res) {
         console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
+        console.log(r);
+        if (r.ok) {
+            req.session.loggedin = true;
+            req.session.user_id = r.data.insertId;
+            req.session.username = req.body.username;
+        }
+
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
     }
 
@@ -114,6 +123,7 @@ class HTTPinterface {
             req.session.username = r.data.username;
             req.session.user_id = r.data.id;
             req.session.isAdmin = r.data.isAdmin;
+            req.session.avatar = r.data.avatar;
             req.session.placeDetails = {}
             //req.session.userType = 0, 1, 2, 3.  
             //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
@@ -235,6 +245,13 @@ class HTTPinterface {
         }
     }
 
+    async updateAvatar(req, res) {
+        if (req.session.loggedin) {   
+            const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
+            console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
 
     async searchUser(req, res) {
         
@@ -252,8 +269,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
     
-    async main_page(req, res)
-    {
+    async main_page(req, res){
         if (req.user) {
             console.log('user session is alive')
         }

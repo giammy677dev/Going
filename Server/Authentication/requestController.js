@@ -15,7 +15,7 @@ class RequestController {
         if (username && password && email && birthdate) {
             password = md5(password);
             const data = await this.dao.register(username, password, email, birthdate);
-            return { ok: data[0], error: data[1] };
+            return { ok: data[0], error: data[1], data: data[2]};
         }
         else {
             return { ok: false, error: -2 }
@@ -117,6 +117,11 @@ class RequestController {
     async getNumberRoadmapPreferite(id) {
         const data = await this.dao.getNumberRoadmapPreferite(id);
         return { ok: data[0], error: data[1], data: data[2]}
+    }
+
+    async updateAvatar(id, new_avatar) {
+        const data = await this.dao.updateAvatar(id, new_avatar);
+        return { ok: data[0], error: data[1], data: data[2] }
     }
 
 }
