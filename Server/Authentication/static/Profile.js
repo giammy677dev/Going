@@ -84,6 +84,39 @@
     xhr.send();
   }
 
+  // Cambio Profilo Provvisorio
+
+  function load_choice_avatar(){
+    document.getElementById('choice_avatar').style.display='block'
+    document.getElementById("avatar_choice").setAttribute("src",document.getElementById("avatar").getAttribute("src"))
+  }
+
+  function choice(id){
+    document.getElementById("avatar_choice").setAttribute("src","/avatar/"+id+".png")
+  }
+
+  function change_avatar(){
+    var new_avatar = document.getElementById("avatar_choice").getAttribute("src");
+    
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", '/updateAvatar', true);
+  
+    xhr.onload = function (event) {
+      const r = JSON.parse(event.target.responseText);
+
+      if (r.ok == true) {
+        document.getElementById("avatar").setAttribute("src",new_avatar);
+        document.getElementById('choice_avatar').style.display='none';
+      }
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+      new_avatar: new_avatar
+    }));
+  }
+
   // Script Blocco Roadmap
 
   function open_view(pageName, elmnt, color) {

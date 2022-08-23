@@ -22,7 +22,7 @@ body {
     margin-left: 5%;
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: #ffffff;
+    background-color: #6e0eb7;
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
 }
 
@@ -36,12 +36,10 @@ body {
     margin-bottom: 20px;
 }
 
-/* Stile Sezione Card*/
+/* Stile Sezione Card */
 
 .images {
     border-radius: 50%;
-    margin-left:10%;
-    margin-right:10%;
 }
 
 .card {
@@ -55,6 +53,35 @@ body {
 
 .card h2{
     text-align: center;
+}
+
+#choice_avatar{
+    font-size: 26px;
+    display: none;
+    z-index: 2;
+    font-family: serif;
+    color: white;
+    background-color: #6e0eb7;
+    position: absolute;
+    width: 70%;
+    height: 80%;
+    margin: 5% 15%;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    border: thin #d24618 solid;
+    overflow: auto;
+}
+
+.button_avatar{
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+#avatar_provisoral{
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
 }
 
 /* Stile Sezione Roadmap */
