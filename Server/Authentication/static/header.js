@@ -4,7 +4,7 @@ var user_id=0
 function check() {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/isLogWho', true);
+  xhr.open("GET", '/getDataUser', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -15,9 +15,7 @@ function check() {
       console.log(r)
       ok=r.ok
       user_id=r.whoLog
-      
-      console.log(document.getElementById("image_topnav"))
-      document.getElementById("image_topnav").setAttribute("src","\storage\\temporaneo.png");
+      document.getElementById("image_topnav").setAttribute("src",r.data[0].avatar);
 
       var image = document.createElement("img");
       image.setAttribute("src","/storage/logoutTransp.png");
