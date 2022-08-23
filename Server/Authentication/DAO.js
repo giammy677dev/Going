@@ -65,10 +65,11 @@ class DAO {
     async addRoadmap(titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id) {
         try {
             var connection = await this.connect();
-            console.log('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, NULL, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id])
+            //console.log('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, NULL, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id])
             const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, null, dataCreazione, utenteRegistrato_id]);
             return [true, 0, res[0]];
         } catch (error) {
+            console.log(error)
             return [false, error.errno, {}];
         }
     }
@@ -81,7 +82,7 @@ class DAO {
             var stored_stage = session_data[stage.placeId][0]
             var isExNovo = session_data[stage.placeId][1]
             try {
-                console.log(session_data)
+                //console.log(session_data)
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
@@ -100,13 +101,17 @@ class DAO {
 
     }
 
-    async instantiateRoadmap(roadmap_id, user_id, stages) {
+    async instantiateRoadmap(roadmap_id, user_id, stages, distance_data) {
         try {
+            console.log(distance_data)
             var connection = await this.connect();
+            var route;
             for (var i = 0; i < stages.length; i++) {
                 var stage = stages[i];
+                route = i > 0 ? distance_data[stages[i - 1].placeId + "|" + stage.placeId] : {}
+                route = JSON.stringify(route);
                 // Execute SQL query that'll insert the account in the database
-                await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine) VALUES(?, ?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata, i]);
+                await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine, route) VALUES(?, ?, ?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata, i, route]);
             }
             return [true, 0];
         } catch (error) {
