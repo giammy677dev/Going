@@ -69,53 +69,18 @@ function deleteStage(toDeleteIndex) {
         var line = document.getElementById("line" + oldIndex);
         var dot = document.getElementById("dot" + oldIndex);
 
-        roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
-        //tolto un elemento!
-
-        if (toDeleteIndex == 0) {
-            if (roadmap.length > 1) {
-                distance_renderers[toDeleteIndex].setMap(null);
-                distance_renderers.splice(toDeleteIndex, 1);
-            }
-        } else if (toDeleteIndex == roadmap.length - 1) {
-            distance_renderers[toDeleteIndex - 1].setMap(null);
-            distance_renderers.splice(toDeleteIndex - 1, 1);
-        } else {
-            distance_renderers[toDeleteIndex].setMap(null);
-            distance_renderers[toDeleteIndex - 1].setMap(null);
-            distance_renderers.splice(toDeleteIndex - 1, 1);
-            distance_renderers.splice(toDeleteIndex, 1);
-            //si calcola distanza tra A->C
-            backendDistance(roadmap[toDeleteIndex - 1], roadmap[toDeleteIndex + 1])
-        }
-        roadmap.splice(toDeleteIndex, 1); //4) eliminare istanza nella roadmap
-        //tolto un elemento!
-
-        document.getElementById("card" + toDeleteIndex).remove();
-        document.getElementById("line" + toDeleteIndex).remove();
-        document.getElementById("dot" + toDeleteIndex).remove();
-        const remainingCards = roadmap.length - toDeleteIndex;
-        for (var i = 0; i < remainingCards; i++) {
-            var oldIndex = toDeleteIndex + i + 1;
-            var newIndex = toDeleteIndex + i;
-            console.log(oldIndex, "diventa", newIndex)
-            var element = document.getElementById("card" + oldIndex);
-            var line = document.getElementById("line" + oldIndex);
-            var dot = document.getElementById("dot" + oldIndex);
-
-            element.id = "card" + newIndex;
-            element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
+        element.id = "card" + newIndex;
+        element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
 
-            line.id = "line" + newIndex;
-            dot.id = "dot" + newIndex; //così se scriviamo qualcosa l'istanza è preservata
-        }
-        console.log(toDeleteIndex)
-
-        stage_index--;
-
-        console.log(roadmap)
+        line.id = "line" + newIndex;
+        dot.id = "dot" + newIndex; //così se scriviamo qualcosa l'istanza è preservata
     }
+    console.log(toDeleteIndex)
+
+    stage_index--;
+
+    console.log(roadmap)
 }
 
 function initMap() {
@@ -534,8 +499,7 @@ var ClickEventHandler = /** @class */ (function () {
 
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+            drawNewStage(stage_index, stage);
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -607,8 +571,7 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+            drawNewStage(stage_index, stage)
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
