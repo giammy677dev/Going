@@ -14,7 +14,7 @@ var distance_renderers = [];
 var stage_index = 0;
 var rectDegree = 0.008;
 const minZoomForExNovoMarkers = 15;
-
+var indirizzo
 
 function check_now() {
     var xhr = new XMLHttpRequest();
@@ -345,6 +345,7 @@ function backendDistance(marker1, marker2) {
         if (r.ok == true) {
             const response = r.data;
             const status = response.status;
+            console.log(response)
             if (status !== 'OK') {
                 window.alert('Directions request failed due to ' + status);
                 return;
@@ -421,7 +422,7 @@ function isIconMouseEvent(e) {
 
 function drawNewStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
 }
 
 function submitRoadmap(roadmap) {
@@ -535,6 +536,7 @@ var ClickEventHandler = /** @class */ (function () {
                 placeId = place.place_id;
                 var AddressLabel = document.createElement('p');
                 AddressLabel.textContent = "Indirizzo:\n\n" + place.formatted_address;
+                indirizzo="Indirizzo:\n\n" + place.formatted_address;
                 spn.appendChild(AddressLabel);
             }
             else if (r.ok == false) {
@@ -613,6 +615,8 @@ var ClickEventHandler = /** @class */ (function () {
             markers[stage_index].setTitle(StageName.value)
 
             /*Nodo ex novo*/
+            to_send_stage.indirizzo=indirizzo
+            stage.indirizzo=indirizzo
             stage.index = stage_index
             stage.nome = StageName.value;
             stage.durata = parseInt(durataElement.value);
