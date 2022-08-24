@@ -1,5 +1,5 @@
 var user_id = 0
-function check() {
+function check_now() {
     var xhr = new XMLHttpRequest();
 
     xhr.open("GET", '/isLogWho', true);
