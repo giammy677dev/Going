@@ -285,9 +285,7 @@ class HTTPinterface {
 
     async getMarkersFromRect(req, res) {
         if (req.session.loggedin) {
-            console.log(req.body)
             const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
-            console.log(r)
             return res.send(JSON.stringify(r));
         }
     }

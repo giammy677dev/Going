@@ -31,12 +31,13 @@ function deleteStage(stage_index) {
 
 
 var map;
-let customMarker = './storage/markerDiego.png'
+let customMarker = './storage/marker.png'
 var db_markers = [];
 var roadmap = []; //lista degli stage
 var markers = [];
 var distance_renderers = [];
 var stage_index = 0;
+var rectDegree = 0.008;
 
 function deleteStage(stage_index) {
     //qua va il comando di rimozione del box grafico nel roadmap
@@ -71,7 +72,7 @@ function deleteStage(stage_index) {
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 18,
+        zoom: 5,
         center: origin,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
@@ -91,79 +92,87 @@ function initMap() {
         submitRoadmap(roadmap);
     });
 
-    var distance = 0;
-
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
-        console.log(zoom)
-        // iterate over markers and call setVisible
-        for (var i = 0; i < db_markers.length; i++) {
-            if (zoom <= 5) {
+
+        if (zoom <= 15) {
+            for (var i = 0; i < db_markers.length; i++) {
                 db_markers[i].setVisible(false);
             }
-            else {
-                db_markers[i].setVisible(true);
-                //Chiamata al DB
-            }
+        }
+        else {
+            drawExNovoStages();
         }
     });
 
-    const rectDegree = 0.05;
-
     map.addListener('dragend', function () {
         map.addListener('idle', function () {
-            var centerLatInf = map.getCenter().lat() - rectDegree;
-            var centerLatSup = map.getCenter().lat() + rectDegree;
-            var centerLngInf = map.getCenter().lng() - rectDegree;
-            var centerLngSup = map.getCenter().lng() + rectDegree;
-            var zoom = map.getZoom();
-
-            for (var i = 0; i < db_markers.length; i++) {
-                if (zoom <= 5) {
-                    db_markers[i].setVisible(false);
-                }
-            }
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", '/getMarkersFromRect', true);
-            xhr.onload = function (event) {
-                const r = JSON.parse(event.target.responseText);
-
-                if (r.ok == true) {
-                    if (zoom > 5 && r.data.length > 0) {
-                        r.data
-                        for (var i = 0; i < r.data.length; i++) {
-                            const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
-
-                            let marker = new google.maps.Marker({
-                                position: latLng,
-                                map: map,
-                                icon: customMarker,
-                                visible: true
-                            });
-                        }
-                        //for per mostrare tutti i marker presi dal DB
-                        /*if (distance < 300) {
-                            db_markers[i].setVisible(true);
-                        }
-                        else {
-                            db_markers[i].setVisible(false);
-                        }*/
-                    }
-                }
-            }
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
-                centerLatInf: centerLatInf,
-                centerLatSup: centerLatSup,
-                centerLngInf: centerLngInf,
-                centerLngSup: centerLngSup
-            }));
+            drawExNovoStages();
         });
     });
 
     new ClickEventHandler(map, origin);
+}
+
+function drawExNovoStages() {
+    var centerLatInf = map.getCenter().lat() - rectDegree;
+    var centerLatSup = map.getCenter().lat() + rectDegree;
+    var centerLngInf = map.getCenter().lng() - rectDegree;
+    var centerLngSup = map.getCenter().lng() + rectDegree;
+    var zoom = map.getZoom();
+    console.log(zoom)
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/getMarkersFromRect', true);
+    xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+
+        if (r.ok == true) {
+            var old_db_markers = [];
+            old_db_markers.push(...db_markers);
+            db_markers = [];
+
+            if (zoom > 15 && r.data.length > 0) {
+                for (var i = 0; i < r.data.length; i++) {
+                    var j = 0;
+                    var trovato = false;
+                    while (trovato != true && j < old_db_markers.length) {
+                        if (r.data[i].placeId == old_db_markers[j].placeId) {
+                            db_markers.push(old_db_markers[j]);
+                            old_db_markers[j].pop();
+                            trovato = true;
+                        }
+                        j++;
+                    }
+
+                    if (trovato == false) {
+                        const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
+
+                        let marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map,
+                            icon: customMarker,
+                            visible: true,
+                        });
+
+                        db_markers.push(marker);
+                    }
+                }
+
+                for (var j = 0; j < old_db_markers.length; j++) {
+                    old_db_markers[j].setMap(null);
+                }
+            }
+        }
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        centerLatInf: centerLatInf,
+        centerLatSup: centerLatSup,
+        centerLngInf: centerLngInf,
+        centerLngSup: centerLngSup
+    }));
 }
 
 function getDistance(marker, centerLat, centerLng) {
@@ -205,7 +214,7 @@ function typecastRoutes(routes) {
     return routes;
 }
 
-function getExNovoStages(t) {
+/*function getExNovoStages(t) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/getExNovoStages', true);
     xhr.onload = function (event) {
@@ -221,7 +230,7 @@ function getExNovoStages(t) {
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(null);
-}
+}*/
 
 function getPlaceDetails(placeId) {
     var xhr = new XMLHttpRequest();
@@ -239,7 +248,7 @@ function getPlaceDetails(placeId) {
     xhr.send();
 }
 
-// Loop through the results array and place a marker for each set of coordinates.
+/* Loop through the results array and place a marker for each set of coordinates.
 function drawExNovoStages(results, t) {
     for (let i = 0; i < results.length; i++) {
         const latitudine = results[i].latitudine;
@@ -262,7 +271,7 @@ function drawExNovoStages(results, t) {
         //marker.addListener("click", console.log(results).bind(this));
         db_markers.push(marker); //Aggiungo il marker all'array markers
     }
-}
+}*/
 
 function backendDistance(marker1, marker2) {
 
@@ -298,13 +307,13 @@ function backendDistance(marker1, marker2) {
             } else {
                 distance_renderers[stage_index - 2] = new google.maps.DirectionsRenderer();
                 distance_renderers[stage_index - 2].setOptions({
-                    var routes = typecastRoutes(response.routes)
+                    /*var routes = typecastRoutes(response.routes)
                     directions: {
                         routes: typecastRoutes(response.routes),
                         // "ub" is important and not returned by web service it's an
                         // object containing "origin", "destination" and "travelMode"
                         request: route
-                    },
+                    },*/
                     map: map
                 });
             }
@@ -316,7 +325,6 @@ function backendDistance(marker1, marker2) {
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(route));
-
 }
 
 function calculateDistance(first_marker, second_marker) {
@@ -367,7 +375,6 @@ function isIconMouseEvent(e) {
     return "placeId" in e;
 }
 
-
 var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
         this.origin = origin;
@@ -377,7 +384,7 @@ var ClickEventHandler = /** @class */ (function () {
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
         this.infowindow.setContent(this.infowindowContent);
-        getExNovoStages(this);
+        //getExNovoStages(this);
         // Listen for clicks on the map.
         this.map.addListener("click", this.handleClick.bind(this));
     }

@@ -269,7 +269,6 @@ class DAO {
 
     async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
         try {
-            console.log(centerLatInf, centerLatSup, centerLngInf, centerLngSup)
             var connection = await this.connect();
             let selection = await connection.query('SELECT * FROM stage WHERE latitudine >= ? AND latitudine <= ? AND longitudine >= ? AND longitudine <= ? AND isExNovo = 1', [centerLatInf, centerLatSup, centerLngInf, centerLngSup]);
             let results = selection[0];
