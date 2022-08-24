@@ -1,12 +1,13 @@
 var user_id = 0
 var map;
-let customMarker = './storage/marker.png'
-var db_markers = [];
+let customMarker = './storage/markerDiego.png'
+var db_markers = {};
 var roadmap = []; //lista degli stage
 var markers = [];
 var distance_renderers = [];
 var stage_index = 0;
 var rectDegree = 0.008;
+const minZoomForExNovoMarkers = 10;
 
 function check_now() {
     var xhr = new XMLHttpRequest();
@@ -72,7 +73,6 @@ function deleteStage(toDeleteIndex) {
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
-
         line.id = "line" + newIndex;
         dot.id = "dot" + newIndex; //così se scriviamo qualcosa l'istanza è preservata
     }
@@ -109,10 +109,14 @@ function initMap() {
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
 
-        if (zoom <= 15) {
-            for (var i = 0; i < db_markers.length; i++) {
+        if (zoom <= minZoomForExNovoMarkers) {
+            Object.keys(db_markers).forEach(function (key) { // iter on markers 
+                db_markers[key].setVisible(false);
+            });
+
+            /*for (var i = 0; i < db_markers.length; i++) {
                 db_markers[i].setVisible(false);
-            }
+            }*/
         }
         else {
             drawExNovoStages();
@@ -120,32 +124,69 @@ function initMap() {
     });
 
     map.addListener('dragend', function () {
-        map.addListener('idle', function () {
+        var zoom = map.getZoom();
+        console.log(zoom)
+        //map.addListener('idle', function () { QUESTO CAUSAVA N CHIAMATE AL DB!!
+        if(zoom > minZoomForExNovoMarkers)
             drawExNovoStages();
-        });
+        //});
     });
 
     new ClickEventHandler(map, origin);
 }
 
 function drawExNovoStages() {
-    var centerLatInf = map.getCenter().lat() - rectDegree;
-    var centerLatSup = map.getCenter().lat() + rectDegree;
-    var centerLngInf = map.getCenter().lng() - rectDegree;
-    var centerLngSup = map.getCenter().lng() + rectDegree;
-    var zoom = map.getZoom();
-    console.log(zoom)
+    console.log("UPDATE MARKERS!")
 
+    var boxMinLat = map.getBounds().zb.lo
+    var boxMaxLat = map.getBounds().zb.hi
+    var boxMinLng = map.getBounds().Ra.lo
+    var boxMaxLng = map.getBounds().Ra.hi
+
+
+
+    //console.log(coveredLatRange)
+    //console.log(boxMinLat, boxMaxLat)
+    //console.log(coveredLngRange)
+    //console.log(boxMinLng, boxMaxLng)
+    //if (boxMinLat < coveredLatRange[0] || boxMaxLat > coveredLatRange[1] || boxMinLng < coveredLngRange[0] || boxMaxLng > coveredLngRange[1]) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/getMarkersFromRect', true);
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
+        if (r.ok) {
+            //console.log(r.data)
+            for (var i = 0; i < r.data.length; i++) {
+                if (db_markers[r.data[i].placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
+                    const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
 
-        if (r.ok == true) {
+                    let marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: customMarker,
+                        visible: false,
+                    });
+
+                    db_markers[r.data[i].placeId] = marker;
+                    //add event on click 
+
+                    db_markers[r.data[i].placeId].addListener("click", (e) => {
+                        console.log(e)
+                        //this.openAddBox(event.placeId, event.latLng); //OBIETTIVO
+                    });
+                }
+                if(db_markers[r.data[i].placeId].visible == false) {
+                    db_markers[r.data[i].placeId].setVisible(true);
+                }
+
+            }
+
+
+            /*
             var old_db_markers = [];
             old_db_markers.push(...db_markers);
             db_markers = [];
-
+ 
             if (zoom > 15 && r.data.length > 0) {
                 for (var i = 0; i < r.data.length; i++) {
                     var j = 0;
@@ -158,35 +199,41 @@ function drawExNovoStages() {
                         }
                         j++;
                     }
-
+ 
                     if (trovato == false) {
                         const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
-
+ 
                         let marker = new google.maps.Marker({
                             position: latLng,
                             map: map,
                             icon: customMarker,
                             visible: true,
                         });
-
+ 
                         db_markers.push(marker);
                     }
                 }
-
+ 
                 for (var j = 0; j < old_db_markers.length; j++) {
                     old_db_markers[j].setMap(null);
                 }
             }
+            */
+
+            //coveredLatRange = [boxMinLat, boxMaxLat]
+            //coveredLngRange = [boxMinLng, boxMaxLng]
         }
     }
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
-        centerLatInf: centerLatInf,
-        centerLatSup: centerLatSup,
-        centerLngInf: centerLngInf,
-        centerLngSup: centerLngSup
+        centerLatInf: boxMinLat,
+        centerLatSup: boxMaxLat,
+        centerLngInf: boxMinLng,
+        centerLngSup: boxMaxLng
     }));
+    //}
+
 }
 
 function getDistance(marker, centerLat, centerLng) {
