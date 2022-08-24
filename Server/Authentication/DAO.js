@@ -16,20 +16,26 @@ class DAO {
         }
     }
     async viewRoadmap(id) {
-        
-        try{
-            var connection=await this.connect();
-            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=? AND isPublic=1', [id])
-            var id_utente=result_rm[0][0].utenteRegistrato_id
-            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+
+        try {
+          
+            var connection = await this.connect();
+            var result_rm = await connection.query('SELECT * FROM roadmap INNER JOIN stageInRoadmap ON roadmap.id=stageInRoadmap.roadmap_id INNER JOIN stage on stage.placeId=stageInRoadmap.stage_placeId WHERE roadmap.id=?', [id])
+           
             
-            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0] }];
+            var id_utente = result_rm[0][0].utenteRegistrato_id
+          
+            
+            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+            console.log("res_us: ",result_us)
+
+            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0]}];
         }
-        catch(error){
+        catch (error) {
             return [false, error.errno];
         }
     }
-    
+
 
     async register(username, password, email, birthdate) {
         try {
@@ -256,7 +262,7 @@ class DAO {
         }
     }
 
-    async updateAvatar(id,new_avatar) {
+    async updateAvatar(id, new_avatar) {
         try {
             var connection = await this.connect();
             let selection = await connection.query('UPDATE utenteregistrato SET avatar = ? WHERE id = ?', [new_avatar, id]);

@@ -1,5 +1,5 @@
 var ok = false
-var id_user=null
+var id_user = null
 window.onload = function () {
   check()
   loading_roadmap()
@@ -18,7 +18,7 @@ function check_nw() {
     if (r.ok == true) {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok = true
-      id_user=r.whoLog
+      id_user = r.whoLog
       //check_ut(id_user)
     }
     else if (r.ok == false) {
@@ -73,28 +73,39 @@ function richiestaRoadmap(id) {
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
-    console.log(r)
+    const quanti_stage = r.data.results_rm.length
     const result_rm = r.data.results_rm
     const result_us = r.data.results_us
 
-    console.log(result_rm)
-
-    console.log(result_us)
     if (r.ok == true) {
-      //if (length == 1) {
-      var day = new Date(result_rm[0].dataCreazione)
-      var month = day.getMonth() + 1;
-      document.getElementById("titolo").innerText = result_rm[0].titolo
-      document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-      document.getElementById("durata").innerText = ' ⏱ ' + result_rm[0].durataComplessiva
-      document.getElementById("citta").innerText = ' 🏙 ' + result_rm[0].localita
-      document.getElementById("utente").innerText = ' 👤 ' + result_us[0].username
-      document.getElementById("descrizione").innerText = result_rm[0].descrizione
+      if (quanti_stage < 0) {
+        location.href = "/explore"
+      }
+      else {
+        var day = new Date(result_rm[0].dataCreazione)
+        var month = day.getMonth() + 1;
+        document.getElementById("titolo").innerText = result_rm[0].titolo
+        document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
+        document.getElementById("durata").innerText = ' ⏱ ' + result_rm[0].durataComplessiva
+        document.getElementById("citta").innerText = ' 🏙 ' + result_rm[0].localita
+        document.getElementById("utente").innerText = ' 👤 ' + result_us[0].username
+        document.getElementById("descrizione").innerText = result_rm[0].descrizione
+        funcCoktail(result_rm[0].punteggio)
 
-      funcCoktail(result_rm[0].punteggio)
-      //}
-      //else location.href = "/explore"
+        for(let i=0;i<quanti_stage;i++){
+          document.getElementById('prova_stages').innerHTML += '<div class="dot"></div><div class="line"></div>'
 
+          document.getElementById("prova_stages").innerHTML += result_rm[i].nome+'<br>'
+          document.getElementById("prova_stages").innerHTML += result_rm[i].durata+'<br>'
+          document.getElementById("prova_stages").innerHTML += result_rm[i].reachTime+'<br>'
+          document.getElementById("prova_stages").innerHTML += result_rm[i].indirizzo+'<br>'
+          document.getElementById("prova_stages").innerHTML += result_rm[i].descrizione_st+'<br>'
+
+          document.getElementById("prova_stages").innerHTML += "<br><br><br><br>"
+
+        }
+
+      }
     }
     else if (r.ok == false) {
       console.log(r)

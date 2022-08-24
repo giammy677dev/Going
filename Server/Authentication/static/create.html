@@ -14,85 +14,6 @@
   <link rel="stylesheet" href="/static/roadmap.css">
 </head>
 
-<script>
-
-  /*function addToRoadmapVisual(stage) {
-    document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
-  }*/
-
-  function deleteStage(stage_index){
-    console.log("ciao stage da eliminare: ", stage_index)
-  }
-
-  function ricercaCitta() {
-    /*
-    mappa da richiedere con dati in campo id="citta_search"
-    */
-    console.log("ciao citta, posto cercato")
-  }
-
-  function submitRoadmap(roadmap) {
-    var title, description, dateNow
-    allTime = parseInt(document.getElementById("somma_totale").innerText)
-    var isPub = 1
-    var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
-    console.log("visibilità: ", visibilita)
-    if (visibilita == "Privata") {
-      isPub = 0
-    }
-    console.log("isPub: ", isPub)
-
-
-    title = document.getElementById("titolo").value
-    console.log("titolo: ", title);
-    description = document.getElementById("descrizione").value
-    console.log("descrizione: ", description);
-
-    console.log("lenght rm: ", roadmap.length);
-    console.log(roadmap)
-
-
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    console.log(today)
-
-    if (title == "") {
-      alert("Titolo vuoto")
-    }
-    else if (roadmap.length < 2) {
-      alert("almeno due stage")
-    }
-    else {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", '/createRoadmap', true);
-      xhr.onload = function (event) {
-
-        const r = JSON.parse(event.target.responseText);
-
-        if (r.ok == true) {
-          alert("creata la roadmap")
-          location.href = '/profile'
-        }
-        else if (r.ok == false) {
-          alert("Problemi creazione roadmap")
-        }
-      }
-
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-        titolo: title,
-        descrizione: description,
-        isPublic: isPub,
-        localita: roadmap[0].citta,
-        stages: roadmap
-      }));
-    }
-  }
-
-</script>
 
 <div id="info_nolog">
 
@@ -111,7 +32,7 @@
 </div>
 
 
-<body id="all_page" onload="check(),check_now()">
+<body id="all_page">
 
   <!-- INIZIO PARTE LOG LOGOUT E HEADER-->
   <div id="log">

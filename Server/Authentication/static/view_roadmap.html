@@ -21,30 +21,30 @@
     <p>
     <h2>EFFETTUA IL LOGIN</h2>
     </p>
-  
-  
+
+
     <p>
-        <label for="username"><span class="inEvidenza">Username</span>
-            <p><input type="text" name="username" id="username_login" /></p>
-        </label>
+      <label for="username"><span class="inEvidenza">Username</span>
+        <p><input type="text" name="username" id="username_login" /></p>
+      </label>
     </p>
     <p>
-        <label for="password"><span class="inEvidenza">Password</span>
-            <p><input type="password" name="password" id="password_login" /></p>
-        </label>
+      <label for="password"><span class="inEvidenza">Password</span>
+        <p><input type="password" name="password" id="password_login" /></p>
+      </label>
     </p>
-  
+
     <p>
-        <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
-        <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
-            value="Annulla" />
+      <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
+      <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
+        value="Annulla" />
     </p>
-  
-  
+
+
     <p class="noReg">
-        Non sei ancora registrato? <a href="/signup">Registrati qui</a>
+      Non sei ancora registrato? <a href="/signup">Registrati qui</a>
     </p>
-  
+
   </div>
 
   <div id="logout">
@@ -55,9 +55,9 @@
 
     <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
     <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
-        value="Annulla" />
+      value="Annulla" />
 
-</div>
+  </div>
 
   <!--Nuovo Header-->
   <div class="row1">
@@ -81,14 +81,16 @@
     <div class="topnav_image0" id="topnav_image0">
     </div>
     <div class="topnav_image" id="topnav_image">
-      <img id="image_topnav" src="/storage/loginTransp.png" onclick="document.getElementById('log').style.display='block'"/>
+      <img id="image_topnav" src="/storage/loginTransp.png"
+        onclick="document.getElementById('log').style.display='block'" />
     </div>
-  </div>   
+  </div>
   <!-- FINE PARTE LOG LOGOUT E HEADER-->
 
   <div class="contenuto">
     <br>--DA FARE--<br>
-    3)box recensioni utenti da db<br>5)query per stage nella roadmap che poppano nella lista a tendina e vanno sulla mappa<br>
+    3)box recensioni utenti da db<br>5)query per stage nella roadmap che poppano nella lista a tendina e vanno sulla
+    mappa<br>
     <div class="container_top">
       <div class="result_query" id="result_query">
         <div class="res" id="res">
@@ -105,7 +107,7 @@
       <div class="map" id="map">
         <h2>mappa spauna qua</h2>
       </div>
-
+      <!--
       <div class="all">
         <div class="body-cards">
           <div class="main">
@@ -119,7 +121,7 @@
 
 
             <div class="timeline">
-              <h3>Durata totale MA MAGARA IN ORIZZONTALE SOTTO????  </h3>
+              <h3>Durata totale MA MAGARA IN ORIZZONTALE SOTTO???? </h3>
               <label class="durata" id="somma_totale">0</label>
               <div class="box">
 
@@ -133,20 +135,20 @@
                   </div>
 
                   <div class="cards" id="cards">
-                  <div class="card">
+                    <div class="card">
 
 
-                    <h4>Prova titolo</h4>
-                    <p>Via e durata</p>
+                      <h4>Prova titolo</h4>
+                      <p>Via e durata</p>
+                    </div>
+                    <div class="card">
+
+
+                      <h4>Prova titolo</h4>
+                      <p>Via e durata</p>
+                    </div>
+
                   </div>
-                  <div class="card">
-
-
-                    <h4>Prova titolo</h4>
-                    <p>Via e durata</p>
-                  </div>
-
-                </div>
 
 
                 </div>
@@ -162,40 +164,55 @@
           </div>
         </div>
       </div>
+      -->
     </div>
 
+    <div id="prova_stages" class="prova_stages">
+      <div class="top" id=top>
+        <h4>Punti di sosta</h4>
+      </div>
+      <div class="stage" id="stage">
+        prova
+      </div>
+      <div class="link" id="link">
+        -------------->
+      </div>
 
+    </div>
+    <div class="container_middle">
+      <div id="rate" class="rate">
+        <input type="radio" id="star5" name="rate" value="5" onclick="rating(value)">
+        <label for="star5" title="text"> </label>
+        <input type="radio" id="star4" name="rate" value="4" onclick="rating(value)">
+        <label for="star4" title="text"> </label>
+        <input type="radio" id="star3" name="rate" value="3" onclick="rating(value)">
+        <label for="star3" title="text"> </label>
+        <input type="radio" id="star2" name="rate" value="2" onclick="rating(value)">
+        <label for="star2" title="text"> </label>
+        <input type="radio" id="star1" name="rate" value="1" onclick="rating(value)">
+        <label for="star1" title="text"> </label>
+      </div>
+
+      <div id="heart" class="heart">
+        <i class="heart-like-button" onclick="heart()"> </i>
+      </div>
+
+      <div id="checked" class="checked">
+        <i class="checked-like-button" onclick="checked()"> </i>
+      </div>
+
+      <div id="forka" class="forka">
+        <input type="submit" value="Forka la Roadmap" onclick="forkaggio()">
+      </div>
+    </div>
   </div>
 
-  <div class="container_middle">
-    <div id="rate"class="rate">
-      <input type="radio" id="star5" name="rate" value="5" onclick="rating(value)">
-      <label for="star5" title="text"> </label>
-      <input type="radio" id="star4" name="rate" value="4" onclick="rating(value)">
-      <label for="star4" title="text"> </label>
-      <input type="radio" id="star3" name="rate" value="3" onclick="rating(value)">
-      <label for="star3" title="text"> </label>
-      <input type="radio" id="star2" name="rate" value="2" onclick="rating(value)">
-      <label for="star2" title="text"> </label>
-      <input type="radio" id="star1" name="rate" value="1" onclick="rating(value)">
-      <label for="star1" title="text"> </label>
-    </div>
-
-    <div id="heart"class="heart">
-      <i class="heart-like-button" onclick="heart()"> </i>
-    </div>
-
-    <div id="checked"class="checked">
-      <i class="checked-like-button" onclick="checked()"> </i>
-    </div>
-    
-    <div id="forka" class="forka">
-      <input type="submit" value="Forka la Roadmap" onclick="forkaggio()">
-    </div>
-  </div>
 
 
-  </div>
+
+
+
+
 
   <div class="footer">
 
