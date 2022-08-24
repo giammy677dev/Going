@@ -16,6 +16,48 @@
 </head>
 
 <body>
+  <!-- INIZIO PARTE LOG LOGOUT E HEADER-->
+  <div id="log">
+    <p>
+    <h2>EFFETTUA IL LOGIN</h2>
+    </p>
+  
+  
+    <p>
+        <label for="username"><span class="inEvidenza">Username</span>
+            <p><input type="text" name="username" id="username_login" /></p>
+        </label>
+    </p>
+    <p>
+        <label for="password"><span class="inEvidenza">Password</span>
+            <p><input type="password" name="password" id="password_login" /></p>
+        </label>
+    </p>
+  
+    <p>
+        <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
+        <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
+            value="Annulla" />
+    </p>
+  
+  
+    <p class="noReg">
+        Non sei ancora registrato? <a href="/signup">Registrati qui</a>
+    </p>
+  
+  </div>
+
+  <div id="logout">
+    <p>
+    <h2>VUOI EFFETTUARE IL LOGOUT?</h2>
+    </p>
+
+
+    <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
+    <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
+        value="Annulla" />
+
+</div>
 
   <!--Nuovo Header-->
   <div class="row1">
