@@ -1,5 +1,5 @@
 .container_top {
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1fr 3fr;
   width: auto;
   display: grid;
   gap: 10px;
@@ -186,6 +186,29 @@
     font-size: 13px;
     line-height: 22px;
     color: #2b2862;
+}
+
+
+
+/*<!------------------------------------------------------------->*/
+/*<!---stages---------------------------------------------------->*/
+
+.prova_stages{
+  display: flex;
+  justify-content: center;
+}
+
+.top{
+background-color: #00AAF8;
+width: fit-content;
+color:white;
+}
+
+.stage{
+color: black;
+}
+.link{
+  color: black;
 }
 
 

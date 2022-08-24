@@ -1,4 +1,12 @@
 var user_id = 0
+
+window.onload = function () {
+    check_now()
+    check()
+};
+
+
+
 var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers = {};
@@ -9,6 +17,7 @@ var stage_index = 0;
 var rectDegree = 0.008;
 const minZoomForExNovoMarkers = 15;
 
+
 function check_now() {
     var xhr = new XMLHttpRequest();
 
@@ -16,6 +25,7 @@ function check_now() {
     xhr.onload = function (event) {
 
         const r = JSON.parse(event.target.responseText);
+
 
         if (r.ok == true) {
             console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
@@ -39,6 +49,27 @@ function deleteStage(toDeleteIndex) {
     markers[toDeleteIndex].setMap(null);
     markers.splice(toDeleteIndex, 1);
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
+
+    if (stage_index == 0) {
+        distance_renderers[stage_index].setMap(null);
+    } else if (stage_index == roadmap.length - 1) {
+        distance_renderers[stage_index - 1].setMap(null);
+        stage_index--;
+    } else {
+        distance_renderers[stage_index].setMap(null);
+        distance_renderers[stage_index - 1].setMap(null);
+        //si calcola distanza tra A->C
+        backendDistance(roadmap[stage_index], roadmap[stage_index + 2])
+        stage_index--;
+    }
+    distance_renderers.splice(stage_index + 1, 1);
+
+
+
+
+    roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
+    //tolto un elemento!
+
     if (toDeleteIndex == 0) {
         if (roadmap.length > 1) {
             distance_renderers[toDeleteIndex].setMap(null);
@@ -409,11 +440,70 @@ function calculateDistance(first_marker, second_marker) {
 function isIconMouseEvent(e) {
     return "placeId" in e;
 }
+function submitRoadmap(roadmap) {
+    var title, description
+    allTime = parseInt(document.getElementById("somma_totale").innerText)
+    var isPub = 1
+    var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
+    console.log("visibilità: ", visibilita)
+    if (visibilita == "Privata") {
+      isPub = 0
+    }
+    console.log("isPub: ", isPub)
 
 function drawNewStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
 }
+
+    title = document.getElementById("titolo").value
+    console.log("titolo: ", title);
+    description = document.getElementById("descrizione").value
+    console.log("descrizione: ", description);
+
+    console.log("lenght rm: ", roadmap.length);
+    console.log(roadmap)
+
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log(today)
+
+    if (title == "") {
+      alert("Titolo vuoto")
+    }
+    else if (roadmap.length < 2) {
+      alert("almeno due stage")
+    }
+    else {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", '/createRoadmap', true);
+      xhr.onload = function (event) {
+
+        const r = JSON.parse(event.target.responseText);
+
+        if (r.ok == true) {
+          alert("creata la roadmap")
+          location.href = '/profile'
+        }
+        else if (r.ok == false) {
+          alert("Problemi creazione roadmap")
+        }
+      }
+
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        titolo: title,
+        descrizione: description,
+        isPublic: isPub,
+        localita: roadmap[0].citta,
+        stages: roadmap
+      }));
+    }
+  }
 
 var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
@@ -564,7 +654,12 @@ var ClickEventHandler = /** @class */ (function () {
 
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
+
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+
             drawNewStage(stage_index, stage);
+
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -636,7 +731,12 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
+
+            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+
             drawNewStage(stage_index, stage)
+
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);

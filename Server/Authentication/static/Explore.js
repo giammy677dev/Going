@@ -1,4 +1,7 @@
-
+window.onload=function(){
+    fromMain()
+    check()
+  };
 function richiestaDBRoadmap(ricerca) {
     
     var xhr = new XMLHttpRequest();
