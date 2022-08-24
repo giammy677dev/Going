@@ -77,7 +77,6 @@ class RequestController {
         }
     }
 
-
     async getBestRoadmap() {
         const data = await this.dao.getBestRoadmap();
         return { ok: data[0], error: data[1], data: data[2] }
@@ -146,6 +145,11 @@ class RequestController {
 
     async updateAvatar(id, new_avatar) {
         const data = await this.dao.updateAvatar(id, new_avatar);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
+        const data = await this.dao.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

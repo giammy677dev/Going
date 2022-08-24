@@ -13,17 +13,17 @@ function check() {
             user_id = r.whoLog
         }
         else if (r.ok == false) {
-            document.getElementById('contenuto').style.filter='blur(10px)'
-            document.getElementById('all_page').style.overflow='hidden'
-            document.getElementById('all_page').style.height='100%'
-            document.getElementById('all_page').style.margin='0'
+            document.getElementById('contenuto').style.filter = 'blur(10px)'
+            document.getElementById('all_page').style.overflow = 'hidden'
+            document.getElementById('all_page').style.height = '100%'
+            document.getElementById('all_page').style.margin = '0'
             document.getElementById('info_nolog').style.display = 'block'
         }
     }
     xhr.send();
 }
 
-function deleteStage(stage_index){
+function deleteStage(stage_index) {
     console.log("ciao stage da eliminare: ", stage_index)
 }
 
@@ -60,6 +60,8 @@ function initMap() {
         submitRoadmap(roadmap);
     });
 
+    var distance = 0;
+
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
         console.log(zoom)
@@ -70,39 +72,101 @@ function initMap() {
             }
             else {
                 db_markers[i].setVisible(true);
+                //Chiamata al DB
             }
         }
+    });
+
+    const rectDegree = 0.05;
+
+    map.addListener('dragend', function () {
+        map.addListener('idle', function () {
+            var centerLatInf = map.getCenter().lat() - rectDegree;
+            var centerLatSup = map.getCenter().lat() + rectDegree;
+            var centerLngInf = map.getCenter().lng() - rectDegree;
+            var centerLngSup = map.getCenter().lng() + rectDegree;
+            var zoom = map.getZoom();
+
+            for (var i = 0; i < db_markers.length; i++) {
+                if (zoom <= 5) {
+                    db_markers[i].setVisible(false);
+                }
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/getMarkersFromRect', true);
+            xhr.onload = function (event) {
+                const r = JSON.parse(event.target.responseText);
+
+                if (r.ok == true) {
+                    if (zoom > 5 && r.data.length > 0) {
+                        r.data
+                        for (var i = 0; i < r.data.length; i++) {
+                            const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
+
+                            let marker = new google.maps.Marker({
+                                position: latLng,
+                                map: map,
+                                icon: customMarker,
+                                visible: true
+                            });
+                        }
+                        //for per mostrare tutti i marker presi dal DB
+                        /*if (distance < 300) {
+                            db_markers[i].setVisible(true);
+                        }
+                        else {
+                            db_markers[i].setVisible(false);
+                        }*/
+                    }
+                }
+            }
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                centerLatInf: centerLatInf,
+                centerLatSup: centerLatSup,
+                centerLngInf: centerLngInf,
+                centerLngSup: centerLngSup
+            }));
+        });
     });
 
     new ClickEventHandler(map, origin);
 }
 
+function getDistance(marker, centerLat, centerLng) {
+    var centerLatlng = new google.maps.LatLng(centerLat, centerLng);
+    distance = google.maps.geometry.spherical.computeDistanceBetween(marker.position, centerLatlng)
+    return distance;
+}
+
 function asPath(encodedPolyObject) {
     return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
 }
+
 function asLatLng(latLngObject) {
     return new google.maps.LatLng(latLngObject.lat, latLngObject.lng);
 }
 
 function asBounds(boundsObject) {
-    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest),asLatLng(boundsObject.northeast));
+    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast));
 }
 
-function typecastRoutes(routes)
-{
-    routes.forEach(function(route){
+function typecastRoutes(routes) {
+    routes.forEach(function (route) {
         route.bounds = asBounds(route.bounds);
         // I don't think `overview_path` is used but it exists on the
         // response of DirectionsService.route()
         routes.overview_path = asPath(route.overview_polyline);
 
-        route.legs.forEach(function(leg){
+        route.legs.forEach(function (leg) {
             leg.start_location = asLatLng(leg.start_location);
-            leg.end_location   = asLatLng(leg.end_location);
+            leg.end_location = asLatLng(leg.end_location);
 
-            leg.steps.forEach(function(step){
+            leg.steps.forEach(function (step) {
                 step.start_location = asLatLng(step.start_location);
-                step.end_location   = asLatLng(step.end_location);
+                step.end_location = asLatLng(step.end_location);
                 step.path = asPath(step.polyline);
             });
         });
@@ -202,7 +266,7 @@ function backendDistance(marker1, marker2) {
                 return;
             } else {
 
-                
+
                 var routes = typecastRoutes(response.routes)
                 renderer.setOptions({
                     directions: {
@@ -211,7 +275,7 @@ function backendDistance(marker1, marker2) {
                         // object containing "origin", "destination" and "travelMode"
                         request: route
                     },
-                    map:map
+                    map: map
                 });
             }
         }
@@ -424,7 +488,7 @@ var ClickEventHandler = /** @class */ (function () {
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -497,7 +561,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
+            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
