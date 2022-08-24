@@ -139,9 +139,11 @@ class DAO {
     async placeIDExists(placeID) {
         try {
             var connection = await this.connect();
+
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione,website,fotoURL as foto FROM stage WHERE placeId = ?', [placeID]);
+            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione,website,fotoID as foto FROM stage WHERE placeId = ?', [placeID]);
             let results = selection[0];
+
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
@@ -152,6 +154,7 @@ class DAO {
                 return [false, -1, {}];
             }
         } catch (error) {
+            console.log(error)
             return [false, error.errno, {}];
         }
     }

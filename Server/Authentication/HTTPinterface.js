@@ -233,10 +233,10 @@ class HTTPinterface {
     }
 
     async getPlaceInfo(req, res) {
-        if (req.session.loggedin) { // da mettere!
+        if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
-            //console.log(r)
+
             if (r.ok) 
             {
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
