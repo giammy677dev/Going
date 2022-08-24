@@ -8,8 +8,7 @@ function check() {
         const r = JSON.parse(event.target.responseText);
 
 
-        if (r.ok == true)
-        {
+        if (r.ok == true) {
             console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
             user_id = r.whoLog
         }
@@ -24,7 +23,7 @@ function check() {
     xhr.send();
 }
 
-function deleteStage(stage_index){
+function deleteStage(stage_index) {
     console.log("ciao stage da eliminare: ", stage_index)
 }
 
@@ -41,30 +40,30 @@ var stage_index = 0;
 
 function deleteStage(stage_index) {
     //qua va il comando di rimozione del box grafico nel roadmap
-    
+
     //rimozione markaer dalla mappa
     markers[stage_index].setMap(null);
 
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
-    if(stage_index == 0){
+    if (stage_index == 0) {
         distance_renderers[stage_index].setMap(null);
-    }else if(stage_index==roadmap.length-1){
-        distance_renderers[stage_index-1].setMap(null);
+    } else if (stage_index == roadmap.length - 1) {
+        distance_renderers[stage_index - 1].setMap(null);
         stage_index--;
-    }else{
+    } else {
         distance_renderers[stage_index].setMap(null);
-        distance_renderers[stage_index-1].setMap(null);
+        distance_renderers[stage_index - 1].setMap(null);
         //si calcola distanza tra A->C
-        backendDistance(roadmap[stage_index],roadmap[stage_index+2])
+        backendDistance(roadmap[stage_index], roadmap[stage_index + 2])
         stage_index--;
     }
-    distance_renderers.splice(stage_index+1, 1);
+    distance_renderers.splice(stage_index + 1, 1);
 
-    
 
-    
+
+
     roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
-     //tolto un elemento!
+    //tolto un elemento!
     console.log(roadmap)
 }
 
@@ -268,7 +267,7 @@ function drawExNovoStages(results, t) {
 function backendDistance(marker1, marker2) {
 
     //CI DEVE ESSERE UNA MODALITA' PER OGNI COPPIA DI NODI?
-    
+
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
         selectedMode = document.getElementById("driving_mode").value;
@@ -297,8 +296,8 @@ function backendDistance(marker1, marker2) {
                 window.alert('Directions request failed due to ' + status);
                 return;
             } else {
-distance_renderers[stage_index-2] = new google.maps.DirectionsRenderer();
-                distance_renderers[stage_index-2].setOptions({
+                distance_renderers[stage_index - 2] = new google.maps.DirectionsRenderer();
+                distance_renderers[stage_index - 2].setOptions({
                     var routes = typecastRoutes(response.routes)
                     directions: {
                         routes: typecastRoutes(response.routes),
