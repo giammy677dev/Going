@@ -1,11 +1,12 @@
 var ok = false
 var id_user=null
 window.onload = function () {
-  loading_roadmap()
   check()
+  loading_roadmap()
+  check_nw()
 }
 
-function check() {
+function check_nw() {
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/isLogWho', true);

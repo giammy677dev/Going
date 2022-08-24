@@ -72,7 +72,6 @@ class HTTPinterface {
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
-
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
 

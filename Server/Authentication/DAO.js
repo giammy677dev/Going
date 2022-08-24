@@ -214,7 +214,7 @@ class DAO {
     async getDataUser(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
+            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
