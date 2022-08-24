@@ -8,8 +8,7 @@ function check() {
         const r = JSON.parse(event.target.responseText);
 
 
-        if (r.ok == true)
-        {
+        if (r.ok == true) {
             console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
             user_id = r.whoLog
         }
@@ -36,32 +35,54 @@ var markers = [];
 var distance_renderers = [];
 var stage_index = 0;
 
-function deleteStage(stage_index) {
+function deleteStage(toDeleteIndex) {
     //qua va il comando di rimozione del box grafico nel roadmap
-    
+
     //rimozione markaer dalla mappa
-    markers[stage_index].setMap(null);
-
+    markers[toDeleteIndex].setMap(null);
+    markers.splice(toDeleteIndex, 1);
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
-    if(stage_index == 0){
-        distance_renderers[stage_index].setMap(null);
-    }else if(stage_index==roadmap.length-1){
-        distance_renderers[stage_index-1].setMap(null);
-        stage_index--;
-    }else{
-        distance_renderers[stage_index].setMap(null);
-        distance_renderers[stage_index-1].setMap(null);
+    if (toDeleteIndex == 0) {
+        if (roadmap.length > 1) {
+            distance_renderers[toDeleteIndex].setMap(null);
+            distance_renderers.splice(toDeleteIndex, 1);
+        }
+    } else if (toDeleteIndex == roadmap.length - 1) {
+        distance_renderers[toDeleteIndex - 1].setMap(null);
+        distance_renderers.splice(toDeleteIndex - 1, 1);
+    } else {
+        distance_renderers[toDeleteIndex].setMap(null);
+        distance_renderers[toDeleteIndex - 1].setMap(null);
+        distance_renderers.splice(toDeleteIndex - 1, 1);
+        distance_renderers.splice(toDeleteIndex, 1);
         //si calcola distanza tra A->C
-        backendDistance(roadmap[stage_index],roadmap[stage_index+2])
-        stage_index--;
+        backendDistance(roadmap[toDeleteIndex - 1], roadmap[toDeleteIndex + 1])
     }
-    distance_renderers.splice(stage_index+1, 1);
+    roadmap.splice(toDeleteIndex, 1); //4) eliminare istanza nella roadmap
+    //tolto un elemento!
 
-    
+    document.getElementById("card" + toDeleteIndex).remove();
+    document.getElementById("line" + toDeleteIndex).remove();
+    document.getElementById("dot" + toDeleteIndex).remove();
+    const remainingCards = roadmap.length - toDeleteIndex;
+    for (var i = 0; i < remainingCards; i++) {
+        var oldIndex = toDeleteIndex + i + 1;
+        var newIndex = toDeleteIndex + i;
+        console.log(oldIndex, "diventa", newIndex)
+        var element = document.getElementById("card" + oldIndex);
+        var line = document.getElementById("line" + oldIndex);
+        var dot = document.getElementById("dot" + oldIndex);
 
-    
-    roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
-     //tolto un elemento!
+        element.id = "card" + newIndex;
+        element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
+        
+        
+        line.id = "line"+ newIndex;
+        dot.id = "dot"+ newIndex; //così se scriviamo qualcosa l'istanza è preservata
+    }
+    console.log(toDeleteIndex)
+
+    stage_index--;
     console.log(roadmap)
 }
 
@@ -200,7 +221,7 @@ function drawExNovoStages(results, t) {
 function backendDistance(marker1, marker2) {
 
     //CI DEVE ESSERE UNA MODALITA' PER OGNI COPPIA DI NODI?
-    
+
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
         selectedMode = document.getElementById("driving_mode").value;
@@ -229,8 +250,8 @@ function backendDistance(marker1, marker2) {
                 window.alert('Directions request failed due to ' + status);
                 return;
             } else {
-                distance_renderers[stage_index-2] = new google.maps.DirectionsRenderer();
-                distance_renderers[stage_index-2].setOptions({
+                distance_renderers[stage_index - 2] = new google.maps.DirectionsRenderer();
+                distance_renderers[stage_index - 2].setOptions({
                     directions: {
                         routes: typecastRoutes(response.routes),
                         // "ub" is important and not returned by web service it's an
@@ -299,6 +320,10 @@ function isIconMouseEvent(e) {
     return "placeId" in e;
 }
 
+function drawNewStage(stage_index, stage) {
+    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+}
 
 var ClickEventHandler = /** @class */ (function () {
     function ClickEventHandler(map, origin) {
@@ -448,9 +473,7 @@ var ClickEventHandler = /** @class */ (function () {
             roadmap.push(to_send_stage)
 
 
-            //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
+            drawNewStage(stage_index,stage);
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -522,8 +545,7 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose'+stage_index+'" onclick="deleteStage('+stage_index+')"">x</a><h4>' + stage.nome + '</h4><p>' +stage.indirizzo+' con durata di visita: '+stage.durata + '</p></div>'
+            drawNewStage(stage_index, stage);
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
