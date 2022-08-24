@@ -7,7 +7,7 @@ var markers = [];
 var distance_renderers = [];
 var stage_index = 0;
 var rectDegree = 0.008;
-const minZoomForExNovoMarkers = 10;
+const minZoomForExNovoMarkers = 15;
 
 function check_now() {
     var xhr = new XMLHttpRequest();
@@ -111,7 +111,7 @@ function initMap() {
 
         if (zoom <= minZoomForExNovoMarkers) {
             Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                db_markers[key].setVisible(false);
+                db_markers[key][0].setVisible(false);
             });
 
             /*for (var i = 0; i < db_markers.length; i++) {
@@ -126,8 +126,8 @@ function initMap() {
     map.addListener('dragend', function () {
         var zoom = map.getZoom();
         console.log(zoom)
-        //map.addListener('idle', function () { QUESTO CAUSAVA N CHIAMATE AL DB!!
-        if(zoom > minZoomForExNovoMarkers)
+        //map.addListener('idle', function () {
+        if (zoom > minZoomForExNovoMarkers)
             drawExNovoStages();
         //});
     });
@@ -156,6 +156,11 @@ function drawExNovoStages() {
         const r = JSON.parse(event.target.responseText);
         if (r.ok) {
             //console.log(r.data)
+            
+            Object.keys(db_markers).forEach(function (key) { // iter on markers 
+                db_markers[key][1] = 0;
+            });
+
             for (var i = 0; i < r.data.length; i++) {
                 if (db_markers[r.data[i].placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
                     const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
@@ -167,19 +172,32 @@ function drawExNovoStages() {
                         visible: false,
                     });
 
-                    db_markers[r.data[i].placeId] = marker;
+                    db_markers[r.data[i].placeId] = [marker,1]; //flag 1 = deve rimanere
                     //add event on click 
 
-                    db_markers[r.data[i].placeId].addListener("click", (e) => {
+                    db_markers[r.data[i].placeId][0].addListener("click", (e) => {
                         console.log(e)
                         //this.openAddBox(event.placeId, event.latLng); //OBIETTIVO
                     });
                 }
-                if(db_markers[r.data[i].placeId].visible == false) {
-                    db_markers[r.data[i].placeId].setVisible(true);
-                }
+                db_markers[r.data[i].placeId][1] = 1;
 
+
+                if (db_markers[r.data[i].placeId][0].visible == false) {
+                    db_markers[r.data[i].placeId][0].setVisible(true);
+                }
             }
+
+            Object.keys(db_markers).forEach(function (key) { // iter on markers 
+                if(db_markers[key][1] == 0){
+                    db_markers[key][0].setMap(null);
+                    delete db_markers[key] //remove element from dict too
+                   
+                }else {
+                    db_markers[key][0].setVisible(true);
+                }
+            });
+
 
 
             /*
