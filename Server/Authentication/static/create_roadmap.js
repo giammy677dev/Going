@@ -1,9 +1,21 @@
 var user_id = 0
+
 window.onload = function () {
     check_now()
     check()
 };
 
+
+
+var map;
+let customMarker = './storage/markerDiego.png'
+var db_markers = {};
+var roadmap = []; //lista degli stage
+var markers = [];
+var distance_renderers = [];
+var stage_index = 0;
+var rectDegree = 0.008;
+const minZoomForExNovoMarkers = 10;
 
 
 function check_now() {
@@ -30,25 +42,14 @@ function check_now() {
     xhr.send();
 }
 
-
-
-
-
-var map;
-let customMarker = './storage/markerDiego.png'
-var db_markers = [];
-var roadmap = []; //lista degli stage
-var markers = [];
-var distance_renderers = [];
-var stage_index = 0;
-
-function deleteStage(stage_index) {
+function deleteStage(toDeleteIndex) {
     //qua va il comando di rimozione del box grafico nel roadmap
 
     //rimozione markaer dalla mappa
-    markers[stage_index].setMap(null);
-
+    markers[toDeleteIndex].setMap(null);
+    markers.splice(toDeleteIndex, 1);
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
+
     if (stage_index == 0) {
         distance_renderers[stage_index].setMap(null);
     } else if (stage_index == roadmap.length - 1) {
@@ -68,14 +69,55 @@ function deleteStage(stage_index) {
 
     roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
     //tolto un elemento!
+
+    if (toDeleteIndex == 0) {
+        if (roadmap.length > 1) {
+            distance_renderers[toDeleteIndex].setMap(null);
+            distance_renderers.splice(toDeleteIndex, 1);
+        }
+    } else if (toDeleteIndex == roadmap.length - 1) {
+        distance_renderers[toDeleteIndex - 1].setMap(null);
+        distance_renderers.splice(toDeleteIndex - 1, 1);
+    } else {
+        distance_renderers[toDeleteIndex].setMap(null);
+        distance_renderers[toDeleteIndex - 1].setMap(null);
+        distance_renderers.splice(toDeleteIndex - 1, 1);
+        distance_renderers.splice(toDeleteIndex, 1);
+        //si calcola distanza tra A->C
+        backendDistance(roadmap[toDeleteIndex - 1], roadmap[toDeleteIndex + 1])
+    }
+    roadmap.splice(toDeleteIndex, 1); //4) eliminare istanza nella roadmap
+    //tolto un elemento!
+
+    document.getElementById("card" + toDeleteIndex).remove();
+    document.getElementById("line" + toDeleteIndex).remove();
+    document.getElementById("dot" + toDeleteIndex).remove();
+    const remainingCards = roadmap.length - toDeleteIndex;
+    for (var i = 0; i < remainingCards; i++) {
+        var oldIndex = toDeleteIndex + i + 1;
+        var newIndex = toDeleteIndex + i;
+        console.log(oldIndex, "diventa", newIndex)
+        var element = document.getElementById("card" + oldIndex);
+        var line = document.getElementById("line" + oldIndex);
+        var dot = document.getElementById("dot" + oldIndex);
+
+        element.id = "card" + newIndex;
+        element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
+
+        line.id = "line" + newIndex;
+        dot.id = "dot" + newIndex; //così se scriviamo qualcosa l'istanza è preservata
+    }
+    console.log(toDeleteIndex)
+
+    stage_index--;
+
     console.log(roadmap)
 }
-
 
 function initMap() {
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 18,
+        zoom: 5,
         center: origin,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
@@ -97,24 +139,144 @@ function initMap() {
 
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
-        console.log(zoom)
-        // iterate over markers and call setVisible
-        for (var i = 0; i < db_markers.length; i++) {
-            if (zoom <= 5) {
+
+        if (zoom <= minZoomForExNovoMarkers) {
+            Object.keys(db_markers).forEach(function (key) { // iter on markers 
+                db_markers[key].setVisible(false);
+            });
+
+            /*for (var i = 0; i < db_markers.length; i++) {
                 db_markers[i].setVisible(false);
-            }
-            else {
-                db_markers[i].setVisible(true);
-            }
+            }*/
         }
+        else {
+            drawExNovoStages();
+        }
+    });
+
+    map.addListener('dragend', function () {
+        var zoom = map.getZoom();
+        console.log(zoom)
+        //map.addListener('idle', function () { QUESTO CAUSAVA N CHIAMATE AL DB!!
+        if(zoom > minZoomForExNovoMarkers)
+            drawExNovoStages();
+        //});
     });
 
     new ClickEventHandler(map, origin);
 }
 
+function drawExNovoStages() {
+    console.log("UPDATE MARKERS!")
+
+    var boxMinLat = map.getBounds().zb.lo
+    var boxMaxLat = map.getBounds().zb.hi
+    var boxMinLng = map.getBounds().Ra.lo
+    var boxMaxLng = map.getBounds().Ra.hi
+
+
+
+    //console.log(coveredLatRange)
+    //console.log(boxMinLat, boxMaxLat)
+    //console.log(coveredLngRange)
+    //console.log(boxMinLng, boxMaxLng)
+    //if (boxMinLat < coveredLatRange[0] || boxMaxLat > coveredLatRange[1] || boxMinLng < coveredLngRange[0] || boxMaxLng > coveredLngRange[1]) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/getMarkersFromRect', true);
+    xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+        if (r.ok) {
+            //console.log(r.data)
+            for (var i = 0; i < r.data.length; i++) {
+                if (db_markers[r.data[i].placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
+                    const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
+
+                    let marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: customMarker,
+                        visible: false,
+                    });
+
+                    db_markers[r.data[i].placeId] = marker;
+                    //add event on click 
+
+                    db_markers[r.data[i].placeId].addListener("click", (e) => {
+                        console.log(e)
+                        //this.openAddBox(event.placeId, event.latLng); //OBIETTIVO
+                    });
+                }
+                if(db_markers[r.data[i].placeId].visible == false) {
+                    db_markers[r.data[i].placeId].setVisible(true);
+                }
+
+            }
+
+
+            /*
+            var old_db_markers = [];
+            old_db_markers.push(...db_markers);
+            db_markers = [];
+ 
+            if (zoom > 15 && r.data.length > 0) {
+                for (var i = 0; i < r.data.length; i++) {
+                    var j = 0;
+                    var trovato = false;
+                    while (trovato != true && j < old_db_markers.length) {
+                        if (r.data[i].placeId == old_db_markers[j].placeId) {
+                            db_markers.push(old_db_markers[j]);
+                            old_db_markers[j].pop();
+                            trovato = true;
+                        }
+                        j++;
+                    }
+ 
+                    if (trovato == false) {
+                        const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
+ 
+                        let marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map,
+                            icon: customMarker,
+                            visible: true,
+                        });
+ 
+                        db_markers.push(marker);
+                    }
+                }
+ 
+                for (var j = 0; j < old_db_markers.length; j++) {
+                    old_db_markers[j].setMap(null);
+                }
+            }
+            */
+
+            //coveredLatRange = [boxMinLat, boxMaxLat]
+            //coveredLngRange = [boxMinLng, boxMaxLng]
+        }
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        centerLatInf: boxMinLat,
+        centerLatSup: boxMaxLat,
+        centerLngInf: boxMinLng,
+        centerLngSup: boxMaxLng
+    }));
+    //}
+
+}
+
+function getDistance(marker, centerLat, centerLng) {
+    var centerLatlng = new google.maps.LatLng(centerLat, centerLng);
+    distance = google.maps.geometry.spherical.computeDistanceBetween(marker.position, centerLatlng)
+    return distance;
+}
+
 function asPath(encodedPolyObject) {
     return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
 }
+
 function asLatLng(latLngObject) {
     return new google.maps.LatLng(latLngObject.lat, latLngObject.lng);
 }
@@ -144,24 +306,6 @@ function typecastRoutes(routes) {
     return routes;
 }
 
-function getExNovoStages(t) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/getExNovoStages', true);
-    xhr.onload = function (event) {
-        const r = JSON.parse(event.target.responseText);
-        console.log(r)
-        if (r.ok == true) {
-            drawExNovoStages(r.data, t) //chiama la funzione per disegnare i nodi ex novo già caricati nel DB
-        }
-        else if (r.ok == false) {
-            console.log("Nodi non trovati")
-        }
-    }
-
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(null);
-}
-
 function getPlaceDetails(placeId) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
@@ -176,31 +320,6 @@ function getPlaceDetails(placeId) {
         }
     }
     xhr.send();
-}
-
-// Loop through the results array and place a marker for each set of coordinates.
-function drawExNovoStages(results, t) {
-    for (let i = 0; i < results.length; i++) {
-        const latitudine = results[i].latitudine;
-        const longitudine = results[i].longitudine;
-        const placeId = results[i].placeId;
-        const latLng = new google.maps.LatLng(latitudine, longitudine);
-
-        let marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            icon: customMarker,
-            visible: false
-        });
-
-        t.latLng = latLng;
-        t.placeId = placeId;
-        t.ExistingNode = true;
-        //marker.addListener("click", t.handleClick.bind(this));
-        marker.addListener("click", () => { console.log(results[i]) })
-        //marker.addListener("click", console.log(results).bind(this));
-        db_markers.push(marker); //Aggiungo il marker all'array markers
-    }
 }
 
 function backendDistance(marker1, marker2) {
@@ -254,7 +373,6 @@ function backendDistance(marker1, marker2) {
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(route));
-
 }
 
 function calculateDistance(first_marker, second_marker) {
@@ -315,6 +433,10 @@ function submitRoadmap(roadmap) {
     }
     console.log("isPub: ", isPub)
 
+function drawNewStage(stage_index, stage) {
+    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+}
 
     title = document.getElementById("titolo").value
     console.log("titolo: ", title);
@@ -374,7 +496,7 @@ var ClickEventHandler = /** @class */ (function () {
         this.infowindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
         this.infowindow.setContent(this.infowindowContent);
-        getExNovoStages(this);
+        //getExNovoStages(this);
         // Listen for clicks on the map.
         this.map.addListener("click", this.handleClick.bind(this));
     }
@@ -514,8 +636,12 @@ var ClickEventHandler = /** @class */ (function () {
 
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
+
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
             document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+
+            drawNewStage(stage_index, stage);
+
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);
@@ -587,8 +713,12 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
+
             document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
             document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+
+            drawNewStage(stage_index, stage)
+
 
             if (roadmap.length >= 2) {
                 //calculateDistance(roadmap[stage_index - 1], stage);

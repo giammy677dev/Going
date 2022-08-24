@@ -159,6 +159,11 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
+    async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
+        const data = await this.dao.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
 }
 
 module.exports = RequestController;

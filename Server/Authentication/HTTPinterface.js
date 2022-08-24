@@ -78,7 +78,8 @@ class HTTPinterface {
        
 
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
-
+        this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
+    
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -275,9 +276,16 @@ class HTTPinterface {
     }
 
     async updateAvatar(req, res) {
-        if (req.session.loggedin) {   
+        if (req.session.loggedin) {
             const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
             console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getMarkersFromRect(req, res) {
+        if (req.session.loggedin | true) { //MOMENTANEO TRUE
+            const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
             return res.send(JSON.stringify(r));
         }
     }

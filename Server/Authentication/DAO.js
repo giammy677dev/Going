@@ -273,6 +273,17 @@ class DAO {
         }
     }
 
+    async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT * FROM stage WHERE latitudine >= ? AND latitudine <= ? AND longitudine >= ? AND longitudine <= ? AND isExNovo = 1', [centerLatInf, centerLatSup, centerLngInf, centerLngSup]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
 }
 
 module.exports = DAO
