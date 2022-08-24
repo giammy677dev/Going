@@ -228,10 +228,10 @@ class DAO {
         }
     }
 
-    async getNumberRoadmapCreate(id) {
+    async getRoadmapCreate(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Utente FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
+            let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -240,10 +240,10 @@ class DAO {
     }
 
 
-    async getNumberRoadmapSeguite(id) {
+    async getRoadmapSeguite(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Seguite FROM roadmapuser WHERE idUtenteRegistrato = ? AND seguita=1', [id]);
+            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -251,10 +251,10 @@ class DAO {
         }
     }
 
-    async getNumberRoadmapPreferite(id) {
+    async getRoadmapPreferite(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Preferite FROM roadmapuser WHERE idUtenteRegistrato = ? AND preferita=1', [id]);
+            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {

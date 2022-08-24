@@ -65,9 +65,9 @@ class HTTPinterface {
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
-        this.app.get('/getNumberRoadmapCreate', this.getNumberRoadmapCreate.bind(this));
-        this.app.get('/getNumberRoadmapSeguite', this.getNumberRoadmapSeguite.bind(this));
-        this.app.get('/getNumberRoadmapPreferite', this.getNumberRoadmapPreferite.bind(this));
+        this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
+        this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
+        this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
@@ -211,26 +211,23 @@ class HTTPinterface {
         }
     }
 
-    async getNumberRoadmapCreate(req, res) {
+    async getRoadmapCreate(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapCreate(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapCreate(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }
 
-    async getNumberRoadmapSeguite(req, res) {
+    async getRoadmapSeguite(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapSeguite(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapSeguite(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }
 
-    async getNumberRoadmapPreferite(req, res) {
+    async getRoadmapPreferite(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapPreferite(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapPreferite(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }

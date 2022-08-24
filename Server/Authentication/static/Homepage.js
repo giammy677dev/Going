@@ -78,7 +78,7 @@ function caricaRoadmap() {
         spazioRoadmap.setAttribute("onMouseOver","conMouseOver(\"" + spazioRoadmap.id + "\")");
         spazioRoadmap.setAttribute("onMouseOut","conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("containerRoadmap").appendChild(spazioRoadmap);
-        spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"\"><span class=\"inEvidenza\">" + result[i].titolo + "</span></a>" + 
+        spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+result[i].id+"\"><span class=\"inEvidenza\">" + result[i].titolo + "</span></a>" + 
         "<p><span class=\"interno\">🏙 " + result[i].localita  + "</span><span class=\"interno\">⏱" + result[i].durataComplessiva + "</span></p>";
         funcCoktail(result[i].punteggio,i);
       }
@@ -113,9 +113,9 @@ function funcCoktail(media_valutazioni,i){
       }
       //inizio controllo sul decimale
       const decimalStr = media_valutazioni.toString().split('.')[1];
-      var decimal = Number(decimalStr);
-      if (decimal < 2.5) {
-      } else if (decimal > 7.5){
+      var decimal = Number("0."+decimalStr);
+      if (decimal < 0.25) {
+      } else if (decimal > 0.75){
         spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
         counterStamp++;
       } else{
