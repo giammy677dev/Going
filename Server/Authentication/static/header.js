@@ -1,5 +1,5 @@
-var ok=false
-var user_id=0
+var ok = false
+var user_id = 0
 
 function check() {
   var xhr = new XMLHttpRequest();
@@ -11,22 +11,24 @@ function check() {
 
 
     if (r.ok == true) {
-      console.log("sei loggato!!! con questo id", r.whoLog)
       console.log(r)
-      ok=r.ok
-      user_id=r.whoLog
-      document.getElementById("image_topnav").setAttribute("src",r.data[0].avatar);
+      ok = r.ok
+      user_id = r.data[0].id
+      console.log("sei loggato!!! con questo id", ok)
+
+      console.log("sei loggato!!! con questo id", user_id)
+      document.getElementById("image_topnav").setAttribute("src", r.data[0].avatar);
 
       var image = document.createElement("img");
-      image.setAttribute("src","/storage/logoutTransp.png");
+      image.setAttribute("src", "/storage/logoutTransp.png");
       image.setAttribute("display", "block");
       image.setAttribute("id", "image_topnav0");
-      image.setAttribute("onclick","document.getElementById('logout').style.display='block'");
-      document.getElementById("topnav_image0").appendChild(image);      
-      document.getElementById("topnav_image0").style.setProperty("display","block"); 
-      document.getElementById("topnav_image").style.setProperty("width","5%"); 
-      document.getElementById("image_topnav").style.setProperty("margin-top","27%"); 
-      document.getElementById("image_topnav").setAttribute("onclick","location.href=\"/profile\"");
+      image.setAttribute("onclick", "document.getElementById('logout').style.display='block'");
+      document.getElementById("topnav_image0").appendChild(image);
+      document.getElementById("topnav_image0").style.setProperty("display", "block");
+      document.getElementById("topnav_image").style.setProperty("width", "5%");
+      document.getElementById("image_topnav").style.setProperty("margin-top", "27%");
+      document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile\"");
     }
     else if (r.ok == false) {
       console.log("non sei loggato!!!")
@@ -36,22 +38,25 @@ function check() {
   xhr.send();
 }
 
-function logout(){
+function logout() {
   var xhr = new XMLHttpRequest();
-  
+  console.log("inizio")
   xhr.open("POST", '/logout', true);
-  
+  console.log("dopo open")
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
+    console.log(r)
+    console.log(ok)
+    console.log(user_id)
     if (r.ok == true) {
       location.href = "/";
     }
-    else if(r.ok==false){
+    else if (r.ok == false) {
       console.log("ops problemi")
     }
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-        id: user_id
-      }));
+  xhr.send(JSON.stringify({
+    id: user_id
+  }));
 }
