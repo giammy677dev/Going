@@ -5,8 +5,6 @@ window.onload = function () {
     check()
 };
 
-
-
 var map;
 let customMarker = './storage/markerDiego.png'
 var db_markers = {};
@@ -49,26 +47,6 @@ function deleteStage(toDeleteIndex) {
     markers[toDeleteIndex].setMap(null);
     markers.splice(toDeleteIndex, 1);
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
-
-    if (stage_index == 0) {
-        distance_renderers[stage_index].setMap(null);
-    } else if (stage_index == roadmap.length - 1) {
-        distance_renderers[stage_index - 1].setMap(null);
-        stage_index--;
-    } else {
-        distance_renderers[stage_index].setMap(null);
-        distance_renderers[stage_index - 1].setMap(null);
-        //si calcola distanza tra A->C
-        backendDistance(roadmap[stage_index], roadmap[stage_index + 2])
-        stage_index--;
-    }
-    distance_renderers.splice(stage_index + 1, 1);
-
-
-
-
-    roadmap.splice(stage_index, 1); //4) eliminare istanza nella roadmap
-    //tolto un elemento!
 
     if (toDeleteIndex == 0) {
         if (roadmap.length > 1) {
@@ -212,7 +190,6 @@ function drawExNovoStages() {
                     });
                 }
                 db_markers[r.data[i].placeId][1] = 1;
-
 
                 if (db_markers[r.data[i].placeId][0].visible == false) {
                     db_markers[r.data[i].placeId][0].setVisible(true);
@@ -440,6 +417,13 @@ function calculateDistance(first_marker, second_marker) {
 function isIconMouseEvent(e) {
     return "placeId" in e;
 }
+
+
+function drawNewStage(stage_index, stage) {
+    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+}
+
 function submitRoadmap(roadmap) {
     var title, description
     allTime = parseInt(document.getElementById("somma_totale").innerText)
@@ -451,10 +435,6 @@ function submitRoadmap(roadmap) {
     }
     console.log("isPub: ", isPub)
 
-function drawNewStage(stage_index, stage) {
-    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
-}
 
     title = document.getElementById("titolo").value
     console.log("titolo: ", title);
@@ -655,9 +635,6 @@ var ClickEventHandler = /** @class */ (function () {
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
 
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
-
             drawNewStage(stage_index, stage);
 
 
@@ -731,9 +708,6 @@ var ClickEventHandler = /** @class */ (function () {
             console.log(stage)
             roadmap.push(to_send_stage);
             //addToRoadmapVisual(stage);
-
-            document.getElementById('lines').innerHTML += '<div class="dot"></div><div class="line"></div>'
-            document.getElementById('cards').innerHTML += '<div class="card"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
 
             drawNewStage(stage_index, stage)
 
