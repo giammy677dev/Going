@@ -62,7 +62,7 @@
     border: 3px dotted #00AAF8;
 }
 
-input[type="text"]{
+.contenuto input[type="text"]{
     font-size: 15px;
 }
 

@@ -2,7 +2,7 @@
     float: center;
 }
 
-input[type=text] {
+#barra_ricerca{
     padding: 6px;
     margin-top: 8px;
     font-size: 17px;
@@ -37,6 +37,10 @@ input[type=text] {
     margin-top: 14%;
 }
 
+.Input_log{
+    font-size: 30px;
+	border-radius: 4px;
+}
 
 @supports(display: grid) {
 
