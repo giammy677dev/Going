@@ -79,7 +79,7 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
-.primoPiano H2 {
+.primoPiano H2, #Response_Research{
     margin-bottom: .5rem;
     font-weight: 500;
     line-height: 1.2;
@@ -148,7 +148,6 @@ body {
   #logout {
       display: none;
       font-size: 26px;
-      display: none;
       z-index: 2;
       font-family: serif;
       color: white;
@@ -179,7 +178,6 @@ body {
       background-color: rgba(0, 0, 0, 0.92);
       position: absolute;
       width: 70%;
-      height: 80%;
       margin: 5% 15%;
       text-align: center;
       font-family: "Poppins", sans-serif;
@@ -187,6 +185,10 @@ body {
       overflow: auto;
   }
   
+    #Response_Login{
+        font-size: 18px;
+    }
+
   .pulsantiForm { 
       font-size: 20px;
       padding: 5px 30px;
@@ -203,7 +205,8 @@ body {
   }
   
   input[type="text"], input[type="password"] {
-      font-size: 30px;
+    width: 50%;  
+    font-size: 30px;
       border-radius: 4px;
   }
   

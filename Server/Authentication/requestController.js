@@ -104,9 +104,9 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
-    async getDataUser(id) {
+    async getDataUser(id, element) {   
         const data = await this.dao.getDataUser(id);
-        return { ok: data[0], error: data[1], data: data[2]}
+        return { ok: data[0], error: data[1], data: data[2], isYou: element}
     }
 
     async getPlaceInfo(id) {
@@ -139,8 +139,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoadmapCreate(id) {
-        const data = await this.dao.getRoadmapCreate(id);
+    async getRoadmapCreate(id_query,id_session) {
+        const data = await this.dao.getRoadmapCreate(id_query,id_session);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 

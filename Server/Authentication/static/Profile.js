@@ -1,8 +1,12 @@
 
   // Script Avvio Pagina
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const id = urlParams.get('id')
 
   //fare che quando carica prende rispetto a chi sta sull'url
   window.onload=function(){
+    check()
     document.getElementById("bar_roadmap_create").click();
     data_user();
     roadmap_create();
@@ -15,7 +19,7 @@
   function data_user(){ 
     var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", '/getDataUser', true);
+    xhr.open("GET", '/getDataUser?id=' + id, true);
   
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
@@ -28,6 +32,13 @@
           document.getElementById("info_email").innerText = "Email = "+r.data[0].email;
           document.getElementById("info_birthdate").innerText = "Compleanno = "+day.getDate()+"/"+month+"/"+day.getFullYear();
           document.getElementById("avatar").src = r.data[0].avatar;
+
+          if(r.isYou == 1){
+            document.getElementById('button_choice_avatar').style.display='block';
+          }
+          else{
+            document.getElementById('button_choice_avatar').style.display='none';
+          }
       }
     }
 
@@ -39,7 +50,7 @@
   function roadmap_create(){ 
     var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", '/getRoadmapCreate', true);
+    xhr.open("GET", '/getRoadmapCreate?id=' + id, true);
   
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
@@ -67,7 +78,7 @@
   function roadmap_seguite(){ 
     var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", '/getRoadmapSeguite', true);
+    xhr.open("GET", '/getRoadmapSeguite?id=' + id, true);
   
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);
@@ -95,7 +106,7 @@
   function roadmap_preferite(){ 
     var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", '/getRoadmapPreferite', true);
+    xhr.open("GET", '/getRoadmapPreferite?id=' + id, true);
   
     xhr.onload = function (event) {
       const r = JSON.parse(event.target.responseText);

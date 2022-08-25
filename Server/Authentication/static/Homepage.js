@@ -9,7 +9,6 @@ function check() {
 
     const r = JSON.parse(event.target.responseText);
 
-
     if (r.ok == true) {
       console.log("sei loggato!!! con questo id", r.whoLog)
       console.log(r)
@@ -22,7 +21,7 @@ function check() {
 
       console.log(document.getElementById("secondButtLog"))
       document.getElementById("secondButtLog").innerHTML = "Profile";
-      document.getElementById("secondButtLog").setAttribute("href","/profile");
+      document.getElementById("secondButtLog").setAttribute("href","/profile?id="+user_id);
     }
     else if (r.ok == false) {
       console.log("non sei loggato!!!")
@@ -55,7 +54,7 @@ function logout(){
 function ricercaHome() {
   var ricerca = document.getElementById("search").value;
   if (ricerca == "") {
-    alert(" campo nullo")
+    document.getElementById("Response_Research").innerText = "❗Campo Vuoto. Riprovare";
   }
   else {
     location.href = "/explore?ricerca=" + ricerca;

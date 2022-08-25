@@ -1,0 +1,141 @@
+
+/* Stile Body */
+
+body {
+	background-image: url(/storage/sfondo2.jpg);
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+/* Stile Contenuto */
+
+.container {
+    width: auto;
+    display: grid;
+    margin-top: 140px;
+    margin-bottom: 40px;
+
+}
+
+/* Stile Sezioni */
+
+.login{
+    width: 65%;
+    margin: auto;
+    float: center;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+}
+
+.sign-up{
+    background-color: rgba(0, 0, 0, 0.8);
+	font-family: "Poppins", sans-serif;
+	width: 80%;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+    margin: auto;
+    position: relative;
+    width: 65%;
+    display: block;
+}
+
+/* Stile Scritte */
+
+.login h2,.sign-up h2{
+    text-align: center;
+    color: #ffffff;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+    border-bottom: 1px solid #dee0e4;
+    margin-bottom: 0px;
+}
+
+.sign-up p{
+    text-align: center;
+    color: #5b6574;
+    font-size: 18px;
+    border-bottom: 0px solid #dee0e4;
+    
+}
+
+/* Stile Sezioni Caselle */
+
+.form{
+    top: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Stile Caselle Input */
+
+.form[type="password"], .form[type="text"]{
+    width: 60%;
+    border: 1px solid #dee0e4;
+    margin: auto;
+    margin-bottom: 30px;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
+}
+
+.form[type="date"]{
+    width: 60%;
+    border: 1px solid #dee0e4;
+    margin: auto;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
+}
+
+.formButton{
+    width: 50%;
+    padding: 15px;
+    background-color: #59b2b5;
+    cursor: pointer;
+    float: left;
+    font-weight: bold;
+    color: #ffffff;
+    transition: background-color 0.2s;
+    margin-top: 30px;
+}
+
+.formButton:hover{
+    background-color: #6cd5d9;
+}
+
+#postReg{
+    display: none;
+      font-size: 26px;
+      z-index: 2;
+      font-family: serif;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.92);
+      position: absolute;
+      width: 70%;
+      height: 30%;
+      margin: 5% 15%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      border: thin #d24618 solid;
+      overflow: auto;
+}
+
+.info{
+    display: none;
+    color: white;
+    padding: 10px;
+    border-bottom: thin white solid;
+    background-color: rgba(132, 132, 132, 0.42);
+}
+
+.second{
+    background-color: rgba(118, 29, 29, 0.42);
+}
+
+#infobox{
+    display: none;
+}
+
+#pressInfo{
+    cursor: pointer;
+}

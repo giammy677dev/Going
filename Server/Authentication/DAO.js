@@ -19,7 +19,7 @@ class DAO {
     async viewRoadmap(id) {
 
         try {
-          
+
             var connection = await this.connect();
             var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
             
@@ -137,7 +137,7 @@ class DAO {
     async searchUser(username) {
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT username FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            var result = await connection.query('SELECT * FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -239,12 +239,21 @@ class DAO {
         }
     }
 
-    async getRoadmapCreate(id) {
+    async getRoadmapCreate(id_query, id_session) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
-            let results = selection[0];
-            return [true, 0, results];
+
+            if (id_query == id_session) {
+                let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ?', [id_session]);
+                let results = selection[0];
+                return [true, 0, results];
+            }
+            else {
+                let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ? AND isPublic = 1', [id_query]);
+                let results = selection[0];
+                return [true, 0, results];
+            }
+
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
