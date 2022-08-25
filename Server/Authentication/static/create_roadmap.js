@@ -47,7 +47,7 @@ function check_now() {
 function deleteStage(toDeleteIndex) {
     //qua va il comando di rimozione del box grafico nel stages_list
 
-    //rimozione markaer dalla mappa
+    //rimozione marker dalla mappa
     markers[toDeleteIndex].setMap(null);
     markers.splice(toDeleteIndex, 1);
     circles[toDeleteIndex].setMap(null);
@@ -142,10 +142,6 @@ function initMap() {
             Object.keys(db_markers).forEach(function (key) { // iter on markers 
                 db_markers[key][0].setVisible(false);
             });
-
-            /*for (var i = 0; i < db_markers.length; i++) {
-                db_markers[i].setVisible(false);
-            }*/
         }
         else {
             drawExNovoStages();
@@ -155,10 +151,9 @@ function initMap() {
     map.addListener('dragend', function () {
         var zoom = map.getZoom();
         console.log(zoom)
-        //map.addListener('idle', function () {
-        if (zoom > minZoomForExNovoMarkers)
+        if (zoom > minZoomForExNovoMarkers) {
             drawExNovoStages();
-        //});
+        }
     });
 
     new ClickEventHandler(map, origin);
@@ -167,28 +162,16 @@ function initMap() {
 function drawExNovoStages() {
     console.log("UPDATE MARKERS!")
 
-    /*var boxMinLat = map.getBounds().zb.lo
-    var boxMaxLat = map.getBounds().zb.hi
-    var boxMinLng = map.getBounds().Ra.lo
-    var boxMaxLng = map.getBounds().Ra.hi*/
-
     var boxMinLat = map.getBounds().getSouthWest().lat()
     var boxMaxLat = map.getBounds().getNorthEast().lat()
     var boxMinLng = map.getBounds().getSouthWest().lng()
     var boxMaxLng = map.getBounds().getNorthEast().lng()
 
-    //console.log(coveredLatRange)
-    //console.log(boxMinLat, boxMaxLat)
-    //console.log(coveredLngRange)
-    //console.log(boxMinLng, boxMaxLng)
-    //if (boxMinLat < coveredLatRange[0] || boxMaxLat > coveredLatRange[1] || boxMinLng < coveredLngRange[0] || boxMaxLng > coveredLngRange[1]) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/getMarkersFromRect', true);
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
         if (r.ok) {
-            //console.log(r.data)
-
             Object.keys(db_markers).forEach(function (key) { // iter on markers 
                 db_markers[key][1] = 0;
             });
@@ -206,16 +189,10 @@ function drawExNovoStages() {
                     });
 
                     db_markers[placeId] = [marker, 1]; //flag 1 = deve rimanere
-                    //add event on click 
 
-
+                    //add event on click
                     db_markers[placeId][0].addListener("click", (e) => {
-                        console.log("after", placeId)
-                        console.log(r)
-                        console.log('agfda')
-                        console.log(r.data)
                         ClickEventHandler.prototype.openAddBox(placeId, latLng);
-                        //this.openAddBox(event.placeId, event.latLng); //OBIETTIVO
                     });
                 }
                 db_markers[placeId][1] = 1;
@@ -234,49 +211,6 @@ function drawExNovoStages() {
                     db_markers[key][0].setVisible(true);
                 }
             });
-
-
-
-            /*
-            var old_db_markers = [];
-            old_db_markers.push(...db_markers);
-            db_markers = [];
- 
-            if (zoom > 15 && r.data.length > 0) {
-                for (var i = 0; i < r.data.length; i++) {
-                    var j = 0;
-                    var trovato = false;
-                    while (trovato != true && j < old_db_markers.length) {
-                        if (r.data[i].placeId == old_db_markers[j].placeId) {
-                            db_markers.push(old_db_markers[j]);
-                            old_db_markers[j].pop();
-                            trovato = true;
-                        }
-                        j++;
-                    }
- 
-                    if (trovato == false) {
-                        const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
- 
-                        let marker = new google.maps.Marker({
-                            position: latLng,
-                            map: map,
-                            icon: customMarker,
-                            visible: true,
-                        });
- 
-                        db_markers.push(marker);
-                    }
-                }
- 
-                for (var j = 0; j < old_db_markers.length; j++) {
-                    old_db_markers[j].setMap(null);
-                }
-            }
-            */
-
-            //coveredLatRange = [boxMinLat, boxMaxLat]
-            //coveredLngRange = [boxMinLng, boxMaxLng]
         }
     }
 
@@ -287,8 +221,6 @@ function drawExNovoStages() {
         centerLngInf: boxMinLng,
         centerLngSup: boxMaxLng
     }));
-    //}
-
 }
 
 function getDistance(marker, centerLat, centerLng) {
@@ -450,7 +382,6 @@ function isIconMouseEvent(e) {
     return "placeId" in e;
 }
 
-
 function drawNewStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
@@ -475,7 +406,6 @@ function submitRoadmap(stages_list) {
 
     console.log("lenght rm: ", stages_list.length);
     console.log(stages_list)
-
 
     var today = new Date();
     var dd = today.getDate();
