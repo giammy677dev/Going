@@ -23,7 +23,7 @@ class DAO {
             var connection = await this.connect();
             var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
             
-            var result_stages= await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=?', [id])
+            var result_stages= await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
            
             
             var id_utente = result_rm[0][0].utenteRegistrato_id
