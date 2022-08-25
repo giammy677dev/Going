@@ -220,7 +220,7 @@ function saveCom() {
 
 function forkaggio() {
   if (ok == true) {
-    alert("Sito in distruzione")
+    console.log("roadmap forkata: ",id_rm)
   }
   else { alert("non puoi passare!!") }
 }

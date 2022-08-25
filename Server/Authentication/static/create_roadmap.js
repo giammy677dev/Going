@@ -69,10 +69,15 @@ function deleteStage(toDeleteIndex) {
     }
     stages_list.splice(toDeleteIndex, 1); //4) eliminare istanza nella stages_list
     //tolto un elemento!
-
+    var timeStage=parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
+    console.log("timestage: ",timeStage)
     document.getElementById("card" + toDeleteIndex).remove();
     document.getElementById("line" + toDeleteIndex).remove();
     document.getElementById("dot" + toDeleteIndex).remove();
+    var allTime = parseInt(document.getElementById("somma_totale").innerText)
+    console.log("alltime: ", allTime)
+    allTime=allTime-timeStage
+    document.getElementById("somma_totale").innerText = allTime
     const remainingCards = stages_list.length - toDeleteIndex;
     for (var i = 0; i < remainingCards; i++) {
         var oldIndex = toDeleteIndex + i + 1;
@@ -81,12 +86,14 @@ function deleteStage(toDeleteIndex) {
         var element = document.getElementById("card" + oldIndex);
         var line = document.getElementById("line" + oldIndex);
         var dot = document.getElementById("dot" + oldIndex);
-
+        var dur=document.getElementById("durata" + oldIndex);
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
-
+        
         line.id = "line" + newIndex;
-        dot.id = "dot" + newIndex; //così se scriviamo qualcosa l'istanza è preservata
+        dot.id = "dot" + newIndex; 
+        dur.id="durata"+newIndex;
+        //così se scriviamo qualcosa l'istanza è preservata
     }
     console.log(toDeleteIndex)
 
@@ -431,11 +438,11 @@ function isIconMouseEvent(e) {
 
 function drawNewStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + indirizzo + ' con durata di visita: ' + stage.durata + '</p></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + indirizzo + ' con durata di visita: <div id="durata'+stage_index+'">' + stage.durata + '</div></p></div>'
 }
 
 function submitRoadmap(stages_list) {
-    var title, description
+    var title, description,allTime
     allTime = parseInt(document.getElementById("somma_totale").innerText)
     var isPub = 1
     var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
