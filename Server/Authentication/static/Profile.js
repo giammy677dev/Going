@@ -6,6 +6,7 @@
 
   //fare che quando carica prende rispetto a chi sta sull'url
   window.onload=function(){
+    check()
     document.getElementById("bar_roadmap_create").click();
     data_user();
     roadmap_create();

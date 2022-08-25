@@ -26,7 +26,7 @@ function validation_registration() {
     }
     else if (password != confirm_password) {
         document.getElementsByClassName("second")[0].style.display = "block";
-        document.getElementById("errorText").innerHTML="Password sbagliate"
+        document.getElementById("errorText").innerHTML="Le Password non corrispondono. Riprovare"
     }
     else if (password.length < 8) {
         document.getElementsByClassName("second")[0].style.display = "block";
@@ -38,7 +38,7 @@ function validation_registration() {
         xhr.onload = function (event) {
 
             const r = JSON.parse(event.target.responseText);
-            
+
             if (r.ok == true) {
                 document.getElementById('errorBox').remove();
                 document.getElementById('infoH').innerHTML="Registrazione avvenuta con successo!";
@@ -46,7 +46,7 @@ function validation_registration() {
                 document.getElementById('infoH').style.setProperty("padding","0px");
                 document.getElementById('infoH').style.setProperty("border-bottom","0px");
                 document.getElementById('changeButton').value = "Visita Profilo";
-                document.getElementById('changeButton').setAttribute("onclick","goTo(6)");
+                document.getElementById('changeButton').setAttribute("onclick","goTo(6,"+r.data.insertId+")");
             }
             else if (r.ok == false && r.error == "1062") {
                 document.getElementById("errorText").innerHTML= "Username o Email già usato. Riprovare";
@@ -80,12 +80,12 @@ function validation_registration() {
         document.getElementById("birthdate").setAttribute("max", today);
     }
 
-    function goTo(num){
+    function goTo(num,id){
         if(num==0){
             location.href = '/';
         }
         else if(num==6){
-            location.href = "/profile";
+            location.href = "/profile?id="+id;
         }
     }
 

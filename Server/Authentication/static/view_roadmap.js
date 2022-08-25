@@ -193,9 +193,9 @@ function funcCoktail(punteggio) {
     }
     //inizio controllo sul decimale
     const decimalStr = punteggio.toString().split('.')[1];
-    var decimal = Number(decimalStr);
-    if (decimal < 2.5) {
-    } else if (decimal > 7.5) {
+    var decimal = Number("0."+decimalStr);
+    if (decimal < 0.25) {
+    } else if (decimal > 0.75) {
       spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
       counterStamp++;
     } else {

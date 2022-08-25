@@ -74,15 +74,17 @@ body {
     border: 1px solid #dee0e4;
     margin: auto;
     margin-bottom: 30px;
-    font-size: 25px;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
 }
 
 .form[type="date"]{
     width: 60%;
-    height: 30px;
     border: 1px solid #dee0e4;
     margin: auto;
     margin-bottom: 20px;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
 }
 
 .formButton{
