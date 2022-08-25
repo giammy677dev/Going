@@ -1,9 +1,11 @@
 var ok = false
 var id_user = null
+var id_rm=0
 window.onload = function () {
   check()
   loading_roadmap()
   check_nw()
+  loadRecCom(id_rm)
 }
 
 function check_nw() {
@@ -19,7 +21,6 @@ function check_nw() {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok = true
       id_user = r.whoLog
-      //check_ut(id_user)
     }
     else if (r.ok == false) {
       ok = false
@@ -28,37 +29,13 @@ function check_nw() {
   xhr.send();
 }
 
-function check_ut(id_user) {
-
-
-  console.log("mammt si pure ca dint, id: ", id_user)
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("GET", '/-recensione, valutazione, se seguita e/o preferita--', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-
-    if (r.ok == true) {
-      console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
-
-    }
-    else if (r.ok == false) {
-
-    }
-  }
-  xhr.send();
-
-}
-
-
 function loading_roadmap() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const id = urlParams.get('id')
 
   if (id != null && id >= 0) {
+    id_rm=id
     richiestaRoadmap(id)
   }
   else {
@@ -73,9 +50,14 @@ function richiestaRoadmap(id) {
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
+    if (r.data === undefined) {
+      location.href = "/explore"
+    }
     const quanti_stage = r.data.results_rm.length
     const result_rm = r.data.results_rm
     const result_us = r.data.results_us
+
+
 
     if (r.ok == true) {
       if (quanti_stage < 0) {
@@ -92,18 +74,16 @@ function richiestaRoadmap(id) {
         document.getElementById("descrizione").innerText = result_rm[0].descrizione
         funcCoktail(result_rm[0].punteggio)
 
-        for(let i=0;i<quanti_stage;i++){
-          document.getElementById('prova_stages').innerHTML += '<div class="dot"></div><div class="line"></div>'
-
-          document.getElementById("prova_stages").innerHTML += result_rm[i].nome+'<br>'
-          document.getElementById("prova_stages").innerHTML += result_rm[i].durata+'<br>'
-          document.getElementById("prova_stages").innerHTML += result_rm[i].reachTime+'<br>'
-          document.getElementById("prova_stages").innerHTML += result_rm[i].indirizzo+'<br>'
-          document.getElementById("prova_stages").innerHTML += result_rm[i].descrizione_st+'<br>'
-
-          document.getElementById("prova_stages").innerHTML += "<br><br><br><br>"
+        for (let i = 0; i < quanti_stage; i++) {
+          var time = result_rm[i].reachTime
+          if (time == null) {
+            time = " "
+          }
+          document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
+          document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + result_rm[i].nome + '</h4><p>' + result_rm[i].indirizzo + ' con durata di sosta: ' + result_rm[i].durata + '; facendo ste cose: ' + result_rm[i].descrizione_st + '</p></div>'
 
         }
+
 
       }
     }
@@ -114,6 +94,28 @@ function richiestaRoadmap(id) {
   }
   xhr.send()
 }
+
+function loadRecCom(id){
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", '/getRecCom?id='+id, true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      
+    }
+    else if (r.ok == false) {
+      
+    }
+  }
+  xhr.send();
+}
+
+
+
 function rating(value) {
   if (ok == true) {
     var points = value
@@ -201,9 +203,24 @@ function funcCoktail(punteggio) {
     counterStamp++;
   }
 }
+function saveRec() {
+  if (ok == true) {
+    console.log("Sito in costruzione: id: ", id_user)
+  }
+  else{alert("non !!!")}
+}
+function saveCom() {
+  if (ok == true) {
+    console.log("Sito in costruzione: id: ",id_user)
+  }
+  else{alert("non !!!")}
+}
+
+
+
 function forkaggio() {
   if (ok == true) {
-    alert("Sito in distruzione")
+    console.log("roadmap forkata: ",id_rm)
   }
   else { alert("non puoi passare!!") }
 }
