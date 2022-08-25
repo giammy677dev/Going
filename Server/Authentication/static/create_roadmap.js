@@ -11,7 +11,7 @@ var db_markers = {};
 var stages_list = []; //lista degli stage
 var markers = [];
 var distance_renderers = [];
-var stages_Ids = {}
+var lastPlaceId = 0;
 
 var stage_index = 0;
 var infoWindow;
@@ -52,6 +52,7 @@ function deleteStage(toDeleteIndex) {
     //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
 
     if (toDeleteIndex == 0) {
+        lastPlaceId = 0
         if (stages_list.length > 1) {
             distance_renderers[toDeleteIndex].setMap(null);
             distance_renderers.splice(toDeleteIndex, 1);
@@ -59,11 +60,13 @@ function deleteStage(toDeleteIndex) {
     } else if (toDeleteIndex == stages_list.length - 1) {
         distance_renderers[toDeleteIndex - 1].setMap(null);
         distance_renderers.splice(toDeleteIndex - 1, 1);
+        lastPlaceId = stages_list[toDeleteIndex-1].placeId
     } else {
         distance_renderers[toDeleteIndex].setMap(null);
         distance_renderers[toDeleteIndex - 1].setMap(null);
         distance_renderers.splice(toDeleteIndex - 1, 1);
         distance_renderers.splice(toDeleteIndex, 1);
+        lastPlaceId = stages_list[toDeleteIndex-1].placeId
         //si calcola distanza tra A->C
         backendDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
     }
@@ -91,7 +94,7 @@ function deleteStage(toDeleteIndex) {
     console.log(toDeleteIndex)
 
     stage_index--;
-    delete stages_Ids[stages_list[toDeleteIndex].placeId]
+    
     console.log(stages_list)
 }
 
@@ -150,12 +153,15 @@ function initMap() {
 function drawExNovoStages() {
     console.log("UPDATE MARKERS!")
 
-    var boxMinLat = map.getBounds().zb.lo
+    /*var boxMinLat = map.getBounds().zb.lo
     var boxMaxLat = map.getBounds().zb.hi
     var boxMinLng = map.getBounds().Ra.lo
-    var boxMaxLng = map.getBounds().Ra.hi
+    var boxMaxLng = map.getBounds().Ra.hi*/
 
-
+    var boxMinLat = map.getBounds().getSouthWest().lat()
+    var boxMaxLat = map.getBounds().getNorthEast().lat()
+    var boxMinLng = map.getBounds().getSouthWest().lng()
+    var boxMaxLng = map.getBounds().getNorthEast().lng()
 
     //console.log(coveredLatRange)
     //console.log(boxMinLat, boxMaxLat)
@@ -177,7 +183,7 @@ function drawExNovoStages() {
                 const placeId = r.data[i].placeId;
                 if (db_markers[placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
                     const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
-                    
+
                     let marker = new google.maps.Marker({
                         position: latLng,
                         map: map,
@@ -188,9 +194,9 @@ function drawExNovoStages() {
                     db_markers[placeId] = [marker, 1]; //flag 1 = deve rimanere
                     //add event on click 
 
-                    
+
                     db_markers[placeId][0].addListener("click", (e) => {
-                        console.log("after",placeId)
+                        console.log("after", placeId)
                         console.log(r)
                         console.log('agfda')
                         console.log(r.data)
@@ -635,7 +641,7 @@ var ClickEventHandler = (function () {
             to_send_stage.latitudine = latLng.lat();
             to_send_stage.longitudine = latLng.lng();
             stages_list.push(to_send_stage)
-            stages_Ids[placeId]=1
+            lastPlaceId = placeId;
 
             //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
 
@@ -646,7 +652,7 @@ var ClickEventHandler = (function () {
                 //calculateDistance(stages_list[stage_index - 1], stage);
                 backendDistance(stages_list[stage_index - 1], stage);
             }
-            
+
             stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
@@ -675,7 +681,7 @@ var ClickEventHandler = (function () {
     };
     ClickEventHandler.prototype.openAddBox = function (placeId, latLng) {
         //var me = this;
-        if(stages_Ids[placeId] !== undefined & stages_Ids[placeId] == 1){ //già stato aggiunto il nodo
+        if (lastPlaceId == placeId) { //stesso nodo due volte di fila!
             return;
         }
         //me.infowindow.close();
@@ -725,7 +731,7 @@ var ClickEventHandler = (function () {
             console.log(stage)
             stages_list.push(to_send_stage);
             //addToRoadmapVisual(stage);
-            stages_Ids[placeId]=1
+            lastPlaceId = placeId;
             drawNewStage(stage_index, stage)
 
 
