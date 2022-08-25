@@ -349,7 +349,8 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
-        return res.sendFile(__dirname + '/static/Signup.html');
+        //return res.sendFile(__dirname + '/static/Signup.html');
+        return res.sendFile(__dirname + '/static/registrazione.html');
     }
 
     async profile_page(req, res) {

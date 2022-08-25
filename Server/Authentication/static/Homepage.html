@@ -24,20 +24,20 @@
         <h2>EFFETTUA IL LOGIN</h2>
         </p>
 
-
+        <FORM onSubmit="validation_login()">
         <p>
             <label for="username"><span class="inEvidenza">Username</span>
-                <p><input type="text" name="username" id="username_login" /></p>
+                <p><input type="text" name="username" id="username_login" required/></p>
             </label>
         </p>
         <p>
             <label for="password"><span class="inEvidenza">Password</span>
-                <p><input type="password" name="password" id="password_login" /></p>
+                <p><input type="password" name="password" id="password_login" required/></p>
             </label>
         </p>
 
         <p>
-            <input class="pulsantiForm" id="log_puls" type="submit" name="invia" value="Login" onclick="validation_login()" />
+            <input class="pulsantiForm" id="log_puls" type="submit" name="invia" value="Login" />
             <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
                 value="Annulla" />
         </p>
@@ -46,7 +46,7 @@
         <p class="noReg">
             Non sei ancora registrato? <a href="/signup">Registrati qui</a>
         </p>
-
+    </FORM>
     </div>
 
     <div id="logout">

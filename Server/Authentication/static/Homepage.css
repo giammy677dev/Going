@@ -148,7 +148,6 @@ body {
   #logout {
       display: none;
       font-size: 26px;
-      display: none;
       z-index: 2;
       font-family: serif;
       color: white;
@@ -179,7 +178,6 @@ body {
       background-color: rgba(0, 0, 0, 0.92);
       position: absolute;
       width: 70%;
-      height: 80%;
       margin: 5% 15%;
       text-align: center;
       font-family: "Poppins", sans-serif;

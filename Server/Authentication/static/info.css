@@ -4,7 +4,7 @@
 }
 
 body {
-	background-image: url(/storage/sfondoTemporaneo.jpg);
+	background-image: url(/storage/sfondoInfo.jpg);
 	background-size: cover;
 	background-attachment: fixed;
 }
@@ -97,7 +97,7 @@ body {
 	display: block;
 }
 
-h2 {
+.row2 h2 {
 	color: #18c9d2;
 	font-size: 20px;
 }
