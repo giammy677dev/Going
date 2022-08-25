@@ -4,7 +4,7 @@ var user_id = 0
 function check() {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/getDataUser', true);
+  xhr.open("GET", '/getDataUser?id='+ user_id, true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -28,7 +28,7 @@ function check() {
       document.getElementById("topnav_image0").style.setProperty("display", "block");
       document.getElementById("topnav_image").style.setProperty("width", "5%");
       document.getElementById("image_topnav").style.setProperty("margin-top", "27%");
-      document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile\"");
+      document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
     }
     else if (r.ok == false) {
       console.log("non sei loggato!!!")

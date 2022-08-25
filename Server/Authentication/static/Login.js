@@ -5,22 +5,28 @@ function validation_login() {
     var username = document.getElementById("username_login").value;
     var password = document.getElementById("password_login").value;
 
+    if (username == "" && password == "") {
+        document.getElementById("Response_Login").innerText = "❗Username e Password Vuoti. Riprovare";
+    }
+    else if (username == "") {
+        document.getElementById("Response_Login").innerText = "❗Campo Username Vuoto. Riprovare";
+    }
+    else if (password == "") {
+        document.getElementById("Response_Login").innerText = "❗Campo Password Vuoto. Riprovare";
+    }
+    else{
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/auth', true);
     xhr.onload = function (event) {
 
-        const r = JSON.parse(event.target.responseText);
+    const r = JSON.parse(event.target.responseText);
 
-        if (r.ok == true) {
-            alert("Benvenuto " + username)
-            location.href = "/profile";
-        }
-        else if (r.ok == false && r.error == "-1") {
-            alert("Username o Password Vuoti. Riprovare")
-        }
-        else if (r.ok == false && r.error == "-3") {
-            alert("Username o Password Errati. Riprovare")
-        }
+    if (r.ok == true) {
+        location.href = "/profile?id="+r.data.id;
+    }
+    else if (r.ok == false && r.error == "-3") {
+        document.getElementById("Response_Login").innerText = "❗Username o Password Errati. Riprovare";
+       }
     }
 
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -28,4 +34,5 @@ function validation_login() {
         username: username,
         password: password
     }));
+    }
 }
