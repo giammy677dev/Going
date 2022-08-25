@@ -20,16 +20,23 @@ class DAO {
         try {
           
             var connection = await this.connect();
-            var result_rm = await connection.query('SELECT * FROM roadmap INNER JOIN stageInRoadmap ON roadmap.id=stageInRoadmap.roadmap_id INNER JOIN stage on stage.placeId=stageInRoadmap.stage_placeId WHERE roadmap.id=?', [id])
+            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
+            
+            var result_stages= await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=?', [id])
            
             
             var id_utente = result_rm[0][0].utenteRegistrato_id
           
+        
             
             var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
-            console.log("res_us: ",result_us)
+      
 
-            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0]}];
+
+            var result=result_rm[0][0]
+            result.stages=result_stages[0]
+            console.log("res totale: ",result)
+            return [true, 0, { results: result, results_us: result_us[0]}];
         }
         catch (error) {
             return [false, error.errno];

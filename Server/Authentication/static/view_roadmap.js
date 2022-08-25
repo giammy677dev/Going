@@ -5,7 +5,7 @@ window.onload = function () {
   check()
   loading_roadmap()
   check_nw()
-  loadRecCom(id_rm)
+  loadRecCom()
 }
 
 function check_nw() {
@@ -21,9 +21,12 @@ function check_nw() {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok = true
       id_user = r.whoLog
+      
     }
     else if (r.ok == false) {
       ok = false
+      document.getElementById("container_funz").style.display="none"
+      document.getElementById("roadmap_funz").innerHTML="<h2"
     }
   }
   xhr.send();
@@ -95,10 +98,10 @@ function richiestaRoadmap(id) {
   xhr.send()
 }
 
-function loadRecCom(id){
+function loadRecCom(){
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/getRecCom?id='+id, true);
+  xhr.open("GET", '/getRecCom?id='+id_rm, true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -220,7 +223,7 @@ function saveCom() {
 
 function forkaggio() {
   if (ok == true) {
-    console.log("roadmap forkata: ",id_rm)
+    location.href="/create?roadmap_id="+id_rm
   }
   else { alert("non puoi passare!!") }
 }

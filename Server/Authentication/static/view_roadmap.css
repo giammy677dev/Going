@@ -76,11 +76,16 @@
   text-decoration: none;
   list-style: none;
   font-family: "Mulish", sans-serif;
+  margin-bottom: -290px;
+}
+
+.main{
+  margin-bottom: -250px;
 }
 
 .body-cards {
   display: flex;
-  padding-top: 50px;
+  padding-top: 0px;
   justify-content: right;
   transform: scale(0.8) translateY(-50px);
 }
@@ -101,11 +106,11 @@
   background: #ecf1f524;
   mix-blend-mode: normal;
   overflow: hidden;
-  position: absolute;
-  top: 50px;
+  position: relative;
   margin-left: 71px;
   box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.566816);
   border-radius: 10px;
+  top: -200px;
 }
 
 .timeline h3 {
@@ -433,6 +438,13 @@
   gap: 20px;
 }
 
+#recensione {
+  border: 2px solid black;
+}
+#commento{
+  border: 2px solid black;
+}
+
 .btn {
   width: 250px;
   height: 55px;
@@ -459,3 +471,4 @@
   background-color: white;
   border-radius: 50%;
 }
+
