@@ -56,34 +56,36 @@ function richiestaRoadmap(id) {
     if (r.data === undefined) {
       location.href = "/explore"
     }
-    const quanti_stage = r.data.results_rm.length
-    const result_rm = r.data.results_rm
-    const result_us = r.data.results_us
-
-
+    const quanti_stage = r.data.results.stages.length
+    const roadmap = r.data.roadmap
+    const user = r.data.user
+    console.log(quanti_stage)
+    console.log(roadmap)
+    console.log(user)
+    
 
     if (r.ok == true) {
       if (quanti_stage < 0) {
         location.href = "/explore"
       }
       else {
-        var day = new Date(result_rm[0].dataCreazione)
+        var day = new Date(roadmap.dataCreazione)
         var month = day.getMonth() + 1;
-        document.getElementById("titolo").innerText = result_rm[0].titolo
+        document.getElementById("titolo").innerText = roadmap.titolo
         document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-        document.getElementById("durata").innerText = ' ⏱ ' + result_rm[0].durataComplessiva
-        document.getElementById("citta").innerText = ' 🏙 ' + result_rm[0].localita
-        document.getElementById("utente").innerText = ' 👤 ' + result_us[0].username
-        document.getElementById("descrizione").innerText = result_rm[0].descrizione
-        funcCoktail(result_rm[0].punteggio)
+        document.getElementById("durata").innerText = ' ⏱ ' + roadmap.durataComplessiva
+        document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
+        document.getElementById("utente").innerText = ' 👤 ' + user[0].username
+        document.getElementById("descrizione").innerText = roadmap.descrizione
+        funcCoktail(roadmap.punteggio)
 
         for (let i = 0; i < quanti_stage; i++) {
-          var time = result_rm[i].reachTime
+          var time = roadmap.stages.reachTime
           if (time == null) {
             time = " "
           }
           document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-          document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + result_rm[i].nome + '</h4><p>' + result_rm[i].indirizzo + ' con durata di sosta: ' + result_rm[i].durata + '; facendo ste cose: ' + result_rm[i].descrizione_st + '</p></div>'
+          document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + roadmap.stages[i].nome + '</h4><p>' + roadmap.stages[i].indirizzo + ' con durata di sosta: ' + roadmap.stages[i].durata + '; facendo ste cose: ' + roadmap.stages[i].descrizione_st + '</p></div>'
 
         }
 

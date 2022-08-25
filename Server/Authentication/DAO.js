@@ -36,7 +36,7 @@ class DAO {
             var result=result_rm[0][0]
             result.stages=result_stages[0]
             console.log("res totale: ",result)
-            return [true, 0, { results: result, results_us: result_us[0]}];
+            return [true, 0, { roadmap: result, user: result_us[0]}];
         }
         catch (error) {
             return [false, error.errno];
