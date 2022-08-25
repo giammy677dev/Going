@@ -16,20 +16,33 @@ class DAO {
         }
     }
     async viewRoadmap(id) {
-        
-        try{
-            var connection=await this.connect();
-            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=? AND isPublic=1', [id])
-            var id_utente=result_rm[0][0].utenteRegistrato_id
-            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+
+        try {
+          
+            var connection = await this.connect();
+            var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
             
-            return [true, 0, { results_rm: result_rm[0], results_us: result_us[0] }];
+            var result_stages= await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=?', [id])
+           
+            
+            var id_utente = result_rm[0][0].utenteRegistrato_id
+          
+        
+            
+            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+      
+
+
+            var result=result_rm[0][0]
+            result.stages=result_stages[0]
+            console.log("res totale: ",result)
+            return [true, 0, { roadmap: result, user: result_us[0]}];
         }
-        catch(error){
+        catch (error) {
             return [false, error.errno];
         }
     }
-    
+
 
     async register(username, password, email, birthdate) {
         try {
@@ -86,11 +99,11 @@ class DAO {
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 }
             } catch (error) {
                 console.log(error)
@@ -133,9 +146,11 @@ class DAO {
     async placeIDExists(placeID) {
         try {
             var connection = await this.connect();
+
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione,website,fotoURL as foto FROM stage WHERE placeId = ?', [placeID]);
+            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,nome as name,descrizione_st,website,fotoID as foto FROM stage WHERE placeId = ?', [placeID]);
             let results = selection[0];
+
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
@@ -146,6 +161,7 @@ class DAO {
                 return [false, -1, {}];
             }
         } catch (error) {
+            console.log(error)
             return [false, error.errno, {}];
         }
     }
@@ -214,7 +230,7 @@ class DAO {
     async getDataUser(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
+            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -222,10 +238,10 @@ class DAO {
         }
     }
 
-    async getNumberRoadmapCreate(id) {
+    async getRoadmapCreate(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Utente FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
+            let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -234,10 +250,10 @@ class DAO {
     }
 
 
-    async getNumberRoadmapSeguite(id) {
+    async getRoadmapSeguite(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Seguite FROM roadmapuser WHERE idUtenteRegistrato = ? AND seguita=1', [id]);
+            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -245,10 +261,10 @@ class DAO {
         }
     }
 
-    async getNumberRoadmapPreferite(id) {
+    async getRoadmapPreferite(id) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT COUNT(*) AS Roadmap_Preferite FROM roadmapuser WHERE idUtenteRegistrato = ? AND preferita=1', [id]);
+            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {
@@ -256,10 +272,21 @@ class DAO {
         }
     }
 
-    async updateAvatar(id,new_avatar) {
+    async updateAvatar(id, new_avatar) {
         try {
             var connection = await this.connect();
             let selection = await connection.query('UPDATE utenteregistrato SET avatar = ? WHERE id = ?', [new_avatar, id]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT * FROM stage WHERE latitudine >= ? AND latitudine <= ? AND longitudine >= ? AND longitudine <= ? AND isExNovo = 1', [centerLatInf, centerLatSup, centerLngInf, centerLngSup]);
             let results = selection[0];
             return [true, 0, results];
         } catch (error) {

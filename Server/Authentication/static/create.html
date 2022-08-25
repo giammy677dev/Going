@@ -7,9 +7,13 @@
   <title>Create</title>
   <link rel="stylesheet" href="/static/going.css">
   <link rel="stylesheet" href="/static/create.css">
+  <link rel="stylesheet" href="/static/header.css">
+  <script src="/static/header.js" type="text/javascript"></script>
+  <script src="/static/Login.js" type="text/javascript"></script>
   <script src="/static/create_roadmap.js" type="text/javascript"></script>
   <link rel="stylesheet" href="/static/roadmap.css">
 </head>
+
 
 <script>
 
@@ -17,9 +21,6 @@
     document.getElementById('stage_list').innerHTML += "🏁" + stage.name + " -> " + stage.durata + "<br>"
   }*/
 
-  function deleteStage(stage_index){
-    console.log("ciao stage da eliminare: ", stage_index)
-  }
 
   function ricercaCitta() {
     /*
@@ -91,6 +92,7 @@
 
 </script>
 
+
 <div id="info_nolog">
 
   <p>
@@ -100,7 +102,7 @@
   <h4>Torna alla home o Registrati</h4>
   </p>
 
-  
+
   <input class="pulsantiForm" type="submit" name="home" value="Home" onclick="location.href = '/'">
   <input type="submit" class="pulsantiForm" value="Registrati" onclick="location.href ='/signup'">
 
@@ -108,32 +110,83 @@
 </div>
 
 
-<body id="all_page" onload="check()">
+<body id="all_page">
 
-  <div class="header">
-    <a href="/">
-      <h1>GOING</h1>
+  <!-- INIZIO PARTE LOG LOGOUT E HEADER-->
+  <div id="log">
+    <p>
+    <h2>EFFETTUA IL LOGIN</h2>
+    </p>
 
 
-      <img class="logo_nostro" src="/storage/logo.png" alt="logo">
+    <p>
+      <label for="username"><span class="inEvidenza">Username</span>
+        <p><input type="text" name="username" id="username_login" /></p>
+      </label>
+    </p>
+    <p>
+      <label for="password"><span class="inEvidenza">Password</span>
+        <p><input type="password" name="password" id="password_login" /></p>
+      </label>
+    </p>
 
-      <p>Where you want to go, the roads you want to take</p>
-    </a>
+    <p>
+      <input class="pulsantiForm" type="submit" name="invia" value="Login" onclick="validation_login()" />
+      <input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm"
+        value="Annulla" />
+    </p>
+
+
+    <p class="noReg">
+      Non sei ancora registrato? <a href="/signup">Registrati qui</a>
+    </p>
+
   </div>
 
-  <div class="navbar">
-    <a href="/">Homepage</a>
-    <a href="/about">About</a>
-    <a href="/explore">Explore</a>
-    <a href="/create">Create</a>
-    <a href="/login" class="right">Sign Up/Login</a>
+  <div id="logout">
+    <p>
+    <h2>VUOI EFFETTUARE IL LOGOUT?</h2>
+    </p>
+
+
+    <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
+    <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
+      value="Annulla" />
 
   </div>
 
-  
+  <!--Nuovo Header-->
+  <div class="row1">
+    <div class="coloumn-headersx">
+      <div class="coloumnLogo">
+        <span><img src="/storage/logo.png" id="logo-header" /> </span>
+      </div>
+      <div class="coloumnTitolo">
+        <p> GOING</p>
+      </div>
+    </div>
+    <div class="coloumn-headerdx">
+      <div class="topnav">
+        <a id="home_header" href="/"> HOMEPAGE</a>
+        <a id="info_header" href="/info">INFO</a>
+        <a id="about_header" href="/about"> ABOUT </a>
+        <a id="explore_header" href="/explore"> EXPLORE </a>
+        <a id="create_header" href="/create"> CREATE </a>
+      </div>
+    </div>
+    <div class="topnav_image0" id="topnav_image0">
+    </div>
+    <div class="topnav_image" id="topnav_image">
+      <img id="image_topnav" src="/storage/loginTransp.png"
+        onclick="document.getElementById('log').style.display='block'" />
+    </div>
+  </div>
+  <!-- FINE PARTE LOG LOGOUT E HEADER-->
+
+
 
   <div class="contenuto" id="contenuto">
-    
+
     <br>--DA FARE--<br>
     barra ricerca città permette onclick mappa su quella citta<br>
 
@@ -230,24 +283,24 @@
 
 
                 <div class="bottom">
-                  
+
                   <div class="btn" id="submit_btn">Conferma Creazione Roadmap</div>
-                  
+
                 </div>
               </div>
-              </div>
-
-
             </div>
+
+
           </div>
         </div>
       </div>
+
 
     </div>
 
 
     <div class="container_bottom">
-      
+
 
 
 
@@ -264,7 +317,7 @@
   <div class="footer">
 
     <h4>
-      Copyright 2022 
+      Copyright 2022
     </h4>
 
     <h6>

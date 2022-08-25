@@ -139,23 +139,28 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getNumberRoadmapCreate(id) {
-        const data = await this.dao.getNumberRoadmapCreate(id);
+    async getRoadmapCreate(id) {
+        const data = await this.dao.getRoadmapCreate(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
-    async getNumberRoadmapSeguite(id) {
-        const data = await this.dao.getNumberRoadmapSeguite(id);
+    async getRoadmapSeguite(id) {
+        const data = await this.dao.getRoadmapSeguite(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
-    async getNumberRoadmapPreferite(id) {
-        const data = await this.dao.getNumberRoadmapPreferite(id);
+    async getRoadmapPreferite(id) {
+        const data = await this.dao.getRoadmapPreferite(id);
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
     async updateAvatar(id, new_avatar) {
         const data = await this.dao.updateAvatar(id, new_avatar);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
+        const data = await this.dao.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

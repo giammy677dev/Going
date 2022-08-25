@@ -65,21 +65,21 @@ class HTTPinterface {
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
-        this.app.get('/getNumberRoadmapCreate', this.getNumberRoadmapCreate.bind(this));
-        this.app.get('/getNumberRoadmapSeguite', this.getNumberRoadmapSeguite.bind(this));
-        this.app.get('/getNumberRoadmapPreferite', this.getNumberRoadmapPreferite.bind(this));
+        this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
+        this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
+        this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
-
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
 
        
 
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
-
+        this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
+    
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -211,35 +211,32 @@ class HTTPinterface {
         }
     }
 
-    async getNumberRoadmapCreate(req, res) {
+    async getRoadmapCreate(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapCreate(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapCreate(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }
 
-    async getNumberRoadmapSeguite(req, res) {
+    async getRoadmapSeguite(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapSeguite(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapSeguite(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }
 
-    async getNumberRoadmapPreferite(req, res) {
+    async getRoadmapPreferite(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.getNumberRoadmapPreferite(req.session.user_id);
-            //console.log(r)
+            const r = await this.controller.getRoadmapPreferite(req.session.user_id);
             return res.send(JSON.stringify(r));
         }
     }
 
     async getPlaceInfo(req, res) {
-        if (req.session.loggedin) { // da mettere!
+        if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
-            //console.log(r)
+
             if (r.ok) 
             {
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
@@ -276,9 +273,16 @@ class HTTPinterface {
     }
 
     async updateAvatar(req, res) {
-        if (req.session.loggedin) {   
+        if (req.session.loggedin) {
             const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
             console.log(r)
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async getMarkersFromRect(req, res) {
+        if (req.session.loggedin | true) { //MOMENTANEO TRUE
+            const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
             return res.send(JSON.stringify(r));
         }
     }

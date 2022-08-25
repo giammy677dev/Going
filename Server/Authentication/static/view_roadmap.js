@@ -1,11 +1,14 @@
 var ok = false
-var id_user=null
+var id_user = null
+var id_rm=0
 window.onload = function () {
-  loading_roadmap()
   check()
+  loading_roadmap()
+  check_nw()
+  loadRecCom()
 }
 
-function check() {
+function check_nw() {
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/isLogWho', true);
@@ -17,40 +20,17 @@ function check() {
     if (r.ok == true) {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok = true
-      id_user=r.whoLog
-      //check_ut(id_user)
+      id_user = r.whoLog
+      
     }
     else if (r.ok == false) {
       ok = false
+      document.getElementById("container_funz").style.display="none"
+      document.getElementById("roadmap_funz").innerHTML="<h2"
     }
   }
   xhr.send();
 }
-
-function check_ut(id_user) {
-
-
-  console.log("mammt si pure ca dint, id: ", id_user)
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("GET", '/-recensione, valutazione, se seguita e/o preferita--', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-
-    if (r.ok == true) {
-      console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
-
-    }
-    else if (r.ok == false) {
-
-    }
-  }
-  xhr.send();
-
-}
-
 
 function loading_roadmap() {
   const queryString = window.location.search;
@@ -58,6 +38,7 @@ function loading_roadmap() {
   const id = urlParams.get('id')
 
   if (id != null && id >= 0) {
+    id_rm=id
     richiestaRoadmap(id)
   }
   else {
@@ -72,28 +53,44 @@ function richiestaRoadmap(id) {
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
-    console.log(r)
-    const result_rm = r.data.results_rm
-    const result_us = r.data.results_us
+    if (r.data === undefined) {
+      location.href = "/explore"
+    }
+    const quanti_stage = r.data.results.stages.length
+    const roadmap = r.data.roadmap
+    const user = r.data.user
+    console.log(quanti_stage)
+    console.log(roadmap)
+    console.log(user)
+    
 
-    console.log(result_rm)
-
-    console.log(result_us)
     if (r.ok == true) {
-      //if (length == 1) {
-      var day = new Date(result_rm[0].dataCreazione)
-      var month = day.getMonth() + 1;
-      document.getElementById("titolo").innerText = result_rm[0].titolo
-      document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-      document.getElementById("durata").innerText = ' ⏱ ' + result_rm[0].durataComplessiva
-      document.getElementById("citta").innerText = ' 🏙 ' + result_rm[0].localita
-      document.getElementById("utente").innerText = ' 👤 ' + result_us[0].username
-      document.getElementById("descrizione").innerText = result_rm[0].descrizione
+      if (quanti_stage < 0) {
+        location.href = "/explore"
+      }
+      else {
+        var day = new Date(roadmap.dataCreazione)
+        var month = day.getMonth() + 1;
+        document.getElementById("titolo").innerText = roadmap.titolo
+        document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
+        document.getElementById("durata").innerText = ' ⏱ ' + roadmap.durataComplessiva
+        document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
+        document.getElementById("utente").innerText = ' 👤 ' + user[0].username
+        document.getElementById("descrizione").innerText = roadmap.descrizione
+        funcCoktail(roadmap.punteggio)
 
-      funcCoktail(result_rm[0].punteggio)
-      //}
-      //else location.href = "/explore"
+        for (let i = 0; i < quanti_stage; i++) {
+          var time = roadmap.stages.reachTime
+          if (time == null) {
+            time = " "
+          }
+          document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
+          document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + roadmap.stages[i].nome + '</h4><p>' + roadmap.stages[i].indirizzo + ' con durata di sosta: ' + roadmap.stages[i].durata + '; facendo ste cose: ' + roadmap.stages[i].descrizione_st + '</p></div>'
 
+        }
+
+
+      }
     }
     else if (r.ok == false) {
       console.log(r)
@@ -102,6 +99,28 @@ function richiestaRoadmap(id) {
   }
   xhr.send()
 }
+
+function loadRecCom(){
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", '/getRecCom?id='+id_rm, true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      
+    }
+    else if (r.ok == false) {
+      
+    }
+  }
+  xhr.send();
+}
+
+
+
 function rating(value) {
   if (ok == true) {
     var points = value
@@ -189,9 +208,24 @@ function funcCoktail(punteggio) {
     counterStamp++;
   }
 }
+function saveRec() {
+  if (ok == true) {
+    console.log("Sito in costruzione: id: ", id_user)
+  }
+  else{alert("non !!!")}
+}
+function saveCom() {
+  if (ok == true) {
+    console.log("Sito in costruzione: id: ",id_user)
+  }
+  else{alert("non !!!")}
+}
+
+
+
 function forkaggio() {
   if (ok == true) {
-    alert("Sito in distruzione")
+    location.href="/create?roadmap_id="+id_rm
   }
   else { alert("non puoi passare!!") }
 }

@@ -65,12 +65,12 @@
 .topnav a {
 	line-height: 1;
 	display: inline-block;
-	text-decoration:none;
+	text-decoration: none;
 	color: rgba(255, 255, 255, 0.7);
 	font-size: 18px;
 	padding: 10px;
 	text-align: center;
-  margin-left: 30px;
+	margin-left: 30px;
 }
 
 .topnav a:hover {
@@ -99,32 +99,33 @@
 }
 
 #logout_header {
-	
+
 	margin-left: 18%;
-	
+
 }
 
 
 #logout_header:after {
 	display: none;
 }
+
 /* fine header */
 
-.button_header{
-    border: thin solid #18c9d2;
+.button_header {
+	border: thin solid #18c9d2;
 	display: inline-block;
 	transition: all ease-in-out 0.3s;
-    text-decoration: none;
+	text-decoration: none;
 }
 
 .button_header:hover {
 	background-color: #117077;
 	color: white;
 	border: thin solid white;
-    text-decoration: none;
+	text-decoration: none;
 }
 
-#topnav_image{
+#topnav_image {
 	float: left;
 	width: 10%;
 	text-align: center;
@@ -133,20 +134,20 @@
 	font-family: "Poppins", sans-serif;
 }
 
-.topnav_image img{
+.topnav_image img {
 	height: 50%;
 	margin-top: 14%;
 	border-radius: 28px;
 	cursor: pointer;
-	
+
 }
 
-.topnav_image img:hover{
+.topnav_image img:hover {
 	background-color: #141a1b;
 	box-shadow: 0px 0px 3px 2px #07b7c4;
 }
 
-#topnav_image0{
+#topnav_image0 {
 	float: left;
 	width: 5%;
 	text-align: center;
@@ -156,20 +157,20 @@
 	display: none;
 }
 
-.topnav_image0 img{
+.topnav_image0 img {
 	height: 50%;
 	margin-top: 27%;
 	border-radius: 28px;
 	cursor: pointer;
 }
 
-.topnav_image0 img:hover{
+.topnav_image0 img:hover {
 	background-color: #141a1b;
 	box-shadow: 0px 0px 3px 2px #07b7c4;
 }
 
 /*-------------------*/
-#log{
+#log {
 	font-size: 26px;
 	display: none;
 	z-index: 2;
@@ -183,9 +184,9 @@
 	font-family: "Poppins", sans-serif;
 	border: thin #d24618 solid;
 	overflow: auto;
-  }
-  
-  .pulsantiForm { 
+}
+
+.pulsantiForm {
 	font-size: 20px;
 	padding: 5px 30px;
 	margin-top: 10px;
@@ -193,24 +194,26 @@
 	cursor: pointer;
 	background-color: #a02113;
 	color: white;
-  }
-  
-  .pulsantiForm:hover{ 
+}
+
+.pulsantiForm:hover {
 	/*box-shadow: 0px 0px 10px #18d26e;*/
 	box-shadow: 0px 0px 10px white;
-  }
-  
-  input[type="text"], input[type="password"] {
+}
+
+input[type="text"],
+input[type="password"] {
 	font-size: 30px;
 	border-radius: 4px;
-  }
-  
-  input[type="text"]:focus, input[type="password"]:focus {
-	border: medium solid #d21818;
-  }
+}
 
-  
-  .noReg{
+input[type="text"]:focus,
+input[type="password"]:focus {
+	border: medium solid #d21818;
+}
+
+
+.noReg {
 	font-size: 20px;
 }
 
@@ -222,10 +225,11 @@
 	color: #fff;
 	border-bottom: 2px solid #a6290f;
 }
-  /*-------------------*/
 
-   
-  #logout {
+/*-------------------*/
+
+
+#logout {
 	display: none;
 	font-size: 26px;
 	z-index: 2;
@@ -240,4 +244,16 @@
 	font-family: "Poppins", sans-serif;
 	border: thin #d24618 solid;
 	overflow: auto;
+}
+
+/*-------------------*/
+
+
+.footer {
+	color: white;
+	margin-top: 100px;
+	padding: 20px;
+	text-align: center;
+	background-color: #00AAF8;
+
 }
