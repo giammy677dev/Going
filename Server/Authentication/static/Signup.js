@@ -25,7 +25,7 @@ function validation_registration() {
             
             if (r.ok == true) {
                 alert("Benvenuto " + username)
-                location.href = "/profile";
+                location.href = "/profile?id="+r.data.insertId;
             }
             else if (r.ok == false && r.error == "1062") {
                 alert("Username o Email già usato. Riprovare")

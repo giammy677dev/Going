@@ -23,18 +23,12 @@
         <p>
         <h2>EFFETTUA IL LOGIN</h2>
         </p>
-
-
-        <p>
-            <label for="username"><span class="inEvidenza">Username</span>
-                <p><input type="text" name="username" id="username_login" /></p>
-            </label>
-        </p>
-        <p>
-            <label for="password"><span class="inEvidenza">Password</span>
-                <p><input type="password" name="password" id="password_login" /></p>
-            </label>
-        </p>
+            
+        <p id="Response_Login"> </p>	
+      
+        <p><input type="text" name="username" id="username_login" placeholder="Username"/></p>
+      
+        <p><input type="password" name="password" id="password_login" placeholder="Password"/></p>
 
         <p>
             <input class="pulsantiForm" id="log_puls" type="submit" name="invia" value="Login" onclick="validation_login()" />
@@ -83,6 +77,7 @@
                 <div class="boxRicerca">
                     <input type="text" name="search" id="search" placeholder="Cerca Roadmap/Utenti" method="get">
                     <input type="submit" value="Ricerca" id="tastoRicerca" onclick="ricercaHome()">
+                    <p id="Response_Research"> </p>
                 </div>
                 <p class="paragrafoSocial">
                     <a title="Visita profilo Instagram" target="_blank" href="https://www.instagram.com//"><img
@@ -98,7 +93,7 @@
             <div class="split right">
 
                 <div class="pulsantiLog">
-                    <a class="windowButton" id="firstButtLog" onclick="document.getElementById('log').style.display='block'">Accedi</a>
+                    <a class="windowButton" id="firstButtLog" onclick="document.getElementById('log').style.display='block',document.getElementById('Response_Login').innerText = ''">Accedi</a>
                     <a class="windowButton" id="secondButtLog" href="/signup">Registrati</a>
                 </div>
 

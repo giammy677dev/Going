@@ -74,12 +74,9 @@ class HTTPinterface {
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
-
-       
-
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
-    
+
         // http://localhost:3000/home
         this.app.get('/home', function (req, res) {
             // If the user is loggedin
@@ -125,11 +122,12 @@ class HTTPinterface {
 
     async login(req, res) {
         const r = await this.controller.login(req.body.username, req.body.password);
-        //console.log(r)
         if (r.ok) {
             req.session.loggedin = true;
-            req.session.username = r.data.username;
             req.session.user_id = r.data.id;
+            req.session.username = r.data.username;
+            req.session.email = r.data.email
+            req.session.birthdate = r.data.birthdate;
             req.session.isAdmin = r.data.isAdmin;
             req.session.avatar = r.data.avatar;
             req.session.placeDetails = {}
@@ -139,17 +137,19 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
-    async view_roadmap(req,res){
+
+    async view_roadmap(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
         return res.sendFile(__dirname + '/static/view_roadmap.html');
     }
-    async viewrm(req,res){
+
+    async viewrm(req, res) {
         const r = await this.controller.viewRoadmap(req.query.id);
         return res.send(JSON.stringify(r));
     }
-    
+
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
@@ -205,31 +205,35 @@ class HTTPinterface {
 
 
     async getDataUser(req, res) {
-        if (req.session.loggedin) {
-            const r = await this.controller.getDataUser(req.session.user_id);
+        var element = 0;
+
+        if(req.session.user_id == req.query.id){
+            element=1;
+        }
+
+        if (req.query.id == 0) {
+            const r = await this.controller.getDataUser(req.session.user_id,element);
+            return res.send(JSON.stringify(r));
+        }
+        else {
+            const r = await this.controller.getDataUser(req.query.id,element);
             return res.send(JSON.stringify(r));
         }
     }
 
     async getRoadmapCreate(req, res) {
-        if (req.session.loggedin) {
-            const r = await this.controller.getRoadmapCreate(req.session.user_id);
-            return res.send(JSON.stringify(r));
-        }
+        const r = await this.controller.getRoadmapCreate(req.query.id,req.session.user_id);
+        return res.send(JSON.stringify(r));
     }
 
     async getRoadmapSeguite(req, res) {
-        if (req.session.loggedin) {
-            const r = await this.controller.getRoadmapSeguite(req.session.user_id);
-            return res.send(JSON.stringify(r));
-        }
+        const r = await this.controller.getRoadmapSeguite(req.query.id);
+        return res.send(JSON.stringify(r));
     }
 
     async getRoadmapPreferite(req, res) {
-        if (req.session.loggedin) {
-            const r = await this.controller.getRoadmapPreferite(req.session.user_id);
-            return res.send(JSON.stringify(r));
-        }
+        const r = await this.controller.getRoadmapPreferite(req.query.id);
+        return res.send(JSON.stringify(r));
     }
 
     async getPlaceInfo(req, res) {
@@ -237,8 +241,7 @@ class HTTPinterface {
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
 
-            if (r.ok) 
-            {
+            if (r.ok) {
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
             }
 
@@ -264,8 +267,7 @@ class HTTPinterface {
     async getRoute(req, res) {
         if (req.session.loggedin || true) { // da mettere!
             const r = await this.controller.getRoute(req.body.origin, req.body.destination, req.body.travelMode);
-            if (r.ok) 
-            { 
+            if (r.ok) {
                 req.session.distanceDetails[req.body.origin + "|" + req.body.destination] = r.data;
             }
             return res.send(JSON.stringify(r));
@@ -302,9 +304,8 @@ class HTTPinterface {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
-    
-    async main_page(req, res)
-    {
+
+    async main_page(req, res) {
         if (req.user) {
             console.log('user session is alive')
         }
@@ -343,10 +344,10 @@ class HTTPinterface {
         if (req.session.loggedin !== undefined & req.session.loggedin == true) {
             return res.sendFile(__dirname + '/static/create.html');
             console.log('user session is alive')
-        }else{
+        } else {
             return res.sendFile(__dirname + '/static/create.html');
         }
-        
+
     }
 
     async signup_page(req, res) {
