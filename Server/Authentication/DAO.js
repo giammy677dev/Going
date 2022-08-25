@@ -1,15 +1,21 @@
 var mysql = require('mysql2/promise');
 const config = require('./config.js');
+const fs = require('fs');
+const path = require('path');
+
 
 class DAO {
     async connect() {
         try {
             var connection = await mysql.createConnection({
-                host: config.host,
-                user: config.user,
-                password: config.password,
+                host: config.hostDB,
+                user: config.userDB,
+                password: config.passwordDB,
                 database: config.database,
-                port: 3306
+                //port: 3306
+                ssl: {
+                    ca: fs.readFileSync(path.resolve(__dirname, config.ca))
+                }
             });
             return connection;
         } catch (err) {
@@ -22,22 +28,22 @@ class DAO {
 
             var connection = await this.connect();
             var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
-            
-            var result_stages= await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
-           
-            
+
+            var result_stages = await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
+
+
             var id_utente = result_rm[0][0].utenteRegistrato_id
-          
-        
-            
+
+
+
             var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
-      
 
 
-            var result=result_rm[0][0]
-            result.stages=result_stages[0]
-            console.log("res totale: ",result)
-            return [true, 0, { roadmap: result, user: result_us[0]}];
+
+            var result = result_rm[0][0]
+            result.stages = result_stages[0]
+            console.log("res totale: ", result)
+            return [true, 0, { roadmap: result, user: result_us[0] }];
         }
         catch (error) {
             return [false, error.errno];
