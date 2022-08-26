@@ -78,8 +78,8 @@ class HTTPinterface {
         this.app.get('/allLoggedRoadmap',this.allLoggedRoadmap.bind(this));
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
-        this.app.post('/setRecensione', this.setCommento.bind(this));
-        this.app.post('/updateRecensione', this.updateCommento.bind(this));
+        this.app.post('/setRecensione', this.setRecensione.bind(this));
+        this.app.post('/updateRecensione', this.updateRecensione.bind(this));
 
     
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));

@@ -326,6 +326,7 @@ class DAO {
 
             var connection = await this.connect();
             var res = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
+            console.log(res)
             return [true, 0, res[0]];
 
         }

@@ -486,7 +486,7 @@ a.boxclose:hover {
 }
 
 .btn {
-  width: 200px;
+  width: fit-content;
   height: 35px;
   mix-blend-mode: normal;
   cursor: pointer;
@@ -504,6 +504,8 @@ a.boxclose:hover {
   margin-bottom: 5px;
   transition: 0.3s;
   background: #00AAF8;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .btn:hover {

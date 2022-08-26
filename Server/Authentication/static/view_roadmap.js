@@ -3,7 +3,7 @@ var id_user = null
 var id_rm = 0
 var insert_com = 1
 var insert_rec = 1
-
+var points = 0
 window.onload = function () {
   check()
   loading_roadmap()
@@ -53,7 +53,7 @@ function richiestaRoadmap(id) {
         var month = day.getMonth() + 1;
 
         var minuti = Math.round(roadmap.durata / 60)
-         
+
         document.getElementById("titolo").innerText = roadmap.titolo
         document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
         document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
@@ -61,8 +61,9 @@ function richiestaRoadmap(id) {
         document.getElementById("utente").innerText = ' 👤 ' + user[0].username
         document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
         document.getElementById("descrizione").innerText = roadmap.descrizione
-        if(roadmap.punteggio!=null){
-          funcCoktail(roadmap.punteggio)
+        if (roadmap.punteggio != null) {
+          const html_cock = cocksPrint(roadmap.punteggio, 35)
+          document.getElementById("rating").innerHTML += html_cock
         }
         for (let i = 0; i < quanti_stage; i++) {
           var time = roadmap.stages[i].reachTime
@@ -123,24 +124,33 @@ function loadLoggedRoad(id_user) {
     if (r.ok == true) {
       if (chk_rec == 1) {
         const rec = r.data.results_rec[0]
-
-        document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione o cambia solo la tua Valutazione";
+        insert_rec = 0
+        document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
         const rating = rec.valutazione
-        const html_cock = cocksPrint(rating)
-        document.getElementById("pulsantirec").innerHTML += html_cock
-
-
+        points=rating
+        const html_cock = cocksPrint(rating, 50)
+        document.getElementById("cocks").innerHTML = html_cock
+        var elements = document.getElementById('cocks').children;
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].setAttribute("id", i)
+          elements[i].setAttribute("onclick", "rating(" + i + ")")
+        }
+        document.getElementById('cocks').setAttribute("disabled", "disabled")
         if (rec.opinione != null) {
           document.getElementById("lab_rec").innerHTML = "La tua recensione!"
-          document.getElementById("us_rec").setAttribute("value", rec.opinione)
+          document.getElementById("us_rec").innerText = rec.opinione
           document.getElementById("us_rec").setAttribute("disabled", "disabled")
           document.getElementById("save_recbtn").setAttribute("onclick", "abilitaRec()");
         }
       }
+      if (chk_rec == 0) {
+        const html_cock = '<img id="0" onclick="rating(0)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="1" onclick="rating(1)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="2" onclick="rating(2)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="3" onclick="rating(3)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="4" onclick="rating(4)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;">'
+        document.getElementById("cocks").innerHTML = html_cock
+      }
 
       if (chk_com == 1) {
         const com = r.data.results_com[0]
-
+        insert_com= 0
         document.getElementById("save_combtn").innerHTML = "Modifica commento";
         document.getElementById("save_combtn").setAttribute("onclick", "abilitaCom()");
         document.getElementById("lab_com").innerHTML = "Il tuo commento!"
@@ -161,13 +171,12 @@ function abilitaRec() {
   document.getElementById("us_rec").removeAttribute("disabled")
   document.getElementById("save_recbtn").innerHTML = "Salva Valutazione e/o opinione";
   document.getElementById("save_recbtn").setAttribute("onclick", "saveRec()");
-  insert_rec = 0
+  
 }
 function abilitaCom() {
   document.getElementById("us_com").removeAttribute("disabled")
   document.getElementById("save_combtn").innerHTML = "Salva Commento";
   document.getElementById("save_combtn").setAttribute("onclick", "saveCom()");
-  insert_com = 0
 }
 
 function loadRecCom() {
@@ -189,7 +198,7 @@ function loadRecCom() {
           var day = new Date(recensioni[i].dataPubblicazione)
           var month = day.getMonth() + 1;
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const cocksHtml = cocksPrint(recensioni[i].valutazione)
+          const cocksHtml = cocksPrint(recensioni[i].valutazione, 25)
           var opHtml = recensioni[i].opinione
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
@@ -227,14 +236,14 @@ function loadRecCom() {
   xhr.send();
 }
 
-function cocksPrint(punteggio) {
+function cocksPrint(punteggio, grandezza) {
   /* prendo tutto il numero intero e stampo i cock pieni
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
 
-  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
+  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
+  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
+  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
   var html_globale = " "
   var counterStamp = 0;
   if (Number.isInteger(punteggio)) {
@@ -267,10 +276,14 @@ function cocksPrint(punteggio) {
 }
 
 function rating(value) {
-
-  var points = value
-  //insert in tabella con id utente per la valutazione
-  alert("Punteggio: " + points)
+  points = value + 1
+  const html_cock = cocksPrint(points, 50)
+  document.getElementById("cocks").innerHTML = html_cock
+  var elements = document.getElementById('cocks').children;
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].setAttribute("id", i)
+    elements[i].setAttribute("onclick", "rating(" + i + ")")
+  }
 }
 
 function heart() {
@@ -307,110 +320,85 @@ function checked() {
   }
 
 }
-function funcCoktail(punteggio) {
-  /* prendo tutto il numero intero e stampo i cock pieni
-   verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
-   verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
-  var spazioRoadmap = document.getElementById("rating");
-  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
-  var counterStamp = 0;
-  if (Number.isInteger(punteggio)) {
-    for (var iteratorInt = 0; iteratorInt < punteggio; iteratorInt++) {
-      spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-      counterStamp++;
-    }
-  } else {
-    for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-      spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-      counterStamp++;
-    }
-    //inizio controllo sul decimale
-    const decimalStr = punteggio.toString().split('.')[1];
-    var decimal = Number("0." + decimalStr);
-    if (decimal < 0.25) {
-    } else if (decimal > 0.75) {
-      spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-      counterStamp++;
-    } else {
-      spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
-      counterStamp++;
-    }
-  }
-  while (counterStamp < 5) {
-    spazioRoadmap.insertAdjacentHTML("beforeend", html_codeVuoto);
-    counterStamp++;
-  }
-}
 function saveRec() {
 
-  opinione = document.getElementById("us_rec").value
-  if (opinione == "") {
-    opnione = "null"
-  }
-  //take valutazione !!!!!
-  valutazione = 1 ////////////
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1; //January is 0!
-  var yyyy = today.getFullYear();
-  today = yyyy + '-' + mm + '-' + dd;
-
-  if (insert_rec == 1) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("POST", '/setRecensione', true);
-    xhr.onload = function (event) {
-
-      const r = JSON.parse(event.target.responseText);
-
-      console.log(r)
-      if (r.ok == true) {
-        alert("Compliementi!!")
-        location.reload()
-      }
-      else if (r.ok == false) {
-        console.log(r)
-        alert("Problemi col db")
-      }
+  if (points > 0) {
+    var opinione = document.getElementById("us_rec").value
+    if (opinione == "") {
+      opinione = null
     }
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-      user: id_user,
-      roadmap: id_rm,
-      mod_opinione: opinione,
-      mod_valutazione: valutazione,
-      day: today
-    }));
-  }
-  if (insert_rec == 0) {
-    var xhr = new XMLHttpRequest();
+    var valutazione = points
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log(insert_rec)
+    console.log(today)
+    console.log(valutazione)
+    console.log(opinione)
+    console.log(id_rm)
+    console.log(id_user)
 
-    xhr.open("POST", '/updateRecensione', true);
-    xhr.onload = function (event) {
 
-      const r = JSON.parse(event.target.responseText);
+    if (insert_rec == 1) {
+      var xhr = new XMLHttpRequest();
 
-      console.log(r)
-      if (r.ok == true) {
-        alert("Compliementi!!")
-        location.reload()
-      }
-      else if (r.ok == false) {
+      xhr.open("POST", '/setRecensione', true);
+      xhr.onload = function (event) {
+
+        const r = JSON.parse(event.target.responseText);
+
         console.log(r)
-        alert("Problemi col db")
+        if (r.ok == true) {
+          alert("Compliementi!!")
+          location.reload()
+        }
+        else if (r.ok == false) {
+          console.log(r)
+          alert("Problemi col db")
+        }
       }
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        user: id_user,
+        roadmap: id_rm,
+        mod_opinione: opinione,
+        mod_valutazione: valutazione,
+        day: today
+      }));
     }
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-      user: id_user,
-      roadmap: id_rm,
-      mod_opinione: opinione,
-      mod_valutazione: valutazione,
-      day: today
-    }));
+    if (insert_rec == 0) {
+      var xhr = new XMLHttpRequest();
 
+      xhr.open("POST", '/updateRecensione', true);
+      xhr.onload = function (event) {
+
+        const r = JSON.parse(event.target.responseText);
+
+        console.log(r)
+        if (r.ok == true) {
+          alert("Compliementi!!")
+          location.reload()
+        }
+        else if (r.ok == false) {
+          console.log(r)
+          alert("Problemi col db")
+        }
+      }
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        user: id_user,
+        roadmap: id_rm,
+        mod_opinione: opinione,
+        mod_valutazione: valutazione,
+        day: today
+      }));
+
+    }
+  }
+  else {
+    alert("nooooooooo")
   }
 }
 function saveCom() {

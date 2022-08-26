@@ -166,24 +166,21 @@ class RequestController {
         }
     }
     async setRecensione(user, roadmap, mod_op,mod_val, day) {
-        if (!roadmap || !user || !user || !mod_com || !mod_val|| !day ) {
+        if (!roadmap || !user || !user || !mod_val|| !day ) {
 
             return { ok: false, error: -4, data: ''  }
         }
         else {
             const data = await this.dao.setRecensione(user, roadmap, mod_op,mod_val, day);
+            
             return { ok: true, error: data[1], data: data[2] };
         }
     }
     async updateRecensione(user, roadmap, mod_op,mod_val, day) {
-        if (!roadmap || !user || !user || !mod_com || !mod_val|| !day ) {
-
-            return { ok: false, error: -4, data: ''  }
-        }
-        else {
+       
             const data = await this.dao.updateRecensione(user, roadmap, mod_op,mod_val, day);
             return { ok: true, error: data[1], data: data[2] };
-        }
+        
     }
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
