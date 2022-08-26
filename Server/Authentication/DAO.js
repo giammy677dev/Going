@@ -14,7 +14,7 @@ class DAO {
                 database: config.database,
                 //port: 3306
                 ssl: {
-                    ca: fs.readFileSync(path.resolve(__dirname+"/ca", config.ca))
+                    ca: fs.readFileSync(path.resolve(__dirname + "/ca", config.ca))
                 }
             });
             return connection;
@@ -40,23 +40,23 @@ class DAO {
 
 
 
-            var result=result_rm[0][0]
-            result.stages=result_stages[0]
-            return [true, 0, { roadmap: result, user: result_us[0]}];
+            var result = result_rm[0][0]
+            result.stages = result_stages[0]
+            return [true, 0, { roadmap: result, user: result_us[0] }];
 
         }
         catch (error) {
             return [false, error.errno];
         }
     }
-    async getRecCom(id){
+    async getRecCom(id) {
         try {
-          
+
             var connection = await this.connect();
             var result_rec = await connection.query('select idRecensione,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
             var result_comm = await connection.query('select idCommento,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
-            
-            return [true, 0, { recensioni:result_rec[0] , commenti: result_comm[0]}];
+
+            return [true, 0, { recensioni: result_rec[0], commenti: result_comm[0] }];
         }
         catch (error) {
             return [false, error.errno];
@@ -259,9 +259,78 @@ class DAO {
             var connection = await this.connect();
             let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
             let results = selection[0];
+
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
+        }
+    }
+    async allLoggedRoadmap(id) {
+        try {
+
+            var connection = await this.connect();
+            var result_rec = await connection.query('select idRecensione,valutazione,opinione,dataPubblicazione from recensione where idUtenteRegistrato=?', [id])
+            var result_com = await connection.query('select idCommento,testo,dataPubblicazione from commento where idUtenteRegistrato=?', [id])
+            //query per vedere se preferita o seguita, quindi due tabelle, ancora non fatte
+            console.log("result_com: ", result_com[0])
+            console.log("result_com length: ", result_com[0].length)
+
+            console.log("result_rec: ", result_rec[0])
+            console.log("result_rec length: ", result_rec[0].length)
+
+
+            return [true, 0, { results_rec: result_rec[0], results_com: result_com[0] }];
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async setCommento(user, roadmap, mod_com, day) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user, roadmap, mod_com, day])
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async setRecensione(user, roadmap, mod_op, mod_valutazione, day) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async updateCommento(user, roadmap, mod_com, day) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idUtenteRegistrato=? and idRoadmap=?', [mod_com, day, user, roadmap])
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async updateRecensione(user, roadmap, mod_op, mod_valutazione, day) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
         }
     }
 
