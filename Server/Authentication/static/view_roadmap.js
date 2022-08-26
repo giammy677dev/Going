@@ -51,11 +51,13 @@ function richiestaRoadmap(id) {
       else {
         var day = new Date(roadmap.dataCreazione)
         var month = day.getMonth() + 1;
+        var minuti=roadmap.durata/60
         document.getElementById("titolo").innerText = roadmap.titolo
         document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-        document.getElementById("durata").innerText = ' ⏱ ' + roadmap.durataComplessiva
+        document.getElementById("durata").innerText = ' ⏱ ' + minuti +' minuti'
         document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
         document.getElementById("utente").innerText = ' 👤 ' + user[0].username
+        document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza+' metri'
         document.getElementById("descrizione").innerText = roadmap.descrizione
         funcCoktail(roadmap.punteggio)
 
