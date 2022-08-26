@@ -51,16 +51,19 @@ function richiestaRoadmap(id) {
       else {
         var day = new Date(roadmap.dataCreazione)
         var month = day.getMonth() + 1;
-        var minuti=roadmap.durata/60
+
+        var minuti = Math.round(roadmap.durata / 60)
+         
         document.getElementById("titolo").innerText = roadmap.titolo
         document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-        document.getElementById("durata").innerText = ' ⏱ ' + minuti +' minuti'
+        document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
         document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
         document.getElementById("utente").innerText = ' 👤 ' + user[0].username
-        document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza+' metri'
+        document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
         document.getElementById("descrizione").innerText = roadmap.descrizione
-        funcCoktail(roadmap.punteggio)
-
+        if(roadmap.punteggio!=null){
+          funcCoktail(roadmap.punteggio)
+        }
         for (let i = 0; i < quanti_stage; i++) {
           var time = roadmap.stages[i].reachTime
           if (time == null) {
@@ -341,13 +344,13 @@ function funcCoktail(punteggio) {
   }
 }
 function saveRec() {
-  
+
   opinione = document.getElementById("us_rec").value
-  if(opinione==""){
-    opnione="null"
+  if (opinione == "") {
+    opnione = "null"
   }
   //take valutazione !!!!!
-  valutazione=1 ////////////
+  valutazione = 1 ////////////
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth() + 1; //January is 0!
@@ -381,7 +384,7 @@ function saveRec() {
       day: today
     }));
   }
-  if (insert_rec== 0) {
+  if (insert_rec == 0) {
     var xhr = new XMLHttpRequest();
 
     xhr.open("POST", '/updateRecensione', true);
