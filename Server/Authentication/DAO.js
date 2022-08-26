@@ -124,11 +124,11 @@ class DAO {
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 0, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto, stored_stage.localita]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 0, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stored_stage.website, stored_stage.foto, stored_stage.localita]);
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL,stored_stage.localita]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL,stored_stage.localita]);
                 }
             } catch (error) {
                 console.log(error)
@@ -176,7 +176,7 @@ class DAO {
             var connection = await this.connect();
 
             // Execute SQL query that'll select the account from the database based on the specified username and password
-            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,localita, nome as name,descrizione_st,website,fotoID as foto FROM stage WHERE placeId = ?', [placeID]);
+            let selection = await connection.query('SELECT placeId,latitudine,longitudine,indirizzo as formatted_address,localita, nome as name,website,fotoID as foto FROM stage WHERE placeId = ?', [placeID]);
             let results = selection[0];
 
             // If the account exists

@@ -425,6 +425,7 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
+        //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
         return res.sendFile(__dirname + '/static/Profile.html');
     }
 

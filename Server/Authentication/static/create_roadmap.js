@@ -1,15 +1,18 @@
-var user_id = 0
 
 window.onload = function () {
-    check_now()
+    //result = check_now();
     check()
+    initMap();
 };
+
+document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
 
 var map;
 let customMarker = './storage/marker.png'
 var db_markers = {};
+var local_db_markers = {}; //user aggiunge markers che poi non si sa se submitta con roadmap.
 var stages_list = []; //lista degli stage
-var markers = [];
+var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
 var circles = [];
 var distance_renderers = [];
 var lastPlaceId = 0;
@@ -18,30 +21,18 @@ var stage_index = 0;
 var infoWindow;
 
 const minZoomForExNovoMarkers = 15;
-var indirizzo
+var indirizzo;
 
-function check_now() {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("GET", '/isLogWho', true);
-    xhr.onload = function (event) {
-
-        const r = JSON.parse(event.target.responseText);
-
-
-        if (r.ok == true) {
-            console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
-            user_id = r.whoLog
-        }
-        else if (r.ok == false) {
-            document.getElementById('contenuto').style.filter = 'blur(10px)'
-            document.getElementById('all_page').style.overflow = 'hidden'
-            document.getElementById('all_page').style.height = '100%'
-            document.getElementById('all_page').style.margin = '0'
-            document.getElementById('info_nolog').style.display = 'block'
-        }
+function blurIfNotLoggedIn(user_id) {
+    console.log(user_id)
+    if (user_id == 0) {
+        document.getElementById('contenuto').style.filter = 'blur(10px)'
+        document.getElementById('all_page').style.overflow = 'hidden'
+        document.getElementById('all_page').style.height = '100%'
+        document.getElementById('all_page').style.margin = '0'
+        document.getElementById('info_nolog').style.display = 'block'
+        document.getElementById('contenuto').style['pointer-events'] = 'none';
     }
-    xhr.send();
 }
 
 function deleteStage(toDeleteIndex) {
@@ -72,9 +63,9 @@ function deleteStage(toDeleteIndex) {
         distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
         lastPlaceId = stages_list[toDeleteIndex - 1].placeId
         //si calcola distanza tra A->C
-        backendDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
+        requestDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
     }
-    console.log(distance_renderers)
+
     stages_list.splice(toDeleteIndex, 1); //4) eliminare istanza nella stages_list
     //tolto un elemento!
     var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
@@ -90,12 +81,12 @@ function deleteStage(toDeleteIndex) {
     for (var i = 0; i < remainingCards; i++) {
         var oldIndex = toDeleteIndex + i + 1;
         var newIndex = toDeleteIndex + i;
-        console.log(oldIndex, "diventa", newIndex)
+
         var element = document.getElementById("card" + oldIndex);
         var line = document.getElementById("line" + oldIndex);
         var dot = document.getElementById("dot" + oldIndex);
         var dur = document.getElementById("durata" + oldIndex);
-        console.log(dot)
+
         dur.id = "durata" + newIndex;
 
         element.id = "card" + newIndex;
@@ -105,96 +96,12 @@ function deleteStage(toDeleteIndex) {
         dot.id = "dot" + newIndex;
         //così se scriviamo qualcosa l'istanza è preservata
     }
-    console.log(toDeleteIndex)
-
     stage_index--;
-
-    console.log(stages_list)
 }
 
-
-function renderDistances(stages) {
-    var stage = stages[0];
-    var routeHelper;
-    var bounds = new google.maps.LatLngBounds();
-
-    for (var i = 0; i < stages.length; i++) {
-        stage = stages[i];
-        const latLng = new google.maps.LatLng(stage.latitudine, stage.longitudine);
-        circles[i] = new google.maps.Circle({
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35,
-            map,
-            center: latLng,
-            radius: 30,
-            clickable: false
-        });
-        bounds.extend(latLng);
-
-        if (i != 0) {
-            routeHelper = { origin: stages[i - 1].placeId, destination: stages[i].placeId, travelMode: roadmap.travelMode }
-            //TRAVEL MODE dipende dal campo roadmap.travelMode ancora da aggiungere nel db
-            distance_renderers[i-1] = new google.maps.DirectionsRenderer();
-            distance_renderers[i-1].setOptions({
-                directions: {
-                    routes: typecastRoutes(stage.route.routes),
-                    request: routeHelper
-                },
-                suppressMarkers: true,
-                map: map,
-                preserveViewport: true
-            });
-
-        }
-        drawNewStage(i,stage);
-        
-    }
-
-    map.setCenter(bounds.getCenter());
-    map.fitBounds(bounds)
-    //map.setZoom(map.getZoom() - 1);  //edge marker case cover
-
-}
-
-
-function richiestaRoadmap(id) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/viewrm?id=' + id, true);
-
-    xhr.onload = function (event) {
-        const r = JSON.parse(event.target.responseText);
-        if (r.ok) {
-            roadmap = r.data.roadmap
-            stage_index = roadmap.stages.length;
-            stages_list = roadmap.stages;
-            document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;
-            //map.setCenter(latLng);
-            map.setZoom(16);
-            renderDistances(stages_list);
-        }
-    }
-    xhr.send()
-}
-
-function loading_roadmap() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get('roadmap_id')
-
-    if (id != null && id >= 0) {
-        id_rm = id
-        richiestaRoadmap(id)
-    }
-}
 
 function initMap() {
-
-    //qua bisogna far richiesta dellle info della roadmap
-
-    loading_roadmap(); //loads roadmap if roadmap_id != null
+    loadFromForkIfNeeded(); //loads roadmap if roadmap_id != null
 
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
@@ -215,6 +122,7 @@ function initMap() {
 
 
     document.getElementById("submit_btn").addEventListener('click', function () {
+        console.log("PRESSED BUTTON!")
         submitRoadmap(stages_list);
     });
 
@@ -242,124 +150,7 @@ function initMap() {
     new ClickEventHandler(map, origin);
 }
 
-function drawExNovoStages() {
-    console.log("UPDATE MARKERS!")
-
-    var boxMinLat = map.getBounds().getSouthWest().lat()
-    var boxMaxLat = map.getBounds().getNorthEast().lat()
-    var boxMinLng = map.getBounds().getSouthWest().lng()
-    var boxMaxLng = map.getBounds().getNorthEast().lng()
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", '/getMarkersFromRect', true);
-    xhr.onload = function (event) {
-        const r = JSON.parse(event.target.responseText);
-        if (r.ok) {
-            Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                db_markers[key][1] = 0;
-            });
-
-            for (var i = 0; i < r.data.length; i++) {
-                const placeId = r.data[i].placeId;
-                if (db_markers[placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
-                    const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
-
-                    let marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map,
-                        icon: customMarker,
-                        visible: false,
-                    });
-
-                    db_markers[placeId] = [marker, 1]; //flag 1 = deve rimanere
-
-                    //add event on click
-                    db_markers[placeId][0].addListener("click", (e) => {
-                        ClickEventHandler.prototype.openAddBox(placeId, latLng);
-                    });
-                }
-                db_markers[placeId][1] = 1;
-
-                if (db_markers[placeId][0].visible == false) {
-                    db_markers[placeId][0].setVisible(true);
-                }
-            }
-
-            Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                if (db_markers[key][1] == 0) {
-                    db_markers[key][0].setMap(null);
-                    delete db_markers[key] //remove element from dict too
-
-                } else {
-                    db_markers[key][0].setVisible(true);
-                }
-            });
-        }
-    }
-
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        centerLatInf: boxMinLat,
-        centerLatSup: boxMaxLat,
-        centerLngInf: boxMinLng,
-        centerLngSup: boxMaxLng
-    }));
-}
-
-
-function asPath(encodedPolyObject) {
-    return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
-}
-
-function asLatLng(latLngObject) {
-    return new google.maps.LatLng(latLngObject.lat, latLngObject.lng);
-}
-
-function asBounds(boundsObject) {
-    return new google.maps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast));
-}
-
-function typecastRoutes(routes) {
-    routes.forEach(function (route) {
-        route.bounds = asBounds(route.bounds);
-        // I don't think `overview_path` is used but it exists on the
-        // response of DirectionsService.route()
-        routes.overview_path = asPath(route.overview_polyline);
-
-        route.legs.forEach(function (leg) {
-            leg.start_location = asLatLng(leg.start_location);
-            leg.end_location = asLatLng(leg.end_location);
-
-            leg.steps.forEach(function (step) {
-                step.start_location = asLatLng(step.start_location);
-                step.end_location = asLatLng(step.end_location);
-                step.path = asPath(step.polyline);
-            });
-        });
-    });
-    return routes;
-}
-
-function getPlaceDetails(placeId) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
-    xhr.onload = function (event) {
-        const r = JSON.parse(event.target.responseText);
-        if (r.ok == true) {
-            console.log(r.data)
-        }
-        else if (r.ok == false) {
-            console.log("nodi non trovati")
-            return {}
-        }
-    }
-    xhr.send();
-}
-
-function backendDistance(marker1, marker2) {
-
-    //CI DEVE ESSERE UNA MODALITA' PER OGNI COPPIA DI NODI?
-
+function requestDistance(marker1, marker2) {
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
         selectedMode = document.getElementById("driving_mode").value;
@@ -412,41 +203,15 @@ function backendDistance(marker1, marker2) {
     xhr.send(JSON.stringify(route));
 }
 
-function isIconMouseEvent(e) {
-    return "placeId" in e;
-}
-
-function drawNewStage(stage_index, stage) {
-    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
-}
 
 function submitRoadmap(stages_list) {
-    var title, description, allTime
-    allTime = parseInt(document.getElementById("somma_totale").innerText)
-    var isPub = 1
+    var isPub = 1;
     var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
-    console.log("visibilità: ", visibilita)
     if (visibilita == "Privata") {
         isPub = 0
     }
-    console.log("isPub: ", isPub)
-
-
-    title = document.getElementById("titolo").value
-    console.log("titolo: ", title);
-    description = document.getElementById("descrizione").value
-    console.log("descrizione: ", description);
-
-    console.log("lenght rm: ", stages_list.length);
-    console.log(stages_list)
-
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    console.log(today)
+    var title = document.getElementById("titolo").value
+    var description = document.getElementById("descrizione").value
 
     if (title == "") {
         alert("Titolo vuoto")
@@ -463,7 +228,7 @@ function submitRoadmap(stages_list) {
 
             if (r.ok == true) {
                 alert("creata la stages_list")
-                location.href = '/profile'
+                //location.href = '/profile'
             }
             else if (r.ok == false) {
                 alert("Problemi creazione stages_list")
@@ -475,7 +240,6 @@ function submitRoadmap(stages_list) {
             titolo: title,
             descrizione: description,
             isPublic: isPub,
-            localita: stages_list[0].citta,
             stages: stages_list
         }));
     }
@@ -492,7 +256,6 @@ var ClickEventHandler = (function () {
         this.infowindowContent = document.getElementById("infowindow-content");
         //this.infowindow.setContent(this.infowindowContent);
         infoWindow.setContent("placeholder");
-        // getExNovoStages(this);
         // Listen for clicks on the map
 
         this.map.addListener("click", this.handleClick.bind(this));
@@ -501,7 +264,7 @@ var ClickEventHandler = (function () {
         console.log("You clicked on: " + event.latLng);
         console.log(event)
         // If the event has a placeId, use it.
-        if (isIconMouseEvent(event)) { //POI
+        if ("placeId" in event) { //POI
             console.log(event)
             console.log("You clicked on place:" + event.placeId);
             // Calling e.stop() on the event prevents the default info window from
@@ -518,7 +281,6 @@ var ClickEventHandler = (function () {
         }
     };
     ClickEventHandler.prototype.openCreateBox = function (latLng) {
-        //var me = this;
         var stage = {}
         var to_send_stage = {}
 
@@ -541,70 +303,58 @@ var ClickEventHandler = (function () {
                 return {}
             }
         }
-
         xhr.send();
+
+        //costruzione sottopagina per inserimento nodo ex novo. qui va fatto la customizzazione grafica.
+        //volendo al posto di tutto ciò si può importare una pagina HTML pronta da fare a parte.
+
         var StageTitle = document.createElement('p');
         StageTitle.textContent = 'Stai creando un nuovo stage! Descrivilo:';
-        spn.appendChild(StageTitle);
 
         var StageNameLabel = document.createElement('p');
         StageNameLabel.textContent = 'NOME:';
-        spn.appendChild(StageNameLabel);
+
         var StageName = document.createElement('input');
         StageName.id = "stage-name";
-        spn.appendChild(StageName);
 
         var StagePhotoLabel = document.createElement('p');
         StagePhotoLabel.textContent = 'PHOTO:';
-        spn.appendChild(StagePhotoLabel);
+
         var PhotoFile = document.createElement('input');
         PhotoFile.type = "file"
         PhotoFile.id = "stage-photo";
-        spn.appendChild(PhotoFile);
 
-        stage.place_id = -1;
         stage.latLng = latLng;
 
         var WebsiteLabel = document.createElement('p');
         WebsiteLabel.textContent = "website"
-        spn.appendChild(WebsiteLabel);
+
         var WebsiteElement = document.createElement('input');
         WebsiteElement.id = "website";
-        spn.appendChild(WebsiteElement);
 
         var durataShow = document.createElement('p');
         durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
-        spn.appendChild(durataShow);
+
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
-        spn.appendChild(durataElement);
 
-        var desLabel = document.createElement('p');
-        desLabel.textContent = "descrizione (opzionale)"
-        spn.appendChild(desLabel);
-
-        var descrElement = document.createElement('input');
-        descrElement.id = "descrizione";
-        descrElement.value = " "
-        spn.appendChild(descrElement);
 
         var inputElement = document.createElement('input');
         inputElement.type = "submit"
         inputElement.value = "Aggiungi stage"
+
+        spn.appendChild(StageTitle);
+        spn.appendChild(StageNameLabel);
+        spn.appendChild(StageName);
+        spn.appendChild(StagePhotoLabel);
+        spn.appendChild(PhotoFile);
+        spn.appendChild(WebsiteLabel);
+        spn.appendChild(WebsiteElement);
+        spn.appendChild(durataShow);
+        spn.appendChild(durataElement);
         spn.appendChild(inputElement);
 
-        markers[stage_index] = new google.maps.Marker({
-            position: latLng,
-            map: this.map,
-            title: "#",
-            visible: false,
-            icon: customMarker
-        });
-
         inputElement.addEventListener('click', function () {
-            markers[stage_index].setVisible(false);
-            markers[stage_index].setTitle(StageName.value)
-
             circles[stage_index] = new google.maps.Circle({
                 strokeColor: "#FF0000",
                 strokeOpacity: 0.8,
@@ -616,38 +366,47 @@ var ClickEventHandler = (function () {
                 radius: 3,
             });
 
+            local_db_markers[placeId] = new google.maps.Marker({ //qua va aggiustato l'evento
+                position: latLng,
+                map: map,
+                icon: customMarker,
+                visible: true,
+            });
+
+            local_db_markers[placeId].addListener("click", (e) => {
+                ClickEventHandler.prototype.openAddBox(placeId, latLng);
+            });
+
 
             /*Nodo ex novo*/
-            to_send_stage.indirizzo = indirizzo
             stage.indirizzo = indirizzo
             stage.index = stage_index
             stage.nome = StageName.value;
             stage.durata = parseInt(durataElement.value);
-            stage.descrizione = descrElement.value
             stage.placeId = placeId;
             stage.fotoURL = PhotoFile.value;
             stage.latitudine = latLng.lat();
             stage.longitudine = latLng.lng();
+
+            stages_info[placeId] = stage;
+
             to_send_stage.placeId = stage.placeId;
-            to_send_stage.descrizione = stage.descrizione;
             to_send_stage.titolo = stage.titolo;
             to_send_stage.fotoURL = stage.fotoURL;
             to_send_stage.website = stage.website;
             to_send_stage.durata = stage.durata;
             to_send_stage.nome = stage.nome;
-            to_send_stage.latitudine = latLng.lat();
-            to_send_stage.longitudine = latLng.lng();
+            //to_send_stage.latitudine = stage.latitudine;
+            //to_send_stage.longitudine = stage.longitudine;
+
             stages_list.push(to_send_stage)
             lastPlaceId = placeId;
 
-            //addToRoadmapVisual(stage); // -1 = placeholder di UUID da fare
-
             drawNewStage(stage_index, stage);
 
-
             if (stages_list.length >= 2) {
-                //calculateDistance(stages_list[stage_index - 1], stage);
-                backendDistance(stages_list[stage_index - 1], stage);
+                //requestDistance(stages_list[stage_index - 1], stage);
+                requestDistance(stages_list[stage_index - 1], stage);
             }
 
             stage_index++;
@@ -656,17 +415,8 @@ var ClickEventHandler = (function () {
             prec = stage.durata + prec
             document.getElementById("somma_totale").innerText = prec
 
-            //me.infowindow.close();
-
             infoWindow.close();
         });
-
-        /*me.infowindow = new google.maps.InfoWindow({
-            content: spn
-        });
-
-        me.infowindow.setPosition(latLng);
-        me.infowindow.open(me.map);*/
 
         infoWindow = new google.maps.InfoWindow({
             content: spn
@@ -677,12 +427,11 @@ var ClickEventHandler = (function () {
         return;
     };
     ClickEventHandler.prototype.openAddBox = function (placeId, latLng) {
-        //var me = this;
         if (lastPlaceId == placeId) { //stesso nodo due volte di fila!
             return;
         }
-        //me.infowindow.close();
         infoWindow.close();
+
 
         var stage = {}
         var to_send_stage = {}
@@ -692,26 +441,12 @@ var ClickEventHandler = (function () {
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
 
-        var desShow = document.createElement('p');
-        desShow.textContent = "descrizione (opzionale)"
-        var desElement = document.createElement('input');
-        desElement.id = "descrizone";
-        desElement.value = " "
-
         var inputElement = document.createElement('input');
         inputElement.type = "submit"
         inputElement.value = "Aggiungi stage"
 
-        markers[stage_index] = new google.maps.Marker({
-            position: latLng,
-            map: this.map,
-            title: "#",
-            visible: false
-        });
 
         inputElement.addEventListener('click', function () {
-            markers[stage_index].setVisible(false);
-            markers[stage_index].setTitle(stage.nome)
 
             circles[stage_index] = new google.maps.Circle({
                 strokeColor: "#FF0000",
@@ -726,17 +461,16 @@ var ClickEventHandler = (function () {
 
             /*Nodo gia esistente*/
             stage.durata = parseInt(durataElement.value);
-            to_send_stage.durata = stage.durata;
+
             stage.placeId = placeId;
-            to_send_stage.placeId = stage.placeId;
-            stage.descrizione = desElement.value
-            to_send_stage.descrizione = stage.descrizione;
             stage.latitudine = latLng.lat();
             stage.longitudine = latLng.lng();
-            to_send_stage.latitudine = latLng.lat();
-            to_send_stage.longitudine = latLng.lng();
 
-            console.log(stage)
+            //to_send_stage.latitudine = latLng.lat();
+            //to_send_stage.longitudine = latLng.lng();
+            to_send_stage.durata = stage.durata;
+            to_send_stage.placeId = stage.placeId;
+
             stages_list.push(to_send_stage);
             //addToRoadmapVisual(stage);
             lastPlaceId = placeId;
@@ -744,8 +478,7 @@ var ClickEventHandler = (function () {
 
 
             if (stages_list.length >= 2) {
-                //calculateDistance(stages_list[stage_index - 1], stage);
-                backendDistance(stages_list[stage_index - 1], stage);
+                requestDistance(stages_list[stage_index - 1], stage);
             }
 
             stage_index++;
@@ -762,61 +495,46 @@ var ClickEventHandler = (function () {
 
         spn.append(durataShow);
         spn.appendChild(durataElement);
-        spn.append(desShow);
-        spn.appendChild(desElement);
         spn.appendChild(inputElement);
 
-        console.log(placeId)
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
-        xhr.onload = function (event) {
-            const r = JSON.parse(event.target.responseText);
-            if (r.ok == true) {
-                var place = r.data;
-                stage.nome = place.name;
-                stage.indirizzo = place.formatted_address;
-                //stage.citta = place.address_components[2].long_name
-                if (place.website !== undefined) {
-                    stage.website = place.website;
+        if (stages_info[placeId] !== undefined) {
+            stage = stages_info[placeId]
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '/getPlaceInfo?placeId=' + placeId, true);
+            xhr.onload = function (event) {
+                const r = JSON.parse(event.target.responseText);
+                if (r.ok == true) {
+                    var place = r.data;
+                    stage.nome = place.name;
+                    stage.indirizzo = place.formatted_address;
+                    stage.citta = place.citta;
+                    if (place.website !== undefined) {
+                        stage.website = place.website;
+                    }
+                    else {
+                        stage.website = null
+                    }
+                    if (place.foto !== undefined) {
+                        stage.fotoURL = place.fotoURL
+                    }
+                    else {
+                        stage.fotoURL = null
+                    }
+                    stages_info[placeId] = stage;
                 }
-                else {
-                    stage.website = null
+                else if (r.ok == false) {
+                    console.log("nodi non trovati")
+                    return {}
                 }
-                if (place.foto !== undefined) {
-                    stage.fotoURL = place.fotoURL
-                }
-                else {
-                    stage.fotoURL = null
-                }
-
-                console.log(r.data)
             }
-            else if (r.ok == false) {
-                console.log("nodi non trovati")
-                return {}
-            }
+            xhr.send();
         }
-        xhr.send();
-
-
         infoWindow = new google.maps.InfoWindow({
             content: spn
-            //content: "Sei sicuro di voler aggiungere questo nodo? <br>DURATA: <input id=\"durata\"></input><br><button onclick=\"addToRoadmap('placeId')\" type=\"button\">AGGIUNGI</button>"
         });
-
-        /*me.infowindow = new google.maps.InfoWindow({
-            content: spn
-            //content: "Sei sicuro di voler aggiungere questo nodo? <br>DURATA: <input id=\"durata\"></input><br><button onclick=\"addToRoadmap('placeId')\" type=\"button\">AGGIUNGI</button>"
-        });*/
-
-
-        //me.infowindow.setPosition(latLng);
-        //me.infowindow.open(me.map);
         infoWindow.setPosition(latLng);
         infoWindow.open(map);
     };
     return ClickEventHandler;
 }());
-
-window.initMap = initMap;
