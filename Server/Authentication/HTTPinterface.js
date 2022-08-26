@@ -75,6 +75,11 @@ class HTTPinterface {
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
         this.app.get('/getRecCom', this.getRecCom.bind(this));
+        this.app.get('/allLoggedRoadmap',this.allLoggedRoadmap.bind(this));
+        this.app.post('/setCommento', this.setCommento.bind(this));
+        this.app.post('/updateCommento', this.updateCommento.bind(this));
+        this.app.post('/setRecensione', this.setCommento.bind(this));
+        this.app.post('/updateRecensione', this.updateCommento.bind(this));
 
     
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
@@ -152,11 +157,32 @@ class HTTPinterface {
         const r = await this.controller.viewRoadmap(req.query.id);
         return res.send(JSON.stringify(r));
     }
-    async getRecCom(req,res){
+    async allLoggedRoadmap(req,res){
+        const r = await this.controller.allLoggedRoadmap(req.query.id);
+        console.log(r)
+        return res.send(JSON.stringify(r));
+    }
+    async getRecCom(req, res) {
         const r = await this.controller.getRecCom(req.query.id);
         return res.send(JSON.stringify(r));
     }
-
+    async setCommento(req,res){
+        const r = await this.controller.setCommento(req.body.user,req.body.roadmap,req.body.mod_com,req.body.day);
+        return res.send(JSON.stringify(r))
+    }
+    async updateCommento(req,res){
+        const r = await this.controller.updateCommento(req.body.user,req.body.roadmap,req.body.mod_com,req.body.day);
+        return res.send(JSON.stringify(r))
+    }
+    async setRecensione(req,res){
+        const r = await this.controller.setRecensione(req.body.user,req.body.roadmap,req.body.mod_opinione,req.body.mod_valutazione,req.body.day);
+        return res.send(JSON.stringify(r))
+    }
+    async updateRecensione(req,res){
+        const r = await this.controller.updateRecensione(req.body.user,req.body.roadmap,req.body.mod_opnione,req.body.mod_valutazione,req.body.day);
+        return res.send(JSON.stringify(r))
+    }
+    
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
@@ -214,22 +240,25 @@ class HTTPinterface {
     async getDataUser(req, res) {
         var element = 0;
 
-        if(req.session.user_id == req.query.id){
-            element=1;
+
+        if (req.session.user_id == req.query.id) {
+            element = 1;
         }
 
         if (req.query.id == 0) {
-            const r = await this.controller.getDataUser(req.session.user_id,element);
+            const r = await this.controller.getDataUser(req.session.user_id, element);
+
             return res.send(JSON.stringify(r));
         }
         else {
-            const r = await this.controller.getDataUser(req.query.id,element);
+            const r = await this.controller.getDataUser(req.query.id, element);
+            
             return res.send(JSON.stringify(r));
         }
     }
 
     async getRoadmapCreate(req, res) {
-        const r = await this.controller.getRoadmapCreate(req.query.id,req.session.user_id);
+        const r = await this.controller.getRoadmapCreate(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
