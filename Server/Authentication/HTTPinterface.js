@@ -359,7 +359,6 @@ class HTTPinterface {
             if(req.query.roadmap_id !== undefined && req.query.roadmap_id > 0 ){
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
-            
         }
 
 

@@ -150,7 +150,7 @@ function renderDistances(stages) {
 
         }
         drawNewStage(i,stage);
-        document.getElementById("somma_totale").textContent = roadmap.durata;
+        
     }
 
     map.setCenter(bounds.getCenter());
@@ -167,10 +167,10 @@ function richiestaRoadmap(id) {
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
         if (r.ok) {
-            //cover all visible markers here: https://stackoverflow.com/questions/19304574/center-set-zoom-of-map-to-cover-all-visible-markers
             roadmap = r.data.roadmap
             stage_index = roadmap.stages.length;
             stages_list = roadmap.stages;
+            document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;
             //map.setCenter(latLng);
             map.setZoom(16);
             renderDistances(stages_list);
