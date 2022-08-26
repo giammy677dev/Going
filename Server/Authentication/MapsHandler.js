@@ -1,14 +1,14 @@
 const { Client } = require("@googlemaps/google-maps-services-js");
 
 const client = new Client({});
-const API_KEY = 'AIzaSyDkhHdG46Po1AyvEnEsk8PALxscMRpEYCs'
-const FRONT_END_KEY = 'AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8'
+const config = require('./config.js');
+
 class MapsHandler {
 
     getPhotoUrl(photo_reference) {
         const MAX_HEIGHT = 500;
         const MAX_WIDTH = 500;
-        var url = 'https://maps.googleapis.com/maps/api/place/photo?photoreference=' + photo_reference + '&sensor=false&maxheight=' + MAX_HEIGHT + '&maxwidth=' + MAX_WIDTH + '&key=' + FRONT_END_KEY
+        var url = 'https://maps.googleapis.com/maps/api/place/photo?photoreference=' + photo_reference + '&sensor=false&maxheight=' + MAX_HEIGHT + '&maxwidth=' + MAX_WIDTH + '&key=' + config.GOOGLE_MAPS_FRONTEND_API_KEY
         return url
     }
 
@@ -23,7 +23,7 @@ class MapsHandler {
                     origin: "place_id:"+placeId1,
                     destination: "place_id:"+placeId2,
                     mode: travelMode.toLowerCase(),
-                    key: API_KEY,
+                    key: config.GOOGLE_MAPS_BACKEND_API_KEY,
                     //fields:['icon'] if necessary
                 },
                 timeout: 1000, // milliseconds
@@ -44,7 +44,7 @@ class MapsHandler {
             var data_from_google = await client.placeDetails({
                 params: {
                     place_id: place_id,
-                    key: API_KEY,
+                    key: config.GOOGLE_MAPS_BACKEND_API_KEY,
                     //fields:['icon'] if necessary
                 },
                 timeout: 10000, // milliseconds. qual è il timeout di default?
@@ -76,7 +76,7 @@ class MapsHandler {
             var data_from_google = await client.geocode({
                 params: {
                     latlng:lat+","+lng,
-                    key: API_KEY,
+                    key: config.GOOGLE_MAPS_BACKEND_API_KEY,
                     //fields:['icon'] if necessary
                 },
                 timeout: 1000, // milliseconds
