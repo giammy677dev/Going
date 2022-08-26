@@ -1,4 +1,5 @@
 /* Script Verifica Password */
+var flag=0;
 
 function validation_registration() {
     var username = document.getElementById("username").value;
@@ -6,6 +7,8 @@ function validation_registration() {
     var confirm_password = document.getElementById("confirmpassword").value;
     var email = document.getElementById("email").value;
     var birthdate = document.getElementById("birthdate").value;
+
+    flag++;
 
     if (username == "" || password == "" || confirm_password =="" || email == "" || birthdate == "") {
         document.getElementsByClassName("second")[0].style.display = "block";
@@ -101,3 +104,26 @@ function validation_registration() {
     }
 
   
+    document.addEventListener('on', function(e){
+        var input = e.target;
+        if (!$.nodeName(input, 'input')) return;
+        input.checkValidity();
+        var element = $(input).parent();
+        if(input.validity.valid) {
+            element.removeClass('invalid');
+            element.parent().removeClass('invalid');
+        } else { //Remove the lines below if you don't want to automatically add
+                 // classes when they're invalid.
+            element.addClass('invalid');
+            element.parent().removeClass('invalid');
+        }
+    });
+
+    document.getElementById("username").addEventListener('focusout',userWarning);
+
+    function userWarning(){
+        if(document.getElementById("username").value==""){
+            document.getElementById("username").style.setProperty("background-color","rgba(120,55,55,0.5)");
+        }
+        
+    }
