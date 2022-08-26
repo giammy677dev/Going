@@ -1,26 +1,17 @@
 
 window.onload = function () {
-    //result = check_now();
     check()
     initMap();
+
+    
 };
 
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
 
-var map;
-let customMarker = './storage/marker.png'
-var db_markers = {};
-var local_db_markers = {}; //user aggiunge markers che poi non si sa se submitta con roadmap.
 var stages_list = []; //lista degli stage
 var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
-var circles = [];
-var distance_renderers = [];
 var lastPlaceId = 0;
 var durataComplessiva = 0;
-var stage_index = 0;
-var infoWindow;
-
-const minZoomForExNovoMarkers = 15;
 var indirizzo;
 
 function blurIfNotLoggedIn(user_id) {
@@ -99,57 +90,6 @@ function deleteStage(toDeleteIndex) {
     stage_index--;
 }
 
-
-function initMap() {
-    loadFromForkIfNeeded(); //loads roadmap if roadmap_id != null
-
-    var origin = { lat: 40.85, lng: 14.26 };
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: origin,
-        mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
-        },
-        disableDefaultUI: true,
-        mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
-        scaleControl: true,
-        zoomControl: true,
-        zoomControlOptions: {
-            style: google.maps.ZoomControlStyle.LARGE
-        },
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-
-
-    document.getElementById("submit_btn").addEventListener('click', function () {
-        console.log("PRESSED BUTTON!")
-        submitRoadmap(stages_list);
-    });
-
-    map.addListener('zoom_changed', function () {
-        var zoom = map.getZoom();
-
-        if (zoom <= minZoomForExNovoMarkers) {
-            Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                db_markers[key][0].setVisible(false);
-            });
-        }
-        else {
-            drawExNovoStages();
-        }
-    });
-
-    map.addListener('dragend', function () {
-        var zoom = map.getZoom();
-        console.log(zoom)
-        if (zoom > minZoomForExNovoMarkers) {
-            drawExNovoStages();
-        }
-    });
-
-    new ClickEventHandler(map, origin);
-}
-
 function requestDistance(marker1, marker2) {
     var selectedMode;
     if (document.getElementById("driving_mode").checked) {
@@ -203,8 +143,7 @@ function requestDistance(marker1, marker2) {
     xhr.send(JSON.stringify(route));
 }
 
-
-function submitRoadmap(stages_list) {
+function submitRoadmap() {
     var isPub = 1;
     var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
     if (visibilita == "Privata") {
@@ -366,14 +305,14 @@ var ClickEventHandler = (function () {
                 radius: 3,
             });
 
-            local_db_markers[placeId] = new google.maps.Marker({ //qua va aggiustato l'evento
+            var marker = new google.maps.Marker({ //qua va aggiustato l'evento
                 position: latLng,
                 map: map,
                 icon: customMarker,
                 visible: true,
             });
 
-            local_db_markers[placeId].addListener("click", (e) => {
+            marker.addListener("click", (e) => {
                 ClickEventHandler.prototype.openAddBox(placeId, latLng);
             });
 
