@@ -57,6 +57,9 @@ class MapsHandler {
                 data_from_google.foto = "NO"
                 data_from_google.fotoURL = null
             }
+            data_from_google.latitudine = data_from_google.geometry.location.lat;
+            data_from_google.longitudine = data_from_google.geometry.location.lng;
+            data_from_google.localita = data_from_google.address_components[2].long_name;
             return [
                 true, 0, data_from_google
             ]
@@ -79,6 +82,9 @@ class MapsHandler {
                 timeout: 1000, // milliseconds
             });
             const res = (data_from_google.data.results[0]);
+            res.latitudine = res.geometry.location.lat;
+            res.longitudine = res.geometry.location.lng;
+            res.localita = res.address_components[2].long_name;
             //console.log(res)
             return [true,0, res]
         } catch (error) {

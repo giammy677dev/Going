@@ -189,10 +189,9 @@ class HTTPinterface {
 
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
             //const user_id = req.session.id; //qua da aggiustare in login!!
-            const user_id = 1;
 
             console.log(req.session.distanceDetails)
-            const r = await this.controller.createRoadmap(user_id, req.body, req.session.placeDetails, req.session.distanceDetails);
+            const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails);
             //const 
             if (r.ok) {
                 console.log("OK ROADMAP")

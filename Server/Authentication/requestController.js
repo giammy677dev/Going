@@ -58,7 +58,12 @@ class RequestController {
             roadmap.durataComplessiva = this.calculateDuration(roadmap.stages, distance_data); //si calcola con una ulteriore chiamata a google maps
             roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
             roadmap.travelMode = distance_data[roadmap.stages[0].placeId+"|"+roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
-            roadmap.localita = "TEST";//session_data[roadmap.stages[0].placeId].formatted_address;
+            
+            console.log(session_data[roadmap.stages[0].placeId])
+            roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
+            console.log(roadmap.localita)
+            console.log(roadmap.localita)
+            console.log(roadmap.localita)
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza,user_id);
             const roadmap_id = data1[2].insertId
