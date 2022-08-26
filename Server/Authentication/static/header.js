@@ -27,7 +27,6 @@ function check() {
       document.getElementById("topnav_image0").appendChild(image);
       document.getElementById("topnav_image0").style.setProperty("display", "block");
       document.getElementById("topnav_image").style.setProperty("width", "5%");
-      document.getElementById("image_topnav").style.setProperty("margin-top", "27%");
       document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
     }
     else if (r.ok == false) {

@@ -1,5 +1,5 @@
 /* Script Verifica Password */
-//var flag=0;
+var flag=0;
 
 function validation_registration() {
     var username = document.getElementById("username").value;
@@ -8,7 +8,7 @@ function validation_registration() {
     var email = document.getElementById("email").value;
     var birthdate = document.getElementById("birthdate").value;
 
-    //flag++;
+    flag++;
 
     if (username == "" || password == "" || confirm_password =="" || email == "" || birthdate == "") {
         document.getElementsByClassName("second")[0].style.display = "block";
@@ -118,3 +118,12 @@ function validation_registration() {
             element.parent().removeClass('invalid');
         }
     });
+
+    document.getElementById("username").addEventListener('focusout',userWarning);
+
+    function userWarning(){
+        if(document.getElementById("username").value==""){
+            document.getElementById("username").style.setProperty("background-color","rgba(120,55,55,0.5)");
+        }
+        
+    }

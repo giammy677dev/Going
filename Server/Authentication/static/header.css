@@ -58,8 +58,11 @@
 }
 
 .topnav {
-	margin-top: 3.5%;
 	align-items: center;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .topnav a {
@@ -136,9 +139,12 @@
 
 .topnav_image img {
 	height: 50%;
-	margin-top: 14%;
 	border-radius: 28px;
 	cursor: pointer;
+
+	position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 
 }
 
@@ -159,9 +165,12 @@
 
 .topnav_image0 img {
 	height: 50%;
-	margin-top: 27%;
 	border-radius: 28px;
 	cursor: pointer;
+
+	position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .topnav_image0 img:hover {
