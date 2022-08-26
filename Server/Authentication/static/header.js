@@ -9,9 +9,7 @@ function check() {
 
     const r = JSON.parse(event.target.responseText);
 
-
-    if (r.ok == true) {
-      console.log(r)
+    if (r.ok == true && r.data.length == 1) {
       ok = r.ok
       user_id = r.data[0].id
       console.log("sei loggato!!! con questo id", ok)
@@ -30,7 +28,7 @@ function check() {
       document.getElementById("image_topnav").style.setProperty("margin-top", "27%");
       document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
     }
-    else if (r.ok == false) {
+    else if (r.ok == true && r.data.length == 0) {
       console.log("non sei loggato!!!")
       console.log(r)
     }

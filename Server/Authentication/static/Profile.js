@@ -33,6 +33,8 @@
           document.getElementById("info_birthdate").innerText = "Compleanno = "+day.getDate()+"/"+month+"/"+day.getFullYear();
           document.getElementById("avatar").src = r.data[0].avatar;
 
+          console.log(r.isYou);
+
           if(r.isYou == 1){
             document.getElementById('button_choice_avatar').style.display='block';
           }
@@ -135,6 +137,7 @@
   // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut
 
   function funcCoktail(media_valutazioni,number,i){
+
     /* prendo tutto il numero intero e stampo i cock pieni
       verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
       verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
@@ -143,26 +146,31 @@
       const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
       const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
       var counterStamp = 0;
-      if(Number.isInteger(media_valutazioni)){
-        for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-          counterStamp++;
-        }
-      } else{
-        for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-          counterStamp++;
-        }
-        //inizio controllo sul decimale
-        const decimalStr = media_valutazioni.toString().split('.')[1];
-        var decimal = Number("0."+decimalStr);
-        if (decimal < 0.25) {
-        } else if (decimal > 0.75){
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
-          counterStamp++;
+      if(media_valutazioni != null){
+          if(Number.isInteger(media_valutazioni)){
+          for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+            counterStamp++;
+          }
         } else{
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
-          counterStamp++;
+          for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+            counterStamp++;
+          }
+          //inizio controllo sul decimal
+          console.log("Media Valutazioni = ");
+          console.log(media_valutazioni);
+
+          const decimalStr = media_valutazioni.toString().split('.')[1];
+          var decimal = Number("0."+decimalStr);
+          if (decimal < 0.25) {
+          } else if (decimal > 0.75){
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+            counterStamp++;
+          } else{
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
+            counterStamp++;
+          }
         }
       }
   
