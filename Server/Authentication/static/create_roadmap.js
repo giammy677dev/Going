@@ -13,7 +13,7 @@ var markers = [];
 var circles = [];
 var distance_renderers = [];
 var lastPlaceId = 0;
-
+var durataComplessiva = 0;
 var stage_index = 0;
 var infoWindow;
 
@@ -48,8 +48,8 @@ function deleteStage(toDeleteIndex) {
     //qua va il comando di rimozione del box grafico nel stages_list
 
     //rimozione marker dalla mappa
-    markers[toDeleteIndex].setMap(null);
-    markers.splice(toDeleteIndex, 1);
+    //markers[toDeleteIndex].setMap(null);
+    //markers.splice(toDeleteIndex, 1);
     circles[toDeleteIndex].setMap(null);
     circles.splice(toDeleteIndex, 1);
 
@@ -97,7 +97,7 @@ function deleteStage(toDeleteIndex) {
         var dur = document.getElementById("durata" + oldIndex);
         console.log(dot)
         dur.id = "durata" + newIndex;
-        
+
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
@@ -112,7 +112,90 @@ function deleteStage(toDeleteIndex) {
     console.log(stages_list)
 }
 
+
+function renderDistances(stages) {
+    var stage = stages[0];
+    var routeHelper;
+    var bounds = new google.maps.LatLngBounds();
+
+    for (var i = 0; i < stages.length; i++) {
+        stage = stages[i];
+        const latLng = new google.maps.LatLng(stage.latitudine, stage.longitudine);
+        circles[i] = new google.maps.Circle({
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map,
+            center: latLng,
+            radius: 30,
+            clickable: false
+        });
+        bounds.extend(latLng);
+
+        if (i != 0) {
+            routeHelper = { origin: stages[i - 1].placeId, destination: stages[i].placeId, travelMode: "WALKING" }
+            //TRAVEL MODE dipende dal campo roadmap.travelMode ancora da aggiungere nel db
+            distance_renderers[i-1] = new google.maps.DirectionsRenderer();
+            distance_renderers[i-1].setOptions({
+                directions: {
+                    routes: typecastRoutes(stage.route.routes),
+                    request: routeHelper
+                },
+                suppressMarkers: true,
+                map: map,
+                preserveViewport: true
+            });
+
+        }
+        drawNewStage(i,stage);
+        document.getElementById("somma_totale").textContent = roadmap.durata;
+    }
+
+    map.setCenter(bounds.getCenter());
+    map.fitBounds(bounds)
+    //map.setZoom(map.getZoom() - 1);  //edge marker case cover
+
+}
+
+
+function richiestaRoadmap(id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", '/viewrm?id=' + id, true);
+
+    xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+        if (r.ok) {
+            //cover all visible markers here: https://stackoverflow.com/questions/19304574/center-set-zoom-of-map-to-cover-all-visible-markers
+            roadmap = r.data.roadmap
+            stage_index = roadmap.stages.length;
+            stages_list = roadmap.stages;
+            //map.setCenter(latLng);
+            map.setZoom(16);
+            renderDistances(stages_list);
+        }
+    }
+    xhr.send()
+}
+
+function loading_roadmap() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('roadmap_id')
+
+    if (id != null && id >= 0) {
+        id_rm = id
+        richiestaRoadmap(id)
+    }
+}
+
 function initMap() {
+
+    //qua bisogna far richiesta dellle info della roadmap
+
+    loading_roadmap(); //loads roadmap if roadmap_id != null
+
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,

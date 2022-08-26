@@ -14,7 +14,7 @@ class DAO {
                 database: config.database,
                 //port: 3306
                 ssl: {
-                    ca: fs.readFileSync(path.resolve(__dirname+"\\ca", config.ca))
+                    ca: fs.readFileSync(path.resolve(__dirname+"/ca", config.ca))
                 }
             });
             return connection;
