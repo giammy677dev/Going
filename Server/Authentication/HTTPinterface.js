@@ -214,7 +214,7 @@ class HTTPinterface {
     async getDataUser(req, res) {
         var element = 0;
 
-        if(req.session.user_id == req.query.id){
+        if(req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined){
             element=1;
         }
 
