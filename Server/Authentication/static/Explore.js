@@ -38,8 +38,17 @@ function richiestaDBRoadmap(ricerca) {
                 const posto = document.getElementById("pop_res_rm");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
-                    const html_star=funcCoktail(result[i].punteggio)
-                    const html_code = '<a class="link_rm" href="/view_roadmap?id=' + result[i].id + '"><div class="item">'+result[i].titolo+'<br>🏙' +result[i].localita+'<br>⏱'+result[i].durataComplessiva+'min<br>'+html_star
+
+                    const durata=Math.round(result[i].durata/60)
+                    var html_star
+                    if(result[i].punteggio!=null){
+                        html_star=funcCoktail(result[i].punteggio)
+                    }else{
+                        html_star=" "
+                    }
+                    const html_code = '<a class="link_rm" href="/view_roadmap?id=' + result[i].id + '"><div class="item">'+result[i].titolo+'<br>🏙' +result[i].localita+'<br>⏱'+durata+' min<br>🚶'+ result[i].distanza+' metri <br>'+html_star+'</div></a>'
+
+                    
                     const posto = document.getElementById("items");
                     posto.insertAdjacentHTML("beforeend", html_code)
                 }

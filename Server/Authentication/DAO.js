@@ -219,7 +219,7 @@ class DAO {
 
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durata,localita,id,punteggio FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
+            var result = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?)OR(distanza LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%','%' + ricerca + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
