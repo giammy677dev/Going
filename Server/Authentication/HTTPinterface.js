@@ -157,8 +157,8 @@ class HTTPinterface {
         const r = await this.controller.viewRoadmap(req.query.id);
 
         if(req.session.loggedin){ //salva info per eventuale fork
-            req.session.placeDetails = {}
-            req.session.distanceDetails={}
+            req.session.placeDetails = {}; //reset
+            req.session.distanceDetails= {};
             //vanno popolati placeDetails & distanceDetails
             const stages = r.data.roadmap.stages;
             var stage;
@@ -168,6 +168,7 @@ class HTTPinterface {
                 if (i > 0){
                     req.session.distanceDetails[stages[i-1].placeId+"|"+stage.placeId] = stage.route
                 }
+                
             }
             console.log(req.session)
             
@@ -402,7 +403,7 @@ class HTTPinterface {
         
 
         
-        if (req.session.loggedin | true) {
+        if (req.session.loggedin | true) { //fatto in viewrm. va bene?
             if(req.query.roadmap_id !== undefined && req.query.roadmap_id > 0 ){
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
@@ -424,6 +425,7 @@ class HTTPinterface {
         if (req.user) {
             console.log('user session is alive')
         }
+        //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
         return res.sendFile(__dirname + '/static/Profile.html');
     }
 
