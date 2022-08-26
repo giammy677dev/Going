@@ -155,6 +155,24 @@ class HTTPinterface {
 
     async viewrm(req, res) {
         const r = await this.controller.viewRoadmap(req.query.id);
+
+        if(req.session.loggedin){ //salva info per eventuale fork
+            req.session.placeDetails = {}
+            req.session.distanceDetails={}
+            //vanno popolati placeDetails & distanceDetails
+            const stages = r.data.roadmap.stages;
+            var stage;
+            for(var i = 0; i < stages.length;i++){
+                stage = stages[i];
+                req.session.placeDetails[stage.placeId] = [stage,stage.isExNovo]
+                if (i > 0){
+                    req.session.distanceDetails[stages[i-1].placeId+"|"+stage.placeId] = stage.route
+                }
+            }
+            console.log(req.session)
+            
+            
+        }
         return res.send(JSON.stringify(r));
     }
     async allLoggedRoadmap(req,res){
