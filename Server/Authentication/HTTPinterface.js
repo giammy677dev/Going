@@ -241,8 +241,9 @@ class HTTPinterface {
         var element = 0;
 
 
-        if (req.session.user_id == req.query.id) {
-            element = 1;
+        if(req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined){
+            element=1;
+
         }
 
         if (req.query.id == 0) {
@@ -276,8 +277,12 @@ class HTTPinterface {
         if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
-
+            if(req.session.placeDetails === undefined){
+                req.session.placeDetails = {}
+            }
             if (r.ok) {
+                
+
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
             }
 
@@ -377,13 +382,17 @@ class HTTPinterface {
     }
 
     async createRoadmap_page(req, res) {
-        if (req.session.loggedin !== undefined & req.session.loggedin == true) {
-            return res.sendFile(__dirname + '/static/create.html');
-            console.log('user session is alive')
-        } else {
-            return res.sendFile(__dirname + '/static/create.html');
+        
+
+        
+        if (req.session.loggedin | true) {
+            if(req.query.roadmap_id !== undefined && req.query.roadmap_id > 0 ){
+                //if req.query.roadmap_id is not null then should add to session something if logged
+            }
         }
 
+
+        return res.sendFile(__dirname + '/static/create.html');
     }
 
     async signup_page(req, res) {

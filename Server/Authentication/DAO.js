@@ -94,11 +94,11 @@ class DAO {
         }
     }
 
-    async addRoadmap(titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id) {
+    async addRoadmap(titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, travelMode, distanza, utenteRegistrato_id) {
         try {
             var connection = await this.connect();
             //console.log('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, NULL, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, dataCreazione, utenteRegistrato_id])
-            const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, null, dataCreazione, utenteRegistrato_id]);
+            const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durataComplessiva, localita, descrizione, punteggio, dataCreazione, travelMode, distanza, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [titolo, isPublic, durataComplessiva, localita, descrizione, null, dataCreazione, travelMode, distanza, utenteRegistrato_id]);
             return [true, 0, res[0]];
         } catch (error) {
             console.log(error)
@@ -110,19 +110,22 @@ class DAO {
         var connection = await this.connect();
         for (var i = 0; i < stages.length; i++) {
             var stage = stages[i];
-            //console.log(stage);
             var stored_stage = session_data[stage.placeId][0]
+            //console.log(stored_stage);
+            //console.log(stored_stage.geometry);
+            stored_stage.latitudine = stored_stage.latitudine === undefined ? stored_stage.geometry.location.lat : stored_stage.latitudine;
+            stored_stage.longitudine = stored_stage.longitudine === undefined ? stored_stage.geometry.location.lng : stored_stage.longitudine;
             var isExNovo = session_data[stage.placeId][1]
             try {
                 //console.log(session_data)
                 if (!isExNovo) //è da google! non è exnovo!
                 {
                     //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 0, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 0, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stage.descrizione, stored_stage.website, stored_stage.foto]);
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stored_stage.place_id, 1, stored_stage.geometry.location.lat, stored_stage.geometry.location.lng, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome, descrizione_st, website, fotoID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.descrizione, stage.website, stage.fotoURL]);
                 }
             } catch (error) {
                 console.log(error)
@@ -138,12 +141,15 @@ class DAO {
             console.log(distance_data)
             var connection = await this.connect();
             var route;
+            var reachTime;
             for (var i = 0; i < stages.length; i++) {
                 var stage = stages[i];
                 route = i > 0 ? distance_data[stages[i - 1].placeId + "|" + stage.placeId] : {}
+                
+                reachTime = i > 0 ? route.routes[0].legs[0].duration.value : 0;
                 route = JSON.stringify(route);
                 // Execute SQL query that'll insert the account in the database
-                await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine, route) VALUES(?, ?, ?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata, i, route]);
+                await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine, reachTime, route) VALUES(?, ?, ?, ?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route]);
             }
             return [true, 0];
         } catch (error) {
@@ -173,7 +179,6 @@ class DAO {
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
-                console.log(results)
                 return [true, 0, { found: true, result: results[0] }];
             }
             else {
