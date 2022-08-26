@@ -135,7 +135,7 @@ function renderDistances(stages) {
         bounds.extend(latLng);
 
         if (i != 0) {
-            routeHelper = { origin: stages[i - 1].placeId, destination: stages[i].placeId, travelMode: "WALKING" }
+            routeHelper = { origin: stages[i - 1].placeId, destination: stages[i].placeId, travelMode: roadmap.travelMode }
             //TRAVEL MODE dipende dal campo roadmap.travelMode ancora da aggiungere nel db
             distance_renderers[i-1] = new google.maps.DirectionsRenderer();
             distance_renderers[i-1].setOptions({
@@ -306,11 +306,6 @@ function drawExNovoStages() {
     }));
 }
 
-function getDistance(marker, centerLat, centerLng) {
-    var centerLatlng = new google.maps.LatLng(centerLat, centerLng);
-    distance = google.maps.geometry.spherical.computeDistanceBetween(marker.position, centerLatlng)
-    return distance;
-}
 
 function asPath(encodedPolyObject) {
     return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
@@ -415,50 +410,6 @@ function backendDistance(marker1, marker2) {
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(route));
-}
-
-function calculateDistance(first_marker, second_marker) {
-    var selectedMode;
-    if (document.getElementById("driving_mode").checked) {
-        selectedMode = document.getElementById("driving_mode").value;
-    }
-    else {
-        selectedMode = document.getElementById("walking_mode").value;
-    }
-    console.log('Modalità: ' + selectedMode);
-
-    let directionsService = new google.maps.DirectionsService();
-    let directionsRenderer = new google.maps.DirectionsRenderer();
-    console.log(directionsRenderer)
-    directionsRenderer.setMap(map); // Existing map object displays directions
-    // Create route from existing points used for markers
-    const route = {
-        origin: { lat: first_marker.latitudine, lng: first_marker.longitudine },
-        destination: { lat: second_marker.latitudine, lng: second_marker.longitudine },
-        travelMode: selectedMode //c'era 'DRIVING', cambia se vogliamo fare la modalità diverse (a piedi, in macchina, ecc..)
-    }
-
-
-    directionsService.route(route,
-        function (response, status) { // anonymous function to capture directions
-            console.log('STATUS: ' + status)
-            if (status !== 'OK') {
-                window.alert('Directions request failed due to ' + status);
-                return;
-            } else {
-                console.log(response)
-                directionsRenderer.setDirections(response); // Add route to the map
-                var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
-                if (!directionsData) {
-                    window.alert('Directions request failed');
-                    return;
-                }
-                else {
-                    //TO-DO: Dobbiamo aggiungere la durata
-                    //document.getElementById('msg').innerHTML += " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
-                }
-            }
-        });
 }
 
 function isIconMouseEvent(e) {
