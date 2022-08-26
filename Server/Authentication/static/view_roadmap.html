@@ -120,141 +120,120 @@
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
           defer></script>
       </div>
-    </div>
 
 
 
-    <div class="all">
-      <div class="body-cards">
-        <div class="main">
+      <div class="all">
+        <div class="body-cards">
+          <div class="main">
 
-          <div class="cardTop">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z"
-              fill="#FF768E" />
-            </svg>
-          </div>
+            <div class="cardTop">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z"
+                fill="#FF768E" />
+              </svg>
+            </div>
 
 
-          <div class="timeline">
-            <h3>Lista punti di sosta</h3>
+            <div class="timeline">
+              <h3>Lista punti di sosta</h3>
 
-            <div class="box">
+              <div class="box">
 
-              <div class="container">
+                <div class="container">
 
-                <div class="lines" id="lines">
+                  <div class="lines" id="lines">
+
+                  </div>
+
+                  <div class="cards" id="cards">
+
+
+
+                  </div>
+
+
 
                 </div>
-
-                <div class="cards" id="cards">
-
-
-
-                </div>
-
-
-
-              </div>
-
-
-
-
-              <div class="bottom">
-
-                <div class="btn" id="fork_btn" onclick="forkaggio()">Forka questa Roadmap</div>
-
               </div>
             </div>
+
+
           </div>
-
-
         </div>
       </div>
+
+
+
     </div>
 
 
 
-  </div>
-
-  <div id="roadmap_funz">
-    <div class="container_middle" id="container_funz">
-
+    <div id="ult_dati" style="width: 70%; margin-top: 100px;">
       <div class="descrizione" id="descrizione"></div>
       <div class="data" id="data"></div>
-      <h2>Lascia una valutazione, opinione, o inseriscila tra i preferiti con il cuore o se l'hai percorsa, clicca il
-        flag</h2>
-      <div id="rate" class="rate">
-        <input type="radio" id="star5" name="rate" value="5" onclick="rating(value)">
-        <label for="star5" title="text"> </label>
-        <input type="radio" id="star4" name="rate" value="4" onclick="rating(value)">
-        <label for="star4" title="text"> </label>
-        <input type="radio" id="star3" name="rate" value="3" onclick="rating(value)">
-        <label for="star3" title="text"> </label>
-        <input type="radio" id="star2" name="rate" value="2" onclick="rating(value)">
-        <label for="star2" title="text"> </label>
-        <input type="radio" id="star1" name="rate" value="1" onclick="rating(value)">
-        <label for="star1" title="text"> </label>
-      </div>
-
-      <div id="heart" class="heart">
-        <i class="heart-like-button" onclick="heart()"> </i>
-      </div>
-
-      <div id="checked" class="checked">
-        <i class="checked-like-button" onclick="checked()"> </i>
-      </div>
-
-
-
     </div>
+    <div id="roadmap_funz">
 
-    <label for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
-    <input type="text" id="us_rec" name="us_rec" size="50">
-    <div class="btn" id="save_recbtn" onclick="saveRec()">Salva valutazione e opinione</div>
+      <div class="container_middle" id="container_funz">
+
+        <div class="btn" id="fork_btn" onclick="forkaggio()">Forka questa Roadmap</div>
+        <div id="heart" class="heart">
+          <i class="heart-like-button" onclick="heart()"> </i>
+        </div>
+
+        <div id="checked" class="checked">
+          <i class="checked-like-button" onclick="checked()"> </i>
+        </div>
+        
+        <h2>Lascia una valutazione, opinione, inseriscila tra i preferiti con il cuore o se l'hai percorsa, clicca il
+          flag, o se ti piace così tanto, FORKALA!!</h2>
+        
 
 
-    <label for="us_com" style="font-size: 25px;">Lascia un commento!</label>
-    <input type="text" id="us_com" name="us_com" size="20">
-    <div class="btn" id="save_combtn" onclick="saveCom()">Salva il tuo commento!</div>
+        <label for="us_com" style="font-size: 25px;">Lascia un commento!</label>
+        <input type="text" id="us_com" name="us_com" size="20" />
+        <div class="btn" id="save_combtn" onclick="saveCom()">Salva il tuo commento!</div>
+        
 
-  </div>
-  <div class="container_bottom">
-    <div class="lab_recensioni" id="lab_recensioni">
-      <h2>Recensioni della roadmap</h2>
 
-      <div class="recensioni" id="recensioni">
-        <div class="recensione" id="recensione">
-          <div class="valutazione" id="valutazione">
-            cocks
-          </div>
-          <div class="whoRec" id="whoRec">
-            who rec
-          </div>
-          <div class="opinione" id="opinione">
-            opinions mia
-          </div>
-          <div class="data_pub" id="data_pub">
-            data
-          </div>
+        <div id="rate" class="rate">
+          <input type="radio" id="star5" name="rate" value="5" onclick="rating(value)">
+          <label for="star5" title="text"> </label>
+          <input type="radio" id="star4" name="rate" value="4" onclick="rating(value)">
+          <label for="star4" title="text"> </label>
+          <input type="radio" id="star3" name="rate" value="3" onclick="rating(value)">
+          <label for="star3" title="text"> </label>
+          <input type="radio" id="star2" name="rate" value="2" onclick="rating(value)">
+          <label for="star2" title="text"> </label>
+          <input type="radio" id="star1" name="rate" value="1" onclick="rating(value)">
+          <label for="star1" title="text"> </label>
+        </div>
+        <label for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
+        <input type="text" id="us_rec" name="us_rec" size="50" />
+        <div class="btn" id="save_recbtn" onclick="saveRec()">Salva valutazione e opinione</div>
+
+        
+
+
+
+      </div>
+    </div>
+    <div class="container_bottom">
+      <div class="lab_recensioni" id="lab_recensioni">
+        <h2>Recensioni della roadmap</h2>
+        <div class="recensioni" id="recensioni">
+
+        </div>
+      </div>
+
+      <div class="lab_commenti" id="lab_commenti">
+        <h2>Commenti alla roadmap</h2>
+        <div class="commenti" id="commenti">
+
         </div>
       </div>
     </div>
-
-    <div class="lab_commenti" id="lab_commenti">
-      <h2>Commenti alla roadmap</h2>
-      <div class="commenti" id="commenti">
-        <div class="commento" id="commento">
-          <div class="whoCom" id="whoCom">
-            who com
-          </div>
-          <div class="text_commento" id="text_commento">
-            com
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
 
 

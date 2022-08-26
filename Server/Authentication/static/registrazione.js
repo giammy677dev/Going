@@ -49,6 +49,7 @@ function validation_registration() {
                 document.getElementById('changeButton').setAttribute("onclick","goTo(6,"+r.data.insertId+")");
             }
             else if (r.ok == false && r.error == "1062") {
+                document.getElementsByClassName("second")[0].style.display = "block";
                 document.getElementById("errorText").innerHTML= "Username o Email già usato. Riprovare";
             }
         }

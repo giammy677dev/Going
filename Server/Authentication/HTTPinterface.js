@@ -74,6 +74,9 @@ class HTTPinterface {
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
+        this.app.get('/getRecCom', this.getRecCom.bind(this));
+
+    
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
 
@@ -147,6 +150,10 @@ class HTTPinterface {
 
     async viewrm(req, res) {
         const r = await this.controller.viewRoadmap(req.query.id);
+        return res.send(JSON.stringify(r));
+    }
+    async getRecCom(req,res){
+        const r = await this.controller.getRecCom(req.query.id);
         return res.send(JSON.stringify(r));
     }
 
