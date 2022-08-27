@@ -68,6 +68,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
+        this.app.get('/deleteRoadmapSeguite', this.deleteRoadmapSeguite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
@@ -258,20 +259,16 @@ class HTTPinterface {
     async getDataUser(req, res) {
         var element = 0;
 
-
         if(req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined){
             element=1;
-
         }
 
         if (req.query.id == 0) {
             const r = await this.controller.getDataUser(req.session.user_id, element);
-
             return res.send(JSON.stringify(r));
         }
         else {
-            const r = await this.controller.getDataUser(req.query.id, element);
-            
+            const r = await this.controller.getDataUser(req.query.id, element);           
             return res.send(JSON.stringify(r));
         }
     }
@@ -282,15 +279,20 @@ class HTTPinterface {
     }
 
     async getRoadmapSeguite(req, res) {
-        const r = await this.controller.getRoadmapSeguite(req.query.id);
+        const r = await this.controller.getRoadmapSeguite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
     async getRoadmapPreferite(req, res) {
-        const r = await this.controller.getRoadmapPreferite(req.query.id);
+        const r = await this.controller.getRoadmapPreferite(req.session.user_id);
         return res.send(JSON.stringify(r));
     }
-
+    
+    async deleteRoadmapSeguite(req, res) {
+        const r = await this.controller.deleteRoadmapSeguite(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }
+    
     async getPlaceInfo(req, res) {
         if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;

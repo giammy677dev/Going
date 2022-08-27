@@ -216,13 +216,24 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoadmapSeguite(id) {
-        const data = await this.dao.getRoadmapSeguite(id);
-        return { ok: data[0], error: data[1], data: data[2] }
+    async getRoadmapSeguite(id_query,id_session) {
+        var element = 0;
+
+        if(id_session == id_query && id_session != 0 && id_session != undefined){
+            element=1;
+        }
+        
+        const data = await this.dao.getRoadmapSeguite(id_query);
+        return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
 
     async getRoadmapPreferite(id) {
         const data = await this.dao.getRoadmapPreferite(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async deleteRoadmapSeguite(id_roadmap,id_user) {
+        const data = await this.dao.deleteRoadmapSeguite(id_roadmap,id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
