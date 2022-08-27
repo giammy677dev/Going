@@ -189,6 +189,15 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         
     }
+    async setFavorite(user, roadmap, valore){
+        const data = await this.dao.setFavorite(user, roadmap, valore);
+        return { ok: true, error: data[1], data: data[2] };
+    }
+    
+    async setChecked(user, roadmap, valore){
+        const data = await this.dao.setChecked(user, roadmap, valore);
+        return { ok: true, error: data[1], data: data[2] };
+    }
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
         //a google maps api!!

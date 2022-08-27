@@ -65,7 +65,7 @@ function drawObjects(stages) {
 }
 
 function drawExNovoStages() {
-    console.log("UPDATE MARKERS!")
+    //console.log("UPDATE MARKERS!")
 
     var boxMinLat = map.getBounds().getSouthWest().lat()
     var boxMaxLat = map.getBounds().getNorthEast().lat()
@@ -144,7 +144,7 @@ function loadMapInfo() {
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
-                console.log("teetstetst")
+                //console.log("teetstetst")
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;

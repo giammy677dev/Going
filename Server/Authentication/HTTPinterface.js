@@ -80,8 +80,8 @@ class HTTPinterface {
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
-
-    
+        this.app.post('/setFavorite',this.setFavorite.bind(this));
+        this.app.post('/setChecked',this.setChecked.bind(this));
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
 
@@ -201,7 +201,14 @@ class HTTPinterface {
         const r = await this.controller.updateRecensione(req.body.user,req.body.roadmap,req.body.mod_opinione,req.body.mod_valutazione,req.body.day);
         return res.send(JSON.stringify(r))
     }
-    
+    async setFavorite(req,res){
+        const r = await this.controller.setFavorite(req.body.user,req.body.roadmap,req.body.favorite);
+        return res.send(JSON.stringify(r))
+    }
+    async setChecked(req,res){
+        const r = await this.controller.setChecked(req.body.user,req.body.roadmap,req.body.check);
+        return res.send(JSON.stringify(r))
+    }
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
