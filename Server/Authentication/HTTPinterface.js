@@ -75,7 +75,7 @@ class HTTPinterface {
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
         this.app.get('/getRecCom', this.getRecCom.bind(this));
-        this.app.get('/allLoggedRoadmap',this.allLoggedRoadmap.bind(this));
+        this.app.get('/getCommmentsReviewByUserRoad',this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
@@ -176,9 +176,9 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
-    async allLoggedRoadmap(req,res){
+    async getCommmentsReviewByUserRoad(req,res){
         //console.log(req.query)
-        const r = await this.controller.allLoggedRoadmap(req.query.id_user,req.query.id_rm);
+        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user,req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
     async getRecCom(req, res) {

@@ -142,12 +142,12 @@ class RequestController {
 
         return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
-    async allLoggedRoadmap(user,rm) {
+    async getCommmentsReviewByUserRoad(user,rm) {
         if (!user || user == null || !rm || rm == null) { //ricerca nulla
             return { ok: false, error: -4, data: ''  }
         }
         else {
-            const data = await this.dao.allLoggedRoadmap(user,rm);
+            const data = await this.dao.getCommmentsReviewByUserRoad(user,rm);
            
             return { ok: true, error: data[1], data: data[2] };
         }

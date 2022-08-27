@@ -12,12 +12,12 @@ var chk_com
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
-  console.log("jcncjsdnjcdn",e)
+  
   if (e.logged) {
-    console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
+   
     ok_in_rm = true
-    id_user = r.whoLog
-    loadLoggedRoad(id_user,id_rm)
+    id_user = e.user
+    getCommmentsReviewByUserRoad(id_user,id_rm)
 
   }
   else {
@@ -169,10 +169,10 @@ function check_nw() {
 }*/
 
 
-function loadLoggedRoad(id_user,id_rm) {
+function getCommmentsReviewByUserRoad(id_user,id_rm) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/allLoggedRoadmap?id_user=' + id_user+'&id_rm='+id_rm, true);
+  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user+'&id_rm='+id_rm, true);
 
   xhr.onload = function (event) {
 

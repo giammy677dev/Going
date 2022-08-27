@@ -35,6 +35,7 @@ function check() {
       document.getElementById("topnav_image").style.setProperty("width", "5%");
       document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
       receivedUserInfo.logged=true; //passiamo valore tramite evento! wow!
+      receivedUserInfo.user=user_id
       document.dispatchEvent(receivedUserInfo);
     }
     else if (r.ok == true && r.data.length == 0) {
@@ -42,6 +43,7 @@ function check() {
       console.log(r)
       //wagliu qua serve un ritorno. tipo logged:false
       receivedUserInfo.logged=false;
+      receivedUserInfo.user=0
       document.dispatchEvent(receivedUserInfo);
     }
   }
