@@ -30,15 +30,17 @@ document.addEventListener('receivedUserInfo', (e) => {
 document.addEventListener('receivedStageData', (e) => {
 
   var stage = e.stage;
-
-  var time = stage.reachTime;
-  if (time == null) {
-    time = " "
+  console.log(stage)
+  if(stage.reachTime!=null){
+    var time=parseInt(stage.reachTime)/60;
+  }else{
+    time=''
   }
+  
+  console.log(time)
+ 
   document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + '; facendo ste cose: ' + stage.descrizione_st + '</p></div>'
-
-
+  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + 'min </p>'
 
 }, false);
 
@@ -214,10 +216,10 @@ function getCommmentsReviewByUserRoad(id_user,id_rm) {
 
 
       if (chk_com > 0) {
-        for(let i=0;i<chk_com;i++){
-          commento_utente[i].testo = r.data.results_com[i].testo
-          commento_utente[i].data=r.data.results_com[i].dataPubblicazione
-        }
+          console.log(r.data.results_com)
+          commento_utente = r.data.results_com
+          console.log(commento_utente)
+        
 
       }
     }
