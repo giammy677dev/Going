@@ -6,6 +6,9 @@ const config = require('./config.js');
 class MapsHandler {
 
     getPhotoUrl(photo_reference) {
+        if(photo_reference == "" || photo_reference === undefined){
+            return ""
+        }
         const MAX_HEIGHT = 500;
         const MAX_WIDTH = 500;
         var url = 'https://maps.googleapis.com/maps/api/place/photo?photoreference=' + photo_reference + '&sensor=false&maxheight=' + MAX_HEIGHT + '&maxwidth=' + MAX_WIDTH + '&key=' + config.GOOGLE_MAPS_FRONTEND_API_KEY
