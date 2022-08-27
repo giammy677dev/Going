@@ -12,7 +12,7 @@ var chk_com
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
-  
+  console.log("jcncjsdnjcdn",e)
   if (e.logged) {
     console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
     ok_in_rm = true
@@ -56,7 +56,7 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
   if (roadmap.punteggio != null) {
-    const html_cock = cocksPrint(roadmap.punteggio, 35)
+    const html_cock = printBicchieri(roadmap.punteggio, 35)
     document.getElementById("rating").innerHTML += html_cock
   }
   /*for (let i = 0; i < quanti_stage; i++) {

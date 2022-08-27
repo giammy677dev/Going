@@ -1,6 +1,9 @@
 var ok = false
 var user_id = 0
 
+window.onload=function(){
+  check()
+};
 
 const receivedUserInfo = new CustomEvent('receivedUserInfo');
 
