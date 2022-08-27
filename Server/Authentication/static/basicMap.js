@@ -15,7 +15,6 @@ const receivedRoadmapData = new Event('receivedRoadmapData');
 const receivedStageData = new Event('receivedStageData');
 const dbMarkerClicked = new Event('dbMarkerClicked');
 
-
 function drawObjects(stages) {
     var stage = stages[0];
     var routeHelper;
@@ -65,7 +64,6 @@ function drawObjects(stages) {
 }
 
 function drawExNovoStages() {
-    console.log("UPDATE MARKERS!")
 
     var boxMinLat = map.getBounds().getSouthWest().lat()
     var boxMaxLat = map.getBounds().getNorthEast().lat()
@@ -193,6 +191,7 @@ function initMap() {
         mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
         scaleControl: true,
         zoomControl: true,
+        gestureHandling:"greedy",
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
         },

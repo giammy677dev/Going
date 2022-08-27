@@ -139,3 +139,7 @@ body {
 #pressInfo{
     cursor: pointer;
 }
+
+#errorText > span{
+    display:block;
+}

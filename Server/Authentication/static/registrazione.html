@@ -104,33 +104,26 @@
             
             <div id="signupBox" class="sign-up">
                 <h2 id="infoH">Effettua la Registrazione <a id="pressInfo" onclick="mostraInfo()">❓</a></h2>
-                    <div class="info" id="infoBox"><span>Per poter effettuare correttamente la registrazione: <br>-La password deve avere un minimo di 8 caratteri.<br>-Il campo password e ripeti password devono corrispondere<br>-Tutti i campi devono essere compilati </span></div>
+                    <div class="info" id="infoBox"><span>Per poter effettuare correttamente la registrazione: <br>-La password deve avere un minimo di 8 caratteri.<br>-Il campo password e ripeti password devono corrispondere<br>-Tutti i campi devono essere compilati <br>-L'indirizzo e-mail deve essere essere valido </span></div>
                     <div class="info second" id="errorBox"> <span id="errorText"></span> </div>
                     <div id="inputText">
                         <p>
-                            <input class="form" type="text" placeholder="Inserisci Nome Utente" name="Username" id="username" required/>
+                            <input class="form" type="text" placeholder="Inserisci Nome Utente" name="Username" id="username" />
                             
                         </p>
                         <p>
-                            <input class="form" type="password" placeholder="Inserisci Password" name="Password" id="password" minlength="8" required/>
+                            <input class="form" type="password" placeholder="Inserisci Password" name="Password" id="password" minlength="8" />
                         </p>
                         <p>
-                            <input class="form" type="password" placeholder="Ripeti Password" name="Confirmpassword" id="confirmpassword" minlength="8" required/>
+                            <input class="form" type="password" placeholder="Ripeti Password" name="Confirmpassword" id="confirmpassword" minlength="8" />
                         <p>
-                            <input class="form" type="text" placeholder="Inserisci Email" name="Email" id="email" required/>
+                            <input class="form" type="text" placeholder="Inserisci Email" name="Email" id="email" />
                         </p>
                         <p>
                             <input class="form" type="date" name="Birthdate" placeholder="Inserisci Data di Nascita" onclick="date_registration()" id="birthdate" required/>
                         </p>
                     </div>
-                    <!--input class="form" type="text" placeholder="Inserisci Nome Utente" name="Username" id="username"/>
-                    <input class="form" type="password" placeholder="Inserisci Password" name="Password" id="password"/>
-                    <input class="form" type="password" placeholder="Ripeti Password" name="Confirmpassword"
-                        id="confirmpassword"/>
-                    <input class="form" type="text" placeholder="Inserisci Email" name="Email" id="email"/>
-
-                    <p> Data di nascita </p>
-                    <input class="form" type="date" name="Birthdate" onclick="date_registration()" id="birthdate"/-->
+                    
                     <div class="containerButton">
                         <input class="formButton" type="button" value="Torna alla Homepage" onclick="goTo(0)"/>
                         <input id="changeButton" class="formButton" type="button" value="Registrati" onclick="validation_registration()"/>
