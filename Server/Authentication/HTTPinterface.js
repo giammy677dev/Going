@@ -170,12 +170,15 @@ class HTTPinterface {
                 }
                 
             }
+            //console.log(req.session)
             
             
         }
         return res.send(JSON.stringify(r));
     }
     async allLoggedRoadmap(req,res){
+        //console.log(req.query)
+        const r = await this.controller.allLoggedRoadmap(req.query.id_user,req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
     async getRecCom(req, res) {
@@ -195,6 +198,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
     async updateRecensione(req,res){
+        const r = await this.controller.updateRecensione(req.body.user,req.body.roadmap,req.body.mod_opinione,req.body.mod_valutazione,req.body.day);
         return res.send(JSON.stringify(r))
     }
     

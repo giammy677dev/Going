@@ -136,11 +136,13 @@ class RequestController {
 
         return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
-    async allLoggedRoadmap(id) {
-        if (!id || id == null) { //ricerca nulla
-            return { ok: false, error: -4, data: { id_user: '' } }
+    async allLoggedRoadmap(user,rm) {
+        if (!user || user == null || !rm || rm == null) { //ricerca nulla
+            return { ok: false, error: -4, data: ''  }
         }
         else {
+            const data = await this.dao.allLoggedRoadmap(user,rm);
+           
             return { ok: true, error: data[1], data: data[2] };
         }
     }

@@ -71,6 +71,7 @@ function caricaRoadmap() {
     if (r.ok == true) {
 
       for (var i = 0; i < result.length; i++) {
+        var durata=Math.round(result[i].durata/60)
         var spazioRoadmap = document.createElement("div");
         spazioRoadmap.setAttribute("id","divRoadmap" + i);
         spazioRoadmap.setAttribute("class","divRoadmap");
@@ -78,6 +79,7 @@ function caricaRoadmap() {
         spazioRoadmap.setAttribute("onMouseOut","conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("containerRoadmap").appendChild(spazioRoadmap);
         spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+result[i].id+"\"><span class=\"inEvidenza\">" + result[i].titolo + "</span></a>" + 
+        "<p><span class=\"interno\">🏙 " + result[i].localita  + "</span><span class=\"interno\">⏱" + durata + "</span></p>";
         funcCoktail(result[i].punteggio,i);
       }
       
