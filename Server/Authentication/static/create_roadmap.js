@@ -332,7 +332,8 @@ var ClickEventHandler = (function () {
             stage.indirizzo = indirizzo
             stage.index = stage_index
             stage.nome = StageName.value;
-            stage.durata = parseInt(durataElement.value);
+            //secondi!!!
+            stage.durata = parseInt(durataElement.value)*60;
             stage.placeId = placeId;
             stage.fotoURL = PhotoFile.value;
             stage.latitudine = latLng.lat();
@@ -410,7 +411,8 @@ var ClickEventHandler = (function () {
             });
 
             /*Nodo gia esistente*/
-            stage.durata = parseInt(durataElement.value);
+            //secondi!!!!
+            stage.durata = parseInt(durataElement.value)*60;
 
             stage.placeId = placeId;
             stage.latitudine = latLng.lat();
