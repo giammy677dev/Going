@@ -1,11 +1,11 @@
-
-  // Script Avvio Pagina
+// Script Avvio Pagina
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const id = urlParams.get('id')
-  var number_create = 0;
-  var number_seguite = 0;
-  var number_preferite = 0;
+  const number_create = 50;
+  const number_seguite = 10;
+  const number_reviews = 10;
+  const number_commenti = 10;
 
   //fare che quando carica prende rispetto a chi sta sull'url
   window.onload=function(){
@@ -14,6 +14,7 @@
     roadmap_create();
     roadmap_seguite();
     roadmap_preferite();
+    getAchievements();
   };
 
   // Script Dati Utente
@@ -47,9 +48,9 @@
     xhr.send();
   }
 
-  // Script Numero di Roadmap create,seguite e preferite dall'utente
+  // Script Numero di Roadmap create, seguite e preferite dall'utente
 
-  function roadmap_create(){ 
+  function roadmap_create(){
     var xhr = new XMLHttpRequest();
 
     xhr.open("GET", '/getRoadmapCreate?id=' + id, true);
@@ -58,8 +59,7 @@
       const r = JSON.parse(event.target.responseText);
 
       if (r.ok == true) {
-          number_create = r.data.length;
-          document.getElementById("bar_roadmap_create").innerText = "Roadmap Create ("+number_create+")";
+          document.getElementById("bar_roadmap_create").innerText = "Roadmap Create ("+r.data.length+")";
 
           for (var i = 0; i < r.data.length; i++) {
             var spazioRoadmap = document.createElement("div");
@@ -87,7 +87,6 @@
       const r = JSON.parse(event.target.responseText);
 
       if (r.ok == true) {
-          number_seguite = r.data.length;
           document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+r.data.length+")";
 
           for (var i = 0; i < r.data.length; i++) {
@@ -103,7 +102,7 @@
             else{
               spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
               "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>" + 
-              "<p><input type=\"button\" onclick=\"update_roadmap_seguite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
+              "<p><input type=\"button\" onclick=\"updateRoadmapSeguite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
             } 
             funcCoktail(r.data[i].punteggio,1,i);
           }
@@ -122,8 +121,7 @@
       const r = JSON.parse(event.target.responseText);
 
       if (r.ok == true) {
-          number_preferite = r.data.length;
-          document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Preferite ("+number_preferite+")";
+          document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Preferite ("+r.data.length+")";
 
           for (var i = 0; i < r.data.length; i++) {
             var spazioRoadmap = document.createElement("div");
@@ -201,17 +199,16 @@
       }
     }
 
-    function update_roadmap_seguite(number,id){
+    function updateRoadmapSeguite(number,id){
       var xhr = new XMLHttpRequest();
 
-      xhr.open("GET", '/deleteRoadmapSeguite?id=' + id, true);
+      xhr.open("GET", '/updateRoadmapSeguite?id=' + id, true);
     
       xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
   
-        if (r.ok == true) {       
-            number_seguite--;
-            document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+number_seguite+")";
+        if (r.ok == true) {
+            document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+r.data.length+")";
             document.getElementById("divRoadmap_1_" + number).remove();
         }
       }
@@ -273,4 +270,36 @@
   
     // Add the specific color to the button used to open the tab content
     elmnt.style.backgroundColor = color;
+  }
+
+  //Script Achievements
+
+  function getAchievements() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", '/getAchievements?id=' + id, true);
+  
+    xhr.onload = function (event) {
+      const r = JSON.parse(event.target.responseText);
+
+      if (r.ok == true) {
+          if(r.data[0] >= number_create) {
+            document.getElementById("roadmapAchievement").setAttribute("src", "/storage/achievements/roadmap.png");
+          }
+
+          if(r.data[1] >= number_seguite) {
+            document.getElementById("followedRoadmapAchievement").setAttribute("src", "/storage/achievements/followRoadmap.png");
+          }
+
+          if(r.data[2] >= number_reviews) {
+            document.getElementById("reviewAchievement").setAttribute("src", "/storage/achievements/review.png");
+          }
+
+          if(r.data[3] >= number_commenti) {
+            document.getElementById("commentAchievement").setAttribute("src", "/storage/achievements/comment.png");
+          }
+      }
+    }
+
+    xhr.send();
   }

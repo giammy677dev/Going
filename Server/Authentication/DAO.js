@@ -258,7 +258,6 @@ class DAO {
             var connection = await this.connect();
             let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
             let results = selection[0];
-
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -336,14 +335,12 @@ class DAO {
     }
     async updateRecensione(user, roadmap, mod_op, mod_valutazione, day) {
         try {
-
             var connection = await this.connect();
             var res_ins = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
-            var dati=await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?',[roadmap])
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?',[roadmap])
             //console.log("dati da count: ",dati[0][0].numeroRecensioni)
             //console.log("dati da count: ",dati[0][0].somma)
            
-
             var numeroRecensioni=dati[0][0].numeroRecensioni
             var somma=dati[0][0].somma
             var media=parseFloat(somma/numeroRecensioni)
@@ -351,8 +348,6 @@ class DAO {
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?',[media,roadmap])
             
             return [true, 0, {res_ins: res_ins[0],res_upd_media: res_upd_media[0]}];
-
-
         }
         catch (error) {
             return [false, error.errno];
@@ -401,17 +396,17 @@ class DAO {
         }
     }
 
-    async deleteRoadmapSeguite(id_roadmap,id_user) {
+    async updateRoadmapSeguite(id_roadmap,id_user) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('UPDATE roadmapuser SET seguita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
-            let results = selection[0];
+            await connection.query('UPDATE roadmapuser SET seguita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
+            let dati = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id_user])
+            let results = dati[0];
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
     }
-
 
     async updateAvatar(id, new_avatar) {
         try {
@@ -435,6 +430,19 @@ class DAO {
         }
     }
 
+    async getAchievements(id) {
+        try {
+            var connection = await this.connect();
+            let roadmapResult = await connection.query('SELECT COUNT(*) AS numberRoadmap FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
+            let followedRoadmapResult = await connection.query('SELECT COUNT(*) AS numberFollowedRoadmap FROM roadmapuser WHERE idUtenteRegistrato = ? AND seguita = 1', [id]);
+            let reviewsResult = await connection.query('SELECT COUNT(*) AS numberReviews FROM recensione WHERE idUtenteRegistrato = ?', [id]);
+            let commentsResult = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [id]);
+            let results = [roadmapResult[0][0].numberRoadmap, followedRoadmapResult[0][0].numberFollowedRoadmap, reviewsResult[0][0].numberReviews, commentsResult[0][0].numberComments];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
 }
 
 module.exports = DAO

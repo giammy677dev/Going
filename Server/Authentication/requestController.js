@@ -208,7 +208,6 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-
     async getPlaceFromCoords(lat, lng) {
 
         //stesso discorso di placeinfo!! c'è bisogno di una chiamata al db pe vedere se già esiste. se già esiste è inutile 
@@ -239,8 +238,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async deleteRoadmapSeguite(id_roadmap,id_user) {
-        const data = await this.dao.deleteRoadmapSeguite(id_roadmap,id_user);
+    async updateRoadmapSeguite(id_roadmap,id_user) {
+        const data = await this.dao.updateRoadmapSeguite(id_roadmap,id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
@@ -251,6 +250,11 @@ class RequestController {
 
     async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
         const data = await this.dao.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getAchievements(id) {
+        const data = await this.dao.getAchievements(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
