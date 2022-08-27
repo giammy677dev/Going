@@ -141,7 +141,6 @@ class RequestController {
             return { ok: false, error: -4, data: { id_user: '' } }
         }
         else {
-            const data = await this.dao.allLoggedRoadmap(id);
             return { ok: true, error: data[1], data: data[2] };
         }
     }

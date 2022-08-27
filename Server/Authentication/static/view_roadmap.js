@@ -1,9 +1,11 @@
 var ok_in_rm = false
 var id_user = null
 var id_rm = 0
-var insert_com = 1
 var insert_rec = 1
 var points = 0
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
@@ -116,7 +118,6 @@ function richiestaRoadmap(id) {
         document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
         document.getElementById("descrizione").innerText = roadmap.descrizione
         if (roadmap.punteggio != null) {
-          const html_cock = cocksPrint(roadmap.punteggio, 35)
           document.getElementById("rating").innerHTML += html_cock
         }
         for (let i = 0; i < quanti_stage; i++) {
@@ -152,7 +153,6 @@ function check_nw() {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok_in_rm = true
       id_user = r.whoLog
-      loadLoggedRoad(id_user)
 
     }
     else if (r.ok == false) {
@@ -161,19 +161,22 @@ function check_nw() {
     }
   }
   xhr.send();
+<<<<<<< Updated upstream
 }*/
 
 function loadLoggedRoad(user_id) {
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/allLoggedRoadmap?id=' + user_id, true);
+=======
+}
+>>>>>>> Stashed changes
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
     console.log(r.data)
     const chk_rec = r.data.results_rec.length
-    const chk_com = r.data.results_com.length
 
 
     if (r.ok == true) {
@@ -182,8 +185,11 @@ function loadLoggedRoad(user_id) {
         insert_rec = 0
         document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
         const rating = rec.valutazione
+<<<<<<< Updated upstream
         points = rating
         const html_cock = cocksPrint(rating, 50)
+=======
+>>>>>>> Stashed changes
         document.getElementById("cocks").innerHTML = html_cock
         var elements = document.getElementById('cocks').children;
         for (let i = 0; i < elements.length; i++) {
@@ -203,6 +209,7 @@ function loadLoggedRoad(user_id) {
         document.getElementById("cocks").innerHTML = html_cock
       }
 
+<<<<<<< Updated upstream
       if (chk_com == 1) {
         const com = r.data.results_com[0]
         insert_com = 0
@@ -212,6 +219,8 @@ function loadLoggedRoad(user_id) {
         document.getElementById("us_com").setAttribute("value", com.testo)
         document.getElementById("us_com").setAttribute("disabled", "disabled")
 
+=======
+>>>>>>> Stashed changes
       }
     }
     else if (r.ok == false) {
@@ -253,7 +262,6 @@ function loadRecCom() {
           var day = new Date(recensioni[i].dataPubblicazione)
           var month = day.getMonth() + 1;
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const cocksHtml = cocksPrint(recensioni[i].valutazione, 25)
           var opHtml = recensioni[i].opinione
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
@@ -291,7 +299,6 @@ function loadRecCom() {
   xhr.send();
 }
 
-function cocksPrint(punteggio, grandezza) {
   /* prendo tutto il numero intero e stampo i cock pieni
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
@@ -332,7 +339,6 @@ function cocksPrint(punteggio, grandezza) {
 
 function rating(value) {
   points = value + 1
-  const html_cock = cocksPrint(points, 50)
   document.getElementById("cocks").innerHTML = html_cock
   var elements = document.getElementById('cocks').children;
   for (let i = 0; i < elements.length; i++) {
@@ -527,7 +533,6 @@ function forkaggio() {
 function segnalaRec(id_rec) {
   //piccola conferma, poi insert in tabella nel db delle segnalazioni,
   //vedendo anche se già presente 
-  //dicendo (id_rm, id_user, cosa è, id_della_cosa)
   alert(id_rec)
 }
 function segnalaComm(id_comm) {

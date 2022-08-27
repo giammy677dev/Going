@@ -275,8 +275,6 @@ class DAO {
             console.log("result_com: ", result_com[0])
             console.log("result_com length: ", result_com[0].length)
 
-            console.log("result_rec: ", result_rec[0])
-            console.log("result_rec length: ", result_rec[0].length)
 
 
             return [true, 0, { results_rec: result_rec[0], results_com: result_com[0] }];
@@ -301,8 +299,6 @@ class DAO {
         try {
 
             var connection = await this.connect();
-            var res = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
-            return [true, 0, res[0]];
 
         }
         catch (error) {
@@ -325,9 +321,6 @@ class DAO {
         try {
 
             var connection = await this.connect();
-            var res = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
-            console.log(res)
-            return [true, 0, res[0]];
 
         }
         catch (error) {
