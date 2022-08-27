@@ -1,6 +1,6 @@
 window.onload=function(){
-    fromMain()
     check()
+    fromMain()
   };
 function richiestaDBRoadmap(ricerca) {
     

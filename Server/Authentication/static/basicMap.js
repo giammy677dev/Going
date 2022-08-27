@@ -134,7 +134,7 @@ function loadMapInfo() {
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get('roadmap_id')
+    const id = urlParams.get('id')
 
     if (id != null && id >= 0) {
         id_rm = id
