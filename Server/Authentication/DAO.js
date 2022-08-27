@@ -276,7 +276,7 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
-    async allLoggedRoadmap(user,rm) {
+    async getCommmentsReviewByUserRoad(user,rm) {
         try {
 
             var connection = await this.connect();
@@ -391,7 +391,6 @@ class DAO {
         }
     }
 
-
     async getRoadmapSeguite(id) {
         try {
             var connection = await this.connect();
@@ -413,6 +412,18 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
+    async deleteRoadmapSeguite(id_roadmap,id_user) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('UPDATE roadmapuser SET seguita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
+            let results = selection[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
 
     async updateAvatar(id, new_avatar) {
         try {

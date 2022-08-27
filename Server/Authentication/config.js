@@ -2,11 +2,10 @@ const host = 'going.mysql.database.azure.com';
 const user = 'giammy677';
 const password = 'Asdf1234';
 const database = 'going';
-const port = 3000;
+const port = process.env.port || 3000;
 const ca = 'DigiCertGlobalRootCA.crt.pem'
 const GOOGLE_MAPS_BACKEND_API_KEY = 'AIzaSyDkhHdG46Po1AyvEnEsk8PALxscMRpEYCs'
 const GOOGLE_MAPS_FRONTEND_API_KEY = 'AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8'
-
 
 module.exports.hostDB = host;
 module.exports.userDB = user;

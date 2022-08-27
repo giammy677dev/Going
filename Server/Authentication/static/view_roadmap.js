@@ -12,12 +12,12 @@ var chk_com
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
-  console.log("jcncjsdnjcdn",e)
+  
   if (e.logged) {
-    console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
+   
     ok_in_rm = true
-    id_user = r.whoLog
-    loadLoggedRoad(id_user,id_rm)
+    id_user = e.user
+    getCommmentsReviewByUserRoad(id_user,id_rm)
 
   }
   else {
@@ -30,13 +30,17 @@ document.addEventListener('receivedUserInfo', (e) => {
 document.addEventListener('receivedStageData', (e) => {
 
   var stage = e.stage;
-
-  var time = stage.reachTime;
-  if (time == null) {
-    time = " "
+  console.log(stage)
+  if(stage.reachTime!=null){
+    var time=parseInt(stage.reachTime)/60;
+  }else{
+    time=''
   }
+  
+  console.log(time)
+ 
   document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + '; facendo ste cose: ' + stage.descrizione_st + '</p></div>'
+  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + 'min </p>'
 
 }, false);
 
@@ -167,10 +171,10 @@ function check_nw() {
 }*/
 
 
-function loadLoggedRoad(id_user,id_rm) {
+function getCommmentsReviewByUserRoad(id_user,id_rm) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/allLoggedRoadmap?id_user=' + id_user+'&id_rm='+id_rm, true);
+  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user+'&id_rm='+id_rm, true);
 
   xhr.onload = function (event) {
 
@@ -212,10 +216,10 @@ function loadLoggedRoad(id_user,id_rm) {
 
 
       if (chk_com > 0) {
-        for(let i=0;i<chk_com;i++){
-          commento_utente[i].testo = r.data.results_com[i].testo
-          commento_utente[i].data=r.data.results_com[i].dataPubblicazione
-        }
+          console.log(r.data.results_com)
+          commento_utente = r.data.results_com
+          console.log(commento_utente)
+        
 
       }
     }
