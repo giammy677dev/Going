@@ -3,6 +3,7 @@ const MapsHandler = require('./MapsHandler.js');
 const md5 = require('md5');
 const { ExitStatus } = require('typescript');
 
+
 class RequestController {
 
     constructor() {
@@ -72,7 +73,6 @@ class RequestController {
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
             return { ok: data3[0], error: data3[1] }
         }
-
         return { ok: false, error: -5 } //return error!
     }
 
@@ -92,6 +92,14 @@ class RequestController {
         }
         else {
             const data = await this.dao.viewRoadmap(id);
+
+            console.log(data)
+            var stages = data[2].roadmap.stages;
+            var stage;
+            for(var i=0; i< stages.length;i++){
+                stage = stages[i];
+                stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+            }
 
             return { ok: true, error: data[1], data: data[2] };
         }

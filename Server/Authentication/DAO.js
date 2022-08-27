@@ -3,7 +3,6 @@ const config = require('./config.js');
 const fs = require('fs');
 const path = require('path');
 
-
 class DAO {
     async connect() {
         try {
