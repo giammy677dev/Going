@@ -1,18 +1,78 @@
 var ok_in_rm = false
 var id_user = null
 var id_rm = 0
-var insert_com = 1
 var insert_rec = 1
 var points = 0
-window.onload = function () {
-  check()
-  loading_roadmap()
-  check_nw()
-  loadRecCom()
-}
+var commento_utente
+var chk_com
 
 
 
+
+document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
+
+document.addEventListener('receivedUserInfo', (e) => {
+  
+  if (e.logged) {
+   
+    ok_in_rm = true
+    id_user = e.user
+    getCommmentsReviewByUserRoad(id_user,id_rm)
+
+  }
+  else {
+    document.getElementById("container_funz").style.display = "none"
+    document.getElementById("roadmap_funz").innerHTML = "<h2>Registrati o effettua il Log In per lasciare una tua impressione sulla roadmap come hanno fatto questi Roadmappers!<h2>"
+  }
+
+}, false);
+
+document.addEventListener('receivedStageData', (e) => {
+
+  var stage = e.stage;
+  console.log(stage)
+  if(stage.reachTime!=null){
+    var time=parseInt(stage.reachTime)/60;
+  }else{
+    time=''
+  }
+  
+  console.log(time)
+ 
+  document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
+  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + 'min </p>'
+
+}, false);
+
+document.addEventListener('receivedRoadmapData', (e) => {
+  var day = new Date(roadmap.dataCreazione)
+  var month = day.getMonth() + 1;
+
+  var minuti = Math.round(roadmap.durata / 60)
+
+  document.getElementById("titolo").innerText = roadmap.titolo
+  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
+  document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
+  document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
+  document.getElementById("utente").innerText = ' 👤 ' + user[0].username
+  document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
+  document.getElementById("descrizione").innerText = roadmap.descrizione
+  if (roadmap.punteggio != null) {
+    const html_cock = printBicchieri(roadmap.punteggio, 35)
+    document.getElementById("rating").innerHTML += html_cock
+  }
+  /*for (let i = 0; i < quanti_stage; i++) {
+    var time = roadmap.stages[i].reachTime
+    if (time == null) {
+      time = " "
+    }
+    document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + roadmap.stages[i].nome + '</h4><p>' + roadmap.stages[i].indirizzo + ' con durata di sosta: ' + roadmap.stages[i].durata + '; facendo ste cose: ' + roadmap.stages[i].descrizione_st + '</p></div>'
+  }*/
+  loadRecCom();
+}, false);
+
+/*
 function loading_roadmap() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -62,7 +122,7 @@ function richiestaRoadmap(id) {
         document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
         document.getElementById("descrizione").innerText = roadmap.descrizione
         if (roadmap.punteggio != null) {
-          const html_cock = cocksPrint(roadmap.punteggio, 35)
+          const html_cock = printBicchieri(roadmap.punteggio, 35)
           document.getElementById("rating").innerHTML += html_cock
         }
         for (let i = 0; i < quanti_stage; i++) {
@@ -98,7 +158,7 @@ function check_nw() {
       console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
       ok_in_rm = true
       id_user = r.whoLog
-      loadLoggedRoad(id_user)
+      loadLoggedRoad(id_user,id_rm)
 
     }
     else if (r.ok == false) {
@@ -107,18 +167,22 @@ function check_nw() {
     }
   }
   xhr.send();
-}
-function loadLoggedRoad(id_user) {
+<<<<<<< Updated upstream
+}*/
+
+
+function getCommmentsReviewByUserRoad(id_user,id_rm) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/allLoggedRoadmap?id=' + id_user, true);
+  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user+'&id_rm='+id_rm, true);
+
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
     console.log(r.data)
     const chk_rec = r.data.results_rec.length
-    const chk_com = r.data.results_com.length
+    chk_com = r.data.results_com.length
 
 
     if (r.ok == true) {
@@ -127,8 +191,10 @@ function loadLoggedRoad(id_user) {
         insert_rec = 0
         document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
         const rating = rec.valutazione
+
         points=rating
-        const html_cock = cocksPrint(rating, 50)
+        const html_cock = printBicchieri(rating, 50)
+
         document.getElementById("cocks").innerHTML = html_cock
         var elements = document.getElementById('cocks').children;
         for (let i = 0; i < elements.length; i++) {
@@ -148,14 +214,12 @@ function loadLoggedRoad(id_user) {
         document.getElementById("cocks").innerHTML = html_cock
       }
 
-      if (chk_com == 1) {
-        const com = r.data.results_com[0]
-        insert_com= 0
-        document.getElementById("save_combtn").innerHTML = "Modifica commento";
-        document.getElementById("save_combtn").setAttribute("onclick", "abilitaCom()");
-        document.getElementById("lab_com").innerHTML = "Il tuo commento!"
-        document.getElementById("us_com").setAttribute("value", com.testo)
-        document.getElementById("us_com").setAttribute("disabled", "disabled")
+
+      if (chk_com > 0) {
+          console.log(r.data.results_com)
+          commento_utente = r.data.results_com
+          console.log(commento_utente)
+        
 
       }
     }
@@ -171,7 +235,7 @@ function abilitaRec() {
   document.getElementById("us_rec").removeAttribute("disabled")
   document.getElementById("save_recbtn").innerHTML = "Salva Valutazione e/o opinione";
   document.getElementById("save_recbtn").setAttribute("onclick", "saveRec()");
-  
+
 }
 function abilitaCom() {
   document.getElementById("us_com").removeAttribute("disabled")
@@ -198,7 +262,7 @@ function loadRecCom() {
           var day = new Date(recensioni[i].dataPubblicazione)
           var month = day.getMonth() + 1;
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const cocksHtml = cocksPrint(recensioni[i].valutazione, 25)
+          const cocksHtml = printBicchieri(recensioni[i].valutazione, 25)
           var opHtml = recensioni[i].opinione
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
@@ -236,7 +300,7 @@ function loadRecCom() {
   xhr.send();
 }
 
-function cocksPrint(punteggio, grandezza) {
+function printBicchieri(punteggio, grandezza) {
   /* prendo tutto il numero intero e stampo i cock pieni
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
@@ -277,7 +341,7 @@ function cocksPrint(punteggio, grandezza) {
 
 function rating(value) {
   points = value + 1
-  const html_cock = cocksPrint(points, 50)
+  const html_cock = printBicchieri(points, 50)
   document.getElementById("cocks").innerHTML = html_cock
   var elements = document.getElementById('cocks').children;
   for (let i = 0; i < elements.length; i++) {
@@ -472,7 +536,7 @@ function forkaggio() {
 function segnalaRec(id_rec) {
   //piccola conferma, poi insert in tabella nel db delle segnalazioni,
   //vedendo anche se già presente 
-  //dicendo (id_rm, id_user, cosa è, id_della_cosa)
+  //dicendo (id_rm, id_user,cosa è, id_della_cosa)
   alert(id_rec)
 }
 function segnalaComm(id_comm) {
@@ -481,3 +545,45 @@ function segnalaComm(id_comm) {
   //dicendo (id_rm, id_user, cosa è, id_della_cosa)
   alert(id_comm)
 }
+
+
+var ClickEventHandler = (function () {
+  function ClickEventHandler(map, origin) {
+    this.origin = origin;
+    this.map = map;
+    this.map.addListener("click", this.handleClick.bind(this));
+  }
+  ClickEventHandler.prototype.handleClick = function (event) {
+    console.log("You clicked on: " + event.latLng);
+    console.log(event)
+    if ("placeId" in event) { //POI
+      console.log(event)
+      console.log("You clicked on place:" + event.placeId);
+      event.stop(); //fa fare la chiamata di default se non stoppiamo. 
+      if (event.placeId) {
+        this.openInfoBox(event.placeId, event.latLng);
+      }
+    }
+  };
+
+  ClickEventHandler.prototype.openInfoBox = function (placeId, latLng) {
+    var content = ""
+    console.log("DIOASNGOIAD")
+    for (var i = 0; i < roadmap.stages.length; i++) {
+      console.log("test")
+      if (roadmap.stages[i].placeId == placeId) {
+        content += roadmap.stages[i].durata + "\n";
+        console.log(roadmap.stages[i])
+      }
+    }
+    if (content == "") {
+      content = "not in roadmap. possiamo mettere qua quello che vogliamo"
+    }
+    infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+    infoWindow.setPosition(latLng);
+    infoWindow.open(map);
+  };
+  return ClickEventHandler;
+}());

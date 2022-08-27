@@ -4,11 +4,17 @@ var map;
 var roadmap;
 let customMarker = './storage/marker.png'
 var db_markers = {};
+var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
+
 var stage_index = 0;
 var infoWindow;
 var circles = [];
 var distance_renderers = [];
 const minZoomForExNovoMarkers = 15;
+const receivedRoadmapData = new Event('receivedRoadmapData');
+const receivedStageData = new Event('receivedStageData');
+const dbMarkerClicked = new Event('dbMarkerClicked');
+
 
 function drawObjects(stages) {
     var stage = stages[0];
@@ -46,8 +52,10 @@ function drawObjects(stages) {
             });
 
         }
-        drawNewStage(i, stage);
-
+        //drawNewStage(i, stage);
+        receivedStageData.stage_index = i;
+        receivedStageData.stage = stage;
+        document.dispatchEvent(receivedStageData)
     }
 
     map.setCenter(bounds.getCenter());
@@ -89,7 +97,9 @@ function drawExNovoStages() {
 
                     //add event on click
                     db_markers[placeId][0].addListener("click", (e) => {
-                        ClickEventHandler.prototype.openAddBox(placeId, latLng);
+                        dbMarkerClicked.placeId = placeId;
+                        dbMarkerClicked.latLng = latLng;
+                        document.dispatchEvent(dbMarkerClicked)
                     });
                 }
                 db_markers[placeId][1] = 1;
@@ -134,13 +144,17 @@ function loadMapInfo() {
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
+                console.log("teetstetst")
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
                 //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva; MATT questo va messo
                 //con lo stesso nome come fatto nel create_roadmap.js!
                 map.setZoom(16);
+                user = r.data.user;
+                document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
+                
             }
         }
         xhr.send()
@@ -148,10 +162,6 @@ function loadMapInfo() {
 }
 
 
-function drawNewStage(stage_index, stage) {
-    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
-}
 
 function getPlaceDetails(placeId) {
     var xhr = new XMLHttpRequest();
@@ -170,7 +180,6 @@ function getPlaceDetails(placeId) {
 }
 
 function initMap() {
-
     loadMapInfo(); //loads roadmap if roadmap_id != null
 
     var origin = { lat: 40.85, lng: 14.26 };
