@@ -10,6 +10,8 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
+//tutti i || true alla fine vanno tolti!
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -68,6 +70,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
+        this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
@@ -75,13 +78,18 @@ class HTTPinterface {
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
         this.app.get('/viewrm', this.viewrm.bind(this));
         this.app.get('/getRecCom', this.getRecCom.bind(this));
-        this.app.get('/getCommmentsReviewByUserRoad',this.getCommmentsReviewByUserRoad.bind(this));
+        this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
         this.app.post('/setFavorite',this.setFavorite.bind(this));
         this.app.post('/setChecked',this.setChecked.bind(this));
+        this.app.post('/report', this.reportObject.bind(this));
+        this.app.get('/getAchievements', this.getAchievements.bind(this));
+
+
+
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
 
@@ -156,51 +164,52 @@ class HTTPinterface {
     async viewrm(req, res) {
         const r = await this.controller.viewRoadmap(req.query.id);
 
-        if(req.session.loggedin){ //salva info per eventuale fork
+        if (req.session.loggedin) { //salva info per eventuale fork
             req.session.placeDetails = {}; //reset
-            req.session.distanceDetails= {};
+            req.session.distanceDetails = {};
             //vanno popolati placeDetails & distanceDetails
             const stages = r.data.roadmap.stages;
             var stage;
-            for(var i = 0; i < stages.length;i++){
+            for (var i = 0; i < stages.length; i++) {
                 stage = stages[i];
-                req.session.placeDetails[stage.placeId] = [stage,stage.isExNovo]
-                if (i > 0){
-                    req.session.distanceDetails[stages[i-1].placeId+"|"+stage.placeId] = stage.route
+                req.session.placeDetails[stage.placeId] = [stage, stage.isExNovo]
+                if (i > 0) {
+                    req.session.distanceDetails[stages[i - 1].placeId + "|" + stage.placeId] = stage.route
                 }
-                
+
             }
             //console.log(req.session)
-            
-            
+
+
         }
         return res.send(JSON.stringify(r));
     }
-    async getCommmentsReviewByUserRoad(req,res){
+    async getCommmentsReviewByUserRoad(req, res) {
         //console.log(req.query)
-        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user,req.query.id_rm);
+        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
     async getRecCom(req, res) {
         const r = await this.controller.getRecCom(req.query.id);
         return res.send(JSON.stringify(r));
     }
-    async setCommento(req,res){
-        const r = await this.controller.setCommento(req.body.user,req.body.roadmap,req.body.mod_com,req.body.day);
+    async setCommento(req, res) {
+        const r = await this.controller.setCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
-    async updateCommento(req,res){
-        const r = await this.controller.updateCommento(req.body.user,req.body.roadmap,req.body.mod_com,req.body.day);
+    async updateCommento(req, res) {
+        const r = await this.controller.updateCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
-    async setRecensione(req,res){
-        const r = await this.controller.setRecensione(req.body.user,req.body.roadmap,req.body.mod_opinione,req.body.mod_valutazione,req.body.day);
+    async setRecensione(req, res) {
+        const r = await this.controller.setRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
     }
-    async updateRecensione(req,res){
-        const r = await this.controller.updateRecensione(req.body.user,req.body.roadmap,req.body.mod_opinione,req.body.mod_valutazione,req.body.day);
+    async updateRecensione(req, res) {
+        const r = await this.controller.updateRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
     }
+
     async setFavorite(req,res){
         const r = await this.controller.setFavorite(req.body.user,req.body.roadmap,req.body.favorite);
         return res.send(JSON.stringify(r))
@@ -209,6 +218,7 @@ class HTTPinterface {
         const r = await this.controller.setChecked(req.body.user,req.body.roadmap,req.body.check);
         return res.send(JSON.stringify(r))
     }
+
     async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
@@ -265,20 +275,16 @@ class HTTPinterface {
     async getDataUser(req, res) {
         var element = 0;
 
-
-        if(req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined){
-            element=1;
-
+        if (req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined) {
+            element = 1;
         }
 
         if (req.query.id == 0) {
             const r = await this.controller.getDataUser(req.session.user_id, element);
-
             return res.send(JSON.stringify(r));
         }
         else {
             const r = await this.controller.getDataUser(req.query.id, element);
-            
             return res.send(JSON.stringify(r));
         }
     }
@@ -289,12 +295,17 @@ class HTTPinterface {
     }
 
     async getRoadmapSeguite(req, res) {
-        const r = await this.controller.getRoadmapSeguite(req.query.id);
+        const r = await this.controller.getRoadmapSeguite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
     async getRoadmapPreferite(req, res) {
-        const r = await this.controller.getRoadmapPreferite(req.query.id);
+        const r = await this.controller.getRoadmapPreferite(req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }
+
+    async updateRoadmapSeguite(req, res) {
+        const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
@@ -302,11 +313,11 @@ class HTTPinterface {
         if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
-            if(req.session.placeDetails === undefined){
+            if (req.session.placeDetails === undefined) {
                 req.session.placeDetails = {}
             }
             if (r.ok) {
-                
+
 
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
             }
@@ -340,6 +351,13 @@ class HTTPinterface {
         }
     }
 
+    async reportObject(req, res) {
+        if (req.session.loggedin || true) { // da mettere!
+            const r = await this.controller.reportObject(req.session.user_id, req.body.tipo, req.body.idOggetto, req.body.motivazione);
+            return res.send(JSON.stringify(r));
+        }
+    }
+
     async updateAvatar(req, res) {
         if (req.session.loggedin) {
             const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
@@ -353,6 +371,11 @@ class HTTPinterface {
             const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
             return res.send(JSON.stringify(r));
         }
+    }
+
+    async getAchievements(req, res) {
+        const r = await this.controller.getAchievements(req.query.id);
+        return res.send(JSON.stringify(r));
     }
 
     async searchUser(req, res) {
@@ -407,11 +430,11 @@ class HTTPinterface {
     }
 
     async createRoadmap_page(req, res) {
-        
 
-        
+
+
         if (req.session.loggedin | true) { //fatto in viewrm. va bene?
-            if(req.query.roadmap_id !== undefined && req.query.roadmap_id > 0 ){
+            if (req.query.roadmap_id !== undefined && req.query.roadmap_id > 0) {
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
         }

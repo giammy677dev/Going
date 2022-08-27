@@ -34,17 +34,17 @@ class RequestController {
         }
     }
 
-    calculateDuration(stages,distance_data) {
+    calculateDuration(stages, distance_data) {
         var durata = stages[0].durata;
         for (var i = 1; i < stages.length; i++) {
-            durata += distance_data[stages[i-1].placeId+"|"+stages[i].placeId].routes[0].legs[0].duration.value ////CONVENZIONE è IN SECONDI
+            durata += distance_data[stages[i - 1].placeId + "|" + stages[i].placeId].routes[0].legs[0].duration.value ////CONVENZIONE è IN SECONDI
         }
         return durata
     }
-    calculateDistance(stages,distance_data) {
+    calculateDistance(stages, distance_data) {
         var distanza = 0;
         for (var i = 1; i < stages.length; i++) {
-            distanza += distance_data[stages[i-1].placeId+"|"+stages[i].placeId].routes[0].legs[0].distance.value; //in metri
+            distanza += distance_data[stages[i - 1].placeId + "|" + stages[i].placeId].routes[0].legs[0].distance.value; //in metri
         }
         return distanza
     }
@@ -56,15 +56,15 @@ class RequestController {
             //fatte in blocco. se succede qualcosa va fatto il revert di tutto. ROLLBACK SI PUO' FARE???
             roadmap.durataComplessiva = this.calculateDuration(roadmap.stages, distance_data); //si calcola con una ulteriore chiamata a google maps
             roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
-            roadmap.travelMode = distance_data[roadmap.stages[0].placeId+"|"+roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
-            
+            roadmap.travelMode = distance_data[roadmap.stages[0].placeId + "|" + roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
+
             console.log(session_data[roadmap.stages[0].placeId])
             roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
             console.log(roadmap.localita)
             console.log(roadmap.localita)
             console.log(roadmap.localita)
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
-            const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza,user_id);
+            const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza, user_id);
             const roadmap_id = data1[2].insertId
 
             await this.dao.addNewStages(roadmap.stages, session_data);
@@ -94,7 +94,7 @@ class RequestController {
             console.log(data)
             var stages = data[2].roadmap.stages;
             var stage;
-            for(var i=0; i< stages.length;i++){
+            for (var i = 0; i < stages.length; i++) {
                 stage = stages[i];
                 stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
             }
@@ -144,7 +144,7 @@ class RequestController {
     }
     async getCommmentsReviewByUserRoad(user,rm) {
         if (!user || user == null || !rm || rm == null) { //ricerca nulla
-            return { ok: false, error: -4, data: ''  }
+            return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.getCommmentsReviewByUserRoad(user,rm);
@@ -153,9 +153,9 @@ class RequestController {
         }
     }
     async setCommento(user, roadmap, mod_com, day) {
-        if (!roadmap || !user || !user || !mod_com || !day ) {
+        if (!roadmap || !user || !user || !mod_com || !day) {
 
-            return { ok: false, error: -4, data: ''  }
+            return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.setCommento(user, roadmap, mod_com, day);
@@ -163,31 +163,31 @@ class RequestController {
         }
     }
     async updateCommento(user, roadmap, mod_com, day) {
-        if (!roadmap || !user || !user || !mod_com || !day ) {
+        if (!roadmap || !user || !user || !mod_com || !day) {
 
-            return { ok: false, error: -4, data: ''  }
+            return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.updateCommento(user, roadmap, mod_com, day);
             return { ok: true, error: data[1], data: data[2] };
         }
     }
-    async setRecensione(user, roadmap, mod_op,mod_val, day) {
-        if (!roadmap || !user || !user || !mod_val|| !day ) {
+    async setRecensione(user, roadmap, mod_op, mod_val, day) {
+        if (!roadmap || !user || !user || !mod_val || !day) {
 
-            return { ok: false, error: -4, data: ''  }
+            return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.setRecensione(user, roadmap, mod_op,mod_val, day);
-            
+            const data = await this.dao.setRecensione(user, roadmap, mod_op, mod_val, day);
+
             return { ok: true, error: data[1], data: data[2] };
         }
     }
-    async updateRecensione(user, roadmap, mod_op,mod_val, day) {
-       
-            const data = await this.dao.updateRecensione(user, roadmap, mod_op,mod_val, day);
-            return { ok: true, error: data[1], data: data[2] };
-        
+    async updateRecensione(user, roadmap, mod_op, mod_val, day) {
+
+        const data = await this.dao.updateRecensione(user, roadmap, mod_op, mod_val, day);
+        return { ok: true, error: data[1], data: data[2] };
+
     }
     async setFavorite(user, roadmap, valore){
         const data = await this.dao.setFavorite(user, roadmap, valore);
@@ -217,6 +217,11 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
+    async reportObject(user_id, tipo, idOggetto, motivazione) {
+        const data = await this.dao.aggiungiReport(user_id, tipo, idOggetto, motivazione);
+
+        return { ok: data[0], error: data[1]}
+    }
 
     async getPlaceFromCoords(lat, lng) {
 
@@ -232,13 +237,24 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoadmapSeguite(id) {
-        const data = await this.dao.getRoadmapSeguite(id);
-        return { ok: data[0], error: data[1], data: data[2] }
+    async getRoadmapSeguite(id_query,id_session) {
+        var element = 0;
+
+        if(id_session == id_query && id_session != 0 && id_session != undefined){
+            element=1;
+        }
+        
+        const data = await this.dao.getRoadmapSeguite(id_query);
+        return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
 
     async getRoadmapPreferite(id) {
         const data = await this.dao.getRoadmapPreferite(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateRoadmapSeguite(id_roadmap,id_user) {
+        const data = await this.dao.updateRoadmapSeguite(id_roadmap,id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
@@ -249,6 +265,11 @@ class RequestController {
 
     async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
         const data = await this.dao.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getAchievements(id) {
+        const data = await this.dao.getAchievements(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

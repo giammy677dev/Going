@@ -1,8 +1,11 @@
-
-  // Script Avvio Pagina
+// Script Avvio Pagina
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const id = urlParams.get('id')
+  const number_create = 50;
+  const number_seguite = 10;
+  const number_reviews = 10;
+  const number_commenti = 10;
 
   //fare che quando carica prende rispetto a chi sta sull'url
   window.onload=function(){
@@ -11,6 +14,7 @@
     roadmap_create();
     roadmap_seguite();
     roadmap_preferite();
+    getAchievements();
   };
 
   // Script Dati Utente
@@ -32,8 +36,6 @@
           document.getElementById("info_birthdate").innerText = "Compleanno = "+day.getDate()+"/"+month+"/"+day.getFullYear();
           document.getElementById("avatar").src = r.data[0].avatar;
 
-          console.log(r.isYou);
-
           if(r.isYou == 1){
             document.getElementById('button_choice_avatar').style.display='block';
           }
@@ -46,9 +48,9 @@
     xhr.send();
   }
 
-  // Script Numero di Roadmap create,seguite e preferite dall'utente
+  // Script Numero di Roadmap create, seguite e preferite dall'utente
 
-  function roadmap_create(){ 
+  function roadmap_create(){
     var xhr = new XMLHttpRequest();
 
     xhr.open("GET", '/getRoadmapCreate?id=' + id, true);
@@ -94,8 +96,14 @@
             spazioRoadmap.setAttribute("onMouseOver","conMouseOver(\"" + spazioRoadmap.id + "\")");
             spazioRoadmap.setAttribute("onMouseOut","conMouseOut(\"" + spazioRoadmap.id + "\")");
             document.getElementById("Section_Roadmap_Seguite").appendChild(spazioRoadmap);
-            spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
-            "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>";
+            if(r.isYou == 0){
+              spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
+              "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>"}
+            else{
+              spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
+              "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>" + 
+              "<p><input type=\"button\" onclick=\"updateRoadmapSeguite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
+            } 
             funcCoktail(r.data[i].punteggio,1,i);
           }
       }
@@ -116,7 +124,6 @@
           document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Preferite ("+r.data.length+")";
 
           for (var i = 0; i < r.data.length; i++) {
-            console.log(i)
             var spazioRoadmap = document.createElement("div");
             spazioRoadmap.setAttribute("id","divRoadmap_2_" + i);
             spazioRoadmap.setAttribute("class","divRoadmap");
@@ -133,7 +140,7 @@
     xhr.send();
   }
 
-  // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut
+  // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut ed Elimazione Roadmap_Seguite
 
   function funcCoktail(media_valutazioni,number,i){
 
@@ -146,33 +153,30 @@
       const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
       var counterStamp = 0;
       if(media_valutazioni != null){
-          if(Number.isInteger(media_valutazioni)){
+        if(Number.isInteger(media_valutazioni)){
           for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
             spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
             counterStamp++;
           }
-        } else{
+        } 
+        else{
           for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
             spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
             counterStamp++;
           }
-          //inizio controllo sul decimal
-          console.log("Media Valutazioni = ");
-          console.log(media_valutazioni);
-
           const decimalStr = media_valutazioni.toString().split('.')[1];
           var decimal = Number("0."+decimalStr);
-          if (decimal < 0.25) {
-          } else if (decimal > 0.75){
+          if (decimal < 0.25) {} 
+          else if (decimal > 0.75){
             spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
             counterStamp++;
-          } else{
+          } 
+          else{
             spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
             counterStamp++;
           }
         }
       }
-  
       while(counterStamp<5){
         spazioRoadmap.insertAdjacentHTML("beforeend", html_codeVuoto);
         counterStamp++;
@@ -193,6 +197,23 @@
         document.getElementById(target).childNodes[i].style.width='25px';
         document.getElementById(target).childNodes[i].style.height='25px';
       }
+    }
+
+    function updateRoadmapSeguite(number,id){
+      var xhr = new XMLHttpRequest();
+
+      xhr.open("GET", '/updateRoadmapSeguite?id=' + id, true);
+    
+      xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+  
+        if (r.ok == true) {
+            document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+r.data.length+")";
+            document.getElementById("divRoadmap_1_" + number).remove();
+        }
+      }
+  
+      xhr.send();
     }
 
   // Cambio Profilo Provvisorio
@@ -249,4 +270,36 @@
   
     // Add the specific color to the button used to open the tab content
     elmnt.style.backgroundColor = color;
+  }
+
+  //Script Achievements
+
+  function getAchievements() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", '/getAchievements?id=' + id, true);
+  
+    xhr.onload = function (event) {
+      const r = JSON.parse(event.target.responseText);
+
+      if (r.ok == true) {
+          if(r.data[0] >= number_create) {
+            document.getElementById("roadmapAchievement").setAttribute("src", "/storage/achievements/roadmap.png");
+          }
+
+          if(r.data[1] >= number_seguite) {
+            document.getElementById("followedRoadmapAchievement").setAttribute("src", "/storage/achievements/followRoadmap.png");
+          }
+
+          if(r.data[2] >= number_reviews) {
+            document.getElementById("reviewAchievement").setAttribute("src", "/storage/achievements/review.png");
+          }
+
+          if(r.data[3] >= number_commenti) {
+            document.getElementById("commentAchievement").setAttribute("src", "/storage/achievements/comment.png");
+          }
+      }
+    }
+
+    xhr.send();
   }

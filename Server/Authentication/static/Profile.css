@@ -178,3 +178,7 @@ body {
 .grid-container div:hover {
     background-color: #af2d1375;
 }
+
+.achievements img {
+    width: 40px;
+}
