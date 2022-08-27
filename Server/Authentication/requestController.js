@@ -1,8 +1,6 @@
 const DAO = require('./DAO.js');
 const MapsHandler = require('./MapsHandler.js');
 const md5 = require('md5');
-const { ExitStatus } = require('typescript');
-
 
 class RequestController {
 
