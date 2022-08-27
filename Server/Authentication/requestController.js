@@ -1,7 +1,6 @@
 const DAO = require('./DAO.js');
 const MapsHandler = require('./MapsHandler.js');
 const md5 = require('md5');
-const { ExitStatus } = require('typescript');
 
 class RequestController {
 
@@ -58,7 +57,12 @@ class RequestController {
             roadmap.durataComplessiva = this.calculateDuration(roadmap.stages, distance_data); //si calcola con una ulteriore chiamata a google maps
             roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
             roadmap.travelMode = distance_data[roadmap.stages[0].placeId+"|"+roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
-            roadmap.localita = "TEST";//session_data[roadmap.stages[0].placeId].formatted_address;
+            
+            console.log(session_data[roadmap.stages[0].placeId])
+            roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
+            console.log(roadmap.localita)
+            console.log(roadmap.localita)
+            console.log(roadmap.localita)
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza,user_id);
             const roadmap_id = data1[2].insertId
@@ -67,7 +71,6 @@ class RequestController {
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
             return { ok: data3[0], error: data3[1] }
         }
-
         return { ok: false, error: -5 } //return error!
     }
 
@@ -87,6 +90,14 @@ class RequestController {
         }
         else {
             const data = await this.dao.viewRoadmap(id);
+
+            console.log(data)
+            var stages = data[2].roadmap.stages;
+            var stage;
+            for(var i=0; i< stages.length;i++){
+                stage = stages[i];
+                stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+            }
 
             return { ok: true, error: data[1], data: data[2] };
         }
@@ -127,9 +138,57 @@ class RequestController {
 
     async getDataUser(id, element) {
         const data = await this.dao.getDataUser(id);
+
+
         return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
+    async getCommmentsReviewByUserRoad(user,rm) {
+        if (!user || user == null || !rm || rm == null) { //ricerca nulla
+            return { ok: false, error: -4, data: ''  }
+        }
+        else {
+            const data = await this.dao.getCommmentsReviewByUserRoad(user,rm);
+           
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    async setCommento(user, roadmap, mod_com, day) {
+        if (!roadmap || !user || !user || !mod_com || !day ) {
 
+            return { ok: false, error: -4, data: ''  }
+        }
+        else {
+            const data = await this.dao.setCommento(user, roadmap, mod_com, day);
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    async updateCommento(user, roadmap, mod_com, day) {
+        if (!roadmap || !user || !user || !mod_com || !day ) {
+
+            return { ok: false, error: -4, data: ''  }
+        }
+        else {
+            const data = await this.dao.updateCommento(user, roadmap, mod_com, day);
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    async setRecensione(user, roadmap, mod_op,mod_val, day) {
+        if (!roadmap || !user || !user || !mod_val|| !day ) {
+
+            return { ok: false, error: -4, data: ''  }
+        }
+        else {
+            const data = await this.dao.setRecensione(user, roadmap, mod_op,mod_val, day);
+            
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    async updateRecensione(user, roadmap, mod_op,mod_val, day) {
+       
+            const data = await this.dao.updateRecensione(user, roadmap, mod_op,mod_val, day);
+            return { ok: true, error: data[1], data: data[2] };
+        
+    }
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
         //a google maps api!!
@@ -164,13 +223,24 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoadmapSeguite(id) {
-        const data = await this.dao.getRoadmapSeguite(id);
-        return { ok: data[0], error: data[1], data: data[2] }
+    async getRoadmapSeguite(id_query,id_session) {
+        var element = 0;
+
+        if(id_session == id_query && id_session != 0 && id_session != undefined){
+            element=1;
+        }
+        
+        const data = await this.dao.getRoadmapSeguite(id_query);
+        return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
 
     async getRoadmapPreferite(id) {
         const data = await this.dao.getRoadmapPreferite(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async deleteRoadmapSeguite(id_roadmap,id_user) {
+        const data = await this.dao.deleteRoadmapSeguite(id_roadmap,id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

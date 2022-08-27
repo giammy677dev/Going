@@ -1,6 +1,14 @@
 var ok = false
 var user_id = 0
 
+window.onload=function(){
+  check()
+};
+
+const receivedUserInfo = new CustomEvent('receivedUserInfo');
+
+
+
 function check() {
   var xhr = new XMLHttpRequest();
 
@@ -26,10 +34,17 @@ function check() {
       document.getElementById("topnav_image0").style.setProperty("display", "block");
       document.getElementById("topnav_image").style.setProperty("width", "5%");
       document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
+      receivedUserInfo.logged=true; //passiamo valore tramite evento! wow!
+      receivedUserInfo.user=user_id
+      document.dispatchEvent(receivedUserInfo);
     }
     else if (r.ok == true && r.data.length == 0) {
       console.log("non sei loggato!!!")
       console.log(r)
+      //wagliu qua serve un ritorno. tipo logged:false
+      receivedUserInfo.logged=false;
+      receivedUserInfo.user=0
+      document.dispatchEvent(receivedUserInfo);
     }
   }
   xhr.send();
