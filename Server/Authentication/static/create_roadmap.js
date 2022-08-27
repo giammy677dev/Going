@@ -1,15 +1,26 @@
 
+
 window.onload = function () {
     check()
     initMap();
-
-    
 };
 
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
+document.addEventListener('receivedStageData', (e) => { 
+    stages_info[e.stage.placeId]=e.stage
+    drawDeletableStage(e.stage_index, e.stage) }, false);
+
+document.addEventListener('dbMarkerClicked', (e) => {
+    console.log("test");
+    ClickEventHandler.prototype.openAddBox(e.placeId, e.latLng);
+}, false);
+
+function drawDeletableStage(stage_index, stage) {
+    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
+}
 
 var stages_list = []; //lista degli stage
-var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
 var lastPlaceId = 0;
 var durataComplessiva = 0;
 var indirizzo;
@@ -341,7 +352,7 @@ var ClickEventHandler = (function () {
             stages_list.push(to_send_stage)
             lastPlaceId = placeId;
 
-            drawNewStage(stage_index, stage);
+            drawDeletableStage(stage_index, stage);
 
             if (stages_list.length >= 2) {
                 //requestDistance(stages_list[stage_index - 1], stage);
@@ -405,16 +416,12 @@ var ClickEventHandler = (function () {
             stage.latitudine = latLng.lat();
             stage.longitudine = latLng.lng();
 
-            //to_send_stage.latitudine = latLng.lat();
-            //to_send_stage.longitudine = latLng.lng();
             to_send_stage.durata = stage.durata;
             to_send_stage.placeId = stage.placeId;
 
             stages_list.push(to_send_stage);
-            //addToRoadmapVisual(stage);
             lastPlaceId = placeId;
-            drawNewStage(stage_index, stage)
-
+            drawDeletableStage(stage_index, stage)
 
             if (stages_list.length >= 2) {
                 requestDistance(stages_list[stage_index - 1], stage);
@@ -426,7 +433,6 @@ var ClickEventHandler = (function () {
             prec = stage.durata + prec
             document.getElementById("somma_totale").innerText = prec
 
-            //me.infowindow.close();
             infoWindow.close();
         });
 
