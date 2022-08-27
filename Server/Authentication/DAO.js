@@ -264,7 +264,7 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
-    async allLoggedRoadmap(user,rm) {
+    async getCommmentsReviewByUserRoad(user,rm) {
         try {
 
             var connection = await this.connect();
