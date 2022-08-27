@@ -38,8 +38,6 @@ document.addEventListener('receivedStageData', (e) => {
   document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
   document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + '; facendo ste cose: ' + stage.descrizione_st + '</p></div>'
 
-
-
 }, false);
 
 document.addEventListener('receivedRoadmapData', (e) => {

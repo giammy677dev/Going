@@ -10,6 +10,8 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
+//tutti i || true alla fine vanno tolti!
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -80,6 +82,7 @@ class HTTPinterface {
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
+        this.app.post('/report', this.reportObject.bind(this));
 
     
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
@@ -329,6 +332,13 @@ class HTTPinterface {
             if (r.ok) {
                 req.session.distanceDetails[req.body.origin + "|" + req.body.destination] = r.data;
             }
+            return res.send(JSON.stringify(r));
+        }
+    }
+
+    async reportObject(req, res) {
+        if (req.session.loggedin || true) { // da mettere!
+            const r = await this.controller.reportObject(req.session.user_id, req.body.tipo, req.body.idOggetto, req.body.motivazione);
             return res.send(JSON.stringify(r));
         }
     }

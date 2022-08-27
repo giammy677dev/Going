@@ -104,6 +104,18 @@ class DAO {
             return [false, error.errno, {}];
         }
     }
+
+    async aggiungiReport(user_id, tipo, idOggetto, motivazione) {
+        try {
+            var connection = await this.connect();
+            await connection.query('INSERT INTO segnalazione (idUtente, tipo, idOggetto, motivazione) VALUES (?, ?, ?, ?)', [user_id, tipo, idOggetto, motivazione]);
+            return [true, 0];
+        } catch (error) {
+            console.log(error)
+            return [false, error.errno];
+        }
+    }
+
     async addNewStages(stages, session_data) {
 
         var connection = await this.connect();
