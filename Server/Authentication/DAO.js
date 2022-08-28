@@ -420,6 +420,20 @@ class DAO {
         }
     }
 
+    async updateRoadmapPreferite(id_roadmap,id_user) {
+        try {
+            var connection = await this.connect();
+            await connection.query('UPDATE roadmapuser SET preferita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
+            let dati = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id_user])
+            let results = dati[0];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+    
+    
+
     async updateAvatar(id, new_avatar) {
         try {
             var connection = await this.connect();

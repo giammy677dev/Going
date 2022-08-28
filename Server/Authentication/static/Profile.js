@@ -130,8 +130,15 @@
             spazioRoadmap.setAttribute("onMouseOver","conMouseOver(\"" + spazioRoadmap.id + "\")");
             spazioRoadmap.setAttribute("onMouseOut","conMouseOut(\"" + spazioRoadmap.id + "\")");
             document.getElementById("Section_Roadmap_Preferite").appendChild(spazioRoadmap);
-            spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
-            "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>";
+            if(r.isYou == 0){
+              spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
+              "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>"
+            }   
+            else{
+              spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
+              "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>" + 
+              "<p><input type=\"button\" onclick=\"updateRoadmapPreferite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
+            } 
             funcCoktail(r.data[i].punteggio,2,i);
           }
       }
@@ -140,7 +147,7 @@
     xhr.send();
   }
 
-  // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut ed Elimazione Roadmap_Seguite
+  // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut ed Elimazione Roadmap Seguite, Preferite
 
   function funcCoktail(media_valutazioni,number,i){
 
@@ -210,6 +217,23 @@
         if (r.ok == true) {
             document.getElementById("bar_roadmap_seguite").innerText = "Roadmap Seguite ("+r.data.length+")";
             document.getElementById("divRoadmap_1_" + number).remove();
+        }
+      }
+  
+      xhr.send();
+    }
+
+    function updateRoadmapPreferite(number,id){
+      var xhr = new XMLHttpRequest();
+
+      xhr.open("GET", '/updateRoadmapPreferite?id=' + id, true);
+    
+      xhr.onload = function (event) {
+        const r = JSON.parse(event.target.responseText);
+  
+        if (r.ok == true) {
+            document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Seguite ("+r.data.length+")";
+            document.getElementById("divRoadmap_2_" + number).remove();
         }
       }
   

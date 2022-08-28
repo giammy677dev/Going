@@ -239,13 +239,24 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
 
-    async getRoadmapPreferite(id) {
-        const data = await this.dao.getRoadmapPreferite(id);
-        return { ok: data[0], error: data[1], data: data[2] }
+    async getRoadmapPreferite(id_query,id_session) {
+        var element = 0;
+
+        if(id_session == id_query && id_session != 0 && id_session != undefined){
+            element=1;
+        }
+        
+        const data = await this.dao.getRoadmapPreferite(id_query);
+        return { ok: data[0], error: data[1], data: data[2], isYou: element }
     }
 
     async updateRoadmapSeguite(id_roadmap,id_user) {
         const data = await this.dao.updateRoadmapSeguite(id_roadmap,id_user);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateRoadmapPreferite(id_roadmap,id_user) {
+        const data = await this.dao.updateRoadmapPreferite(id_roadmap,id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

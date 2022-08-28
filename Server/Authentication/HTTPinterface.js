@@ -71,6 +71,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
         this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
+        this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
@@ -288,12 +289,17 @@ class HTTPinterface {
     }
 
     async getRoadmapPreferite(req, res) {
-        const r = await this.controller.getRoadmapPreferite(req.session.user_id);
+        const r = await this.controller.getRoadmapPreferite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
     async updateRoadmapSeguite(req, res) {
         const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }
+
+    async updateRoadmapPreferite(req, res) {
+        const r = await this.controller.updateRoadmapPreferite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
