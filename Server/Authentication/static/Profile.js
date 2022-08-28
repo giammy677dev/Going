@@ -7,7 +7,6 @@
   const number_reviews = 10;
   const number_commenti = 10;
 
-  //fare che quando carica prende rispetto a chi sta sull'url
   window.onload=function(){
     document.getElementById("bar_roadmap_create").click();
     data_user();

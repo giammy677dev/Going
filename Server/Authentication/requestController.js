@@ -58,18 +58,18 @@ class RequestController {
             roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
             roadmap.travelMode = distance_data[roadmap.stages[0].placeId + "|" + roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
 
-            console.log(session_data[roadmap.stages[0].placeId])
+            //console.log(session_data[roadmap.stages[0].placeId])
             roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
+            /*console.log(roadmap.localita)
             console.log(roadmap.localita)
-            console.log(roadmap.localita)
-            console.log(roadmap.localita)
+            console.log(roadmap.localita)*/
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza, user_id);
             const roadmap_id = data1[2].insertId
 
             await this.dao.addNewStages(roadmap.stages, session_data);
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
-            return { ok: data3[0], error: data3[1] }
+            return { ok: data3[0], error: data3[1], data: roadmap_id }
         }
         return { ok: false, error: -5 } //return error!
     }
@@ -281,6 +281,11 @@ class RequestController {
 
     async getAchievements(id) {
         const data = await this.dao.getAchievements(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getRoadmapAchievementsPopup(id) {
+        const data = await this.dao.getRoadmapAchievementsPopup(5); //il 5 deve cambiare con id quando passeremo id dalla pagine di viewRoadmap
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

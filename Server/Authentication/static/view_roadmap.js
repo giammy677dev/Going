@@ -6,9 +6,13 @@ var points = 0
 var commento_utente
 var pref
 var fatta
+const number_create = 50;
 
-
-
+window.onload = function() {
+  if (document.referrer == 'http://localhost:3000/create') { //bisogna fare quando di viene da una roadmap forkata con link---> http://localhost:3000/create?roadmap_id=154
+    getRoadmapAchievementsPopup();
+  }
+};
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
@@ -18,8 +22,8 @@ document.addEventListener('receivedUserInfo', (e) => {
 
     ok_in_rm = true
     id_user = e.user
+    
     getCommmentsReviewByUserRoad(id_user, id_rm)
-
   }
   else {
     document.getElementById("container_funz").style.display = "none"
@@ -167,7 +171,6 @@ function check_nw() {
 
 function getCommmentsReviewByUserRoad(id_user, id_rm) {
   var xhr = new XMLHttpRequest();
-
   xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user + '&id_rm=' + id_rm, true);
 
   xhr.onload = function (event) {
@@ -653,3 +656,35 @@ var ClickEventHandler = (function () {
   };
   return ClickEventHandler;
 }());
+
+//Aggiunto da Gian e Diego
+
+function getRoadmapAchievementsPopup() {
+  var xhr = new XMLHttpRequest();
+        xhr.open("GET", '/getRoadmapAchievementsPopup', true);
+        xhr.onload = function (event) {
+
+            const r = JSON.parse(event.target.responseText);
+
+            if (r.ok == true) {
+                if (r.data == number_create) {
+                  document.getElementById('textAchievement').innerText = "Hai creato " + number_create + " roadmap!";
+                  showAchievementPopup();
+                }
+            }
+        }
+
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            id_user: id_user
+        }));
+}
+
+function showAchievementPopup() {
+  document.getElementById("roadmapAchievementPopup").style.display = "block";
+  setTimeout(closeForm, 5000);
+}
+
+function closeForm() {
+  document.getElementById("roadmapAchievementPopup").style.display = "none";
+}

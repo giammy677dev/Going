@@ -96,7 +96,6 @@ class DAO {
     async addRoadmap(titolo, isPublic, durata, localita, descrizione, dataCreazione, travelMode, distanza, utenteRegistrato_id) {
         try {
             var connection = await this.connect();
-            //console.log('INSERT INTO roadmap (titolo, isPublic, durata, localita, descrizione, punteggio, dataCreazione, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, NULL, ?, ?)', [titolo, isPublic, durata, localita, descrizione, dataCreazione, utenteRegistrato_id])
             const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durata, localita, descrizione, punteggio, dataCreazione, travelMode, distanza, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [titolo, isPublic, durata, localita, descrizione, null, dataCreazione, travelMode, distanza, utenteRegistrato_id]);
             return [true, 0, res[0]];
         } catch (error) {
@@ -521,6 +520,17 @@ class DAO {
             let reviewsResult = await connection.query('SELECT COUNT(*) AS numberReviews FROM recensione WHERE idUtenteRegistrato = ?', [id]);
             let commentsResult = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [id]);
             let results = [roadmapResult[0][0].numberRoadmap, followedRoadmapResult[0][0].numberFollowedRoadmap, reviewsResult[0][0].numberReviews, commentsResult[0][0].numberComments];
+            return [true, 0, results];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async getRoadmapAchievementsPopup(id) {
+        try {
+            var connection = await this.connect();
+            let roadmapResult = await connection.query('SELECT COUNT(*) AS numberRoadmap FROM roadmap WHERE utenteRegistrato_id = ?', [id]);
+            let results = roadmapResult[0][0].numberRoadmap;
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];

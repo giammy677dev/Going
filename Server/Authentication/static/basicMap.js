@@ -1,5 +1,3 @@
-
-
 var map;
 var roadmap;
 let customMarker = './storage/marker.png'

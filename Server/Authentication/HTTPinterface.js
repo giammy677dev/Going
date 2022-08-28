@@ -88,6 +88,7 @@ class HTTPinterface {
         this.app.post('/setChecked',this.setChecked.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
+        this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
 
 
 
@@ -252,12 +253,12 @@ class HTTPinterface {
 
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
             //const user_id = req.session.id; //qua da aggiustare in login!!
-
-            console.log(req.session.distanceDetails)
+            //console.log(req.session.distanceDetails)
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails);
             //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
+                console.log(r)
             }
             //qua si svuota tutto!
             //req.session.placeDetails = {} //svuotamento session troppo piccola?
@@ -384,6 +385,11 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
+    async getRoadmapAchievementsPopup(req, res) {
+        const r = await this.controller.getRoadmapAchievementsPopup(req.body.user_id);
+        return res.send(JSON.stringify(r));
+    }
+
     async searchUser(req, res) {
 
         const r = await this.controller.searchUser(req.query.username);
@@ -436,16 +442,11 @@ class HTTPinterface {
     }
 
     async createRoadmap_page(req, res) {
-
-
-
         if (req.session.loggedin | true) { //fatto in viewrm. va bene?
             if (req.query.roadmap_id !== undefined && req.query.roadmap_id > 0) {
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
         }
-
-
         return res.sendFile(__dirname + '/static/create.html');
     }
 
