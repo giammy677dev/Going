@@ -4,7 +4,8 @@ var id_rm = 0
 var insert_rec = 1
 var points = 0
 var commento_utente
-var chk_com
+var pref
+var fatta
 
 
 
@@ -12,12 +13,12 @@ var chk_com
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
-  
+
   if (e.logged) {
-   
+
     ok_in_rm = true
     id_user = e.user
-    getCommmentsReviewByUserRoad(id_user,id_rm)
+    getCommmentsReviewByUserRoad(id_user, id_rm)
 
   }
   else {
@@ -30,17 +31,17 @@ document.addEventListener('receivedUserInfo', (e) => {
 document.addEventListener('receivedStageData', (e) => {
 
   var stage = e.stage;
-  console.log(stage)
-  if(stage.reachTime!=null){
-    var time=parseInt(stage.reachTime)/60;
-  }else{
-    time=''
+  //console.log(stage)
+  if (stage.reachTime != null) {
+    var time = parseInt(stage.reachTime) / 60;
+  } else {
+    time = ''
   }
-  
-  console.log(time)
- 
+
+  //console.log(time)
+
   document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + 'min </p>'
+  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
 
 }, false);
 
@@ -58,17 +59,10 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
   if (roadmap.punteggio != null) {
-    const html_cock = printBicchieri(roadmap.punteggio, 35)
+    const html_cock = printBicchieri(roadmap.punteggio, 35, 'auto')
     document.getElementById("rating").innerHTML += html_cock
   }
-  /*for (let i = 0; i < quanti_stage; i++) {
-    var time = roadmap.stages[i].reachTime
-    if (time == null) {
-      time = " "
-    }
-    document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + roadmap.stages[i].nome + '</h4><p>' + roadmap.stages[i].indirizzo + ' con durata di sosta: ' + roadmap.stages[i].durata + '; facendo ste cose: ' + roadmap.stages[i].descrizione_st + '</p></div>'
-  }*/
+
   loadRecCom();
 }, false);
 
@@ -171,19 +165,34 @@ function check_nw() {
 }*/
 
 
-function getCommmentsReviewByUserRoad(id_user,id_rm) {
+function getCommmentsReviewByUserRoad(id_user, id_rm) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user+'&id_rm='+id_rm, true);
+  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user + '&id_rm=' + id_rm, true);
 
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
-    console.log(r.data)
+    //console.log(r.data)
     const chk_rec = r.data.results_rec.length
-    chk_com = r.data.results_com.length
+    const chk_com = r.data.results_com.length
+    pref = r.data.pref
+    fatta = r.data.fatta
+    var posto_fav = document.getElementById("favorite")
+    var posto_fatta = document.getElementById("checked")
 
+    if (pref == 0 || pref == null) {
+      posto_fav.innerHTML = '<img id="fav"  title="inseriscila tra i preferiti" onclick="favorite(1)"src="/storage/star0.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+    } else if (pref == 1) {
+      posto_fav.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="favorite(0)" src="/storage/star' + pref + '.png" style="width:50px; height:50px;cursor: pointer;">'
+    }
+
+    if (fatta == 0 || fatta == null) {
+      posto_fatta.innerHTML = '<img id="chk"  title="inseriscila tra le percorse" src="/storage/check0.png" onclick="checked(1)" style="width:50px; height:50px;cursor: pointer;">'
+    } else if (fatta == 1) {
+      posto_fatta.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="checked(0)" src="/storage/check' + fatta + '.png" style="width:50px; height:50px;cursor: pointer;">'
+    }
 
     if (r.ok == true) {
       if (chk_rec == 1) {
@@ -192,16 +201,17 @@ function getCommmentsReviewByUserRoad(id_user,id_rm) {
         document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
         const rating = rec.valutazione
 
-        points=rating
-        const html_cock = printBicchieri(rating, 50)
+        points = rating
+        const html_cock = printBicchieri(rating, 50, 'auto')
 
         document.getElementById("cocks").innerHTML = html_cock
         var elements = document.getElementById('cocks').children;
         for (let i = 0; i < elements.length; i++) {
           elements[i].setAttribute("id", i)
-          elements[i].setAttribute("onclick", "rating(" + i + ")")
+          elements[i].setAttribute("title", i + 1)
+
         }
-        document.getElementById('cocks').setAttribute("disabled", "disabled")
+
         if (rec.opinione != null) {
           document.getElementById("lab_rec").innerHTML = "La tua recensione!"
           document.getElementById("us_rec").innerText = rec.opinione
@@ -210,16 +220,16 @@ function getCommmentsReviewByUserRoad(id_user,id_rm) {
         }
       }
       if (chk_rec == 0) {
-        const html_cock = '<img id="0" onclick="rating(0)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="1" onclick="rating(1)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="2" onclick="rating(2)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="3" onclick="rating(3)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;"><img id="4" onclick="rating(4)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;">'
+        const html_cock = '<img id="0" onclick="rating(0)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="1" onclick="rating(1)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="2" onclick="rating(2)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="3" onclick="rating(3)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="4" onclick="rating(4)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;">'
         document.getElementById("cocks").innerHTML = html_cock
       }
 
 
       if (chk_com > 0) {
-          console.log(r.data.results_com)
-          commento_utente = r.data.results_com
-          console.log(commento_utente)
-        
+        //console.log(r.data.results_com)
+        commento_utente = r.data.results_com
+        //console.log(commento_utente)
+
 
       }
     }
@@ -235,7 +245,12 @@ function abilitaRec() {
   document.getElementById("us_rec").removeAttribute("disabled")
   document.getElementById("save_recbtn").innerHTML = "Salva Valutazione e/o opinione";
   document.getElementById("save_recbtn").setAttribute("onclick", "saveRec()");
+  var elements = document.getElementById('cocks').children;
+  for (let i = 0; i < elements.length; i++) {
 
+    elements[i].setAttribute('style', 'width: 50px; height: 50px;cursor: pointer')
+    elements[i].setAttribute('onclick', 'rating(' + i + ')')
+  }
 }
 function abilitaCom() {
   document.getElementById("us_com").removeAttribute("disabled")
@@ -257,7 +272,7 @@ function loadRecCom() {
     if (r.ok == true) {
       if (len_rc !== undefined && len_rc > 0) {
         const recensioni = r.data.recensioni
-        console.log("quante recensioni:", recensioni)
+        //console.log("quante recensioni:", recensioni)
         for (let i = 0; i < len_rc; i++) {
           var day = new Date(recensioni[i].dataPubblicazione)
           var month = day.getMonth() + 1;
@@ -277,7 +292,7 @@ function loadRecCom() {
       }
       if (len_com !== undefined && len_com > 0) {
         const commenti = r.data.commenti
-        console.log("quanti commenti:", commenti)
+        //console.log("quanti commenti:", commenti)
         for (let i = 0; i < len_com; i++) {
 
           var day = new Date(commenti[i].dataPubblicazione)
@@ -300,14 +315,14 @@ function loadRecCom() {
   xhr.send();
 }
 
-function printBicchieri(punteggio, grandezza) {
+function printBicchieri(punteggio, grandezza, cursore) {
   /* prendo tutto il numero intero e stampo i cock pieni
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
 
-  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
-  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
-  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;">'
+  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px; cursor: ' + cursore + ';">'
+  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
+  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
   var html_globale = " "
   var counterStamp = 0;
   if (Number.isInteger(punteggio)) {
@@ -341,47 +356,95 @@ function printBicchieri(punteggio, grandezza) {
 
 function rating(value) {
   points = value + 1
-  const html_cock = printBicchieri(points, 50)
+  const html_cock = printBicchieri(points, 50, 'pointer')
   document.getElementById("cocks").innerHTML = html_cock
   var elements = document.getElementById('cocks').children;
   for (let i = 0; i < elements.length; i++) {
-    elements[i].setAttribute("id", i)
-    elements[i].setAttribute("onclick", "rating(" + i + ")")
+    elements[i].setAttribute('onclick', 'rating(' + i + ')')
+
   }
 }
 
-function heart() {
 
+function favorite(value) {
+  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
+  var xhr = new XMLHttpRequest();
 
-  const button = document.querySelector(".heart-like-button");
-  var point = 0;
-  //insert in tabella con id utente per dire se preferita
-  if (button.classList.contains("liked")) {
-    button.classList.remove("liked");
-    point = 0
-    alert("Non mi piace più, Punteggio=" + point)
-  } else {
-    button.classList.add("liked");
-    point = 1
-    alert("Mi piace, Punteggio=" + point)
+  xhr.open("POST", '/setFavorite', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      //uscita
+      console.log("messo ", value, "in preferite")
+      const prec_value = value
+      var html
+      if (value == 1) {
+        value = 0
+        html = '<img id="fav" title="toglila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+      } else {
+        value = 1
+        html = '<img id="fav" title="inseriscila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+      }
+      var posto_fav = document.getElementById("favorite")
+      posto_fav.innerHTML = html
+
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user: id_user,
+    roadmap: id_rm,
+    favorite: value
+  }));
+
+
 
 }
+function checked(value) {
+  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
+  var xhr = new XMLHttpRequest();
 
-function checked() {
+  xhr.open("POST", '/setChecked', true);
+  xhr.onload = function (event) {
 
-  const button = document.querySelector(".checked-like-button");
-  var point = 0;
-  //insert in tabella con id utente per dire se effettuata
-  if (button.classList.contains("liked")) {
-    button.classList.remove("liked");
-    point = 0
-    alert("Non la seguo più, Punteggio=" + point)
-  } else {
-    button.classList.add("liked");
-    point = 1
-    alert("La seguo, Punteggio=" + point)
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      console.log("messo ", value, "in seguite")
+      //uscita
+      const prec_value = value
+      var html
+      if (value == 1) {
+        value = 0
+        html = '<img id="chk" title="toglila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+      } else {
+        value = 1
+        html = '<img id="chk"  title="inseriscila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+      }
+      var posto_chk = document.getElementById("checked")
+
+      posto_chk.innerHTML = html
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user: id_user,
+    roadmap: id_rm,
+    check: value
+  }));
+
 
 }
 function saveRec() {
@@ -465,7 +528,10 @@ function saveRec() {
     alert("nooooooooo")
   }
 }
-function saveCom() {
+function mostraCommenti() {
+  alert("fare mostra commenti")
+}
+/*function saveCom() {
   com = document.getElementById("us_com").value
   var today = new Date();
   var dd = today.getDate();
@@ -529,7 +595,7 @@ function saveCom() {
 
   }
 }
-
+*/
 function forkaggio() {
   location.href = "/create?roadmap_id=" + id_rm
 }

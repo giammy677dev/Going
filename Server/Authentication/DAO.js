@@ -139,7 +139,7 @@ class DAO {
                 }
                 else //è exnovo!
                 {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL,stored_stage.localita]);
+                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita]);
                 }
             } catch (error) {
                 console.log(error)
@@ -159,7 +159,7 @@ class DAO {
             for (var i = 0; i < stages.length; i++) {
                 var stage = stages[i];
                 route = i > 0 ? distance_data[stages[i - 1].placeId + "|" + stage.placeId] : {}
-                
+
                 reachTime = i > 0 ? route.routes[0].legs[0].duration.value : 0;
                 route = JSON.stringify(route);
                 // Execute SQL query that'll insert the account in the database
@@ -230,7 +230,7 @@ class DAO {
 
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?)OR(distanza LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%','%' + ricerca + '%']);
+            var result = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?)OR(distanza LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -275,13 +275,23 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
-    async getCommmentsReviewByUserRoad(user,rm) {
+    async getCommmentsReviewByUserRoad(user, rm) {
         try {
 
             var connection = await this.connect();
-            var result_rec = await connection.query('select idRecensione,valutazione,opinione,dataPubblicazione from recensione where idUtenteRegistrato=? AND idRoadmap=?', [user,rm])
-            var result_com = await connection.query('select idCommento,testo,dataPubblicazione from commento where idUtenteRegistrato=? AND idRoadmap=?', [user,rm])
-            //query per vedere se preferita o seguita, quindi due tabelle, ancora non fatte
+            var pref = 0
+            var fatta = 0
+            var result_rec = await connection.query('select idRecensione,valutazione,opinione,dataPubblicazione from recensione where idUtenteRegistrato=? AND idRoadmap=?', [user, rm])
+            var result_com = await connection.query('select idCommento,testo,dataPubblicazione from commento where idUtenteRegistrato=? AND idRoadmap=?', [user, rm])
+            var result = await connection.query('select preferita,seguita from roadmapuser where idUtenteRegistrato=? AND idRoadmap=?', [user, rm])
+            //console.log(result[0].length)
+            if (result[0].length != 0) {
+                //console.log(result[0][0].preferita)
+                //console.log(result[0][0].seguita)
+                pref = result[0][0].preferita
+                fatta = result[0][0].seguita
+                //console.log(pref,fatta)
+            }
             //console.log("result_com: ", result_com[0])
             //console.log("result_com length: ", result_com[0].length)
 
@@ -289,7 +299,7 @@ class DAO {
             //console.log("result_rec length: ", result_rec[0].length)
 
 
-            return [true, 0, { results_rec: result_rec[0], results_com: result_com[0] }];
+            return [true, 0, { results_rec: result_rec[0], results_com: result_com[0], pref: pref, fatta: fatta }];
         }
         catch (error) {
             return [false, error.errno];
@@ -312,20 +322,20 @@ class DAO {
 
             var connection = await this.connect();
             var res_ins = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
-            
-            
-            var dati=await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?',[roadmap])
+
+
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
             //console.log("dati da count: ",dati[0][0].numeroRecensioni)
             //console.log("dati da count: ",dati[0][0].somma)
-           
 
-            var numeroRecensioni=dati[0][0].numeroRecensioni
-            var somma=dati[0][0].somma
-            var media=parseFloat(somma/numeroRecensioni)
+
+            var numeroRecensioni = dati[0][0].numeroRecensioni
+            var somma = dati[0][0].somma
+            var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
-            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?',[media,roadmap])
-            
-            return [true, 0, {res_ins: res_ins[0],res_upd_media: res_upd_media[0]}];
+            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
+
+            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0] }];
 
         }
         catch (error) {
@@ -349,17 +359,64 @@ class DAO {
         try {
             var connection = await this.connect();
             var res_ins = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
-            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?',[roadmap])
+
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
             //console.log("dati da count: ",dati[0][0].numeroRecensioni)
             //console.log("dati da count: ",dati[0][0].somma)
-           
-            var numeroRecensioni=dati[0][0].numeroRecensioni
-            var somma=dati[0][0].somma
-            var media=parseFloat(somma/numeroRecensioni)
+
+
+            var numeroRecensioni = dati[0][0].numeroRecensioni
+            var somma = dati[0][0].somma
+            var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
-            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?',[media,roadmap])
-            
-            return [true, 0, {res_ins: res_ins[0],res_upd_media: res_upd_media[0]}];
+            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
+
+            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0] }];
+
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async setFavorite(user, roadmap, valore) {
+        try {
+
+            var connection = await this.connect();
+
+            var query
+            var see=await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
+            if(see[0].length==0){
+                //mai messo nulla
+                query=await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) vALUES (?,?,?)',[user,roadmap,valore])
+            }else{
+                query=await connection.query('UPDATE roadmapuser SET preferita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
+            }
+
+            return [true, 0, query[0]];
+
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    async setChecked(user, roadmap, valore) {
+        try {
+
+            var connection = await this.connect();
+
+            var query
+            var see=await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
+            if(see[0].length==0){
+                //mai messo nulla
+                query=await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) vALUES (?,?,?)',[user,roadmap,valore])
+            }else{
+                query=await connection.query('UPDATE roadmapuser SET seguita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
+            }
+
+            return [true, 0, query[0]];
+
         }
         catch (error) {
             return [false, error.errno];
