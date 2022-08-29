@@ -176,7 +176,7 @@ function printCocktail(punteggio) {
         }
 
         //Inizio controllo sul decimale
-        var decimal = media_valutazioni - Math.floor(media_valutazioni);
+        var decimal = punteggio - Math.floor(punteggio);
         decimal = decimal.toFixed(2);
 
         if (decimal >= 0.25 && decimal < 0.75) {
