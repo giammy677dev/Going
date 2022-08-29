@@ -80,7 +80,7 @@ function caricaRoadmap() {
         document.getElementById("containerRoadmap").appendChild(spazioRoadmap);
         spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+result[i].id+"\"><span class=\"inEvidenza\">" + result[i].titolo + "</span></a>" + 
         "<p><span class=\"interno\">🏙 " + result[i].localita  + "</span><span class=\"interno\">⏱" + durata + "</span></p>";
-        funcCoktail(result[i].punteggio,i);
+        printCocktail(result[i].punteggio,i);
       }
       
     }
@@ -92,42 +92,43 @@ function caricaRoadmap() {
   xhr.send();
 }
 
-function funcCoktail(media_valutazioni,i){
+function printCocktail(media_valutazioni,i){
   /* prendo tutto il numero intero e stampo i cock pieni
     verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
     verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
     var spazioRoadmap = document.getElementById("divRoadmap" + i);
-    const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-    const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-    const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
+    const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
+    const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
+    const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
     var counterStamp = 0;
     if(media_valutazioni != null){
       if(Number.isInteger(media_valutazioni)){
         for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+          spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
           counterStamp++;
         }
       } else{
         for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+          spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
           counterStamp++;
         }
-        //inizio controllo sul decimale
-        const decimalStr = media_valutazioni.toString().split('.')[1];
-        var decimal = Number("0."+decimalStr);
-        if (decimal < 0.25) {
-        } else if (decimal > 0.75){
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+        
+        var decimal = media_valutazioni - Math.floor(media_valutazioni);
+        decimal = decimal.toFixed(2);
+
+        if (decimal >= 0.25 && decimal < 0.75) {
+          spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailMezzo);
           counterStamp++;
-        } else{
-          spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
+        }
+        else if (decimal >= 0.75) {
+          spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
           counterStamp++;
         }
       }
     }
 
-    while(counterStamp<5){
-      spazioRoadmap.insertAdjacentHTML("beforeend", html_codeVuoto);
+    while (counterStamp < 5) {
+      spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailVuoto);
       counterStamp++;
     }
 }

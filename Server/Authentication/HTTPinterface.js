@@ -51,7 +51,6 @@ class HTTPinterface {
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
         this.app.get('/signup', this.signup_page.bind(this)); //Registrati
         this.app.get('/profile', this.profile_page.bind(this)); //Profilo
-        this.app.get('/diego', this.diego.bind(this)); //Easter Egg
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
         this.app.use('/avatar', express.static('avatar')); //avatars
@@ -267,12 +266,10 @@ class HTTPinterface {
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
 
-
     async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
         return res.send(r);
     }
-
 
     async getDataUser(req, res) {
         var element = 0;
@@ -346,7 +343,6 @@ class HTTPinterface {
             return res.send(JSON.stringify(r));
         }
     }
-
 
     async getRoute(req, res) {
         if (req.session.loggedin || true) { // da mettere!
@@ -464,12 +460,6 @@ class HTTPinterface {
         }
         //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
         return res.sendFile(__dirname + '/static/Profile.html');
-    }
-
-    async diego(req, res) {
-        //console.log(req.query.DIEGO)
-        //res.send(req.query.DIEGO)
-        return res.sendFile(__dirname + '/static/Sito/About.html');
     }
 }
 

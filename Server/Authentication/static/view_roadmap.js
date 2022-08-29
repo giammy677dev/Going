@@ -255,6 +255,7 @@ function abilitaRec() {
     elements[i].setAttribute('onclick', 'rating(' + i + ')')
   }
 }
+
 function abilitaCom() {
   document.getElementById("us_com").removeAttribute("disabled")
   document.getElementById("save_combtn").innerHTML = "Salva Commento";
@@ -323,36 +324,39 @@ function printBicchieri(punteggio, grandezza, cursore) {
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
 
-  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px; cursor: ' + cursore + ';">'
-  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
-  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
+  const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px; cursor: ' + cursore + ';">'
+  const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
+  const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
   var html_globale = " "
   var counterStamp = 0;
   if (Number.isInteger(punteggio)) {
     for (var iteratorInt = 0; iteratorInt < punteggio; iteratorInt++) {
       counterStamp++;
-      html_globale += html_codePieno
+      html_globale += html_cocktailPieno
     }
   } else {
     for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
       counterStamp++;
-      html_globale += html_codePieno
+      html_globale += html_cocktailPieno
     }
-    //inizio controllo sul decimale
-    const decimalStr = punteggio.toString().split('.')[1];
-    var decimal = Number(decimalStr);
-    if (decimal < 2.5) {
-    } else if (decimal > 7.5) {
-      html_globale += html_codePieno
+
+    //Inizio controllo sul decimale
+    var decimal = media_valutazioni - Math.floor(media_valutazioni);
+    decimal = decimal.toFixed(2);
+
+    if (decimal >= 0.25 && decimal < 0.75) {
+      html_globale += html_cocktailMezzo
       counterStamp++;
-    } else {
-      html_globale += html_codeMezzo
+    }
+    else if (decimal >= 0.75) {
+      html_globale += html_cocktailPieno
       counterStamp++;
     }
   }
+  
   while (counterStamp < 5) {
     counterStamp++;
-    html_globale += html_codeVuoto
+    html_globale += html_cocktailVuoto
   }
   return html_globale
 }
@@ -364,7 +368,6 @@ function rating(value) {
   var elements = document.getElementById('cocks').children;
   for (let i = 0; i < elements.length; i++) {
     elements[i].setAttribute('onclick', 'rating(' + i + ')')
-
   }
 }
 

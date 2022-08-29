@@ -69,7 +69,7 @@
             document.getElementById("Section_Roadmap_Create").appendChild(spazioRoadmap);
             spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+r.data[i].id+"\"><span class=\"inEvidenza\">" + r.data[i].titolo + "</span></a>" + 
             "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>";
-            funcCoktail(r.data[i].punteggio,0,i);
+            printCocktail(r.data[i].punteggio,0,i);
           }
       }
     }
@@ -103,7 +103,7 @@
               "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>" + 
               "<p><input type=\"button\" onclick=\"updateRoadmapSeguite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
             } 
-            funcCoktail(r.data[i].punteggio,1,i);
+            printCocktail(r.data[i].punteggio,1,i);
           }
       }
     }
@@ -138,7 +138,7 @@
               "<p><span class=\"interno\">🏙 " + r.data[i].localita  + "</span><span class=\"interno\">⏱" + r.data[i].durataComplessiva + "</span></p>" + 
               "<p><input type=\"button\" onclick=\"updateRoadmapPreferite("+i+","+r.data[i].id+")\" value=\"Elimina\"></p>";
             } 
-            funcCoktail(r.data[i].punteggio,2,i);
+            printCocktail(r.data[i].punteggio,2,i);
           }
       }
     }
@@ -148,43 +148,43 @@
 
   // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut ed Elimazione Roadmap Seguite, Preferite
 
-  function funcCoktail(media_valutazioni,number,i){
-
-    /* prendo tutto il numero intero e stampo i cock pieni
+  function printCocktail(media_valutazioni, number, i) {
+    /* prendo tutto il numero intero e stampo i cocktail pieni
       verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
       verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
       var spazioRoadmap = document.getElementById("divRoadmap_"+number+"_"+ i);
-      const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-      const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-      const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
+      const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
+      const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
+      const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
       var counterStamp = 0;
-      if(media_valutazioni != null){
-        if(Number.isInteger(media_valutazioni)){
+      if (media_valutazioni != null) {
+        if (Number.isInteger(media_valutazioni)) {
           for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
-            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
             counterStamp++;
           }
-        } 
-        else{
+        }
+        else {
           for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
             counterStamp++;
           }
-          const decimalStr = media_valutazioni.toString().split('.')[1];
-          var decimal = Number("0."+decimalStr);
-          if (decimal < 0.25) {} 
-          else if (decimal > 0.75){
-            spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+
+          var decimal = media_valutazioni - Math.floor(media_valutazioni);
+          decimal = decimal.toFixed(2);
+
+          if (decimal >= 0.25 && decimal < 0.75) {
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailMezzo);
             counterStamp++;
-          } 
-          else{
-            spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
+          }
+          else if (decimal >= 0.75) {
+            spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
             counterStamp++;
           }
         }
       }
-      while(counterStamp<5){
-        spazioRoadmap.insertAdjacentHTML("beforeend", html_codeVuoto);
+      while(counterStamp < 5) {
+        spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailVuoto);
         counterStamp++;
       }
   }
