@@ -6,9 +6,14 @@ var points = 0
 var commento_utente
 var pref
 var fatta
-const number_create = 50;
+const numeroRoadmapCreate = 50;
+const numeroRoadmapSeguite = 10;
+const numeroCommenti = 10;
+const numeroRecensioni = 10;
+var testoAchievement = '';
+var immagineAchievement = '';
 
-window.onload = function() {
+window.onload = function () {
   if (document.referrer == 'http://localhost:3000/create') { //bisogna fare quando di viene da una roadmap forkata con link---> http://localhost:3000/create?roadmap_id=154
     getRoadmapAchievementsPopup();
   }
@@ -22,7 +27,7 @@ document.addEventListener('receivedUserInfo', (e) => {
 
     ok_in_rm = true
     id_user = e.user
-    
+
     getCommmentsReviewByUserRoad(id_user, id_rm)
   }
   else {
@@ -353,7 +358,7 @@ function printBicchieri(punteggio, grandezza, cursore) {
       counterStamp++;
     }
   }
-  
+
   while (counterStamp < 5) {
     counterStamp++;
     html_globale += html_cocktailVuoto
@@ -409,10 +414,8 @@ function favorite(value) {
     roadmap: id_rm,
     favorite: value
   }));
-
-
-
 }
+
 function checked(value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
@@ -426,14 +429,15 @@ function checked(value) {
     if (r.ok == true) {
       console.log("messo ", value, "in seguite")
       //uscita
-      const prec_value = value
-      var html
+      const prec_value = value;
+      var html;
       if (value == 1) {
         value = 0
         html = '<img id="chk" title="toglila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
-      } else {
+      }
+      else {
         value = 1
-        html = '<img id="chk"  title="inseriscila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="chk" title="inseriscila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       var posto_chk = document.getElementById("checked")
 
@@ -454,7 +458,6 @@ function checked(value) {
 
 }
 function saveRec() {
-
   if (points > 0) {
     var opinione = document.getElementById("us_rec").value
     if (opinione == "") {
@@ -484,8 +487,9 @@ function saveRec() {
 
         console.log(r)
         if (r.ok == true) {
-          alert("Compliementi!!")
-          location.reload()
+          //alert("Compliementi!!")
+          //location.reload()
+          getReviewAchievementPopup(r.data.numRecensioni);
         }
         else if (r.ok == false) {
           console.log(r)
@@ -534,10 +538,14 @@ function saveRec() {
     alert("nooooooooo")
   }
 }
+
 function mostraCommenti() {
   alert("fare mostra commenti")
 }
-/*function saveCom() {
+
+//if numero_commenti > X--> mostra achievements
+
+function saveCom() {
   com = document.getElementById("us_com").value
   var today = new Date();
   var dd = today.getDate();
@@ -555,8 +563,9 @@ function mostraCommenti() {
 
       console.log(r)
       if (r.ok == true) {
-        alert("Compliementi!!")
-        location.reload()
+        //alert("Complimenti!!")
+        //location.reload()
+        getCommentAchievementPopup(r.data);
       }
       else if (r.ok == false) {
         console.log(r)
@@ -571,6 +580,7 @@ function mostraCommenti() {
       day: today
     }));
   }
+
   if (insert_com == 0) {
     var xhr = new XMLHttpRequest();
 
@@ -596,28 +606,26 @@ function mostraCommenti() {
       mod_com: com,
       day: today
     }));
-
-
-
   }
 }
-*/
+
 function forkaggio() {
   location.href = "/create?roadmap_id=" + id_rm
 }
+
 function segnalaRec(id_rec) {
   //piccola conferma, poi insert in tabella nel db delle segnalazioni,
   //vedendo anche se già presente 
   //dicendo (id_rm, id_user,cosa è, id_della_cosa)
   alert(id_rec)
 }
+
 function segnalaComm(id_comm) {
   //piccola conferma, poi insert in tabella nel db delle segnalazioni,
   //vedendo anche se già presente 
   //dicendo (id_rm, id_user, cosa è, id_della_cosa)
   alert(id_comm)
 }
-
 
 var ClickEventHandler = (function () {
   function ClickEventHandler(map, origin) {
@@ -660,30 +668,55 @@ var ClickEventHandler = (function () {
   return ClickEventHandler;
 }());
 
-//Aggiunto da Gian e Diego
-
 function getRoadmapAchievementsPopup() {
   var xhr = new XMLHttpRequest();
-        xhr.open("GET", '/getRoadmapAchievementsPopup', true);
-        xhr.onload = function (event) {
+  xhr.open("GET", '/getRoadmapAchievementsPopup', true);
+  xhr.onload = function (event) {
 
-            const r = JSON.parse(event.target.responseText);
+    const r = JSON.parse(event.target.responseText);
 
-            if (r.ok == true) {
-                if (r.data == number_create) {
-                  document.getElementById('textAchievement').innerText = "Hai creato " + number_create + " roadmap!";
-                  showAchievementPopup();
-                }
-            }
-        }
+    if (r.ok == true) {
+      if (r.data == numeroRoadmapCreate) {
+        testoAchievement = "Hai creato " + numeroRoadmapCreate + " roadmap!";
+        immagineAchievement = '/storage/achievements/roadmap.png'
+        showAchievementPopup(testoAchievement, immagineAchievement);
+      }
+    }
+  }
 
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            id_user: id_user
-        }));
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    id_user: id_user
+  }));
 }
 
-function showAchievementPopup() {
+function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { //NON VIENE CHIAMATA DA NESSUNA PARTE, chiedere a Matteo dove inserirla
+  if (numeroRoadmapSeguiteDaQuery == numeroRoadmapSeguite) {
+    testoAchievement = "Hai completato " + numeroRoadmapSeguite + " roadmap!";
+    immagineAchievement = '/storage/achievements/followRoadmap.png';
+    showAchievementPopup(testoAchievement, immagineAchievement);
+  }
+}
+
+function getReviewAchievementPopup(numeroRecensioniDaQuery) {
+  if (numeroRecensioniDaQuery == numeroRecensioni) {
+    testoAchievement = "Hai lasciato " + numeroRecensioni + " recensioni!";
+    immagineAchievement = '/storage/achievements/review.png';
+    showAchievementPopup(testoAchievement, immagineAchievement);
+  }
+}
+
+function getCommentAchievementPopup(numeroCommentiDaQuery) {
+  if (numeroCommentiDaQuery == numeroCommenti) {
+    testoAchievement = "Hai lasciato " + numeroCommenti + " commenti!";
+    immagineAchievement = '/storage/achievements/comment.png';
+    showAchievementPopup(testoAchievement, immagineAchievement);
+  }
+}
+
+function showAchievementPopup(testo, immagine) {
+  document.getElementById('textAchievement').innerText = testo;
+  document.getElementById('imageAchievement').setAttribute('src', immagine);
   document.getElementById("roadmapAchievementPopup").style.display = "block";
   setTimeout(closePopup, 5000);
 }
