@@ -682,9 +682,9 @@ function getRoadmapAchievementsPopup() {
 
 function showAchievementPopup() {
   document.getElementById("roadmapAchievementPopup").style.display = "block";
-  setTimeout(closeForm, 5000);
+  setTimeout(closePopup, 5000);
 }
 
-function closeForm() {
+function closePopup() {
   document.getElementById("roadmapAchievementPopup").style.display = "none";
 }
