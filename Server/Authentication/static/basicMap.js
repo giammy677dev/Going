@@ -1,5 +1,3 @@
-
-
 var map;
 var roadmap;
 let customMarker = './storage/marker.png'
@@ -14,7 +12,6 @@ const minZoomForExNovoMarkers = 15;
 const receivedRoadmapData = new Event('receivedRoadmapData');
 const receivedStageData = new Event('receivedStageData');
 const dbMarkerClicked = new Event('dbMarkerClicked');
-
 
 function drawObjects(stages) {
     var stage = stages[0];
@@ -65,7 +62,7 @@ function drawObjects(stages) {
 }
 
 function drawExNovoStages() {
-    console.log("UPDATE MARKERS!")
+
 
     var boxMinLat = map.getBounds().getSouthWest().lat()
     var boxMaxLat = map.getBounds().getNorthEast().lat()
@@ -144,7 +141,7 @@ function loadMapInfo() {
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
-                console.log("teetstetst")
+                //console.log("teetstetst")
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
@@ -193,6 +190,7 @@ function initMap() {
         mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
         scaleControl: true,
         zoomControl: true,
+        gestureHandling:"greedy",
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
         },

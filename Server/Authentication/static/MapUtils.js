@@ -1,4 +1,3 @@
-
 function asPath(encodedPolyObject) {
     return google.maps.geometry.encoding.decodePath(encodedPolyObject.points);
 }

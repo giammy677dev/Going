@@ -1,14 +1,14 @@
-window.onload=function(){
+window.onload = function () {
     check()
     fromMain()
-  };
+};
 function richiestaDBRoadmap(ricerca) {
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/searchRoadmap?ricerca=' + ricerca, true);
-    console.log("db roadmap",ricerca)
+    console.log("db roadmap", ricerca)
     xhr.onload = function (event) {
-        console.log("onload db roadmap",ricerca)
+        console.log("onload db roadmap", ricerca)
         const r = JSON.parse(event.target.responseText);
         const result = r.data.results
 
@@ -39,16 +39,16 @@ function richiestaDBRoadmap(ricerca) {
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
 
-                    const durata=Math.round(result[i].durata/60)
+                    const durata = Math.round(result[i].durata / 60)
                     var html_star
-                    if(result[i].punteggio!=null){
-                        html_star=funcCoktail(result[i].punteggio)
-                    }else{
-                        html_star=" "
+                    if (result[i].punteggio != null) {
+                        html_star = printCocktail(result[i].punteggio)
+                    } else {
+                        html_star = " "
                     }
-                    const html_code = '<a class="link_rm" href="/view_roadmap?id=' + result[i].id + '"><div class="item">'+result[i].titolo+'<br>🏙' +result[i].localita+'<br>⏱'+durata+' min<br>🚶'+ result[i].distanza+' metri <br>'+html_star+'</div></a>'
+                    const html_code = '<a class="link_rm" href="/view_roadmap?id=' + result[i].id + '"><div class="item">' + result[i].titolo + '<br>🏙' + result[i].localita + '<br>⏱' + durata + ' min<br>🚶' + result[i].distanza + ' metri <br>' + html_star + '</div></a>'
 
-                    
+
                     const posto = document.getElementById("items");
                     posto.insertAdjacentHTML("beforeend", html_code)
                 }
@@ -66,10 +66,10 @@ function richiestaDBRoadmap(ricerca) {
         }
     }
     xhr.send()
-    console.log("fine db rm",ricerca)
+    console.log("fine db rm", ricerca)
 }
 function richiestaDBUtente(ricerca) {
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/searchUser?username=' + ricerca, true);
     xhr.onload = function (event) {
@@ -134,9 +134,9 @@ function searchExplore() {
         alert(" campo  nullo")
     }
     else {
-        
+
         richiestaDBRoadmap(ricerca);
-        
+
         richiestaDBUtente(ricerca);
     }
 }
@@ -154,41 +154,43 @@ function fromMain() {
     }
 }
 
-function funcCoktail(punteggio) {
+function printCocktail(punteggio) {
     /* prendo tutto il numero intero e stampo i cock pieni
      verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
      verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
-    
-    const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-    const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-    const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
-    var html_globale=" "
+
+    const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
+    const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
+    const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
+    var html_globale = " "
     var counterStamp = 0;
     if (Number.isInteger(punteggio)) {
-      for (var iteratorInt = 0; iteratorInt < punteggio; iteratorInt++) {
-        counterStamp++;
-        html_globale+=html_codePieno
-      }
+        for (var iteratorInt = 0; iteratorInt < punteggio; iteratorInt++) {
+            counterStamp++;
+            html_globale += html_cocktailPieno
+        }
     } else {
-      for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-        counterStamp++;
-        html_globale+=html_codePieno
-      }
-      //inizio controllo sul decimale
-      const decimalStr = punteggio.toString().split('.')[1];
-      var decimal = Number(decimalStr);
-      if (decimal < 2.5) {
-      } else if (decimal > 7.5) {
-        html_globale+=html_codePieno
-        counterStamp++;
-      } else {
-        html_globale+=html_codeMezzo
-        counterStamp++;
-      }
+        for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
+            counterStamp++;
+            html_globale += html_cocktailPieno
+        }
+
+        //Inizio controllo sul decimale
+        var decimal = media_valutazioni - Math.floor(media_valutazioni);
+        decimal = decimal.toFixed(2);
+
+        if (decimal >= 0.25 && decimal < 0.75) {
+            html_globale += html_cocktailMezzo
+            counterStamp++;
+        }
+        else if (decimal >= 0.75) {
+            html_globale += html_cocktailPieno
+            counterStamp++;
+        }
     }
     while (counterStamp < 5) {
-      counterStamp++;
-      html_globale+=html_codeVuoto
+        counterStamp++;
+        html_globale += html_cocktailVuoto
     }
     return html_globale
-  }
+}

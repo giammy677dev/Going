@@ -1,5 +1,3 @@
-
-
 window.onload = function () {
     initMap();
 };
@@ -176,8 +174,8 @@ function submitRoadmap() {
             const r = JSON.parse(event.target.responseText);
 
             if (r.ok == true) {
-                alert("creata la stages_list")
-                //location.href = '/profile'
+                //alert("creata la stages_list")
+                location.href = "/view_roadmap?id="+r.data;
             }
             else if (r.ok == false) {
                 alert("Problemi creazione stages_list")

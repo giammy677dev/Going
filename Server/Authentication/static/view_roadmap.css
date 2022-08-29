@@ -9,6 +9,13 @@
   display: block;
 }
 
+.botton_rm {
+  display: block ruby;
+}
+
+.pulsantireccom {
+  display: block ruby;
+}
 
 .result_query {
   box-shadow: 0 4px 8px 0 #00AAF8;
@@ -513,4 +520,37 @@ a.boxclose:hover {
   color: #00AAF8;
   background-color: white;
   border-radius: 50%;
+}
+
+/*CSS per gli achievements*/
+#roadmapAchievementPopup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  max-width: 300px;
+  padding: 10px;
+  background-color: black;
+}
+
+#closeBtn {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  color: grey;
+}
+
+#contenuto-immagine img {
+  width: 140px;
+}
+
+#contenuto-testo {
+  color: white;
+}
+
+.popup-interno {
+  float: left;
+  width: 50%;
 }
