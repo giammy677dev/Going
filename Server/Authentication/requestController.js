@@ -283,7 +283,7 @@ class RequestController {
     }
 
     async getRoadmapAchievementsPopup(id) {
-        const data = await this.dao.getRoadmapAchievementsPopup(id); //il 5 deve cambiare con id quando passeremo id dalla pagine di viewRoadmap
+        const data = await this.dao.getRoadmapAchievementsPopup(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
