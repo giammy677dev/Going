@@ -678,6 +678,11 @@ function getRoadmapAchievementsPopup() {
     if (r.ok == true) {
       if (r.data == numeroRoadmapCreate) {
         testoAchievement = "Hai creato " + numeroRoadmapCreate + " roadmap!";
+        immagineAchievement = '/storage/achievements/topRoadmapper.png'
+        showAchievementPopup(testoAchievement, immagineAchievement);
+      }
+      else if (r.data == 1) {
+        testoAchievement = "Hai creato la tua prima roadmap!";
         immagineAchievement = '/storage/achievements/roadmap.png'
         showAchievementPopup(testoAchievement, immagineAchievement);
       }

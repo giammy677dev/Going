@@ -384,7 +384,7 @@ class HTTPinterface {
     }
 
     async getRoadmapAchievementsPopup(req, res) {
-        const r = await this.controller.getRoadmapAchievementsPopup(req.body.user_id);
+        const r = await this.controller.getRoadmapAchievementsPopup(req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
