@@ -115,7 +115,6 @@ function requestDistance(marker1, marker2) {
         travelMode: selectedMode
     }
 
-
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/getRoute', true);
     xhr.onload = function (event) {
@@ -168,7 +167,6 @@ function submitRoadmap() {
         alert("almeno due stage")
     }
     else {
-
         const formData = new FormData();
         for (var i = 0; i < stages_list.length; i++) {
             if (stages_list[i].foto !== undefined) {
@@ -183,28 +181,11 @@ function submitRoadmap() {
         formData.append('isPublic', isPub)
         formData.append('stages', JSON.stringify(stages_list))
 
-        fetch("/createRoadmap", {
-            method: 'POST',
-            body: formData,
-            contentType: false,
-            processData: false,
-            //headers: {
-            //    "Content-Type": "multipart/form-data"
-            //}
-        })
-            .then((res) => console.log(res))
-            .catch((err) => ("Error occured", err));
-
-        return
-
-
-
         var xhr = new XMLHttpRequest();
         xhr.open("POST", '/createRoadmap', true);
         xhr.onload = function (event) {
 
             const r = JSON.parse(event.target.responseText);
-
             if (r.ok == true) {
                 //alert("creata la stages_list")
                 location.href = "/view_roadmap?id=" + r.data;
@@ -213,15 +194,7 @@ function submitRoadmap() {
                 alert("Problemi creazione stages_list")
             }
         }
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        xhr.send(JSON.stringify({
-            titolo: title,
-            descrizione: description,
-            isPublic: isPub,
-            stages: stages_list
-        }));
+        xhr.send(formData);
     }
 }
 
