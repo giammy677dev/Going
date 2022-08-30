@@ -30,6 +30,7 @@ document.addEventListener('receivedUserInfo', (e) => {
     ok_in_rm = true
     id_user = e.user
 
+
     getCommmentsReviewByUserRoad(id_user, id_rm)
   }
   else {
@@ -270,6 +271,7 @@ function abilitaCom() {
 }
 
 function loadRecCom() {
+
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/getRecCom?id=' + id_rm, true);
@@ -278,8 +280,8 @@ function loadRecCom() {
     const r = JSON.parse(event.target.responseText);
     const len_rc = r.data.recensioni.length
     const len_com = r.data.commenti.length
-
-
+    console.log(r.data.commenti)
+    console.log(r.data.recensioni)
     if (r.ok == true) {
       if (len_rc !== undefined && len_rc > 0) {
         const recensioni = r.data.recensioni
@@ -293,7 +295,7 @@ function loadRecCom() {
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
           }
-          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '<a id="segn' + recensioni[i].idRecensione + '" class="boxclose" style="margin-top: -50px; title="segnala commento" onclick="segnalaRec(' + recensioni[i].idRecensione + ')">x</a></div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
+          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><a class="boxclose" id="segn' + recensioni[i].idRecensione + '" title="segnala recensione" onclick="segnalaRec(' + recensioni[i].idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml +'</div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
           document.getElementById("recensioni").innerHTML += html_rec
         }
       }
@@ -305,11 +307,15 @@ function loadRecCom() {
         const commenti = r.data.commenti
         //console.log("quanti commenti:", commenti)
         for (let i = 0; i < len_com; i++) {
-
+          var html_funz = '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick="segnalaComm(' + commenti[i].idCommento + ')">⚠️</a>'
+          if (r.data.commenti[i].id == id_user) {
+            console.log(commenti[i].testo)
+            html_funz += '<a class="boxclose" id="update' + commenti[i].idCommento + '" title="modifica commento" onclick="updPreview('+commenti[i].idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commenti[i].idCommento + '" title="elimina commento" onclick="deleteCom(' + commenti[i].idCommento + ')">❌</a>'
+          }
           var day = new Date(commenti[i].dataPubblicazione)
           var month = day.getMonth() + 1;
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" id="text_commento">' + commenti[i].testo + '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick="segnalaComm(' + commenti[i].idCommento + ')">x</a></div><div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
+          const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" value="'+commenti[i].testo+'" id="text_commento'+commenti[i].idCommento +'">' + commenti[i].testo + '</div> ' + html_funz + '<div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
           document.getElementById("commenti").innerHTML += html_com
         }
       }
@@ -348,7 +354,7 @@ function printBicchieri(punteggio, grandezza, cursore) {
     }
 
     //Inizio controllo sul decimale
-    var decimal = media_valutazioni - Math.floor(media_valutazioni);
+    var decimal = punteggio - Math.floor(punteggio);
     decimal = decimal.toFixed(2);
 
     if (decimal >= 0.25 && decimal < 0.75) {
@@ -539,9 +545,6 @@ function saveRec() {
   }
 }
 
-function mostraCommenti() {
-  alert("fare mostra commenti")
-}
 
 //if numero_commenti > X--> mostra achievements
 
@@ -553,59 +556,106 @@ function saveCom() {
   var yyyy = today.getFullYear();
   today = yyyy + '-' + mm + '-' + dd;
 
-  if (insert_com == 1) {
-    var xhr = new XMLHttpRequest();
+  var xhr = new XMLHttpRequest();
 
-    xhr.open("POST", '/setCommento', true);
-    xhr.onload = function (event) {
+  xhr.open("POST", '/setCommento', true);
+  xhr.onload = function (event) {
 
-      const r = JSON.parse(event.target.responseText);
+    const r = JSON.parse(event.target.responseText);
 
-      console.log(r)
-      if (r.ok == true) {
-        console.log(r.data)
-        getCommentAchievementPopup(r.data);
-      }
-      else if (r.ok == false) {
-        console.log(r)
-        alert("Problemi col db")
-      }
+    console.log(r)
+    if (r.ok == true) {
+      getCommentAchievementPopup(r.data);
     }
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-      user: id_user,
-      roadmap: id_rm,
-      mod_com: com,
-      day: today
-    }));
-  }
-
-  if (insert_com == 0) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("POST", '/updateCommento', true);
-    xhr.onload = function (event) {
-
-      const r = JSON.parse(event.target.responseText);
-
+    else if (r.ok == false) {
       console.log(r)
-      if (r.ok == true) {
-        alert("Compliementi!!")
-        location.reload()
-      }
-      else if (r.ok == false) {
-        console.log(r)
-        alert("Problemi col db")
-      }
+      alert("Problemi col db")
     }
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-      user: id_user,
-      roadmap: id_rm,
-      mod_com: com,
-      day: today
-    }));
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user: id_user,
+    roadmap: id_rm,
+    mod_com: com,
+    day: today
+  }));
+}
+function deleteCom(commento) {
+
+  var xhr = new XMLHttpRequest();
+  
+  xhr.open("POST", '/deleteCommento', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      alert("Complimenti!!")
+      location.reload()
+      
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user: id_user,
+    commento: commento,
+    roadmap: id_rm
+  }));
+}
+function updPreview(id) {
+  console.log(id)
+  var txt
+  for(let i=0;i<commento_utente.length;i++){
+    if(commento_utente[i].idCommento==id){
+      txt=commento_utente[i].testo
+    }
+  }
+  
+  console.log(txt)
+  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="'+id+'"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
+  
+}
+function updateCom(id) {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+  var yyyy = today.getFullYear();
+  today = yyyy + '-' + mm + '-' + dd;
+  var xhr = new XMLHttpRequest();
+  testo=document.getElementById(id).value
+  xhr.open("POST", '/updateCommento', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      alert("Compliementi!!")
+      location.reload()
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user: id_user,
+    roadmap: id_rm,
+    id_com: id,
+    mod_com: testo,
+    day: today
+  }));
+}
+function writeCom() {
+  document.getElementById("write_new_com").setAttribute("style", "display:block")
+  document.getElementById("write_com").innerHTML = "Salva il tuo commento"
+  document.getElementById("write_com").setAttribute("onclick", "saveCom()");
 }
 
 function forkaggio() {
