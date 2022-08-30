@@ -52,8 +52,8 @@ class DAO {
         try {
 
             var connection = await this.connect();
-            var result_rec = await connection.query('select idRecensione,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
-            var result_comm = await connection.query('select idCommento,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_rec = await connection.query('select idRecensione,id,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_comm = await connection.query('select idCommento,id,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
 
             return [true, 0, { recensioni: result_rec[0], commenti: result_comm[0] }];
         }
