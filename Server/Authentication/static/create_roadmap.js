@@ -183,6 +183,26 @@ function submitRoadmap() {
         formData.append('isPublic', isPub)
         formData.append('stages', JSON.stringify(stages_list))
 
+        fetch("/createRoadmap", {
+            method: 'POST',
+            body: formData,
+            contentType: false,
+            processData: false,
+            //headers: {
+            //    "Content-Type": "multipart/form-data"
+            //}
+        })
+            .then((res) => {
+                if (res.ok == true) {
+                    location.href = "/view_roadmap?id=" + res.data;
+                }
+            })
+            .catch((err) => ("Error occured", err));
+
+        return
+
+
+
         var xhr = new XMLHttpRequest();
         xhr.open("POST", '/createRoadmap', true);
         xhr.onload = function (event) {

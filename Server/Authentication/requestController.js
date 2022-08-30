@@ -322,7 +322,6 @@ class RequestController {
         const data = await this.dao.getRoadmapAchievementsPopup(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
-
 }
 
 module.exports = RequestController;
