@@ -9,7 +9,6 @@ const path = require('path');
 const config = require('./config.js');
 const { res } = require('express');
 const app = express();
-var uuid = require('uuid');
 
 const multer = require("multer");
 
