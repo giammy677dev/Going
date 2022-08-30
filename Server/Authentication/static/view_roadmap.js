@@ -493,6 +493,7 @@ function deleteCom(commento) {
     roadmap: id_rm
   }));
 }
+
 function updPreview(id) {
   console.log(id)
   var txt
@@ -548,18 +549,23 @@ function writeCom() {
 function forkaggio() {
   location.href = "/create?roadmap_id=" + id_rm
 }
+
 function openSegnRec(id_rec) {
   document.getElementById("segnal_rec" + id_rec).style.display = "block";
 }
+
 function closeSegnRec(id_rec) {
   document.getElementById("segnal_rec" + id_rec).style.display = "none";
 }
+
 function openSegnCom(id_com){
   document.getElementById("segnal_com" + id_com).style.display = "block";
 }
+
 function closeSegnCom(id_com){
   document.getElementById("segnal_com" + id_com).style.display = "none";
 }
+
 function segnalaRec(id_rec) {
   /*1: roadmap
 2: profilo
@@ -591,8 +597,6 @@ function segnalaRec(id_rec) {
     idOggetto: id_rec,
     motivazione: testo
   }));
-
-
 }
 
 function segnalaComm(id_comm) {

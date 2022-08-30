@@ -27,6 +27,7 @@ function richiestaDBRoadmap(ricerca) {
             if (element != null) {
                 element.outerHTML = "";
             }
+
             if (result.length > 0) {
                 const html_code = '<div id="numero_rm" style="text-align: center; font-size:25px"><h4>Ricerca roadmap ha prodotto <div>' + result.length + ' risultato/i</div></h4></div>'
                 const posto = document.getElementById("pop_res_rm");
@@ -99,9 +100,9 @@ function richiestaDBUtente(ricerca) {
                 const posto = document.getElementById("pop_res");
                 posto.insertAdjacentHTML("beforeend", html_code)
                 for (var i = 0; i < result.length; i++) {
-                    const html_code = '<a class="link_user" href="/profile?id=' + result[i].id + '"><div class="item-user" ><img src="/avatar/' + result[i].username + '" style="width:40px;height: 40px;"><br>' + result[i].username + '<br></div></a>'
+                    const html_code = '<a class="link_user" href="/profile?id=' + result[i].id + '"><div class="item-user" ><img src="' + result[i].avatar + '" style="width:40px;height: 40px;"><br>' + result[i].username + '<br></div></a>'
                     const posto = document.getElementById("items-user");
-                    posto.insertAdjacentHTML("beforeend", html_code)
+                    posto.insertAdjacentHTML("beforeend", html_code);
                 }
             }
             else {
