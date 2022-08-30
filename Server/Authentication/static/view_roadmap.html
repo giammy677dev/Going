@@ -16,7 +16,6 @@
 
   <link rel="stylesheet" href="/static/view_roadmap.css">
   <script src="/static/view_roadmap.js" type="text/javascript"></script>
-  <!--<script src="/static/render_map.js" type="text/javascript"></script>-->
 </head>
 
 <body>
@@ -94,15 +93,15 @@
 
   <!-- Popup per gli Achievements-->
   <div id="roadmapAchievementPopup">
-      <div class = "popup-interno" id="contenuto-immagine">
-        <img id="imageAchievement">
-      </div>
-      <div class = "popup-interno" id="contenuto-testo">
-        <h3> Congratulazioni!
-          <button type="button" id="closeBtn" onclick="closePopup()">X</button>
-        </h3>
-        <p id="textAchievement"></p>
-      </div>
+    <div class="popup-interno" id="contenuto-immagine">
+      <img id="imageAchievement">
+    </div>
+    <div class="popup-interno" id="contenuto-testo">
+      <h3> Congratulazioni!
+        <button type="button" id="closeBtn" onclick="closePopup()">X</button>
+      </h3>
+      <p id="textAchievement"></p>
+    </div>
   </div>
 
   <div class="contenuto">
@@ -206,12 +205,12 @@
 
         </div>
 
-        <!--
+        
         <div class="pulsanticom" id="pulsanticom">
           <label id="lab_com" for="us_com" style="font-size: 25px;">Lascia un commento!</label>
           <input type="text" id="us_com" autocomplete="off" name="us_com" size="20" />
           <div class="btn" id="save_combtn" onclick="saveCom()">Salva il tuo commento!</div>
-        </div>-->
+        </div>
 
 
         <div class="pulsantireccom" id="pulsantireccom">
@@ -229,9 +228,11 @@
               cols="40"></textarea>
             <div class="btn" id="save_recbtn" onclick="saveRec()">Salva valutazione e opinione</div>
           </div>
-          <div id="puls_com">
-            <div class="btn" id="mostra_com" onclick="mostraCommenti()">Mostra commenti per modificarli o scriverne un
-              altro</div>
+          <div class="btn" id="write_com" onclick="writeCom()">Scrivi un nuovo commento</div>
+          <div id="write_new_com" style="display: none;">
+            <div id="contenuto-testo">
+              <input type="text" id="us_com" autocomplete="off" name="us_com" size="20" />
+            </div>
           </div>
 
         </div>
@@ -253,7 +254,8 @@
       </div>
 
       <div class="lab_commenti" id="lab_commenti">
-        <h2>Commenti alla roadmap</h2>
+        <h2>Commenti alla roadmap</h2><br>
+        
         <div class="commenti" id="commenti">
 
         </div>
@@ -281,14 +283,7 @@
         document.getElementById("save_recbtn").click();
       }
     });
-    /*var com = document.getElementById("us_com");
-    com.addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        document.getElementById("save_combtn").click();
-      }
-
-    });*/
+   
   </script>
 
 </body>

@@ -50,10 +50,9 @@ class DAO {
     }
     async getRecCom(id) {
         try {
-
             var connection = await this.connect();
-            var result_rec = await connection.query('select idRecensione,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
-            var result_comm = await connection.query('select idCommento,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_rec = await connection.query('select idRecensione,id,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_comm = await connection.query('select idCommento,id,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
 
             return [true, 0, { recensioni: result_rec[0], commenti: result_comm[0] }];
         }
@@ -115,61 +114,28 @@ class DAO {
         }
     }
 
-    async addNewStages(stages, session_data) {
-
+    async createStage(placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita) {
         var connection = await this.connect();
-        for (var i = 0; i < stages.length; i++) {
-            var stage = stages[i];
-            var stored_stage = session_data[stage.placeId][0]
-            //console.log(stored_stage);
-            //console.log(stored_stage.geometry);
-            stored_stage.latitudine = stored_stage.latitudine === undefined ? stored_stage.geometry.location.lat : stored_stage.latitudine;
-            stored_stage.longitudine = stored_stage.longitudine === undefined ? stored_stage.geometry.location.lng : stored_stage.longitudine;
-            var isExNovo = session_data[stage.placeId][1]
-            //console.log("       quiiiii \n\n")
-            //console.log(stored_stage)
-
-            try {
-                //console.log(session_data)
-                if (!isExNovo) //è da google! non è exnovo!
-                {
-                    //COVERARE IL CASO IN CUI NON HA FOTO!!
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 0, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stored_stage.website, stored_stage.foto, stored_stage.localita]);
-                }
-                else //è exnovo!
-                {
-                    await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita]);
-                }
-            } catch (error) {
-                console.log(error)
-                //return [false, error.errno, {}];
-            }
+        try {
+            await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita]);
+        } catch (error) {
+            return [false, error.errno, {}];
         }
         return [true, 0];
-
     }
 
-    async instantiateRoadmap(roadmap_id, user_id, stages, distance_data) {
+    async addStageInstanceToRoadmap(roadmap_id, user_id, placeId, durata, index, reachTime, route) {
         try {
-            console.log(distance_data)
+            console.log("adding stage instance")
             var connection = await this.connect();
-            var route;
-            var reachTime;
-            for (var i = 0; i < stages.length; i++) {
-                var stage = stages[i];
-                route = i > 0 ? distance_data[stages[i - 1].placeId + "|" + stage.placeId] : {}
-
-                reachTime = i > 0 ? route.routes[0].legs[0].duration.value : 0;
-                route = JSON.stringify(route);
-                // Execute SQL query that'll insert the account in the database
-                await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine, reachTime, route) VALUES(?, ?, ?, ?, ?, ?, ?)', [roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route]);
-            }
-            return [true, 0];
+            await connection.query('INSERT INTO stageinroadmap (roadmap_id, roadmap_utenteRegistrato_id, stage_placeId, durata, ordine, reachTime, route) VALUES(?, ?, ?, ?, ?, ?, ?)', [roadmap_id, user_id, placeId, durata, index, reachTime, route]);
+            return [true, 0]
         } catch (error) {
             console.log(error)
             return [false, error.errno];
         }
     }
+
 
     async searchUser(username) {
         try {
@@ -224,9 +190,7 @@ class DAO {
         }
     }
 
-
     async searchRoadmap(ricerca) {
-
         try {
             var connection = await this.connect();
             var result = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?)OR(distanza LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
@@ -264,16 +228,22 @@ class DAO {
         }
     }
 
-    async getDataUser(id) {
+    async getDataUser(id_query, id_session) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id]);
-            let results = selection[0];
+            
+            if (id_query === undefined || id_query <= 0) {
+                id_query = id_session;
+            }
+
+            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id_query]);
+            let results = [selection[0], id_session == id_query];
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
     }
+
     async getCommmentsReviewByUserRoad(user, rm) {
         try {
 
@@ -309,7 +279,7 @@ class DAO {
         try {
             var connection = await this.connect();
             await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user, roadmap, mod_com, day])
-            let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [id]);
+            let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [user]);
             let results = commentsNumber[0][0].numberComments;
             return [true, 0, results];
         }
@@ -324,13 +294,15 @@ class DAO {
             var connection = await this.connect();
             var res_ins = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
             var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
+            var numeroRecensioniUtenteQuery = await connection.query('SELECT count(*) AS numeroRecensioniUtente FROM recensione WHERE idUtenteRegistrato = ?', [user])
             var numeroRecensioni = dati[0][0].numeroRecensioni
+            var numeroRecensioniUtente = numeroRecensioniUtenteQuery[0][0].numeroRecensioniUtente
             var somma = dati[0][0].somma
             var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
 
-            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0], numRecensioni: numeroRecensioni }];
+            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0], numRecensioniUtente: numeroRecensioniUtente }];
 
         }
         catch (error) {
@@ -342,7 +314,21 @@ class DAO {
 
             var connection = await this.connect();
             var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idUtenteRegistrato=? and idRoadmap=?', [mod_com, day, user, roadmap])
-            //media su recensioni di quella roadmap e ri inserimento
+           
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    
+    async deleteCommento(user, commento,roadmap) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('DELETE FROM commento WHERE idUtenteRegistrato = ? and idCommento = ? and idRoadmap=?', [user,commento, roadmap])
+            
             return [true, 0, res[0]];
 
         }
@@ -378,13 +364,13 @@ class DAO {
         try {
             var connection = await this.connect();
             var query
-            var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
-            if (see[0].length == 0){
+            var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?', [user, roadmap])
+            if (see[0].length == 0) {
                 //mai messo nulla
-                query=await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) vALUES (?,?,?)',[user,roadmap,valore])
+                query = await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) vALUES (?,?,?)', [user, roadmap, valore])
             }
             else {
-                query=await connection.query('UPDATE roadmapuser SET preferita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
+                query = await connection.query('UPDATE roadmapuser SET preferita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
             }
             return [true, 0, query[0]];
         }
@@ -395,17 +381,19 @@ class DAO {
     async setChecked(user, roadmap, valore) {
         try {
             var connection = await this.connect();
-            var query
-            var see = await connection.query('select * from roadmapuser where idUtenteRegistrato = ? and idRoadmap = ?', [user,roadmap])
+            var see = await connection.query('SELECT * FROM roadmapuser WHERE idUtenteRegistrato = ? AND idRoadmap = ?', [user,roadmap])
             if (see[0].length == 0) {
                 //mai messo nulla
-                query = await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) VALUES (?,?,?)', [user,roadmap,valore])
+                await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) VALUES (?,?,?)', [user,roadmap,valore])
             } 
             else {
-                query = await connection.query('UPDATE roadmapuser SET seguita = ? where idUtenteRegistrato = ? and idRoadmap = ?', [valore, user, roadmap])
+                await connection.query('UPDATE roadmapuser SET seguita = ? where idUtenteRegistrato = ? and idRoadmap = ?', [valore, user, roadmap])
             }
 
-            return [true, 0, query[0]];
+            let numberFollowedResult = await connection.query('SELECT COUNT(*) AS numberFollowedRoadmap FROM roadmapuser WHERE seguita = 1 and idUtenteRegistrato = ?', [user])
+            let results = numberFollowedResult[0][0].numberFollowedRoadmap;
+
+            return [true, 0, results];
         }
         catch (error) {
             return [false, error.errno];
@@ -416,14 +404,14 @@ class DAO {
         try {
             var connection = await this.connect();
 
-            if (id_query == id_session) {
+            if (id_session == id_query && id_session != 0 && id_session != undefined) {
                 let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ?', [id_session]);
-                let results = selection[0];
+                let results = [selection[0], 1];
                 return [true, 0, results];
             }
             else {
                 let selection = await connection.query('SELECT * FROM roadmap WHERE utenteRegistrato_id = ? AND isPublic = 1', [id_query]);
-                let results = selection[0];
+                let results = [selection[0], 0];
                 return [true, 0, results];
             }
 
@@ -432,53 +420,83 @@ class DAO {
         }
     }
 
-    async getRoadmapSeguite(id) {
+    async getRoadmapSeguite(id_query, id_session) {
         try {
             var connection = await this.connect();
-            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id]);
-            let results = selection[0];
+
+            if (id_session == id_query && id_session != 0 && id_session != undefined) {
+                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id_session]);
+                let results = [selection[0], 1];
+                return [true, 0, results];
+            }
+            else {
+                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ? AND roadmap.isPublic = 1', [id_query]);
+                let results = [selection[0], 0];
+                return [true, 0, results];
+            }
+
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async getRoadmapPreferite(id_query, id_session) {
+        try {
+            var connection = await this.connect();
+
+            if (id_session == id_query && id_session != 0 && id_session != undefined) {
+                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id_session]);
+                let results = [selection[0], 1];
+                return [true, 0, results];
+            }
+            else {
+                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ? AND roadmap.isPublic = 1', [id_query]);
+                let results = [selection[0], 0];
+                return [true, 0, results];
+            }
+
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async deleteRoadmapCreata(id_roadmap, id_user) {
+        try {
+            var connection = await this.connect();
+            await connection.query('DELETE FROM roadmap WHERE id = ?', [id_roadmap])
+            let roadmapResult = await connection.query('SELECT COUNT(*) AS numberRoadmap FROM roadmap WHERE utenteRegistrato_id = ?', [id_user])
+            let results = roadmapResult[0][0].numberRoadmap;
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
     }
 
-    async getRoadmapPreferite(id) {
-        try {
-            var connection = await this.connect();
-            let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id]);
-            let results = selection[0];
-            return [true, 0, results];
-        } catch (error) {
-            return [false, error.errno, { results: [] }];
-        }
-    }
-
-    async updateRoadmapSeguite(id_roadmap,id_user) {
+    async updateRoadmapSeguite(id_roadmap, id_user) {
         try {
             var connection = await this.connect();
             await connection.query('UPDATE roadmapuser SET seguita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
-            let dati = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id_user])
-            let results = dati[0];
+            let numberFollowedResult = await connection.query('SELECT COUNT(*) AS numberFollowedRoadmap FROM roadmapuser WHERE seguita = 1 and idUtenteRegistrato = ?', [id_user])
+            let results = numberFollowedResult[0][0].numberFollowedRoadmap;
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
     }
 
-    async updateRoadmapPreferite(id_roadmap,id_user) {
+    async updateRoadmapPreferite(id_roadmap, id_user) {
         try {
             var connection = await this.connect();
             await connection.query('UPDATE roadmapuser SET preferita = 0 WHERE idRoadmap = ? AND idUtenteRegistrato= ?', [id_roadmap, id_user]);
-            let dati = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id_user])
-            let results = dati[0];
+            let numberFavoriteResult = await connection.query('SELECT COUNT(*) AS numberFavoriteRoadmap FROM roadmapuser WHERE preferita = 1 and idUtenteRegistrato= ?', [id_user])
+            let results = numberFavoriteResult[0][0].numberFavoriteRoadmap;
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
     }
-    
-    
+
+
 
     async updateAvatar(id, new_avatar) {
         try {

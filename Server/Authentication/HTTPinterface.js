@@ -10,7 +10,7 @@ const config = require('./config.js');
 const { res } = require('express');
 const app = express();
 
-//tutti i || true alla fine vanno tolti!
+const multer = require("multer");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +23,7 @@ class HTTPinterface {
         this.controller = new requestController()
         this.initServer();
 
+
         this.port = config.port;
 
         this.server.listen(process.env.PORT || this.port, () => {
@@ -31,6 +32,34 @@ class HTTPinterface {
     }
 
     initServer() {
+
+        this.storage = multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, path.join(__dirname, './'+config.stagesFolder))
+            },
+            filename: function (req, file, cb) {
+                //console.log(this.controller) this.controller= undefined. to fix.
+                const split = file.originalname.split(".");
+                cb(null, file.fieldname + "." + split[split.length - 1])
+                //cb(null, this.controller.getFileName(file)) //assign unique name to stage img
+            }
+        });
+
+        this.upload = multer({
+            storage:this.storage,
+            limits: { fileSize: 1 * 1024 * 1024 }, // 1MB
+            fileFilter: (req, file, cb) => {
+                if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+                    cb(null, true);
+                } else {
+                    cb(null, false);
+                    const err = new Error('Only .png, .jpg and .jpeg format allowed!')
+                    err.name = 'ExtensionError'
+                    return cb(err);
+                }
+            },
+        })
+
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.raw());
@@ -53,6 +82,7 @@ class HTTPinterface {
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
         this.app.use('/avatar', express.static('avatar')); //avatars
+        this.app.use('/stages', express.static('stages')); //avatars EX NOVO STAGE IMGS
 
         //back end calls
         this.app.get('/isLogWho', this.isLogWho.bind(this));
@@ -68,9 +98,10 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
+        this.app.get('/deleteRoadmapCreata', this.deleteRoadmapCreata.bind(this));
         this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
         this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));
-        this.app.post('/createRoadmap', this.createRoadmap.bind(this));
+        //this.app.post('/createRoadmap', this.createRoadmap.bind(this));
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
@@ -80,18 +111,22 @@ class HTTPinterface {
         this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
+        this.app.post('/deleteCommento', this.deleteCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
-        this.app.post('/setFavorite',this.setFavorite.bind(this));
-        this.app.post('/setChecked',this.setChecked.bind(this));
+        this.app.post('/setFavorite', this.setFavorite.bind(this));
+        this.app.post('/setChecked', this.setChecked.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
         this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
+
+        this.app.post("/createRoadmap", this.upload.any(20), this.createRoadmap.bind(this)); //max 20 files?
+
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
 
         // http://localhost:3000/home
-        this.app.get('/home', function (req, res) {
+        /*this.app.get('/home', function (req, res) {
             // If the user is loggedin
             if (req.session.loggedin) {
                 // Output username
@@ -103,7 +138,7 @@ class HTTPinterface {
                 res.send('Please login to view this page!');
             }
             res.end();
-        });
+        });*/
     }
 
     async isLogWho(req, res) {
@@ -202,7 +237,10 @@ class HTTPinterface {
         const r = await this.controller.updateCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
-
+    async deleteCommento(req, res) {
+        const r = await this.controller.deleteCommento(req.body.user, req.body.commento, req.body.roadmap);
+        return res.send(JSON.stringify(r))
+    }
     async setRecensione(req, res) {
         const r = await this.controller.setRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
@@ -213,12 +251,12 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async setFavorite(req,res){
-        const r = await this.controller.setFavorite(req.body.user,req.body.roadmap,req.body.favorite);
+    async setFavorite(req, res) {
+        const r = await this.controller.setFavorite(req.body.user, req.body.roadmap, req.body.favorite);
         return res.send(JSON.stringify(r))
     }
-    async setChecked(req,res){
-        const r = await this.controller.setChecked(req.body.user,req.body.roadmap,req.body.check);
+    async setChecked(req, res) {
+        const r = await this.controller.setChecked(req.body.user, req.body.roadmap, req.body.check);
         return res.send(JSON.stringify(r))
     }
 
@@ -251,18 +289,18 @@ class HTTPinterface {
         2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
         */
-
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
-            //const user_id = req.session.id; //qua da aggiustare in login!!
-            //console.log(req.session.distanceDetails)
-            const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails);
+            
+            req.body.stages = JSON.parse(req.body.stages);
+            const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files);
             //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
-                console.log(r)
             }
             //qua si svuota tutto!
-            //req.session.placeDetails = {} //svuotamento session troppo piccola?
+            req.session.placeDetails = {} //svuotamento session troppo piccola?
+            req.session.distanceDetails = {}
+
             return res.send(JSON.stringify(r))
         }
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
@@ -274,21 +312,9 @@ class HTTPinterface {
     }
 
     async getDataUser(req, res) {
-        var element = 0;
-
-        if (req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined) {
-            element = 1;
-        }
-
-        if (req.query.id == 0) {
-            const r = await this.controller.getDataUser(req.session.user_id, element);
-            return res.send(JSON.stringify(r));
-        }
-        else {
-            const r = await this.controller.getDataUser(req.query.id, element);
-            return res.send(JSON.stringify(r));
-        }
-    }
+        const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }   
 
     async getRoadmapCreate(req, res) {
         const r = await this.controller.getRoadmapCreate(req.query.id, req.session.user_id);
@@ -302,6 +328,11 @@ class HTTPinterface {
 
     async getRoadmapPreferite(req, res) {
         const r = await this.controller.getRoadmapPreferite(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }
+
+    async deleteRoadmapCreata(req, res) {
+        const r = await this.controller.deleteRoadmapCreata(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
@@ -323,8 +354,6 @@ class HTTPinterface {
                 req.session.placeDetails = {}
             }
             if (r.ok) {
-
-
                 req.session.placeDetails[req.query.placeId] = [r.data, isExNovo];
             }
 

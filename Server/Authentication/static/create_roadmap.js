@@ -3,9 +3,11 @@ window.onload = function () {
 };
 
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
-document.addEventListener('receivedStageData', (e) => { 
-    stages_info[e.stage.placeId]=e.stage
-    drawDeletableStage(e.stage_index, e.stage) }, false);
+
+document.addEventListener('receivedStageData', (e) => {
+    stages_info[e.stage.placeId] = e.stage
+    drawDeletableStage(e.stage_index, e.stage)
+}, false);
 
 document.addEventListener('dbMarkerClicked', (e) => {
     console.log("test");
@@ -21,6 +23,7 @@ var stages_list = []; //lista degli stage
 var lastPlaceId = 0;
 var durataComplessiva = 0;
 var indirizzo;
+var markers = {};
 
 function blurIfNotLoggedIn(user_id) {
     console.log(user_id)
@@ -35,15 +38,15 @@ function blurIfNotLoggedIn(user_id) {
 }
 
 function deleteStage(toDeleteIndex) {
-    //qua va il comando di rimozione del box grafico nel stages_list
+    
+    if(markers[toDeleteIndex] !== undefined){ //ex novo case cover
+        markers[toDeleteIndex].setMap(null);
+        delete markers[toDeleteIndex]
+    }
 
-    //rimozione marker dalla mappa
-    //markers[toDeleteIndex].setMap(null);
-    //markers.splice(toDeleteIndex, 1);
     circles[toDeleteIndex].setMap(null);
-    circles.splice(toDeleteIndex, 1);
 
-    //vanno rimosse le distanze tra A->B e B->C se viene rimosso B.
+    circles.splice(toDeleteIndex, 1);
 
     if (toDeleteIndex == 0) {
 
@@ -114,7 +117,6 @@ function requestDistance(marker1, marker2) {
         travelMode: selectedMode
     }
 
-
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/getRoute', true);
     xhr.onload = function (event) {
@@ -167,28 +169,54 @@ function submitRoadmap() {
         alert("almeno due stage")
     }
     else {
+        const formData = new FormData();
+        for (var i = 0; i < stages_list.length; i++) {
+            if (stages_list[i].foto !== undefined) {
+
+                //formData.append("files", stages_list[i].foto);
+                formData.append(stages_list[i].placeId, stages_list[i].foto);
+            }
+        }
+
+        formData.append('titolo', title)
+        formData.append('descrizione', description)
+        formData.append('isPublic', isPub)
+        formData.append('stages', JSON.stringify(stages_list))
+
+        fetch("/createRoadmap", {
+            method: 'POST',
+            body: formData,
+            contentType: false,
+            processData: false,
+            //headers: {
+            //    "Content-Type": "multipart/form-data"
+            //}
+        })
+            .then((res) => {
+                if (res.ok == true) {
+                    location.href = "/view_roadmap?id=" + res.data;
+                }
+            })
+            .catch((err) => ("Error occured", err));
+
+        return
+
+
+
         var xhr = new XMLHttpRequest();
         xhr.open("POST", '/createRoadmap', true);
         xhr.onload = function (event) {
 
             const r = JSON.parse(event.target.responseText);
-
             if (r.ok == true) {
                 //alert("creata la stages_list")
-                location.href = "/view_roadmap?id="+r.data;
+                location.href = "/view_roadmap?id=" + r.data;
             }
             else if (r.ok == false) {
                 alert("Problemi creazione stages_list")
             }
         }
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            titolo: title,
-            descrizione: description,
-            isPublic: isPub,
-            stages: stages_list
-        }));
+        xhr.send(formData);
     }
 }
 
@@ -210,14 +238,9 @@ var ClickEventHandler = (function () {
     ClickEventHandler.prototype.handleClick = function (event) {
         console.log("You clicked on: " + event.latLng);
         console.log(event)
-        // If the event has a placeId, use it.
         if ("placeId" in event) { //POI
             console.log(event)
             console.log("You clicked on place:" + event.placeId);
-            // Calling e.stop() on the event prevents the default info window from
-            // showing.
-            // If you call stop here when there is no placeId you will prevent some
-            // other map click event handlers from receiving the event.
             event.stop();
             if (event.placeId) {
                 this.openAddBox(event.placeId, event.latLng);
@@ -270,6 +293,7 @@ var ClickEventHandler = (function () {
         var PhotoFile = document.createElement('input');
         PhotoFile.type = "file"
         PhotoFile.id = "stage-photo";
+        PhotoFile.accept = 'image/*'
 
         stage.latLng = latLng;
 
@@ -284,7 +308,6 @@ var ClickEventHandler = (function () {
 
         var durataElement = document.createElement('input');
         durataElement.id = "durata";
-
 
         var inputElement = document.createElement('input');
         inputElement.type = "submit"
@@ -313,14 +336,15 @@ var ClickEventHandler = (function () {
                 radius: 3,
             });
 
-            var marker = new google.maps.Marker({ //qua va aggiustato l'evento
+            //bug: bisogna salvarlo per poi eliminarlo se non si vuole più
+            markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
                 position: latLng,
                 map: map,
                 icon: customMarker,
                 visible: true,
             });
 
-            marker.addListener("click", (e) => {
+            markers[stage_index].addListener("click", (e) => {
                 ClickEventHandler.prototype.openAddBox(placeId, latLng);
             });
 
@@ -330,22 +354,26 @@ var ClickEventHandler = (function () {
             stage.index = stage_index
             stage.nome = StageName.value;
             //secondi!!!
-            stage.durata = parseInt(durataElement.value)*60;
+            stage.durata = parseInt(durataElement.value) * 60;
             stage.placeId = placeId;
-            stage.fotoURL = PhotoFile.value;
+
+
+            console.log(PhotoFile.files)
+            stage.foto = PhotoFile.files[0];
             stage.latitudine = latLng.lat();
             stage.longitudine = latLng.lng();
 
             stages_info[placeId] = stage;
-
+            console.log(stage.foto)
+            console.log(stage.foto)
+            console.log(stage.foto)
+            console.log(stage.foto)
             to_send_stage.placeId = stage.placeId;
             to_send_stage.titolo = stage.titolo;
-            to_send_stage.fotoURL = stage.fotoURL;
+            to_send_stage.foto = stage.foto;
             to_send_stage.website = stage.website;
             to_send_stage.durata = stage.durata;
             to_send_stage.nome = stage.nome;
-            //to_send_stage.latitudine = stage.latitudine;
-            //to_send_stage.longitudine = stage.longitudine;
 
             stages_list.push(to_send_stage)
             lastPlaceId = placeId;
@@ -409,7 +437,7 @@ var ClickEventHandler = (function () {
 
             /*Nodo gia esistente*/
             //secondi!!!!
-            stage.durata = parseInt(durataElement.value)*60;
+            stage.durata = parseInt(durataElement.value) * 60;
 
             stage.placeId = placeId;
             stage.latitudine = latLng.lat();
