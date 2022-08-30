@@ -35,7 +35,7 @@ class HTTPinterface {
 
         this.storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, './uploads/'))
+                cb(null, path.join(__dirname, './'+config.stagesFolder))
             },
             filename: function (req, file, cb) {
                 //console.log(this.controller) this.controller= undefined. to fix.
@@ -82,7 +82,7 @@ class HTTPinterface {
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
         this.app.use('/avatar', express.static('avatar')); //avatars
-        //this.app.use('/avatar', express.static('avatar')); //avatars EX NOVO STAGE IMGS
+        this.app.use('/stages', express.static('stages')); //avatars EX NOVO STAGE IMGS
 
         //back end calls
         this.app.get('/isLogWho', this.isLogWho.bind(this));
@@ -119,13 +119,13 @@ class HTTPinterface {
         this.app.get('/getAchievements', this.getAchievements.bind(this));
         this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
 
-        this.app.post("/createRoadmap", this.upload.any(), this.createRoadmap.bind(this));
+        this.app.post("/createRoadmap", this.upload.any(20), this.createRoadmap.bind(this)); //max 20 files?
 
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
 
         // http://localhost:3000/home
-        this.app.get('/home', function (req, res) {
+        /*this.app.get('/home', function (req, res) {
             // If the user is loggedin
             if (req.session.loggedin) {
                 // Output username
@@ -137,7 +137,7 @@ class HTTPinterface {
                 res.send('Please login to view this page!');
             }
             res.end();
-        });
+        });*/
     }
 
     async isLogWho(req, res) {
@@ -152,12 +152,6 @@ class HTTPinterface {
 
             return res.send(JSON.stringify(r))
         }
-    }
-
-    async uploadFiles(req, res) {
-        console.log(req.body)
-        console.log(req.files)
-        res.json({ message: "Successfully uploaded files" });
     }
 
     async register(req, res) {
@@ -298,7 +292,6 @@ class HTTPinterface {
             //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
-                console.log(r)
             }
             //qua si svuota tutto!
             req.session.placeDetails = {} //svuotamento session troppo piccola?
