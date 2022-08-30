@@ -1,3 +1,9 @@
+var stages_list = []; //lista degli stage
+var lastPlaceId = 0;
+var durataComplessiva = 0;
+var indirizzo;
+var markers = {};
+
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
@@ -14,12 +20,6 @@ function drawDeletableStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
 }
-
-var stages_list = []; //lista degli stage
-var lastPlaceId = 0;
-var durataComplessiva = 0;
-var indirizzo;
-var markers = {};
 
 function blurIfNotLoggedIn(user_id) {
     console.log(user_id)
