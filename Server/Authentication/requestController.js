@@ -48,8 +48,13 @@ class RequestController {
         }
         return distanza
     }
+    
+    getFileName(file){
+        const split = file.originalname.split(".");
+        return file.fieldname + "." + split[split.length - 1]
+    }
 
-    async createRoadmap(user_id, roadmap, session_data, distance_data) {
+    async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
         //console.log(roadmap)
         if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {// && roadmap.stages) { //la roadmap è non nulla
 
@@ -58,18 +63,24 @@ class RequestController {
             roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
             roadmap.travelMode = distance_data[roadmap.stages[0].placeId + "|" + roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
 
-            console.log(session_data[roadmap.stages[0].placeId])
+            //console.log(session_data[roadmap.stages[0].placeId])
             roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
+            /*console.log(roadmap.localita)
             console.log(roadmap.localita)
-            console.log(roadmap.localita)
-            console.log(roadmap.localita)
+            console.log(roadmap.localita)*/
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza, user_id);
             const roadmap_id = data1[2].insertId
 
-            await this.dao.addNewStages(roadmap.stages, session_data);
+
+            var stages_img_dict={}
+            for (var i = 0; i < stages_img.length;i++){
+                stages_img_dict[stages_img[i].fieldname]=this.getFileName(stages_img[i]);
+            }
+
+            await this.dao.addNewStages(roadmap.stages, session_data, stages_img_dict);
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
-            return { ok: data3[0], error: data3[1] }
+            return { ok: data3[0], error: data3[1], data: roadmap_id }
         }
         return { ok: false, error: -5 } //return error!
     }
@@ -151,9 +162,9 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+
     async setCommento(user, roadmap, mod_com, day) {
         if (!roadmap || !user || !user || !mod_com || !day) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -161,6 +172,7 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+
     async updateCommento(user, roadmap, mod_com, day) {
         if (!roadmap || !user || !user || !mod_com || !day) {
 
@@ -173,12 +185,10 @@ class RequestController {
     }
     async setRecensione(user, roadmap, mod_op, mod_val, day) {
         if (!roadmap || !user || !user || !mod_val || !day) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.setRecensione(user, roadmap, mod_op, mod_val, day);
-
             return { ok: true, error: data[1], data: data[2] };
         }
     }
@@ -273,6 +283,11 @@ class RequestController {
 
     async getAchievements(id) {
         const data = await this.dao.getAchievements(id);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async getRoadmapAchievementsPopup(id) {
+        const data = await this.dao.getRoadmapAchievementsPopup(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

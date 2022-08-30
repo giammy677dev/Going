@@ -1,5 +1,4 @@
 // Script Avvio Pagina
-
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get('id')
@@ -16,11 +15,10 @@ document.addEventListener('receivedUserInfo', (e) => {
   getAchievements()
  }, false);
 
-// Script Dati Utente 
+// Script Dati Utente
 
 function data_user() {
   var xhr = new XMLHttpRequest();
-  console.log(id);
 
   xhr.open("GET", '/getDataUser?id=' + id, true);
 
@@ -46,13 +44,11 @@ function data_user() {
     }
   }
 
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    id: id
-  }));
+  xhr.send();
 }
 
-// Script delle Roadmap create, seguite e preferite
+// Script Numero di Roadmap create, seguite e preferite dall'utente
+>>>>>>> 3b4423115656b0519810638127c988979c539f97
 
 function roadmap_create() {
   var xhr = new XMLHttpRequest();
@@ -173,43 +169,43 @@ function roadmap_preferite() {
 
 // Funzioni Calcolo Cocktail, conMouseOver, conMouseOut
 
-function funcCoktail(media_valutazioni, number, i) {
-
-  /* prendo tutto il numero intero e stampo i cock pieni
+function printCocktail(media_valutazioni, number, i) {
+  /* prendo tutto il numero intero e stampo i cocktail pieni
     verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
     verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
   var spazioRoadmap = document.getElementById("divRoadmap_" + number + "_" + i);
-  const html_codePieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
-  const html_codeMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
-  const html_codeVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
+  const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
+  const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
+  const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:25px;height: 25px;">'
   var counterStamp = 0;
   if (media_valutazioni != null) {
     if (Number.isInteger(media_valutazioni)) {
       for (var iteratorInt = 0; iteratorInt < media_valutazioni; iteratorInt++) {
-        spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+        spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
         counterStamp++;
       }
     }
     else {
       for (var iteratorInt = 1; iteratorInt < media_valutazioni; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
-        spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+        spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
         counterStamp++;
       }
-      const decimalStr = media_valutazioni.toString().split('.')[1];
-      var decimal = Number("0." + decimalStr);
-      if (decimal < 0.25) { }
-      else if (decimal > 0.75) {
-        spazioRoadmap.insertAdjacentHTML("beforeend", html_codePieno);
+
+      var decimal = media_valutazioni - Math.floor(media_valutazioni);
+      decimal = decimal.toFixed(2);
+
+      if (decimal >= 0.25 && decimal < 0.75) {
+        spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailMezzo);
         counterStamp++;
       }
-      else {
-        spazioRoadmap.insertAdjacentHTML("beforeend", html_codeMezzo);
+      else if (decimal >= 0.75) {
+        spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailPieno);
         counterStamp++;
       }
     }
   }
   while (counterStamp < 5) {
-    spazioRoadmap.insertAdjacentHTML("beforeend", html_codeVuoto);
+    spazioRoadmap.insertAdjacentHTML("beforeend", html_cocktailVuoto);
     counterStamp++;
   }
 }
@@ -230,7 +226,6 @@ function conMouseOut(target) {
   }
 }
 
-// Script Eliminazione Roadmap Seguite, Preferite
 
 function DeleteRoadmapCreata(number, id) {
   var xhr = new XMLHttpRequest();
@@ -347,8 +342,12 @@ function getAchievements() {
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok == true) {
+      if (r.data[0] >= 1) {
+        document.getElementById("firstRoadmapAchievement").setAttribute("src", "/storage/achievements/roadmap.png");
+      }
+
       if (r.data[0] >= number_create) {
-        document.getElementById("roadmapAchievement").setAttribute("src", "/storage/achievements/roadmap.png");
+        document.getElementById("roadmapAchievement").setAttribute("src", "/storage/achievements/topRoadmapper.png");
       }
 
       if (r.data[1] >= number_seguite) {

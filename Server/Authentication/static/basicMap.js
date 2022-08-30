@@ -1,5 +1,3 @@
-
-
 var map;
 var roadmap;
 let customMarker = './storage/marker.png'
@@ -153,7 +151,7 @@ function loadMapInfo() {
                 user = r.data.user;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
-                
+
             }
         }
         xhr.send()
@@ -192,7 +190,7 @@ function initMap() {
         mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
         scaleControl: true,
         zoomControl: true,
-        gestureHandling:"greedy",
+        gestureHandling: "greedy",
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
         },
