@@ -652,6 +652,7 @@ function updateCom(id) {
     day: today
   }));
 }
+
 function writeCom() {
   document.getElementById("write_new_com").setAttribute("style", "display:block")
   document.getElementById("write_com").innerHTML = "Salva il tuo commento"

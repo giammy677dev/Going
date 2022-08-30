@@ -1,7 +1,3 @@
-window.onload = function () {
-    initMap();
-};
-
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
@@ -194,6 +190,7 @@ function submitRoadmap() {
         })
             .then((res) => {
                 if (res.ok == true) {
+                    console.log(res);
                     location.href = "/view_roadmap?id=" + res.data;
                 }
             })

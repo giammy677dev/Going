@@ -96,6 +96,5 @@ class MapsHandler {
         return [false,-1,{}] //errore? -1?
     }
 
-
 }
 module.exports = MapsHandler

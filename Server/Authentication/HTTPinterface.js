@@ -9,7 +9,6 @@ const path = require('path');
 const config = require('./config.js');
 const { res } = require('express');
 const app = express();
-
 const multer = require("multer");
 
 app.use(express.json());
