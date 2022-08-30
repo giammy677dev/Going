@@ -48,7 +48,6 @@ function data_user() {
 }
 
 // Script Numero di Roadmap create, seguite e preferite dall'utente
->>>>>>> 3b4423115656b0519810638127c988979c539f97
 
 function roadmap_create() {
   var xhr = new XMLHttpRequest();
@@ -81,7 +80,7 @@ function roadmap_create() {
         }
 
         document.getElementById("divRoadmap_0_" + i).innerHTML = html_string;
-        funcCoktail(r.data[0][i].punteggio, 0, i);
+        printCocktail(r.data[0][i].punteggio, 0, i);
       }
     }
   }
@@ -120,7 +119,7 @@ function roadmap_seguite() {
         }
 
         document.getElementById("divRoadmap_1_" + i).innerHTML = html_string;
-        funcCoktail(r.data[0][i].punteggio, 1, i);
+        printCocktail(r.data[0][i].punteggio, 1, i);
       }
     }
   }
@@ -159,7 +158,7 @@ function roadmap_preferite() {
         }
 
         document.getElementById("divRoadmap_2_" + i).innerHTML = html_string;
-        funcCoktail(r.data[0][i].punteggio, 2, i);
+        printCocktail(r.data[0][i].punteggio, 2, i);
       }
     }
   }
