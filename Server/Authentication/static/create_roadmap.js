@@ -316,7 +316,6 @@ var ClickEventHandler = (function () {
                 radius: 3,
             });
 
-            //bug: bisogna salvarlo per poi eliminarlo se non si vuole più
             markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
                 position: latLng,
                 map: map,
