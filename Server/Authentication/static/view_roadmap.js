@@ -77,105 +77,6 @@ document.addEventListener('receivedRoadmapData', (e) => {
   loadRecCom();
 }, false);
 
-/*
-function loading_roadmap() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get('id')
-
-  if (id != null && id >= 0) {
-    id_rm = id
-    richiestaRoadmap(id)
-  }
-  else {
-    location.href = "/explore"
-  }
-}
-function richiestaRoadmap(id) {
-
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", '/viewrm?id=' + id, true);
-
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-    if (r.data === undefined) {
-      location.href = "/explore"
-    }
-    const quanti_stage = r.data.roadmap.stages.length
-    const roadmap = r.data.roadmap
-    const user = r.data.user
-    console.log("quanti stage rm:", quanti_stage)
-    console.log("dati rm:", roadmap)
-    console.log("dati user:", user)
-
-    if (r.ok == true) {
-      if (quanti_stage < 0) {
-        location.href = "/explore"
-      }
-      else {
-        var day = new Date(roadmap.dataCreazione)
-        var month = day.getMonth() + 1;
-
-        var minuti = Math.round(roadmap.durata / 60)
-
-        document.getElementById("titolo").innerText = roadmap.titolo
-        document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-        document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
-        document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
-        document.getElementById("utente").innerText = ' 👤 ' + user[0].username
-        document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
-        document.getElementById("descrizione").innerText = roadmap.descrizione
-        if (roadmap.punteggio != null) {
-          const html_cock = printBicchieri(roadmap.punteggio, 35)
-          document.getElementById("rating").innerHTML += html_cock
-        }
-        for (let i = 0; i < quanti_stage; i++) {
-          var time = roadmap.stages[i].reachTime
-          if (time == null) {
-            time = " "
-          }
-          document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-          document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + roadmap.stages[i].nome + '</h4><p>' + roadmap.stages[i].indirizzo + ' con durata di sosta: ' + roadmap.stages[i].durata + '; facendo ste cose: ' + roadmap.stages[i].descrizione_st + '</p></div>'
-
-        }
-
-
-      }
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
-  }
-  xhr.send()
-}
-function check_nw() {
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("GET", '/isLogWho', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      console.log("ok:", r.ok, "=>sei loggato!!! con questo id", r.whoLog)
-      ok_in_rm = true
-      id_user = r.whoLog
-      loadLoggedRoad(id_user,id_rm)
-
-    }
-    else if (r.ok == false) {
-      document.getElementById("container_funz").style.display = "none"
-      document.getElementById("roadmap_funz").innerHTML = "<h2>Registrati o effettua il Log In per lasciare una tua impressione sulla roadmap come hanno fatto questi Roadmappers!<h2>"
-    }
-  }
-  xhr.send();
-<<<<<<< Updated upstream
-}*/
-
-
 function getCommmentsReviewByUserRoad(id_user, id_rm) {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user + '&id_rm=' + id_rm, true);
@@ -294,8 +195,10 @@ function loadRecCom() {
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
           }
-          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><a class="boxclose" id="segn' + recensioni[i].idRecensione + '" title="segnala recensione" onclick="segnalaRec(' + recensioni[i].idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml +'</div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
+          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><a class="boxclose" id="segn' + recensioni[i].idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensioni[i].idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
           document.getElementById("recensioni").innerHTML += html_rec
+          var html = '<div class="popup_segnal" id="segnal_rec' + recensioni[i].idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensioni[i].idRecensione + '"></input><div onclick="segnalaRec(' + recensioni[i].idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensioni[i].idRecensione + ')">Chiudi</div></div>'
+          document.getElementById("recensioni").innerHTML += html
         }
       }
       else {
@@ -304,18 +207,20 @@ function loadRecCom() {
       }
       if (len_com !== undefined && len_com > 0) {
         const commenti = r.data.commenti
-        //console.log("quanti commenti:", commenti)
+        //console.log("quanti commenti:", 
         for (let i = 0; i < len_com; i++) {
-          var html_funz = '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick="segnalaComm(' + commenti[i].idCommento + ')">⚠️</a>'
+          var html_funz = '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick=""openSegnCom(' + commenti[i].idCommento + ')">⚠️</a>'
           if (r.data.commenti[i].id == id_user) {
             console.log(commenti[i].testo)
-            html_funz += '<a class="boxclose" id="update' + commenti[i].idCommento + '" title="modifica commento" onclick="updPreview('+commenti[i].idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commenti[i].idCommento + '" title="elimina commento" onclick="deleteCom(' + commenti[i].idCommento + ')">❌</a>'
+            html_funz += '<a class="boxclose" id="update' + commenti[i].idCommento + '" title="modifica commento" onclick="updPreview(' + commenti[i].idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commenti[i].idCommento + '" title="elimina commento" onclick="deleteCom(' + commenti[i].idCommento + ')">❌</a>'
           }
           var day = new Date(commenti[i].dataPubblicazione)
           var month = day.getMonth() + 1;
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" value="'+commenti[i].testo+'" id="text_commento'+commenti[i].idCommento +'">' + commenti[i].testo + '</div> ' + html_funz + '<div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
+          const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" value="' + commenti[i].testo + '" id="text_commento' + commenti[i].idCommento + '">' + commenti[i].testo + '</div> ' + html_funz + '<div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
           document.getElementById("commenti").innerHTML += html_com
+          var html = '<div class="popup_segnal" id="segnal_com' + commenti[i].idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commenti[i].idCommento + '"></input><div onclick="m(' + commenti[i].idCommento +  ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commenti[i].idCommento +  ')">Chiudi</div></div>'
+          document.getElementById("commenti").innerHTML += html
         }
       }
       else {
@@ -586,7 +491,7 @@ function saveCom() {
 function deleteCom(commento) {
 
   var xhr = new XMLHttpRequest();
-  
+
   xhr.open("POST", '/deleteCommento', true);
   xhr.onload = function (event) {
 
@@ -596,7 +501,7 @@ function deleteCom(commento) {
     if (r.ok == true) {
       alert("Complimenti!!")
       location.reload()
-      
+
     }
     else if (r.ok == false) {
       console.log(r)
@@ -613,15 +518,15 @@ function deleteCom(commento) {
 function updPreview(id) {
   console.log(id)
   var txt
-  for(let i=0;i<commento_utente.length;i++){
-    if(commento_utente[i].idCommento==id){
-      txt=commento_utente[i].testo
+  for (let i = 0; i < commento_utente.length; i++) {
+    if (commento_utente[i].idCommento == id) {
+      txt = commento_utente[i].testo
     }
   }
-  
+
   console.log(txt)
-  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="'+id+'"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
-  
+  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="' + id + '"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
+
 }
 function updateCom(id) {
   var today = new Date();
@@ -630,7 +535,7 @@ function updateCom(id) {
   var yyyy = today.getFullYear();
   today = yyyy + '-' + mm + '-' + dd;
   var xhr = new XMLHttpRequest();
-  testo=document.getElementById(id).value
+  testo = document.getElementById(id).value
   xhr.open("POST", '/updateCommento', true);
   xhr.onload = function (event) {
 
@@ -664,18 +569,85 @@ function writeCom() {
 function forkaggio() {
   location.href = "/create?roadmap_id=" + id_rm
 }
-
+function openSegnRec(id_rec) {
+  document.getElementById("segnal_rec" + id_rec).style.display = "block";
+}
+function closeSegnRec(id_rec) {
+  document.getElementById("segnal_rec" + id_rec).style.display = "none";
+}
+function openSegnCom(id_com){
+  document.getElementById("segnal_com" + id_com).style.display = "block";
+}
+function closeSegnCom(id_com){
+  document.getElementById("segnal_com" + id_com).style.display = "none";
+}
 function segnalaRec(id_rec) {
-  //piccola conferma, poi insert in tabella nel db delle segnalazioni,
-  //vedendo anche se già presente 
-  //dicendo (id_rm, id_user,cosa è, id_della_cosa)
-  alert(id_rec)
+  /*1: roadmap
+2: profilo
+3: recensione rm
+4: commento rm*/
+  testo = document.getElementById("motiv_rec" + id_rec).value
+  if (testo == ' '|| testo == '') {
+    testo = null
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      alert("Hai segnalato questa recensione!!")
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Hai già segnalato!")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user_id: id_user,
+    tipo: 3,
+    idOggetto: id_rec,
+    motivazione: testo
+  }));
+
+
 }
 
 function segnalaComm(id_comm) {
-  //piccola conferma, poi insert in tabella nel db delle segnalazioni,
-  //vedendo anche se già presente 
-  //dicendo (id_rm, id_user, cosa è, id_della_cosa)
+  /*1: roadmap
+2: profilo
+3: recensione rm
+4: commento rm*/
+testo = document.getElementById("motiv" + id_comm).value
+if (testo == ' '|| testo == '') {
+  testo = null
+}
+var xhr = new XMLHttpRequest();
+xhr.open("POST", '/report', true);
+xhr.onload = function (event) {
+
+  const r = JSON.parse(event.target.responseText);
+
+  console.log(r)
+  if (r.ok == true) {
+    alert("Hai segnalato questa recensione!!")
+  }
+  else if (r.ok == false) {
+    console.log(r)
+    alert("Hai già segnalato!")
+  }
+}
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+  user_id: id_user,
+  tipo: 3,
+  idOggetto: id_comm,
+  motivazione: testo
+}));
+
   alert(id_comm)
 }
 
