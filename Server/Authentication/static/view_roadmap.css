@@ -492,6 +492,14 @@ a.boxclose:hover {
   border-radius: 50%;
 }
 
+.popup_segnal {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  border: 3px solid #f1f1f1;
+  z-index: 5;
+}
+
 .btn {
   width: fit-content;
   height: 35px;
@@ -554,6 +562,7 @@ a.boxclose:hover {
   float: left;
   width: 50%;
 }
+
 #popup-interno-com {
   color: black;
   float: left;
