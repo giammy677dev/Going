@@ -92,25 +92,20 @@
   </div>
   <!-- FINE PARTE LOG LOGOUT E HEADER-->
 
-  <!-- Aggiunta da Gian e Diego per gli Achievements-->
+  <!-- Popup per gli Achievements-->
   <div id="roadmapAchievementPopup">
-    <div id="popup">
-      <div id="contenuto-immagine">
-        <img id="achievementImage" src="/storage/achievements/roadmap.png" />
+      <div class = "popup-interno" id="contenuto-immagine">
+        <img id="imageAchievement">
       </div>
-      <div id="contenuto-testo">
+      <div class = "popup-interno" id="contenuto-testo">
         <h3> Congratulazioni!
-          <button type="button" id="closeBtn" onclick="closePopup()">Close</button>
+          <button type="button" id="closeBtn" onclick="closePopup()">X</button>
         </h3>
         <p id="textAchievement"></p>
       </div>
-    </div>
   </div>
-  <!-- Fin qui-->
 
   <div class="contenuto">
-
-
     <div class="result_query" id="result_query">
       <div class="res" id="res">
         <div class="titolo" id="titolo"></div>
@@ -119,7 +114,6 @@
         <div class="utente" id="utente"></div>
         <div class="distanza" id="distanza"></div>
         <div class="rating" id="rating"></div>
-
       </div>
     </div>
 

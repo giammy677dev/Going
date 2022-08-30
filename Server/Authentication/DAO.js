@@ -307,37 +307,33 @@ class DAO {
             return [false, error.errno];
         }
     }
+
     async setCommento(user, roadmap, mod_com, day) {
         try {
-
             var connection = await this.connect();
-            var res = await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user, roadmap, mod_com, day])
-            return [true, 0, res[0]];
-
+            await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user, roadmap, mod_com, day])
+            let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [id]);
+            let results = commentsNumber[0][0].numberComments;
+            return [true, 0, results];
         }
         catch (error) {
             return [false, error.errno];
         }
     }
+
     async setRecensione(user, roadmap, mod_op, mod_valutazione, day) {
         try {
 
             var connection = await this.connect();
             var res_ins = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
-
-
             var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
-            //console.log("dati da count: ",dati[0][0].numeroRecensioni)
-            //console.log("dati da count: ",dati[0][0].somma)
-
-
             var numeroRecensioni = dati[0][0].numeroRecensioni
             var somma = dati[0][0].somma
             var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
 
-            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0] }];
+            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0], numRecensioni: numeroRecensioni }];
 
         }
         catch (error) {
@@ -383,21 +379,17 @@ class DAO {
     }
     async setFavorite(user, roadmap, valore) {
         try {
-
             var connection = await this.connect();
-
             var query
-            var see=await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
-            if(see[0].length==0){
+            var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
+            if (see[0].length == 0){
                 //mai messo nulla
                 query=await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) vALUES (?,?,?)',[user,roadmap,valore])
-            }else{
+            }
+            else {
                 query=await connection.query('UPDATE roadmapuser SET preferita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
             }
-
             return [true, 0, query[0]];
-
-
         }
         catch (error) {
             return [false, error.errno];
@@ -405,20 +397,18 @@ class DAO {
     }
     async setChecked(user, roadmap, valore) {
         try {
-
             var connection = await this.connect();
-
             var query
-            var see=await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?',[user,roadmap])
-            if(see[0].length==0){
+            var see = await connection.query('select * from roadmapuser where idUtenteRegistrato = ? and idRoadmap = ?', [user,roadmap])
+            if (see[0].length == 0) {
                 //mai messo nulla
-                query=await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) vALUES (?,?,?)',[user,roadmap,valore])
-            }else{
-                query=await connection.query('UPDATE roadmapuser SET seguita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
+                query = await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) VALUES (?,?,?)', [user,roadmap,valore])
+            } 
+            else {
+                query = await connection.query('UPDATE roadmapuser SET seguita = ? where idUtenteRegistrato = ? and idRoadmap = ?', [valore, user, roadmap])
             }
 
             return [true, 0, query[0]];
-
         }
         catch (error) {
             return [false, error.errno];

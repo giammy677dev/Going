@@ -163,9 +163,9 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+
     async setCommento(user, roadmap, mod_com, day) {
         if (!roadmap || !user || !user || !mod_com || !day) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -173,6 +173,7 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+
     async updateCommento(user, roadmap, mod_com, day) {
         if (!roadmap || !user || !user || !mod_com || !day) {
 
@@ -185,12 +186,10 @@ class RequestController {
     }
     async setRecensione(user, roadmap, mod_op, mod_val, day) {
         if (!roadmap || !user || !user || !mod_val || !day) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.setRecensione(user, roadmap, mod_op, mod_val, day);
-
             return { ok: true, error: data[1], data: data[2] };
         }
     }
@@ -250,7 +249,6 @@ class RequestController {
 
     async getRoadmapSeguite(id_query,id_session) {
         var element = 0;
-
         if(id_session == id_query && id_session != 0 && id_session != undefined){
             element=1;
         }
@@ -296,7 +294,7 @@ class RequestController {
     }
 
     async getRoadmapAchievementsPopup(id) {
-        const data = await this.dao.getRoadmapAchievementsPopup(5); //il 5 deve cambiare con id quando passeremo id dalla pagine di viewRoadmap
+        const data = await this.dao.getRoadmapAchievementsPopup(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

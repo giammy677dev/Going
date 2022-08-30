@@ -106,16 +106,6 @@ body {
 }
 
 .pulsantiLog a {
-    /*
-      font-size: 20px;
-      margin-top: 20px;
-      border: thin #c82d0e solid;
-      text-transform: uppercase;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      cursor: pointer;*/
-
       font-size: 20px;
       margin-top: 20px;
       margin-left: 10px;
@@ -152,14 +142,16 @@ body {
       font-family: serif;
       color: white;
       background-color: rgba(0, 0, 0, 0.92);
-      position: absolute;
+      position: fixed;
       width: 70%;
-      height: 30%;
-      margin: 5% 15%;
       text-align: center;
       font-family: "Poppins", sans-serif;
       border: thin #d24618 solid;
       overflow: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding-bottom: 25px;
   }
   
   .msgBenvenuto{
@@ -176,13 +168,16 @@ body {
       font-family: serif;
       color: white;
       background-color: rgba(0, 0, 0, 0.92);
-      position: absolute;
+      position: fixed;
       width: 70%;
-      margin: 5% 15%;
       text-align: center;
       font-family: "Poppins", sans-serif;
       border: thin #d24618 solid;
       overflow: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
   }
   
     #Response_Login{

@@ -74,7 +74,6 @@ class HTTPinterface {
         }));
 
         //front end pages
-        //this.app.get('/', this.main_page.bind(this)); //MainPage
         this.app.get('/', this.home_page.bind(this)); //HomePage
         this.app.get('/info', this.info_page.bind(this)); //info
         this.app.get('/about', this.about_page.bind(this)); //about
@@ -223,27 +222,33 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify(r));
     }
+
     async getCommmentsReviewByUserRoad(req, res) {
         //console.log(req.query)
         const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
+
     async getRecCom(req, res) {
         const r = await this.controller.getRecCom(req.query.id);
         return res.send(JSON.stringify(r));
     }
+
     async setCommento(req, res) {
         const r = await this.controller.setCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
+
     async updateCommento(req, res) {
         const r = await this.controller.updateCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
+
     async setRecensione(req, res) {
         const r = await this.controller.setRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
     }
+
     async updateRecensione(req, res) {
         const r = await this.controller.updateRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
@@ -419,12 +424,11 @@ class HTTPinterface {
     }
 
     async getRoadmapAchievementsPopup(req, res) {
-        const r = await this.controller.getRoadmapAchievementsPopup(req.body.user_id);
+        const r = await this.controller.getRoadmapAchievementsPopup(req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
     async searchUser(req, res) {
-
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }
