@@ -294,7 +294,7 @@ function loadRecCom() {
           if (opHtml == null) {
             opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
           }
-          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '<a id="segn' + recensioni[i].idRecensione + '" class="boxclose" style="margin-top: -50px; title="segnala commento" onclick="segnalaRec(' + recensioni[i].idRecensione + ')">x</a></div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
+          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><a class="boxclose" id="segn' + recensioni[i].idRecensione + '" title="segnala recensione" onclick="segnalaRec(' + recensioni[i].idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml +'</div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
           document.getElementById("recensioni").innerHTML += html_rec
         }
       }
@@ -308,6 +308,7 @@ function loadRecCom() {
         for (let i = 0; i < len_com; i++) {
           var html_funz = '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick="segnalaComm(' + commenti[i].idCommento + ')">⚠️</a>'
           if (r.data.commenti[i].id == id_user) {
+            console.log(commenti[i].testo)
             html_funz += '<a class="boxclose" id="update' + commenti[i].idCommento + '" title="modifica commento" onclick="updPreview('+commenti[i].idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commenti[i].idCommento + '" title="elimina commento" onclick="deleteCom(' + commenti[i].idCommento + ')">❌</a>'
           }
           var day = new Date(commenti[i].dataPubblicazione)
@@ -545,9 +546,6 @@ function saveRec() {
   }
 }
 
-function mostraCommenti() {
-  alert("fare mostra commenti")
-}
 
 //if numero_commenti > X--> mostra achievements
 
@@ -596,9 +594,9 @@ function deleteCom(commento) {
 
     console.log(r)
     if (r.ok == true) {
-      //alert("Complimenti!!")
-      //location.reload()
-      getCommentAchievementPopup(r.data);
+      alert("Complimenti!!")
+      location.reload()
+      
     }
     else if (r.ok == false) {
       console.log(r)
@@ -614,9 +612,15 @@ function deleteCom(commento) {
 }
 function updPreview(id) {
   console.log(id)
-  var txt=document.getElementById('text_commento'+id).value
+  var txt
+  for(let i=0;i<commento_utente.length;i++){
+    if(commento_utente[i].idCommento==id){
+      txt=commento_utente[i].testo
+    }
+  }
+  
   console.log(txt)
-  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width="85%""id="text_mod'+id+'"value="' + txt + '"name="us_com" size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
+  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="'+id+'"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
   
 }
 function updateCom(id) {
@@ -626,7 +630,7 @@ function updateCom(id) {
   var yyyy = today.getFullYear();
   today = yyyy + '-' + mm + '-' + dd;
   var xhr = new XMLHttpRequest();
-  const testo=document.getElementById('text_mod' + id).value
+  testo=document.getElementById(id).value
   xhr.open("POST", '/updateCommento', true);
   xhr.onload = function (event) {
 
@@ -651,39 +655,10 @@ function updateCom(id) {
     day: today
   }));
 }
-/*
-  if (insert_com == 0) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("POST", '/updateCommento', true);
-    xhr.onload = function (event) {
-
-      const r = JSON.parse(event.target.responseText);
-
-      console.log(r)
-      if (r.ok == true) {
-        alert("Compliementi!!")
-        location.reload()
-      }
-      else if (r.ok == false) {
-        console.log(r)
-        alert("Problemi col db")
-      }
-    }
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-      user: id_user,
-      roadmap: id_rm,
-      mod_com: com,
-      day: today
-    }));
-  }
-}*/
 function writeCom() {
   document.getElementById("write_new_com").setAttribute("style", "display:block")
   document.getElementById("write_com").innerHTML = "Salva il tuo commento"
   document.getElementById("write_com").setAttribute("onclick", "saveCom()");
-
 }
 
 function forkaggio() {

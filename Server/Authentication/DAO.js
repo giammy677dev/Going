@@ -313,7 +313,21 @@ class DAO {
 
             var connection = await this.connect();
             var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idUtenteRegistrato=? and idRoadmap=?', [mod_com, day, user, roadmap])
-            //media su recensioni di quella roadmap e ri inserimento
+           
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+    
+    async deleteCommento(user, commento,roadmap) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('DELETE FROM commento WHERE idUtenteRegistrato = ? and idCommento = ? and idRoadmap=?', [user,commento, roadmap])
+            
             return [true, 0, res[0]];
 
         }

@@ -111,6 +111,7 @@ class HTTPinterface {
         this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
+        this.app.post('/deleteCommento', this.deleteCommento.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
         this.app.post('/setFavorite', this.setFavorite.bind(this));
@@ -242,7 +243,10 @@ class HTTPinterface {
         const r = await this.controller.updateCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
         return res.send(JSON.stringify(r))
     }
-
+    async deleteCommento(req, res) {
+        const r = await this.controller.deleteCommento(req.body.user, req.body.commento, req.body.roadmap);
+        return res.send(JSON.stringify(r))
+    }
     async setRecensione(req, res) {
         const r = await this.controller.setRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
         return res.send(JSON.stringify(r))
