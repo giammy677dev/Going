@@ -58,7 +58,12 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("utente").innerText = ' 👤 ' + user[0].username
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
-  document.getElementById("segnala_roadmap").setAttribute("onclick", "segnalaRoadmap(" + roadmap.id + ")")
+  if(id_user!=null){
+    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" +roadmap.id+ ")")
+  }else{
+    document.getElementById('segnalazione_roadmap').setAttribute('style','display:none')
+  }
+  
   if (roadmap.punteggio != null) {
     const html_cock = printBicchieri(roadmap.punteggio, 35, 'auto')
     document.getElementById("rating").innerHTML += html_cock
