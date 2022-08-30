@@ -48,8 +48,13 @@ class RequestController {
         }
         return distanza
     }
+    
+    getFileName(file){
+        const split = file.originalname.split(".");
+        return file.fieldname + "." + split[split.length - 1]
+    }
 
-    async createRoadmap(user_id, roadmap, session_data, distance_data) {
+    async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
         //console.log(roadmap)
         if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {// && roadmap.stages) { //la roadmap è non nulla
 
@@ -67,7 +72,13 @@ class RequestController {
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza, user_id);
             const roadmap_id = data1[2].insertId
 
-            await this.dao.addNewStages(roadmap.stages, session_data);
+
+            var stages_img_dict={}
+            for (var i = 0; i < stages_img.length;i++){
+                stages_img_dict[stages_img[i].fieldname]=this.getFileName(stages_img[i]);
+            }
+
+            await this.dao.addNewStages(roadmap.stages, session_data, stages_img_dict);
             const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
             return { ok: data3[0], error: data3[1], data: roadmap_id }
         }

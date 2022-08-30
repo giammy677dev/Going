@@ -115,9 +115,11 @@ class DAO {
         }
     }
 
-    async addNewStages(stages, session_data) {
+    async addNewStages(stages, session_data, stages_img) {
 
         var connection = await this.connect();
+
+        
         for (var i = 0; i < stages.length; i++) {
             var stage = stages[i];
             var stored_stage = session_data[stage.placeId][0]
@@ -138,6 +140,7 @@ class DAO {
                 }
                 else //è exnovo!
                 {
+                    stage.fotoURL = stages_img[stage.placeId] || null;
                     await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [stage.placeId, 1, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita]);
                 }
             } catch (error) {
