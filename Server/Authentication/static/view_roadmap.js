@@ -2,6 +2,7 @@ var ok_in_rm = false
 var id_user = null
 var id_rm = 0
 var insert_rec = 1
+var insert_com = 1
 var points = 0
 var commento_utente
 var pref
@@ -429,7 +430,7 @@ function checked(value) {
     console.log(r)
     if (r.ok == true) {
       console.log("messo ", value, "in seguite")
-      getFollowedRoadmapAchievementPopup(r.data.numeroRoadmapSeguite)
+      getFollowedRoadmapAchievementPopup(r.data)
       const prec_value = value;
       var html;
       if (value == 1) {
@@ -488,9 +489,7 @@ function saveRec() {
 
         console.log(r)
         if (r.ok == true) {
-          //alert("Compliementi!!")
-          //location.reload()
-          getReviewAchievementPopup(r.data.numRecensioni);
+          getReviewAchievementPopup(r.data.numRecensioniUtente);
         }
         else if (r.ok == false) {
           console.log(r)
@@ -564,8 +563,7 @@ function saveCom() {
 
       console.log(r)
       if (r.ok == true) {
-        //alert("Complimenti!!")
-        //location.reload()
+        console.log(r.data)
         getCommentAchievementPopup(r.data);
       }
       else if (r.ok == false) {

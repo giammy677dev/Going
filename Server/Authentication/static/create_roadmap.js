@@ -192,7 +192,11 @@ function submitRoadmap() {
             //    "Content-Type": "multipart/form-data"
             //}
         })
-            .then((res) => console.log(res))
+            .then((res) => {
+                if (res.ok == true) {
+                    location.href = "/view_roadmap?id=" + res.data;
+                }
+            })
             .catch((err) => ("Error occured", err));
 
         return
