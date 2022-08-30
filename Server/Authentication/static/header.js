@@ -7,23 +7,21 @@ window.onload=function(){
 
 const receivedUserInfo = new CustomEvent('receivedUserInfo');
 
-
-
 function check() {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/getDataUser?id='+ user_id, true);
+  xhr.open("GET", '/getDataUser', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
-    if (r.ok == true && r.data.length == 1) {
+    if (r.ok == true && r.data[0].length == 1) {
       ok = r.ok
-      user_id = r.data[0].id
-      console.log("sei loggato!!! con questo id", ok)
+      user_id = r.data[0][0].id
 
+      console.log("sei loggato!!! con questo id", ok)
       console.log("sei loggato!!! con questo id", user_id)
-      document.getElementById("image_topnav").setAttribute("src", r.data[0].avatar);
+      document.getElementById("image_topnav").setAttribute("src", r.data[0][0].avatar);
 
       var image = document.createElement("img");
       image.setAttribute("src", "/storage/logoutTransp.png");
@@ -33,12 +31,12 @@ function check() {
       document.getElementById("topnav_image0").appendChild(image);
       document.getElementById("topnav_image0").style.setProperty("display", "block");
       document.getElementById("topnav_image").style.setProperty("width", "5%");
-      document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0].id+"\"");
+      document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id="+r.data[0][0].id+"\"");
       receivedUserInfo.logged=true; //passiamo valore tramite evento! wow!
       receivedUserInfo.user=user_id
       document.dispatchEvent(receivedUserInfo);
     }
-    else if (r.ok == true && r.data.length == 0) {
+    else if (r.ok == true && r.data[0].length == 0) {
       console.log("non sei loggato!!!")
       console.log(r)
       //wagliu qua serve un ritorno. tipo logged:false
