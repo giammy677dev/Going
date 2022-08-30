@@ -1,11 +1,33 @@
 var ok = false
 var user_id = 0
 
-window.onload = function () {
+window.onload=function(){
+  caricaHeader()
   check()
 };
 
 const receivedUserInfo = new CustomEvent('receivedUserInfo');
+
+function caricaHeader() {
+  fetch('/static/header.html')
+    .then(function(response) {
+        // When the page is loaded convert it to text
+        return response.text()
+    })
+    .then(function(html) {
+        // Initialize the DOM parser
+        var parser = new DOMParser();
+
+        // Parse the text
+        var doc = parser.parseFromString(html, "text/html");
+        document.getElementsByTagName("body")[0].appendChild(doc.getElementById("log"));
+        document.getElementsByTagName("body")[0].appendChild(doc.getElementById("logout"));
+        document.getElementsByTagName("body")[0].appendChild(doc.getElementsByClassName("row1")[0]);
+    })
+    .catch(function(err) {  
+        console.log('Failed to fetch page: ', err);  
+    });
+}
 
 function check() {
   var xhr = new XMLHttpRequest();

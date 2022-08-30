@@ -62,8 +62,6 @@ function drawObjects(stages) {
 }
 
 function drawExNovoStages() {
-
-
     var boxMinLat = map.getBounds().getSouthWest().lat()
     var boxMaxLat = map.getBounds().getNorthEast().lat()
     var boxMinLng = map.getBounds().getSouthWest().lng()
@@ -151,14 +149,11 @@ function loadMapInfo() {
                 user = r.data.user;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
-
             }
         }
         xhr.send()
     }
 }
-
-
 
 function getPlaceDetails(placeId) {
     var xhr = new XMLHttpRequest();

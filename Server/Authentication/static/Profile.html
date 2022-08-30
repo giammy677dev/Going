@@ -20,69 +20,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 </head>
 
-<body>
-
-	<!-- Header -->
- <!-- INIZIO PARTE LOG LOGOUT E HEADER-->
- 	<div id="log">
-		<p>
-		<h2>EFFETTUA IL LOGIN</h2>
-		</p>
-			
-		<p id="Response_Login"> </p>	
-	
-		<p><input type="text" name="username" id="username_login" placeholder="Username"/></p>
-	
-		<p><input type="password" name="password" id="password_login" placeholder="Password"/></p>
-
-		<p>
-			<input class="pulsantiForm" id="log_puls" type="submit" name="invia" value="Login" onclick="validation_login()"/>
-			<input type="button" onclick="document.getElementById('log').style.display='none'" class="pulsantiForm" value="Annulla" />
-		</p>
-
-
-		<p class="noReg">
-			Non sei ancora registrato? <a href="/signup">Registrati qui</a>
-		</p>
-	</div>
-
-  <div id="logout">
-    <p>
-    <h2>VUOI EFFETTUARE IL LOGOUT?</h2>
-    </p>
-
-
-    <input class="pulsantiForm" type="submit" name="Logout" value="Logout" onclick="logout()" />
-    <input type="button" onclick="document.getElementById('logout').style.display='none'" class="pulsantiForm"
-        value="Annulla" />
- </div>
-
-  <!--Nuovo Header-->
-  <div class="row1">
-    <div class="coloumn-headersx">
-      <div class="coloumnLogo">
-        <span><img src="/storage/logo.png" id="logo-header" /> </span>
-      </div>
-      <div class="coloumnTitolo">
-        <p> GOING</p>
-      </div>
-    </div>
-    <div class="coloumn-headerdx">
-      <div class="topnav">
-        <a id="home_header" href="/"> HOMEPAGE</a>
-        <a id="info_header" href="/info">INFO</a>
-        <a id="about_header" href="/about"> ABOUT </a>
-        <a id="explore_header" href="/explore"> EXPLORE </a>
-        <a id="create_header" href="/create"> CREATE </a>
-      </div>
-    </div>
-    <div class="topnav_image0" id="topnav_image0">
-    </div>
-    <div class="topnav_image" id="topnav_image">
-      <img id="image_topnav" src="/storage/loginTransp.png" onclick="document.getElementById('log').style.display='block'"/>
-    </div>
-  </div>   
-  <!-- FINE PARTE LOG LOGOUT E HEADER-->
+<body onload="caricaHeader(), check()">
 
 	<!-- Contenuto Pagina -->
 

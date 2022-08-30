@@ -201,12 +201,22 @@ class RequestController {
     }
 
     async updateCommento(user, roadmap, mod_com, day) {
-        if (!roadmap || !user || !user || !mod_com || !day) {
+        if (!roadmap || !user || !mod_com || !day) {
 
             return { ok: false, error: -4, data: '' }
         }
         else {
             const data = await this.dao.updateCommento(user, roadmap, mod_com, day);
+            return { ok: true, error: data[1], data: data[2] };
+        }
+    }
+    async deleteCommento(user,commento, roadmap) {
+        if (!roadmap || !user ||!commento) {
+
+            return { ok: false, error: -4, data: '' }
+        }
+        else {
+            const data = await this.dao.deleteCommento(user,commento, roadmap);
             return { ok: true, error: data[1], data: data[2] };
         }
     }
@@ -317,7 +327,6 @@ class RequestController {
         const data = await this.dao.getRoadmapAchievementsPopup(id);
         return { ok: data[0], error: data[1], data: data[2] }
     }
-
 }
 
 module.exports = RequestController;
