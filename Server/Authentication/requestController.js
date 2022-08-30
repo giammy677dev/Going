@@ -174,6 +174,11 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2]}
     }
 
+    async getUserStatus(id_session) {
+        const data = await this.dao.getMinimalDataUser(id_session, id_session); //use getdatauser again but in anotha way
+        return { ok: data[0], error: data[1], data: data[2]}
+    }
+
     async getCommmentsReviewByUserRoad(user,rm) {
         if (!user || user == null || !rm || rm == null) { //ricerca nulla
             return { ok: false, error: -4, data: '' }

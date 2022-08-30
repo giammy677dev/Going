@@ -1,7 +1,3 @@
-window.onload = function () {
-    initMap();
-};
-
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
 
 document.addEventListener('receivedStageData', (e) => {

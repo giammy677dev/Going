@@ -95,6 +95,7 @@ class HTTPinterface {
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
+        this.app.get('/getUserStatus', this.getUserStatus.bind(this));
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
@@ -307,9 +308,17 @@ class HTTPinterface {
         return res.send(r);
     }
 
-    async getDataUser(req, res) {
+    async getDataUser(req, res) { //getDataUser != isLogWho!
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
+    }   
+
+    async getUserStatus(req, res) { //getDataUser != isLogWho!
+        const isLogged = req.session.user_id !== undefined && req.session.user_id > 0;
+        const r = await this.controller.getUserStatus(req.session.user_id);
+        r.data.logged = isLogged;
+        return res.send(JSON.stringify(r));
+        
     }   
 
     async getRoadmapCreate(req, res) {
