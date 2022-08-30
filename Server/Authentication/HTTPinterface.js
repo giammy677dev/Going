@@ -70,6 +70,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
+        this.app.get('/deleteRoadmapCreata', this.deleteRoadmapCreata.bind(this));
         this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
         this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));
         this.app.post('/createRoadmap', this.createRoadmap.bind(this));
@@ -266,29 +267,15 @@ class HTTPinterface {
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
 
-
     async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
         return res.send(r);
     }
 
-
     async getDataUser(req, res) {
-        var element = 0;
-
-        if (req.session.user_id == req.query.id && req.session.user_id != 0 && req.session.user_id != undefined) {
-            element = 1;
-        }
-
-        if (req.query.id == 0) {
-            const r = await this.controller.getDataUser(req.session.user_id, element);
-            return res.send(JSON.stringify(r));
-        }
-        else {
-            const r = await this.controller.getDataUser(req.query.id, element);
-            return res.send(JSON.stringify(r));
-        }
-    }
+        const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }   
 
     async getRoadmapCreate(req, res) {
         const r = await this.controller.getRoadmapCreate(req.query.id, req.session.user_id);
@@ -302,6 +289,11 @@ class HTTPinterface {
 
     async getRoadmapPreferite(req, res) {
         const r = await this.controller.getRoadmapPreferite(req.query.id, req.session.user_id);
+        return res.send(JSON.stringify(r));
+    }
+
+    async deleteRoadmapCreata(req, res) {
+        const r = await this.controller.deleteRoadmapCreata(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
