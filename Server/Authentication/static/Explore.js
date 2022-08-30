@@ -1,9 +1,4 @@
-window.onload = function () {
-    check()
-    fromMain()
-};
 function richiestaDBRoadmap(ricerca) {
-
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/searchRoadmap?ricerca=' + ricerca, true);
     console.log("db roadmap", ricerca)
@@ -21,7 +16,6 @@ function richiestaDBRoadmap(ricerca) {
             var elements = document.getElementsByClassName("item");
             for (var i = 0; i < elements.length; i++) {
                 elements[i].innerHTML = ""
-
             }
 
             elements = document.getElementsByClassName("link_rm");
@@ -58,7 +52,6 @@ function richiestaDBRoadmap(ricerca) {
                 const posto = document.getElementById("items");
                 posto.insertAdjacentHTML("beforeend", html_code)
             }
-
         }
         else if (r.ok == false) {
             console.log(r)
@@ -68,8 +61,8 @@ function richiestaDBRoadmap(ricerca) {
     xhr.send()
     console.log("fine db rm", ricerca)
 }
-function richiestaDBUtente(ricerca) {
 
+function richiestaDBUtente(ricerca) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/searchUser?username=' + ricerca, true);
     xhr.onload = function (event) {
@@ -134,23 +127,20 @@ function searchExplore() {
         alert(" campo  nullo")
     }
     else {
-
         richiestaDBRoadmap(ricerca);
-
         richiestaDBUtente(ricerca);
     }
 }
 
 function fromMain() {
-
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const ricerca = urlParams.get('ricerca')
 
     if (ricerca != null) {
         document.getElementById("barra_ricerca").value = ricerca;
-        richiestaDBUtente(ricerca)
-        richiestaDBRoadmap(ricerca)
+        richiestaDBUtente(ricerca);
+        richiestaDBRoadmap(ricerca);
     }
 }
 

@@ -22,26 +22,19 @@ window.onload = function () {
 };
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
-
 document.addEventListener('receivedUserInfo', (e) => {
-
   if (e.logged) {
-
     ok_in_rm = true
     id_user = e.user
-
-
     getCommmentsReviewByUserRoad(id_user, id_rm)
   }
   else {
     document.getElementById("container_funz").style.display = "none"
     document.getElementById("roadmap_funz").innerHTML = "<h2>Registrati o effettua il Log In per lasciare una tua impressione sulla roadmap come hanno fatto questi Roadmappers!<h2>"
   }
-
 }, false);
 
 document.addEventListener('receivedStageData', (e) => {
-
   var stage = e.stage;
   //console.log(stage)
   if (stage.reachTime != null) {
@@ -49,18 +42,13 @@ document.addEventListener('receivedStageData', (e) => {
   } else {
     time = ''
   }
-
-  //console.log(time)
-
   document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
   document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
-
 }, false);
 
 document.addEventListener('receivedRoadmapData', (e) => {
   var day = new Date(roadmap.dataCreazione)
   var month = day.getMonth() + 1;
-
   var minuti = Math.round(roadmap.durata / 60)
 
   document.getElementById("titolo").innerText = roadmap.titolo
@@ -74,7 +62,6 @@ document.addEventListener('receivedRoadmapData', (e) => {
     const html_cock = printBicchieri(roadmap.punteggio, 35, 'auto')
     document.getElementById("rating").innerHTML += html_cock
   }
-
   loadRecCom();
 }, false);
 
@@ -136,13 +123,10 @@ function getCommmentsReviewByUserRoad(id_user, id_rm) {
         document.getElementById("cocks").innerHTML = html_cock
       }
 
-
       if (chk_com > 0) {
         //console.log(r.data.results_com)
         commento_utente = r.data.results_com
         //console.log(commento_utente)
-
-
       }
     }
     else if (r.ok == false) {
@@ -172,7 +156,6 @@ function abilitaCom() {
 }
 
 function loadRecCom() {
-
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/getRecCom?id=' + id_rm, true);
@@ -288,7 +271,6 @@ function rating(value) {
     elements[i].setAttribute('onclick', 'rating(' + i + ')')
   }
 }
-
 
 function favorite(value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
@@ -449,7 +431,6 @@ function saveRec() {
     alert("nooooooooo")
   }
 }
-
 
 //if numero_commenti > X--> mostra achievements
 
