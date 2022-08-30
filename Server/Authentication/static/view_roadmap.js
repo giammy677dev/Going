@@ -14,6 +14,7 @@ var testoAchievement = '';
 var immagineAchievement = '';
 
 window.onload = function () {
+  check()
   if (document.referrer == 'http://localhost:3000/create') { //bisogna fare quando di viene da una roadmap forkata con link---> http://localhost:3000/create?roadmap_id=154
     getRoadmapAchievementsPopup();
   }
@@ -428,7 +429,7 @@ function checked(value) {
     console.log(r)
     if (r.ok == true) {
       console.log("messo ", value, "in seguite")
-      //uscita
+      getFollowedRoadmapAchievementPopup(r.data.numeroRoadmapSeguite)
       const prec_value = value;
       var html;
       if (value == 1) {
