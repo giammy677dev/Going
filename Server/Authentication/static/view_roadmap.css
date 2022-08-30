@@ -464,6 +464,7 @@
   padding-bottom: 10px;
   text-align: center;
   font-size: 18px;
+  display: inline-block;
 }
 
 #commento {
@@ -473,16 +474,15 @@
   margin-top: 10px;
   margin-bottom: 10px;
   text-align: center;
-  width: 50%;
+  width: fit-content;
 }
 
 a.boxclose {
   float: right;
   position: relative;
   color: #00AAF8;
-  font-size: 20px;
+  font-size: 8px;
   font-weight: bold;
-  margin-right: 10px;
 }
 
 a.boxclose:hover {
@@ -553,4 +553,9 @@ a.boxclose:hover {
 .popup-interno {
   float: left;
   width: 50%;
+}
+#popup-interno-com {
+  color: black;
+  float: left;
+  width: 100%;
 }
