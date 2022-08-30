@@ -633,6 +633,38 @@ function segnalaComm(id_comm) {
   }));
 }
 
+function segnalaRoadmap(id_rm) {
+  /*1: roadmap
+2: profilo
+3: recensione rm
+4: commento rm*/
+  testo = document.getElementById("motiv_rm").value
+  if (testo == ' ' || testo == '') {
+    testo = null
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      alert("Hai segnalato questa recensione!!")
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Hai già segnalato!")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user_id: id_user,
+    tipo: 1,
+    idOggetto: id_rm,
+    motivazione: testo
+  }));
+}
 
 var ClickEventHandler = (function () {
   function ClickEventHandler(map, origin) {
