@@ -1,6 +1,7 @@
 const DAO = require('./DAO.js');
 const MapsHandler = require('./MapsHandler.js');
 const md5 = require('md5');
+const config = require('./config.js');
 
 class RequestController {
 
@@ -51,7 +52,7 @@ class RequestController {
 
     getFileName(file) {
         const split = file.originalname.split(".");
-        return file.fieldname + "." + split[split.length - 1]
+        return config.stagesFolder+"/"+file.fieldname + "." + split[split.length - 1]
     }
 
     async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
@@ -87,7 +88,8 @@ class RequestController {
                 }
                 else //è exnovo!
                 {
-                    stage.fotoURL = stages_img[stage.placeId] || null;
+                    stage.fotoURL = stages_img_dict[stage.placeId] || null;
+                    console.log(stage.fotoURL)
                     await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita)
 
                 }
