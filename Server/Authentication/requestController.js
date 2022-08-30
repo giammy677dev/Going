@@ -49,27 +49,58 @@ class RequestController {
         return distanza
     }
 
-    async createRoadmap(user_id, roadmap, session_data, distance_data) {
-        //console.log(roadmap)
-        if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {// && roadmap.stages) { //la roadmap è non nulla
+    getFileName(file) {
+        const split = file.originalname.split(".");
+        return file.fieldname + "." + split[split.length - 1]
+    }
 
-            //fatte in blocco. se succede qualcosa va fatto il revert di tutto. ROLLBACK SI PUO' FARE???
-            roadmap.durataComplessiva = this.calculateDuration(roadmap.stages, distance_data); //si calcola con una ulteriore chiamata a google maps
-            roadmap.distanza = this.calculateDistance(roadmap.stages, distance_data);
+    async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
+
+        if (roadmap.titolo && roadmap.isPublic !== null && user_id !== null) {
+            roadmap.durataComplessiva = this.calculateDuration(roadmap.stages, distance_data);
+            roadmap.distanzaComplessiva = this.calculateDistance(roadmap.stages, distance_data);
             roadmap.travelMode = distance_data[roadmap.stages[0].placeId + "|" + roadmap.stages[1].placeId].routes[0].legs[0].steps[0].travel_mode; //CONVENZIONE CHE SIA SEMPRE LO STESSO METODO. CAMMINO O MACCHINA.
-
-            //console.log(session_data[roadmap.stages[0].placeId])
-            roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita// === undefined ? session_data[roadmap.stages[0].placeId][0].address_components[1].long_name : session_data[roadmap.stages[0].placeId][0].citta;
-            /*console.log(roadmap.localita)
-            console.log(roadmap.localita)
-            console.log(roadmap.localita)*/
+            roadmap.localita = session_data[roadmap.stages[0].placeId][0].localita;
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
-            const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanza, user_id);
+
+            const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanzaComplessiva, user_id);
             const roadmap_id = data1[2].insertId
 
-            await this.dao.addNewStages(roadmap.stages, session_data);
-            const data3 = await this.dao.instantiateRoadmap(roadmap_id, user_id, roadmap.stages, distance_data); //salvo solo la sessione. e la rimozione?
-            return { ok: data3[0], error: data3[1], data: roadmap_id }
+            var stages_img_dict = {} //ex novo imgs handle
+            var stages = roadmap.stages;
+            var route;
+            var reachTime;
+
+            for (var i = 0; i < stages_img.length; i++) {
+                stages_img_dict[stages_img[i].fieldname] = this.getFileName(stages_img[i]);
+            }
+
+            for (var i = 0; i < stages.length; i++) {
+                var stage = stages[i];
+                var stored_stage = session_data[stage.placeId][0]
+                stored_stage.latitudine = stored_stage.latitudine === undefined ? stored_stage.geometry.location.lat : stored_stage.latitudine;
+                stored_stage.longitudine = stored_stage.longitudine === undefined ? stored_stage.geometry.location.lng : stored_stage.longitudine;
+                var isExNovo = session_data[stage.placeId][1]
+
+                if (!isExNovo) {
+                    await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stored_stage.website, stored_stage.foto, stored_stage.localita)
+                }
+                else //è exnovo!
+                {
+                    stage.fotoURL = stages_img[stage.placeId] || null;
+                    await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita)
+
+                }
+
+                route = i > 0 ? distance_data[stages[i - 1].placeId + "|" + stage.placeId] : {}
+
+                reachTime = i > 0 ? route.routes[0].legs[0].duration.value : 0;
+                route = JSON.stringify(route);
+                await this.dao.addStageInstanceToRoadmap(roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route)
+
+            }
+
+            return { ok: true, error: 0, data: roadmap_id }
         }
         return { ok: false, error: -5 } //return error!
     }
@@ -136,19 +167,18 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getDataUser(id, element) {
-        const data = await this.dao.getDataUser(id);
-
-
-        return { ok: data[0], error: data[1], data: data[2], isYou: element }
+    async getDataUser(id_query, id_session) {
+        const data = await this.dao.getDataUser(id_query, id_session);
+        return { ok: data[0], error: data[1], data: data[2]}
     }
+
     async getCommmentsReviewByUserRoad(user,rm) {
         if (!user || user == null || !rm || rm == null) { //ricerca nulla
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.getCommmentsReviewByUserRoad(user,rm);
-           
+            const data = await this.dao.getCommmentsReviewByUserRoad(user, rm);
+
             return { ok: true, error: data[1], data: data[2] };
         }
     }
@@ -188,12 +218,12 @@ class RequestController {
         return { ok: true, error: data[1], data: data[2] };
 
     }
-    async setFavorite(user, roadmap, valore){
+    async setFavorite(user, roadmap, valore) {
         const data = await this.dao.setFavorite(user, roadmap, valore);
         return { ok: true, error: data[1], data: data[2] };
     }
-    
-    async setChecked(user, roadmap, valore){
+
+    async setChecked(user, roadmap, valore) {
         const data = await this.dao.setChecked(user, roadmap, valore);
         return { ok: true, error: data[1], data: data[2] };
     }
@@ -219,7 +249,7 @@ class RequestController {
     async reportObject(user_id, tipo, idOggetto, motivazione) {
         const data = await this.dao.aggiungiReport(user_id, tipo, idOggetto, motivazione);
 
-        return { ok: data[0], error: data[1]}
+        return { ok: data[0], error: data[1] }
     }
 
     async getPlaceFromCoords(lat, lng) {
@@ -236,34 +266,28 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getRoadmapSeguite(id_query,id_session) {
-        var element = 0;
-        if(id_session == id_query && id_session != 0 && id_session != undefined){
-            element=1;
-        }
-        
-        const data = await this.dao.getRoadmapSeguite(id_query);
-        return { ok: data[0], error: data[1], data: data[2], isYou: element }
-    }
-
-    async getRoadmapPreferite(id_query,id_session) {
-        var element = 0;
-
-        if(id_session == id_query && id_session != 0 && id_session != undefined){
-            element=1;
-        }
-        
-        const data = await this.dao.getRoadmapPreferite(id_query);
-        return { ok: data[0], error: data[1], data: data[2], isYou: element }
-    }
-
-    async updateRoadmapSeguite(id_roadmap,id_user) {
-        const data = await this.dao.updateRoadmapSeguite(id_roadmap,id_user);
+    async getRoadmapSeguite(id_query, id_session) {
+        const data = await this.dao.getRoadmapSeguite(id_query, id_session);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async updateRoadmapPreferite(id_roadmap,id_user) {
-        const data = await this.dao.updateRoadmapPreferite(id_roadmap,id_user);
+    async getRoadmapPreferite(id_query, id_session) {
+        const data = await this.dao.getRoadmapPreferite(id_query, id_session);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async deleteRoadmapCreata(id_roadmap,id_user) {
+        const data = await this.dao.deleteRoadmapCreata(id_roadmap,id_user);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateRoadmapSeguite(id_roadmap, id_user) {
+        const data = await this.dao.updateRoadmapSeguite(id_roadmap, id_user);
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateRoadmapPreferite(id_roadmap, id_user) {
+        const data = await this.dao.updateRoadmapPreferite(id_roadmap, id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
