@@ -13,12 +13,17 @@
 }
 
 #logo-header {
-	height: 100%;
+	height: 70%;
+	align-items: center;
+	position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .coloumn-headersx {
 	float: left;
-	width: 30%;
+	width: 20%;
 	height: 100%;
 	background-color: black;
 	font-family: "Poppins", sans-serif;
@@ -26,7 +31,7 @@
 
 .coloumn-headerdx {
 	float: left;
-	width: 60%;
+	width: 70%;
 	height: 100%;
 	background-color: black;
 	font-family: "Poppins", sans-serif;

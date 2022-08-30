@@ -1,8 +1,10 @@
 /* Stile Body */
-
 body {
-    background-color: #435165;
-}
+    box-sizing: border-box;
+    background-image: url(/storage/sfondoProva2.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+  }
 
 /* Stile Contenuto */
 
