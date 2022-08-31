@@ -472,7 +472,7 @@ class HTTPinterface {
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
         }
-        return res.sendFile(__dirname + '/static/create.html');
+        return res.sendFile(__dirname + '/static/newCreate.html');
     }
 
     async signup_page(req, res) {
