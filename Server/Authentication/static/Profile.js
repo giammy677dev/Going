@@ -345,7 +345,7 @@ function conMouseOut(target) {
 function DeleteRoadmapCreata(number, id) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/deleteRoadmapCreata?id=' + id, true);
+  xhr.open("GET", '/deleteRoadmap?id=' + id, true);
 
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
