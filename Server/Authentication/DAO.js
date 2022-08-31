@@ -244,7 +244,7 @@ class DAO {
         try {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
-            var result = await connection.query('SELECT * FROM roadmap WHERE punteggio>4 ORDER BY RAND() LIMIT 3');
+            var result = await connection.query('SELECT * FROM roadmap WHERE punteggio>4 AND isPublic = 1 ORDER BY RAND() LIMIT 3');
             return [true, 0, result[0]];
         } catch (error) {
             return [false, error.errno, { result: [] }];
@@ -276,7 +276,7 @@ class DAO {
                 id_query = id_session;
             }
 
-            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id_query]);
+            let selection = await connection.query('SELECT id,username,email,birthdate,avatar,isAdmin FROM utenteregistrato WHERE id = ?', [id_query]);
             //let results = [selection[0], id_session == id_query];
             let results = {info: selection[0][0], isMe:id_session == id_query};
             return [true, 0, results];

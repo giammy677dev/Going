@@ -6,6 +6,7 @@ const number_create = 50;
 const number_seguite = 10;
 const number_reviews = 10;
 const number_commenti = 10;
+var isMe=0;
 
 document.addEventListener('receivedUserInfo', (e) => {
   data_user();
@@ -35,6 +36,7 @@ function data_user() {
       document.getElementById("avatar").src = r.data.info.avatar;
 
       if (r.data.isMe) {
+        isMe=1;
         document.getElementById('avatar').setAttribute("onclick","load_choice_avatar()");
         document.getElementById("avatar").addEventListener('mouseover', MouseUp);
         document.getElementById("avatar").addEventListener('mouseout', MouseOut);
@@ -72,6 +74,29 @@ function MouseOut() {
 
 // Script Numero di Roadmap create, seguite e preferite dall'utente
 
+function convertHMS(value) {
+  const sec = parseInt(value, 10); // convert value to number if it's string
+  let hours   = Math.floor(sec / 3600); // get hours
+  let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+  let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+  // add 0 if value < 10; Example: 2 => 02
+  if (minutes < 10) {minutes = "0"+minutes;}
+  if (seconds < 10) {seconds = "0"+seconds;}
+  return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+}
+
+function convertKM(value){
+  if(value<1000){
+    var x=value+" m"
+    return x;
+  }
+  else{
+    var km = value / 1000;
+    var x=km.toFixed(1)+" km"
+    return x
+  }
+}
+
 function roadmap_create() {
   var xhr = new XMLHttpRequest();
 
@@ -92,17 +117,36 @@ function roadmap_create() {
         spazioRoadmap.setAttribute("onMouseOut", "conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("Section_Roadmap_Create").appendChild(spazioRoadmap);
 
-        var html_string = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\"><span class=\"inEvidenza\">" + r.data.roadmaps[i].titolo + "</span></a>" +
-          "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span><span class=\"interno\">⏱" + r.data.roadmaps[i].durataComplessiva + "</span></p>"
+        var tempo = convertHMS(r.data.roadmaps[i].durata);
+        var km = convertKM(r.data.roadmaps[i].distanza);
+
+        var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html_string += "<p><input type=\"button\" onclick=\"DeleteRoadmapCreata(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p>";
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         } else {
-          html_string += "<p><input type=\"button\" onclick=\"DeleteRoadmapCreata(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p> <p><span class=\"interno\">❗</span>";
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         }
 
-        document.getElementById("divRoadmap_0_" + i).innerHTML = html_string;
+        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
+                  " <span class=\"interno\">⏱" + tempo + " </span>"+
+                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
+                   
+        document.getElementById("divRoadmap_0_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 0, i);
+      
+        if(isMe){
+          var paragrafo = document.createElement("p");
+          paragrafo.setAttribute("class","paragrafobutton");
+          var bottone = document.createElement("input");
+          bottone.setAttribute("type","button");
+          bottone.setAttribute("class", "roadmapbutton");
+          bottone.setAttribute("onclick","DeleteRoadmapCreata("+i+","+ r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value","Elimina Roadmap");
+          paragrafo.appendChild(bottone);
+          spazioRoadmap.appendChild(paragrafo);
+        }
+
       }
     }
   }
@@ -128,18 +172,36 @@ function roadmap_seguite() {
         spazioRoadmap.setAttribute("onMouseOut", "conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("Section_Roadmap_Seguite").appendChild(spazioRoadmap);
 
-        var html_string = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\"><span class=\"inEvidenza\">" + r.data.roadmaps[i].titolo + "</span></a>" +
-          "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span><span class=\"interno\">⏱" + r.data.roadmaps[i].durataComplessiva + "</span></p>"
+        var tempo = convertHMS(r.data.roadmaps[i].durata);
+        var km = convertKM(r.data.roadmaps[i].distanza);
+
+        var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html_string += "<p><input type=\"button\" onclick=\"updateRoadmapSeguite(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p>";
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         } else {
-          html_string += "<p><input type=\"button\" onclick=\"updateRoadmapSeguite(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p> <p><span class=\"interno\">❗</span>";
-
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         }
 
-        document.getElementById("divRoadmap_1_" + i).innerHTML = html_string;
+        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
+                  " <span class=\"interno\">⏱" + tempo + " </span>"+
+                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
+                   
+        document.getElementById("divRoadmap_1_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 1, i);
+      
+        if(isMe){
+          var paragrafo = document.createElement("p");
+          paragrafo.setAttribute("class","paragrafobutton");
+          var bottone = document.createElement("input");
+          bottone.setAttribute("type","button");
+          bottone.setAttribute("class", "roadmapbutton");
+          bottone.setAttribute("onclick","updateRoadmapSeguite("+i+","+ r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value","Rimuovi da Seguite");
+          paragrafo.appendChild(bottone);
+          spazioRoadmap.appendChild(paragrafo);
+        }
+
       }
     }
   }
@@ -166,18 +228,35 @@ function roadmap_preferite() {
         spazioRoadmap.setAttribute("onMouseOut", "conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("Section_Roadmap_Preferite").appendChild(spazioRoadmap);
 
-        var html_string = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\"><span class=\"inEvidenza\">" + r.data.roadmaps[i].titolo + "</span></a>" +
-          "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span><span class=\"interno\">⏱" + r.data.roadmaps[i].durataComplessiva + "</span></p>"
+        var tempo = convertHMS(r.data.roadmaps[i].durata);
+        var km = convertKM(r.data.roadmaps[i].distanza);
+
+        var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html_string += "<p><input type=\"button\" onclick=\"updateRoadmapPreferite(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p>";
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         } else {
-          html_string += "<p><input type=\"button\" onclick=\"updateRoadmapPreferite(" + i + "," + r.data.roadmaps[i].id + ")\" value=\"X\"></p> <p><span class=\"interno\">❗</span>";
-
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         }
 
-        document.getElementById("divRoadmap_2_" + i).innerHTML = html_string;
+        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
+                  " <span class=\"interno\">⏱" + tempo + " </span>"+
+                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
+                   
+        document.getElementById("divRoadmap_2_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 2, i);
+      
+        if(isMe){
+          var paragrafo = document.createElement("p");
+          paragrafo.setAttribute("class","paragrafobutton");
+          var bottone = document.createElement("input");
+          bottone.setAttribute("type","button");
+          bottone.setAttribute("class", "roadmapbutton");
+          bottone.setAttribute("onclick","updateRoadmapPreferite("+i+","+ r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value","Rimuovi da Preferite");
+          paragrafo.appendChild(bottone);
+          spazioRoadmap.appendChild(paragrafo);
+        }
       }
     }
   }
@@ -228,11 +307,16 @@ function printCocktail(media_valutazioni, number, i) {
   }
 }
 
+//text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
+
 function conMouseOver(target) {
   document.getElementById(target).firstChild.childNodes[0].style.fontSize = '30px';
   for (i = 2; i <= 6; i++) {
     document.getElementById(target).childNodes[i].style.width = '35px';
     document.getElementById(target).childNodes[i].style.height = '35px';
+  }
+  if(isMe){
+    document.getElementById(target).childNodes[7].style.setProperty("display","block");
   }
 }
 
@@ -241,6 +325,9 @@ function conMouseOut(target) {
   for (i = 2; i <= 6; i++) {
     document.getElementById(target).childNodes[i].style.width = '25px';
     document.getElementById(target).childNodes[i].style.height = '25px';
+  }
+  if(isMe){
+    document.getElementById(target).childNodes[7].style.setProperty("display","none");
   }
 }
 
