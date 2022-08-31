@@ -377,6 +377,20 @@ class DAO {
         }
     }
     
+    async deleteStage(stageId) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('DELETE FROM stage WHERE idStage = ?', [stageId])
+            
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+
     async deleteCommento(user, commento,roadmap) {
         try {
 

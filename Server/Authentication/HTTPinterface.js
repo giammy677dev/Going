@@ -113,6 +113,7 @@ class HTTPinterface {
         this.app.post('/setCommento', this.setCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/deleteCommento', this.deleteCommento.bind(this));
+        this.app.post('/deleteStage', this.deleteStage.bind(this));
         this.app.post('/setRecensione', this.setRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
         this.app.post('/setFavorite', this.setFavorite.bind(this));
@@ -261,8 +262,17 @@ class HTTPinterface {
 
     async deleteUser(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if (req.session.isAdmin || true) {
+        if (req.session.isAdmin) {
             r = await this.controller.deleteUser(req.body.user_id);
+        }
+        return res.send(JSON.stringify(r))
+    }
+
+    
+    async deleteStage(req, res) {
+        var r = { ok: false, error: -1, data: {} }
+        if(req.session.isAdmin){
+            r = await this.controller.deleteStage(req.body.stageId);
         }
         return res.send(JSON.stringify(r))
     }
