@@ -322,6 +322,7 @@ class HTTPinterface {
         const isLogged = req.session.user_id !== undefined && req.session.user_id > 0;
         const r = await this.controller.getUserStatus(req.session.user_id);
         r.data.logged = isLogged;
+        r.data.isAdmin = req.session.isAdmin || 0;
         return res.send(JSON.stringify(r));
 
     }
