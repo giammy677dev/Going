@@ -66,7 +66,7 @@ class DAO {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
             const res = await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin, avatar) VALUES (?, ?, ?, ?, 0, "/avatar/Avatar_0.png")', [username, password, email, birthdate]);
-            return [true, 0, {idUser: res[0].insertId}];
+            return [true, 0, { idUser: res[0].insertId }];
         } catch (error) {
             console.log(error)
             return [false, error.errno, {}];
@@ -95,7 +95,7 @@ class DAO {
     }
 
     async isBanned(email) {
-        const default_dict = { banned:false }
+        const default_dict = { banned: false }
         try {
             var connection = await this.connect();
             // Execute SQL query that'll select the account from the database based on the specified username and password
@@ -105,7 +105,7 @@ class DAO {
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
-                return [true, 0, { banned:true }];
+                return [true, 0, { banned: true }];
             }
             else {
                 return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
@@ -126,7 +126,7 @@ class DAO {
         }
     }
 
-    async deleteUser(user_id){
+    async deleteUser(user_id) {
         try {
             var connection = await this.connect();
 
@@ -135,7 +135,7 @@ class DAO {
             await connection.query('INSERT INTO blacklist (email) VALUES(?)', [selection[0][0].email]);
 
             await connection.query('DELETE FROM utenteregistrato WHERE id = ?', [user_id])
-            
+
             return [true, 0, {}];
         }
         catch (error) {
@@ -271,14 +271,14 @@ class DAO {
     async getDataUser(id_query, id_session) {
         try {
             var connection = await this.connect();
-            
+
             if (id_query === undefined || id_query <= 0) {
                 id_query = id_session;
             }
 
             let selection = await connection.query('SELECT id,username,email,birthdate,avatar,isAdmin FROM utenteregistrato WHERE id = ?', [id_query]);
             //let results = [selection[0], id_session == id_query];
-            let results = {info: selection[0][0], isMe:id_session == id_query};
+            let results = { info: selection[0][0], isMe: id_session == id_query };
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -291,7 +291,7 @@ class DAO {
 
             let selection = await connection.query('SELECT id,username,avatar FROM utenteregistrato WHERE id = ?', [id_query]);
             //let results = [selection[0], id_session == id_query];
-            let results = {info: selection[0][0] || {}}; //if undefined puts {} in info
+            let results = { info: selection[0][0] || {} }; //if undefined puts {} in info
             return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -368,7 +368,7 @@ class DAO {
 
             var connection = await this.connect();
             var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idUtenteRegistrato=? and idRoadmap=?', [mod_com, day, user, roadmap])
-           
+
             return [true, 0, res[0]];
 
         }
@@ -376,13 +376,69 @@ class DAO {
             return [false, error.errno];
         }
     }
-    
-    async deleteCommento(user, commento,roadmap) {
+
+    async deleteStage(stageId) {
         try {
 
             var connection = await this.connect();
-            var res = await connection.query('DELETE FROM commento WHERE idUtenteRegistrato = ? and idCommento = ? and idRoadmap=?', [user,commento, roadmap])
-            
+            var res = await connection.query('DELETE FROM stage WHERE idStage = ?', [stageId])
+
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+
+    async deleteSegnalazioni(idOggetto, tipo) { //plurale perché eliminate tutte quelle riferite allo stesso oggetto!
+        try {
+            var connection = await this.connect();
+            await connection.query('DELETE FROM segnalazione WHERE idOggetto = ? AND tipo = ?', [idOggetto, tipo])
+            return [true, 0, []];
+        }
+        catch (error) {
+            console.log(error)
+            return [false, error.errno, []];
+        }
+    }
+
+    async getOggettoBySegnalazione(idSegnalazione) {
+        try {
+            console.log(idSegnalazione)
+
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT idOggetto,tipo FROM segnalazione WHERE idSegnalazione = ?', [idSegnalazione]);
+
+            return [true, 0, selection[0][0] || null];
+        }
+        catch (error) {
+            console.log(error)
+            return [false, error.errno, []];
+        }
+    }
+
+    async deleteRecensione(idRecensione) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
+
+            return [true, 0, res[0]];
+
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+
+
+    async deleteCommento(idCommento) {
+        try {
+
+            var connection = await this.connect();
+            var res = await connection.query('DELETE FROM commento WHERE idCommento = ? ', [idCommento])
+
             return [true, 0, res[0]];
 
         }
@@ -435,11 +491,11 @@ class DAO {
     async setChecked(user, roadmap, valore) {
         try {
             var connection = await this.connect();
-            var see = await connection.query('SELECT * FROM roadmapuser WHERE idUtenteRegistrato = ? AND idRoadmap = ?', [user,roadmap])
+            var see = await connection.query('SELECT * FROM roadmapuser WHERE idUtenteRegistrato = ? AND idRoadmap = ?', [user, roadmap])
             if (see[0].length == 0) {
                 //mai messo nulla
-                await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) VALUES (?,?,?)', [user,roadmap,valore])
-            } 
+                await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,seguita) VALUES (?,?,?)', [user, roadmap, valore])
+            }
             else {
                 await connection.query('UPDATE roadmapuser SET seguita = ? where idUtenteRegistrato = ? and idRoadmap = ?', [valore, user, roadmap])
             }
@@ -459,10 +515,24 @@ class DAO {
             var connection = await this.connect();
 
             var query = 'SELECT id, localita, punteggio, titolo, distanza, durata,travelMode,isPublic FROM roadmap WHERE utenteRegistrato_id = ?';
-            query = id_query == id_session ? query : query + 'AND isPublic = 1' ;
+            query = id_query == id_session ? query : query + 'AND isPublic = 1';
 
             let selection = await connection.query(query, [id_query]);
-            let results = {roadmaps:selection[0]};
+            let results = { roadmaps: selection[0] };
+            return [true, 0, results];
+
+        } catch (error) {
+            return [false, error.errno, { results: {} }];
+        }
+    }
+
+    async getSegnalazioni() {
+        try {
+            var connection = await this.connect();
+
+            var query = 'SELECT * FROM segnalazione';
+            let selection = await connection.query(query);
+            let results = { segnalazioni: selection[0] };
             return [true, 0, results];
 
         } catch (error) {
@@ -475,10 +545,10 @@ class DAO {
             var connection = await this.connect();
 
             var query = 'SELECT id, localita, punteggio, titolo, distanza, durata,travelMode,isPublic FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?';
-            query = id_query == id_session ? query : query + 'AND roadmap.isPublic = 1' ;
+            query = id_query == id_session ? query : query + 'AND roadmap.isPublic = 1';
 
             let selection = await connection.query(query, [id_query]);
-            let results = {roadmaps:selection[0]};
+            let results = { roadmaps: selection[0] };
             return [true, 0, results];
 
         } catch (error) {
@@ -491,10 +561,10 @@ class DAO {
             var connection = await this.connect();
 
             var query = 'SELECT id, localita, punteggio, titolo, distanza, durata,travelMode,isPublic FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?';
-            query = id_query == id_session ? query : query + 'AND roadmap.isPublic = 1' ;
+            query = id_query == id_session ? query : query + 'AND roadmap.isPublic = 1';
 
             let selection = await connection.query(query, [id_query]);
-            let results = {roadmaps:selection[0]};
+            let results = { roadmaps: selection[0] };
             return [true, 0, results];
 
         } catch (error) {
@@ -502,53 +572,21 @@ class DAO {
         }
     }
 
-    /*async getRoadmapSeguite(id_query, id_session) {
-        try {
+    async deleteRoadmap(id_roadmap, id_user_session, isAdmin) {
+        try { 
             var connection = await this.connect();
+            let roadmapInfo = await connection.query('SELECT utenteRegistrato_id from roadmap WHERE id = ?', [id_roadmap])
+            //console.log(roadmapInfo[0][0])
+            let roadmapIdUserRegistrato = roadmapInfo[0][0].utenteRegistrato_id;
 
-            if (id_session == id_query && id_session != 0 && id_session != undefined) {
-                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ?', [id_session]);
-                let results = [selection[0], 1];
+            if ((id_user_session || 0) == roadmapIdUserRegistrato || isAdmin) { //if la roadmap è sua oppure è admin (privilegi)
+                //per modularità andrebbe fuori il check ma si dovrebbe fare una funzione getRoadmapCreatorFromRoadmap()
+                await connection.query('DELETE FROM roadmap WHERE id = ?', [id_roadmap])
+                let roadmapResult = await connection.query('SELECT COUNT(*) AS numberRoadmap FROM roadmap WHERE utenteRegistrato_id = ?', [roadmapIdUserRegistrato])
+                let results = roadmapResult[0][0].numberRoadmap;
                 return [true, 0, results];
             }
-            else {
-                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND seguita = 1 and idUtenteRegistrato= ? AND roadmap.isPublic = 1', [id_query]);
-                let results = [selection[0], 0];
-                return [true, 0, results];
-            }
-
-        } catch (error) {
-            return [false, error.errno, { results: [] }];
-        }
-    }*/
-
-    /*async getRoadmapPreferite(id_query, id_session) {
-        try {
-            var connection = await this.connect();
-
-            if (id_session == id_query && id_session != 0 && id_session != undefined) {
-                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ?', [id_session]);
-                let results = [selection[0], 1];
-                return [true, 0, results];
-            }
-            else {
-                let selection = await connection.query('SELECT * FROM roadmapuser, roadmap WHERE roadmap.id = roadmapuser.idRoadmap AND preferita = 1 and idUtenteRegistrato= ? AND roadmap.isPublic = 1', [id_query]);
-                let results = [selection[0], 0];
-                return [true, 0, results];
-            }
-
-        } catch (error) {
-            return [false, error.errno, { results: [] }];
-        }
-    }*/
-
-    async deleteRoadmapCreata(id_roadmap, id_user) {
-        try {
-            var connection = await this.connect();
-            await connection.query('DELETE FROM roadmap WHERE id = ?', [id_roadmap])
-            let roadmapResult = await connection.query('SELECT COUNT(*) AS numberRoadmap FROM roadmap WHERE utenteRegistrato_id = ?', [id_user])
-            let results = roadmapResult[0][0].numberRoadmap;
-            return [true, 0, results];
+            return [false, 0, []];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
@@ -609,10 +647,10 @@ class DAO {
             let followedRoadmapResult = await connection.query('SELECT COUNT(*) AS numberFollowedRoadmap FROM roadmapuser WHERE idUtenteRegistrato = ? AND seguita = 1', [id]);
             let reviewsResult = await connection.query('SELECT COUNT(*) AS numberReviews FROM recensione WHERE idUtenteRegistrato = ?', [id]);
             let commentsResult = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [id]);
-            let results = {createdRoadmapCount:roadmapResult[0][0].numberRoadmap, followedRoadmapCount: followedRoadmapResult[0][0].numberFollowedRoadmap, reviewedRoadmapCount:reviewsResult[0][0].numberReviews, commentedRoadmapCount:commentsResult[0][0].numberComments};
+            let results = { createdRoadmapCount: roadmapResult[0][0].numberRoadmap, followedRoadmapCount: followedRoadmapResult[0][0].numberFollowedRoadmap, reviewedRoadmapCount: reviewsResult[0][0].numberReviews, commentedRoadmapCount: commentsResult[0][0].numberComments };
             return [true, 0, results];
         } catch (error) {
-            return [false, error.errno, { }];
+            return [false, error.errno, {}];
         }
     }
 
