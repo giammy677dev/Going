@@ -198,6 +198,7 @@ body {
 }
 
 .grid-container>div {
+    background-color: rgba(32, 45, 48, 0.4);
     text-align: center;
     transition: all ease-in-out 0.3s;
     border-radius: 25px;
@@ -212,6 +213,33 @@ body {
 .grid-container div:hover {
     background-color: #16cdd28f;
 }
+
+.divRoadmap a{
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
+}
+
+.paragrafobutton{
+    display: none;
+}
+
+.roadmapbutton{
+    padding: 4px 8px;
+    margin-right: 0.5%;
+    font-size: 20px;
+    margin-left: 10px;
+    border: thin #000000 solid;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #000000c8;
+    border-radius: 25px;
+}
+
+.roadmapbutton:hover {
+    box-shadow: 0px 0px 10px 3px white;
+  }
 
 /* Tooltip */
 

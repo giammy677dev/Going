@@ -45,7 +45,7 @@ body {
     display: flex;
     list-style: none;
     align-items: center;
-    background-color: #af2d1375;
+    background-color: #0f9aac75;
 }
 
 .menuBar a {
@@ -127,7 +127,7 @@ body {
   }
 
   .pulsantiLog a:hover {
-      background-color: #651515;
+      background-color: #269891;
       border: thin white solid;
       color: white;
       font-weight: 500;
@@ -190,7 +190,7 @@ body {
       margin-top: 10px;
       text-align: center;
       cursor: pointer;
-      background-color: #a02113;
+      background-color: #019ba4;
       color: white;
   }
   
@@ -206,7 +206,7 @@ body {
   }
   
   input[type="text"]:focus, input[type="password"]:focus {
-      border: medium solid #d21818;
+      border: medium solid #019ba4;
   }
   
   .noReg{
@@ -214,17 +214,17 @@ body {
   }
   
   .noReg a {
-      color: #d24018;
+      color: #019ba4;
   }
   
   .inEvidenza {
       color: #fff;
-      border-bottom: 2px solid #a6290f;
+      border-bottom: 2px solid #2bcad2;
   }
   
   .inEvidenza2 {
       color: #fff;
-      border-bottom: 1px solid #a6290f;
+      border-bottom: 1px solid #2bcad2;
   }
 
 .paragrafoSocial {
@@ -242,8 +242,8 @@ body {
 }
 
 .paragrafoSocial img:hover {
-    -webkit-filter: drop-shadow(1px 1px 8px #c82d0e);
-    filter: drop-shadow(1px 1px 8px #c82d0e);
+    -webkit-filter: drop-shadow(1px 1px 8px #2bcad2);
+    filter: drop-shadow(1px 1px 8px #2bcad2);
 }
 
 .paragrafoSocial img {
@@ -294,7 +294,7 @@ body {
 }
 
 .sx {
-    background-color: rgba(48, 32, 32, 0.53);
+    background-color: rgba(49, 49, 49, 0.53)
 }
 
 .grid-container {
@@ -322,7 +322,7 @@ body {
 .grid-container>div {
     padding: 2px;
 
-    background-color: rgba(48, 32, 32, 0.400);
+    background-color: rgba(32, 45, 48, 0.4);
     text-align: center;
     transition: all ease-in-out 0.3s;
     border-radius: 25px;
@@ -339,7 +339,7 @@ body {
 }
 
 .grid-container div:hover {
-    background-color: #af2d1375;
+    background-color: #16cdd28f;
 }
 
 .testo-contatti {
@@ -384,7 +384,7 @@ body {
 }
 
 #tastoRicerca:hover {
-    background-color: #651515;
+    background-color: #269891;
     border: thin white solid;
     color: white;
     font-weight: 500;
