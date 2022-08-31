@@ -58,6 +58,12 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("utente").innerText = ' 👤 ' + user[0].username
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
+  if(id_user!=null){
+    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" +roadmap.id+ ")")
+  }else{
+    document.getElementById('segnalazione_roadmap').setAttribute('style','display:none')
+  }
+  
   if (roadmap.punteggio != null) {
     const html_cock = printBicchieri(roadmap.punteggio, 35, 'auto')
     document.getElementById("rating").innerHTML += html_cock
@@ -203,7 +209,7 @@ function loadRecCom() {
           const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
           const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" value="' + commenti[i].testo + '" id="text_commento' + commenti[i].idCommento + '">' + commenti[i].testo + '</div> ' + html_funz + '<div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
           document.getElementById("commenti").innerHTML += html_com
-          var html = '<div class="popup_segnal" id="segnal_com' + commenti[i].idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commenti[i].idCommento + '"></input><div onclick="m(' + commenti[i].idCommento +  ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commenti[i].idCommento +  ')">Chiudi</div></div>'
+          var html = '<div class="popup_segnal" id="segnal_com' + commenti[i].idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commenti[i].idCommento + '"></input><div onclick="m(' + commenti[i].idCommento + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commenti[i].idCommento + ')">Chiudi</div></div>'
           document.getElementById("commenti").innerHTML += html
         }
       }
@@ -493,6 +499,7 @@ function deleteCom(commento) {
     roadmap: id_rm
   }));
 }
+
 function updPreview(id) {
   console.log(id)
   var txt
@@ -548,25 +555,30 @@ function writeCom() {
 function forkaggio() {
   location.href = "/create?roadmap_id=" + id_rm
 }
+
 function openSegnRec(id_rec) {
   document.getElementById("segnal_rec" + id_rec).style.display = "block";
 }
+
 function closeSegnRec(id_rec) {
   document.getElementById("segnal_rec" + id_rec).style.display = "none";
 }
-function openSegnCom(id_com){
+
+function openSegnCom(id_com) {
   document.getElementById("segnal_com" + id_com).style.display = "block";
 }
-function closeSegnCom(id_com){
+
+function closeSegnCom(id_com) {
   document.getElementById("segnal_com" + id_com).style.display = "none";
 }
+
 function segnalaRec(id_rec) {
   /*1: roadmap
 2: profilo
 3: recensione rm
 4: commento rm*/
   testo = document.getElementById("motiv_rec" + id_rec).value
-  if (testo == ' '|| testo == '') {
+  if (testo == ' ' || testo == '') {
     testo = null
   }
   var xhr = new XMLHttpRequest();
@@ -591,8 +603,6 @@ function segnalaRec(id_rec) {
     idOggetto: id_rec,
     motivazione: testo
   }));
-
-
 }
 
 function segnalaComm(id_comm) {
@@ -600,34 +610,65 @@ function segnalaComm(id_comm) {
 2: profilo
 3: recensione rm
 4: commento rm*/
-testo = document.getElementById("motiv" + id_comm).value
-if (testo == ' '|| testo == '') {
-  testo = null
-}
-var xhr = new XMLHttpRequest();
-xhr.open("POST", '/report', true);
-xhr.onload = function (event) {
-
-  const r = JSON.parse(event.target.responseText);
-
-  console.log(r)
-  if (r.ok == true) {
-    alert("Hai segnalato questa recensione!!")
+  testo = document.getElementById("motiv" + id_comm).value
+  if (testo == ' ' || testo == '') {
+    testo = null
   }
-  else if (r.ok == false) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
     console.log(r)
-    alert("Hai già segnalato!")
+    if (r.ok == true) {
+      alert("Hai segnalato questa recensione!!")
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Hai già segnalato!")
+    }
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user_id: id_user,
+    tipo: 3,
+    idOggetto: id_comm,
+    motivazione: testo
+  }));
 }
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify({
-  user_id: id_user,
-  tipo: 3,
-  idOggetto: id_comm,
-  motivazione: testo
-}));
 
-  alert(id_comm)
+function segnalaRoadmap(id_rm) {
+  /*1: roadmap
+2: profilo
+3: recensione rm
+4: commento rm*/
+  testo = document.getElementById("motiv_rm").value
+  if (testo == ' ' || testo == '') {
+    testo = null
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      alert("Hai segnalato questa recensione!!")
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Hai già segnalato!")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    user_id: id_user,
+    tipo: 1,
+    idOggetto: id_rm,
+    motivazione: testo
+  }));
 }
 
 var ClickEventHandler = (function () {

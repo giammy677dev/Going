@@ -18,7 +18,7 @@ document.addEventListener('dbMarkerClicked', (e) => {
 
 function drawDeletableStage(stage_index, stage) {
     document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata + '</div></p></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div>'
 }
 
 function blurIfNotLoggedIn(user_id) {
@@ -333,7 +333,6 @@ var ClickEventHandler = (function () {
                 radius: 3,
             });
 
-            //bug: bisogna salvarlo per poi eliminarlo se non si vuole più
             markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
                 position: latLng,
                 map: map,
