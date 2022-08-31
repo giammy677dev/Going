@@ -25,25 +25,49 @@ function data_user() {
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
 
-    var day = new Date(r.data.info.birthdate);
-    var month = day.getMonth() + 1;
+    var age = Age(r.data.info.birthdate);
 
     if (r.ok == true) {
       console.log(r.data);
       document.getElementById("info_username").innerText = r.data.info.username;
-      document.getElementById("info_email").innerText = "Email = " + r.data.info.email;
-      document.getElementById("info_birthdate").innerText = "Compleanno = " + day.getDate() + "/" + month + "/" + day.getFullYear();
+      document.getElementById("info_email").innerHTML = "<span class=\"Evidenziato\">Email: </span>" + r.data.info.email;
+      document.getElementById("info_birthdate").innerHTML = "<span class=\"Evidenziato\">Età: </span>" + age;
       document.getElementById("avatar").src = r.data.info.avatar;
 
       if (r.data.isMe) {
-        document.getElementById('button_choice_avatar').style.display = 'block';
-      }
-      else {
-        document.getElementById('button_choice_avatar').style.display = 'none';
+        document.getElementById('avatar').setAttribute("onclick","load_choice_avatar()");
+        document.getElementById("avatar").addEventListener('mouseover', MouseUp);
+        document.getElementById("avatar").addEventListener('mouseout', MouseOut);
       }
     }
   }
+
   xhr.send();
+}
+
+function Age(birthdate){
+  var today = new Date();
+  var birthDate = new Date(birthdate);
+
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+  
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age
+}
+
+function MouseUp() {
+  document.getElementById("avatar").style.setProperty("cursor", "pointer");
+  document.getElementById("avatar").style.setProperty("filter", "brightness(105%)");
+  document.getElementById("avatar").style.setProperty("border", "8px solid #31e8f1");
+}
+
+function MouseOut() {
+  document.getElementById("avatar").style.setProperty("cursor", "default");
+  document.getElementById("avatar").style.setProperty("filter", "brightness(100%)");
+  document.getElementById("avatar").style.setProperty("border", "8px solid #2bcad2");
 }
 
 // Script Numero di Roadmap create, seguite e preferite dall'utente

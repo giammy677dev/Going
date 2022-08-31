@@ -29,20 +29,34 @@
 		<!-- Informazioni Utente -->
 
 		<div class="card">
-			<img class="images" id="avatar" width="200" height="200" alt="Avatar">
-
-			<button onclick="load_choice_avatar()" id="button_choice_avatar"> Modifica il tuo Avatar </button>
-
+			<img class="images" id="avatar" alt="Avatar"/>
 			<div class="info">
-				<p> <b id="info_username"> </b></p>
+				<h2> <b id="info_username"> </b> </h2>
 				<p id="info_email"> </p>
 				<p id="info_birthdate"> </p>
 				<div class="achievements">
-					<img title="Hai creato la tua prima roadmap!" id="firstRoadmapAchievement" src="/storage/achievements/roadmapLock.png"/>
-					<img title="Hai creato 50 roadmap!" id="roadmapAchievement" src="/storage/achievements/topRoadmapperLock.png"/>
-					<img title="Hai completato 10 roadmap!" id="followedRoadmapAchievement" src="/storage/achievements/followRoadmapLock.png"/>
-					<img title="Hai recensito 10 roadmap!" id="reviewAchievement" src="/storage/achievements/reviewLock.png"/>
-					<img title="Hai commentato 10 roadmap!" id="commentAchievement" src="/storage/achievements/commentLock.png"/>
+					<fieldset>
+						<legend>Achievements</legend>
+						<p class="rowAchievements">
+							<div class="tooltip"> <img id="firstRoadmapAchievement" src="/storage/achievements/roadmapLock.png"/>
+								<span class="tooltiptext">Hai creato la tua prima roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="roadmapAchievement" src="/storage/achievements/topRoadmapperLock.png"/>
+								<span class="tooltiptext">Hai creato 50 roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="followedRoadmapAchievement" src="/storage/achievements/followRoadmapLock.png"/>
+								<span class="tooltiptext">Hai completato 10 roadmap!</span>
+							</div>
+						</p>
+						<p class="rowAchievements">
+							<div class="tooltip"> <img id="reviewAchievement" src="/storage/achievements/reviewLock.png"/>
+								<span class="tooltiptext">Hai recensito 10 roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="commentAchievement" src="/storage/achievements/commentLock.png"/>
+								<span class="tooltiptext">Hai commentato 10 roadmap!</span>
+							</div>
+						</p>
+					</fieldset>
 				</div>
 			</div>
 		</div>
@@ -81,8 +95,8 @@
 			<button class="button_avatar" onclick="choice(id)" id="Avatar_24"> <img id="avatar_provisoral" src="/avatar/Avatar_24.png"> </button>
 			
 			<p>
-				<input onclick="change_avatar()" type="submit" name="invia" value="Invia">
-				<input type="button" onclick="document.getElementById('choice_avatar').style.display='none'" value="Annulla"/>
+				<input class="pulsantiForm" onclick="change_avatar()" type="submit" name="invia" value="Conferma">
+				<input type="button" class="pulsantiForm" onclick="document.getElementById('choice_avatar').style.display='none'" value="Annulla"/>
 			</p>
 				
 			</p>		
@@ -93,11 +107,10 @@
 		<div class="roadmap">
 
 			<!-- Navbar Sezione Roadmap -->
-			<!-- document.getElementById("bar_roadmap_create").click(); -->
 
-			<button class="tablink" id="bar_roadmap_create" onclick="open_view('roadmap_create', this, 'red')"></button>
-			<button class="tablink" id="bar_roadmap_seguite" onclick="open_view('roadmap_seguite', this, 'green')"></button>
-			<button class="tablink" id="bar_roadmap_preferite" onclick="open_view('roadmap_preferite', this, 'blue')"></button>
+			<button class="tablink" id="bar_roadmap_create" onclick="open_view('roadmap_create', this, '#2bcad2')"></button>
+			<button class="tablink" id="bar_roadmap_seguite" onclick="open_view('roadmap_seguite', this, '#2bcad2')"></button>
+			<button class="tablink" id="bar_roadmap_preferite" onclick="open_view('roadmap_preferite', this, '#2bcad2')"></button>
 			<!-- Sezione Roadmap Create, Seguite e Preferite -->
 
 			<div id="roadmap_create" class="tabcontent">
@@ -116,17 +129,6 @@
 
 	</div>
 	
-	<!-- Sezione Footer -->
-
-	<div class="footer">
-		<h4>
-			Copyright 2022
-		</h4>
-		<h6>
-			Diego-Gian Marco-Marco-Matteo-Valerio
-		</h6>
-	</div>
-
 </body>
 
 </html>
