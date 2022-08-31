@@ -17,7 +17,7 @@ class RequestController {
             var isBanned = (await this.dao.isBanned(email))[2].banned;
 
             if (isBanned) {
-                return { ok: false, error: -777, data:{} } //banned alert
+                return { ok: false, error: -777, data: {} } //banned alert
             } else {
                 password = md5(password);
                 const data = await this.dao.register(username, password, email, birthdate);
@@ -73,7 +73,7 @@ class RequestController {
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
 
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanzaComplessiva, user_id);
-            
+
             const roadmap_id = data1[2].insertId
 
             var stages_img_dict = {} //ex novo imgs handle
@@ -111,7 +111,7 @@ class RequestController {
 
             }
             console.log(roadmap_id)
-            return { ok: true, error: 0, data: {roadmapId:roadmap_id} }
+            return { ok: true, error: 0, data: { roadmapId: roadmap_id } }
         }
         return { ok: false, error: -5, data: {} } //return error!
     }
@@ -306,6 +306,42 @@ class RequestController {
         const data = await this.mapsHandler.getPlaceFromCoords(lat, lng);
         return { ok: data[0], error: data[1], data: data[2] }
     }
+    async getSegnalazioni() {
+        const data = await this.dao.getSegnalazioni();
+        return { ok: data[0], error: data[1], data: data[2] }
+    }
+
+    async updateSegnalazioni(segnalazioni) {
+        console.log(segnalazioni)
+        for (var i = 0; i < segnalazioni.length; i++) 
+        {
+            var segnalazione = segnalazioni[i];
+            const objInfo = (await this.dao.getOggettoBySegnalazione(segnalazione.idSegnalazione))[2];
+            if (objInfo != null) {
+                const idOggetto = objInfo.idOggetto;
+                const tipo = objInfo.tipo;
+                if (segnalazione.action.toLowerCase() == "accept") {
+                    switch (tipo) {
+                        case 1:
+                            await this.dao.deleteRoadmap(idOggetto, 0, true);
+                            break;
+                        case 2:
+                            await this.dao.deleteUser(idOggetto);
+                            break;
+                        case 3:
+                            await this.dao.deleteRecensione(idOggetto);
+                            break;
+                        case 4:
+                            await this.dao.deleteCommento(idOggetto)
+                            break;
+                    }
+                }
+                await this.dao.deleteSegnalazioni(idOggetto, tipo);   
+            }
+        }
+
+        return { ok: true, error: 0, data: {} }
+    }
 
     async getRoadmapCreate(id_query, id_session) {
         const data = await this.dao.getRoadmapCreate(id_query, id_session);
@@ -322,8 +358,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async deleteRoadmapCreata(id_roadmap, id_user) {
-        const data = await this.dao.deleteRoadmapCreata(id_roadmap, id_user);
+    async deleteRoadmap(id_roadmap, id_user, isAdmin) {
+        const data = await this.dao.deleteRoadmap(id_roadmap, id_user, isAdmin);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

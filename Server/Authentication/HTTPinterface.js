@@ -99,7 +99,7 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
-        this.app.get('/deleteRoadmapCreata', this.deleteRoadmapCreata.bind(this));
+        this.app.get('/deleteRoadmap', this.deleteRoadmap.bind(this));
         this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
         this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));
         //this.app.post('/createRoadmap', this.createRoadmap.bind(this));
@@ -121,6 +121,9 @@ class HTTPinterface {
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
         this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
+        this.app.get('/getSegnalazioni', this.getSegnalazioni.bind(this));
+        this.app.post('/updateSegnalazioni', this.updateSegnalazioni.bind(this));
+
 
         this.app.post("/createRoadmap", this.upload.any(20), this.createRoadmap.bind(this)); //max 20 files?
 
@@ -269,6 +272,24 @@ class HTTPinterface {
     }
 
     
+    async getSegnalazioni(req, res) {
+        var r = { ok: false, error: -1, data: {} }
+        if(req.session.isAdmin || true){ // || true da togliere a tutti! solo per testing!
+            
+            r = await this.controller.getSegnalazioni();
+
+        }
+        return res.send(JSON.stringify(r));
+    }
+
+    async updateSegnalazioni(req, res) {
+        var r = { ok: false, error: -1, data: {} }
+        if(req.session.isAdmin || true){ // || true da togliere a tutti! solo per testing!
+            r = await this.controller.updateSegnalazioni(req.body);
+        }
+        return res.send(JSON.stringify(r));
+    }
+    
     async deleteStage(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if(req.session.isAdmin){
@@ -352,8 +373,8 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async deleteRoadmapCreata(req, res) {
-        const r = await this.controller.deleteRoadmapCreata(req.query.id, req.session.user_id);
+    async deleteRoadmap(req, res) {
+        const r = await this.controller.deleteRoadmap(req.query.id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
 
@@ -452,6 +473,8 @@ class HTTPinterface {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
+
+
 
     async main_page(req, res) {
         if (req.user) {
