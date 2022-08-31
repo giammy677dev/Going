@@ -34,7 +34,7 @@ class HTTPinterface {
 
         this.storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, './'+config.stagesFolder))
+                cb(null, path.join(__dirname, './' + config.stagesFolder))
             },
             filename: function (req, file, cb) {
                 //console.log(this.controller) this.controller= undefined. to fix.
@@ -45,7 +45,7 @@ class HTTPinterface {
         });
 
         this.upload = multer({
-            storage:this.storage,
+            storage: this.storage,
             limits: { fileSize: 1 * 1024 * 1024 }, // 1MB
             fileFilter: (req, file, cb) => {
                 if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
@@ -78,6 +78,7 @@ class HTTPinterface {
         this.app.get('/explore', this.explore_page.bind(this)); //Esplora
         this.app.get('/signup', this.signup_page.bind(this)); //Registrati
         this.app.get('/profile', this.profile_page.bind(this)); //Profilo
+        this.app.get('/adminPanel', this.admin_page.bind(this)); //Profilo
         this.app.use('/static', express.static('static')); //HTML e CSS pages
         this.app.use('/storage', express.static('storage')); //Images and other
         this.app.use('/avatar', express.static('avatar')); //avatars
@@ -124,6 +125,7 @@ class HTTPinterface {
 
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
+        this.app.post('/deleteUser', this.deleteUser.bind(this));
 
         // http://localhost:3000/home
         /*this.app.get('/home', function (req, res) {
@@ -156,15 +158,7 @@ class HTTPinterface {
     }
 
     async register(req, res) {
-        console.log(req.body);
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
-        console.log(r);
-        if (r.ok) {
-            req.session.loggedin = true;
-            req.session.user_id = r.data.insertId;
-            req.session.username = req.body.username;
-        }
-
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
     }
 
@@ -265,6 +259,14 @@ class HTTPinterface {
         return res.send(r);
     }
 
+    async deleteUser(req, res) {
+        var r = { ok: false, error: -1, data: {} }
+        if (req.session.isAdmin || true) {
+            r = await this.controller.deleteUser(req.body.user_id);
+        }
+        return res.send(JSON.stringify(r))
+    }
+
     async logout(req, res) {
         console.log("req.session=", req.session)
         console.log("req.session.user_id=", req.session.user_id)
@@ -290,7 +292,7 @@ class HTTPinterface {
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
         */
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
-            
+
             req.body.stages = JSON.parse(req.body.stages);
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files);
             //const 
@@ -314,15 +316,15 @@ class HTTPinterface {
     async getDataUser(req, res) { //getDataUser != isLogWho!
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
-    }   
+    }
 
     async getUserStatus(req, res) { //getDataUser != isLogWho!
         const isLogged = req.session.user_id !== undefined && req.session.user_id > 0;
         const r = await this.controller.getUserStatus(req.session.user_id);
         r.data.logged = isLogged;
         return res.send(JSON.stringify(r));
-        
-    }   
+
+    }
 
     async getRoadmapCreate(req, res) {
         const r = await this.controller.getRoadmapCreate(req.query.id, req.session.user_id);
@@ -498,6 +500,18 @@ class HTTPinterface {
         }
         //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
         return res.sendFile(__dirname + '/static/Profile.html');
+    }
+    async admin_page(req, res) {
+        if (req.user) {
+            console.log('user session is alive')
+        }
+        //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
+        
+        if(req.session.isAdmin){
+            return res.sendFile(__dirname + '/static/AdminPanel.html');
+        }else{
+            return res.sendFile(__dirname + '/static/error.html');
+        }
     }
 }
 

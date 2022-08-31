@@ -66,9 +66,10 @@ class DAO {
             var connection = await this.connect();
             // Execute SQL query that'll insert the account in the database
             const res = await connection.query('INSERT INTO utenteregistrato (username, password, email, birthdate, isAdmin, avatar) VALUES (?, ?, ?, ?, 0, "/avatar/Avatar_0.png")', [username, password, email, birthdate]);
-            return [true, 0, res[0]];
+            return [true, 0, {idUser: res[0].insertId}];
         } catch (error) {
-            return [false, error.errno];
+            console.log(error)
+            return [false, error.errno, {}];
         }
     }
 
@@ -93,6 +94,27 @@ class DAO {
         }
     }
 
+    async isBanned(email) {
+        const default_dict = { banned:false }
+        try {
+            var connection = await this.connect();
+            // Execute SQL query that'll select the account from the database based on the specified username and password
+            let selection = await connection.query('SELECT * FROM blacklist WHERE LOWER(email) = ?', [email.toLowerCase()]);
+            //await connection.close();
+            let results = selection[0];
+            // If the account exists
+            if (results.length > 0) {
+                // Authenticate the user
+                return [true, 0, { banned:true }];
+            }
+            else {
+                return [false, -3, default_dict]; //-3 non si è registrato! Deve registrarsi!
+            }
+        } catch (error) {
+            return [false, error.errno, default_dict];
+        }
+    }
+
     async addRoadmap(titolo, isPublic, durata, localita, descrizione, dataCreazione, travelMode, distanza, utenteRegistrato_id) {
         try {
             var connection = await this.connect();
@@ -101,6 +123,23 @@ class DAO {
         } catch (error) {
             console.log(error)
             return [false, error.errno, {}];
+        }
+    }
+
+    async deleteUser(user_id){
+        try {
+            var connection = await this.connect();
+
+            let selection = await connection.query('SELECT email FROM utenteregistrato WHERE id = ?', [user_id]);
+
+            await connection.query('INSERT INTO blacklist (email) VALUES(?)', [selection[0][0].email]);
+
+            await connection.query('DELETE FROM utenteregistrato WHERE id = ?', [user_id])
+            
+            return [true, 0, {}];
+        }
+        catch (error) {
+            return [false, error.errno || -1, {}];
         }
     }
 

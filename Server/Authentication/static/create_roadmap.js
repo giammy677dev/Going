@@ -179,27 +179,6 @@ function submitRoadmap() {
         formData.append('isPublic', isPub)
         formData.append('stages', JSON.stringify(stages_list))
 
-        fetch("/createRoadmap", {
-            method: 'POST',
-            body: formData,
-            contentType: false,
-            processData: false,
-            //headers: {
-            //    "Content-Type": "multipart/form-data"
-            //}
-        })
-            .then((res) => {
-                if (res.ok == true) {
-                    console.log(res);
-                    location.href = "/view_roadmap?id=" + res.data;
-                }
-            })
-            .catch((err) => ("Error occured", err));
-
-        return
-
-
-
         var xhr = new XMLHttpRequest();
         xhr.open("POST", '/createRoadmap', true);
         xhr.onload = function (event) {
@@ -207,7 +186,7 @@ function submitRoadmap() {
             const r = JSON.parse(event.target.responseText);
             if (r.ok == true) {
                 //alert("creata la stages_list")
-                location.href = "/view_roadmap?id=" + r.data;
+                location.href = "/view_roadmap?id=" + r.data.roadmapId;
             }
             else if (r.ok == false) {
                 alert("Problemi creazione stages_list")
