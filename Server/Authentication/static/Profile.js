@@ -38,6 +38,16 @@ function data_user() {
         document.getElementById('avatar').setAttribute("onclick","load_choice_avatar()");
         document.getElementById("avatar").addEventListener('mouseover', MouseUp);
         document.getElementById("avatar").addEventListener('mouseout', MouseOut);
+
+        if(r.data.info.isAdmin){
+          var bottone = document.createElement("input");
+          bottone.setAttribute("type","button");
+          bottone.setAttribute("id", "adminButton");
+          bottone.setAttribute("onclick","location.href = \"/profile\"");
+          bottone.setAttribute("value","Segnalazioni Admin");
+          document.getElementById("infoBox").appendChild(bottone);
+        }
+        
       }
     }
   }

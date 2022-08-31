@@ -276,7 +276,7 @@ class DAO {
                 id_query = id_session;
             }
 
-            let selection = await connection.query('SELECT id,username,email,birthdate,avatar FROM utenteregistrato WHERE id = ?', [id_query]);
+            let selection = await connection.query('SELECT id,username,email,birthdate,avatar,isAdmin FROM utenteregistrato WHERE id = ?', [id_query]);
             //let results = [selection[0], id_session == id_query];
             let results = {info: selection[0][0], isMe:id_session == id_query};
             return [true, 0, results];
