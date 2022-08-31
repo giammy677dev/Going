@@ -13,9 +13,17 @@ class RequestController {
     async register(username, password, email, birthdate) {
         //Ensure the input fields exists and are not empty
         if (username && password && email && birthdate) {
-            password = md5(password);
-            const data = await this.dao.register(username, password, email, birthdate);
-            return { ok: data[0], error: data[1], data: data[2] };
+
+            var isBanned = (await this.dao.isBanned(email))[2].banned;
+
+            if (isBanned) {
+                return { ok: false, error: -777, data:{} } //banned alert
+            } else {
+                password = md5(password);
+                const data = await this.dao.register(username, password, email, birthdate);
+                return { ok: data[0], error: data[1], data: data[2] };
+            }
+
         }
         else {
             return { ok: false, error: -2 }
@@ -52,7 +60,7 @@ class RequestController {
 
     getFileName(file) {
         const split = file.originalname.split(".");
-        return config.stagesFolder+"/"+file.fieldname + "." + split[split.length - 1]
+        return config.stagesFolder + "/" + file.fieldname + "." + split[split.length - 1]
     }
 
     async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
@@ -65,6 +73,7 @@ class RequestController {
             roadmap.dataCreazione = new Date().toISOString().slice(0, 19).replace("T", " ");
 
             const data1 = await this.dao.addRoadmap(roadmap.titolo, roadmap.isPublic, roadmap.durataComplessiva, roadmap.localita, roadmap.descrizione, roadmap.dataCreazione, roadmap.travelMode, roadmap.distanzaComplessiva, user_id);
+            
             const roadmap_id = data1[2].insertId
 
             var stages_img_dict = {} //ex novo imgs handle
@@ -101,10 +110,10 @@ class RequestController {
                 await this.dao.addStageInstanceToRoadmap(roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route)
 
             }
-
-            return { ok: true, error: 0, data: roadmap_id }
+            console.log(roadmap_id)
+            return { ok: true, error: 0, data: {roadmapId:roadmap_id} }
         }
-        return { ok: false, error: -5 } //return error!
+        return { ok: false, error: -5, data: {} } //return error!
     }
 
     async searchUser(username) {
@@ -171,15 +180,15 @@ class RequestController {
 
     async getDataUser(id_query, id_session) {
         const data = await this.dao.getDataUser(id_query, id_session);
-        return { ok: data[0], error: data[1], data: data[2]}
+        return { ok: data[0], error: data[1], data: data[2] }
     }
 
     async getUserStatus(id_session) {
         const data = await this.dao.getMinimalDataUser(id_session, id_session); //use getdatauser again but in anotha way
-        return { ok: data[0], error: data[1], data: data[2]}
+        return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async getCommmentsReviewByUserRoad(user,rm) {
+    async getCommmentsReviewByUserRoad(user, rm) {
         if (!user || user == null || !rm || rm == null) { //ricerca nulla
             return { ok: false, error: -4, data: '' }
         }
@@ -210,13 +219,23 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
-    async deleteCommento(user,commento, roadmap) {
-        if (!roadmap || !user ||!commento) {
+    async deleteUser(user_id) {
+        if (!user_id) {
+            return { ok: false, error: -4, data: {} }
+        }
+        else {
+            const data = await this.dao.deleteUser(user_id);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
+    }
+
+    async deleteCommento(user, commento, roadmap) {
+        if (!roadmap || !user || !commento) {
 
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.deleteCommento(user,commento, roadmap);
+            const data = await this.dao.deleteCommento(user, commento, roadmap);
             return { ok: true, error: data[1], data: data[2] };
         }
     }
@@ -293,8 +312,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async deleteRoadmapCreata(id_roadmap,id_user) {
-        const data = await this.dao.deleteRoadmapCreata(id_roadmap,id_user);
+    async deleteRoadmapCreata(id_roadmap, id_user) {
+        const data = await this.dao.deleteRoadmapCreata(id_roadmap, id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
