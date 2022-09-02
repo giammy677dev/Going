@@ -55,49 +55,11 @@ document.addEventListener('receivedRoadmapData', (e) => {
 //isMe permette di customizzare la recensione o il commento esteticamente in base al flag se sei tu o no.
 // per come è pensato, i tuoi commenti e recensioni vanno tutti al top grazie all'if in drawCommentiERecensioni()
 
-/*
-codice per gestire le proprie recensione isMe da customizzare (marco)
-
-if (chk_rec == 1) {
-        const rec = r.data.results_rec[0]
-        insert_rec = 0
-        document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
-        const rating = rec.valutazione
-
-        points = rating
-        const html_cock = printBicchieri(rating, 50, 'auto')
-
-        document.getElementById("cocks").innerHTML = html_cock
-        var elements = document.getElementById('cocks').children;
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].setAttribute("id", i)
-          elements[i].setAttribute("title", i + 1)
-        }
-
-        if (rec.opinione != null) {
-          document.getElementById("lab_rec").innerHTML = "La tua recensione!"
-          document.getElementById("us_rec").innerText = rec.opinione
-          document.getElementById("us_rec").setAttribute("disabled", "disabled")
-          document.getElementById("save_recbtn").setAttribute("onclick", "abilitaRec()");
-        }
-      }
-      if (chk_rec == 0) {
-        const html_cock = '<img id="0" onclick="rating(0)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="1" onclick="rating(1)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="2" onclick="rating(2)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="3" onclick="rating(3)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="4" onclick="rating(4)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;">'
-        document.getElementById("cocks").innerHTML = html_cock
-      }
-
-      if (chk_com > 0) {
-        //console.log(r.data.results_com)
-        commento_utente = r.data.results_com
-        //console.log(commento_utente)
-      }
-*/
-
 //popups for recensioni e commenti
 
 function openRecensioniPopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
-
+    //createRecensione(roadmap_id,"test",5)
   } else {
     //classico popup di login
   }
@@ -105,7 +67,7 @@ function openRecensioniPopup(roadmap_id,value) {
 
 function openCommentoPopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
-
+    //createCommento(roadmap_id,"messaggio commento")
   } else {
     //classico popup di login
   }
