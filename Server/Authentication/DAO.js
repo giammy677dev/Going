@@ -165,16 +165,6 @@ class DAO {
         }
     }
 
-    async searchUser(username) {
-        try {
-            var connection = await this.connect();
-            var result = await connection.query('SELECT id,username,avatar,birthdate FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
-            return [true, 0, { results: result[0] }];
-        } catch (error) {
-            return [false, error.errno, { results: [] }];
-        }
-    }
-
     async placeIDExists(placeID) {
         try {
             var connection = await this.connect();
@@ -221,23 +211,43 @@ class DAO {
     async searchRoadmap(ricerca, time, distance) {
         try {
             var connection = await this.connect();
-            var query = "SELECT titolo,durata,localita,id,punteggio,distanza,travelMode FROM roadmap WHERE isPublic=1 AND ((titolo LIKE '%"+ricerca+"%') OR (localita LIKE '%"+ricerca+"%'))";
-            
-            if(time != null && time > 0){
-                time=time*3600;
-                query += ' AND durata < '+time;
+            var query = "SELECT titolo,durata,localita,id,punteggio,distanza,travelMode FROM roadmap WHERE isPublic=1 AND ((titolo LIKE '%" + ricerca + "%') OR (localita LIKE '%" + ricerca + "%'))";
+
+            if (time != null && time > 0) {
+                time = time * 3600;
+                query += ' AND durata < ' + time;
             }
 
-            if(distance != null && distance > 0){
-                distance=distance*1000;
-                query += ' AND distanza < '+distance;
+            if (distance != null && distance > 0) {
+                distance = distance * 1000;
+                query += ' AND distanza < ' + distance;
             }
 
             let selection = await connection.query(query);
-            console.log(selection[0]);
-            let results = {roadmaps: selection[0]};
+            let results = { roadmaps: selection[0] };
             return [true, 0, results];
 
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async searchUser(username) {
+        try {
+            var connection = await this.connect();
+            var result = await connection.query('SELECT id,username,avatar,birthdate FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            return [true, 0, { users: result[0] }];
+        } catch (error) {
+            return [false, error.errno, { results: [] }];
+        }
+    }
+
+    async suggestedRoadmap(roadmap, rating) {
+        try {
+            var connection = await this.connect();
+            let selection = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza,travelMode FROM roadmap WHERE isPublic=1 AND punteggio > ? ORDER BY RAND() LIMIT ?', [rating, roadmap]);
+            let results = { roadmaps: selection[0] };
+            return [true, 0, results];
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
@@ -438,12 +448,12 @@ class DAO {
 
             var connection = await this.connect();
             var res;
-            if(isAdmin){
+            if (isAdmin) {
                 res = await connection.query('DELETE FROM commento WHERE idCommento = ?', [idCommento])
-            }else{
+            } else {
                 res = await connection.query('DELETE FROM commento WHERE idCommento = ? AND idUtenteRegistrato = ? ', [idCommento, user_id])
             }
-            
+
             return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
 
         }
@@ -452,15 +462,15 @@ class DAO {
         }
     }
 
-    async deleteRecensione(user_id,idRecensione,isAdmin) {
+    async deleteRecensione(user_id, idRecensione, isAdmin) {
         try {
 
             var connection = await this.connect();
             var res;
-            if(isAdmin){
+            if (isAdmin) {
                 res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
-            }else{
-                res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? and idUtenteRegistrato = ? ', [idRecensione,user_id])
+            } else {
+                res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? and idUtenteRegistrato = ? ', [idRecensione, user_id])
             }
 
             return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
@@ -495,7 +505,7 @@ class DAO {
             //console.log("dati per queri update media",media)
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
             //res upd media ancora non si sa cosa fa nel frontend
-            return [res_ins[0].affectedRows==1, 0, { idRecensione: idRecensione, now: now }]; //idRecensione ridondante ma va beneècoerente
+            return [res_ins[0].affectedRows == 1, 0, { idRecensione: idRecensione, now: now }]; //idRecensione ridondante ma va beneècoerente
 
 
         }
@@ -505,7 +515,7 @@ class DAO {
     }
     async setRoadmapFavouriteState(user, roadmap, valore) {
         try {
-            console.log(user,roadmap,valore)
+            console.log(user, roadmap, valore)
             var connection = await this.connect();
             var query
             var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?', [user, roadmap])
@@ -606,7 +616,7 @@ class DAO {
         }
     }
 
-    async deleteRoadmap(id_roadmap, id_user_session,isAdmin) {
+    async deleteRoadmap(id_roadmap, id_user_session, isAdmin) {
         try {
             var connection = await this.connect();
             let roadmapInfo = await connection.query('SELECT utenteRegistrato_id from roadmap WHERE id = ?', [id_roadmap])

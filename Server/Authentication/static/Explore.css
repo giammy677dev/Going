@@ -40,7 +40,7 @@
        margin-bottom: 1%;
        font-size: 17px;
        width: 55%;
-       text-align: center;
+       text-align: left;
    }
 
    #durata {
@@ -49,7 +49,7 @@
        margin-bottom: 1%;
        font-size: 17px;
        width: 5%;
-       text-align: center;
+       text-align: left;
    }
 
    #distanza {
@@ -57,7 +57,7 @@
        margin: auto;
        font-size: 17px;
        width: 5%;
-       text-align: center;
+       text-align: left;
    }
 
    .searchExplore {
@@ -86,7 +86,7 @@
 
    /* Sezioni Risultati Ricerca  */
 
-   #info {
+   .info {
        font-size: 25px;
        color: rgba(255, 255, 255, 0.7);
        font-weight: 300px;
@@ -148,7 +148,7 @@
        display: inline-block;
        border-radius: 25px;
        height: fit-content;
-       width: 345px;
+       width: 343px;
        cursor: pointer;
        border: solid 2px;
        padding-top: 10px;
