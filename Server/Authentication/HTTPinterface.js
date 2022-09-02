@@ -90,7 +90,7 @@ class HTTPinterface {
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
-        this.app.get('/searchRoadmap', this.searchRoadmap.bind(this));
+        this.app.post('/searchRoadmap', this.searchRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
@@ -468,7 +468,7 @@ class HTTPinterface {
     }
 
     async searchRoadmap(req, res) {
-        const r = await this.controller.searchRoadmap(req.query.ricerca);
+        const r = await this.controller.searchRoadmap(req.query.ricerca, req.body.time, req.body.distance);
         return res.send(JSON.stringify(r));
     }
 
@@ -476,8 +476,6 @@ class HTTPinterface {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
-
-
 
     async main_page(req, res) {
         if (req.user) {
@@ -520,7 +518,7 @@ class HTTPinterface {
                 //if req.query.roadmap_id is not null then should add to session something if logged
             }
         }
-        return res.sendFile(__dirname + '/static/newCreate.html');
+        return res.sendFile(__dirname + '/static/create.html');
     }
 
     async signup_page(req, res) {

@@ -9,7 +9,6 @@ const number_commenti = 10;
 var isMe=0;
 
 document.addEventListener('receivedUserInfo', (e) => {
-  data_user();
   roadmap_create()
   roadmap_seguite()
   roadmap_preferite()
@@ -48,8 +47,7 @@ function data_user() {
           bottone.setAttribute("onclick","location.href = \"/paginaAdmin\"");
           bottone.setAttribute("value","Segnalazioni Admin");
           document.getElementById("infoBox").appendChild(bottone);
-        }
-        
+        }       
       }
     }
   }
@@ -81,8 +79,6 @@ function MouseOut() {
   document.getElementById("avatar").style.setProperty("filter", "brightness(100%)");
   document.getElementById("avatar").style.setProperty("border", "8px solid #2bcad2");
 }
-
-// Script Numero di Roadmap create, seguite e preferite dall'utente
 
 function convertHMS(value) {
   const sec = parseInt(value, 10); // convert value to number if it's string
@@ -116,6 +112,8 @@ function roadmap_create() {
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok == true) {
+      console.log(isMe);
+
       document.getElementById("bar_roadmap_create").click()
       document.getElementById("bar_roadmap_create").innerText = "Roadmap Create (" + r.data.roadmaps.length + ")";
 
@@ -139,9 +137,15 @@ function roadmap_create() {
         }
 
         html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱" + tempo + " </span>"+
-                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
-                   
+                  " <span class=\"interno\">⏱ " + tempo + " </span>";
+
+        if(r.data.roadmaps[i].travelMode == "WALKING"){
+          html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
+        }
+        else{
+          html += "<span class=\"interno\">🚗 " + km + "</span>";
+        }
+             
         document.getElementById("divRoadmap_0_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 0, i);
       
@@ -192,11 +196,18 @@ function roadmap_seguite() {
         } else {
           html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         }
-
+        
         html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱" + tempo + " </span>"+
-                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
-                   
+                  " <span class=\"interno\">⏱ " + tempo + " </span>";
+
+        if(r.data.roadmaps[i].travelMode == "WALKING"){
+          html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
+        }
+        else{
+          html += "<span class=\"interno\">🚗 " + km + "</span>";
+        }
+                  
+
         document.getElementById("divRoadmap_1_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 1, i);
       
@@ -248,11 +259,17 @@ function roadmap_preferite() {
         } else {
           html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
         }
+        
+       html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
+                  " <span class=\"interno\">⏱ " + tempo + " </span>";
 
-        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱" + tempo + " </span>"+
-                  " <span class=\"interno\">🚶‍♂️" + km + "</span>";
-                   
+        if(r.data.roadmaps[i].travelMode == "WALKING"){
+          html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
+        }
+        else{
+          html += "<span class=\"interno\">🚗 " + km + "</span>";
+        }
+
         document.getElementById("divRoadmap_2_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 2, i);
       

@@ -139,16 +139,23 @@ class RequestController {
             return { ok: false, error: -4, data: { id: '' } }
         }
         else {
-            const data = await this.dao.getRoadmapData(id);
+            try{
+                const data = await this.dao.getRoadmapData(id);
 
-            var stages = data[2].roadmap.stages;
-            var stage;
-            for (var i = 0; i < stages.length; i++) {
-                stage = stages[i];
-                stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+                var stages = data[2].roadmap.stages;
+                var stage;
+                for (var i = 0; i < stages.length; i++) {
+                    stage = stages[i];
+                    stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+                }
+                return { ok: data[0], error: data[1], data: data[2] };
+            }catch(error){
+                console.log(error)
+                return {ok:false, error:error.errno, data:{}}
             }
+           
 
-            return { ok: data[0], error: data[1], data: data[2] };
+            
         }
     }
     async getCommentiRecensioni(id) {
@@ -161,18 +168,11 @@ class RequestController {
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
-    async searchRoadmap(ricerca) {
 
-        if (!ricerca || ricerca == null) { //ricerca nulla
-            return { ok: false, error: -4, data: { ricerca: '' } }
-        }
-        else {
-            const data = await this.dao.searchRoadmap(ricerca);
-
-            return { ok: data[0], error: data[1], data: data[2] };
-        }
+    async searchRoadmap(ricerca, time, distance) {    
+        const data = await this.dao.searchRoadmap(ricerca, time, distance);
+        return { ok: true, error: data[1], data: data[2] };
     }
-
 
     async getBestRoadmap() {
         const data = await this.dao.getBestRoadmap();

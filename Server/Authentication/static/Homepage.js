@@ -71,18 +71,31 @@ function caricaRoadmap() {
     if (r.ok == true) {
 
       for (var i = 0; i < result.length; i++) {
-        var durata=Math.round(result[i].durata/60)
         var spazioRoadmap = document.createElement("div");
         spazioRoadmap.setAttribute("id","divRoadmap" + i);
         spazioRoadmap.setAttribute("class","divRoadmap");
         spazioRoadmap.setAttribute("onMouseOver","conMouseOver(\"" + spazioRoadmap.id + "\")");
         spazioRoadmap.setAttribute("onMouseOut","conMouseOut(\"" + spazioRoadmap.id + "\")");
         document.getElementById("containerRoadmap").appendChild(spazioRoadmap);
-        spazioRoadmap.innerHTML ="<a title=\"visualizza Roadmap\"href=\"view_roadmap?id="+result[i].id+"\"><span class=\"inEvidenza\">" + result[i].titolo + "</span></a>" + 
-        "<p><span class=\"interno\">🏙 " + result[i].localita  + "</span><span class=\"interno\">⏱" + durata + "</span></p>";
+    
+        var tempo = convertHMS(result[i].durata);
+        var km = convertKM(result[i].distanza);
+
+        var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + result[i].id + "\">" +
+                    "<span class=\"inEvidenza\">🌎 " + result[i].titolo + "</span><\a>" +
+                    "<p><span class=\"interno\">🏙 "+ result[i].localita + "</span>" +
+                    "<span class=\"interno\">⏱ " + tempo + " </span>";
+
+        if(result[i].travelMode == "WALKING"){
+          html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
+        }
+        else{
+          html += "<span class=\"interno\">🚗 " + km + "</span>";
+        }
+             
+        document.getElementById("divRoadmap" + i).innerHTML = html;   
         printCocktail(result[i].punteggio,i);
       }
-      
     }
     else if (r.ok == false) {
       console.log(r)
@@ -146,6 +159,29 @@ function printCocktail(media_valutazioni,i){
     for(i=2; i<=6; i++){
       document.getElementById(target).childNodes[i].style.width='25px';
       document.getElementById(target).childNodes[i].style.height='25px';
+    }
+  }
+  
+  function convertHMS(value) {
+    const sec = parseInt(value, 10); // convert value to number if it's string
+    let hours   = Math.floor(sec / 3600); // get hours
+    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+    // add 0 if value < 10; Example: 2 => 02
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+  }
+  
+  function convertKM(value){
+    if(value<1000){
+      var x=value+" m"
+      return x;
+    }
+    else{
+      var km = value / 1000;
+      var x=km.toFixed(1)+" km"
+      return x
     }
   }
   
