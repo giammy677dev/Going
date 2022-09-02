@@ -12,6 +12,7 @@ window.onload = function () {
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
+
   if (e.logged) {
     id_user = e.user
     username = e.username
@@ -19,13 +20,15 @@ document.addEventListener('receivedUserInfo', (e) => {
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
 
-  getCommentiERecensioni()
+  drawCommentiERecensioni()
 }, false);
 
 
-function getNowAsStr() {
-  var today = new Date();
-  return today.getFullYear() + '-' + today.getMonth() + 1 + '-' + today.getDate();
+function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
+  var favouriteObj = document.getElementById("favorite")
+  var checkedObj = document.getElementById("checked")
+  favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/star0.png" style="width:50px; height:50px;cursor: pointer;">'
+  checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png" style="width:50px; height:50px;cursor: pointer;">'
 }
 
 document.addEventListener('receivedStageData', (e) => {
@@ -33,6 +36,7 @@ document.addEventListener('receivedStageData', (e) => {
 }, false);
 
 document.addEventListener('receivedRoadmapData', (e) => {
+
   var day = new Date(roadmap.dataCreazione)
   var minuti = Math.round(roadmap.durata / 60)
 
@@ -44,7 +48,7 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
-
+  drawVisualFavouriteSeguitaBottoni(roadmap.id)
 }, false);
 
 
@@ -91,7 +95,7 @@ if (chk_rec == 1) {
 
 //popups for recensioni e commenti
 
-function openRecensioniPopup() {
+function openRecensioniPopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
 
   } else {
@@ -99,10 +103,28 @@ function openRecensioniPopup() {
   }
 }
 
-function openCommentoPopup() {
+function openCommentoPopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
 
   } else {
+    //classico popup di login
+  }
+}
+
+function pressLikeButton(roadmap_id, value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+    setRoadmapAsFavourite(roadmap_id, value)
+  } else {
+    console.log("non sei loggato")
+    //classico popup di login
+  }
+}
+
+function pressSeguitaButton(roadmap_id, value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+    setRoadmapAsSeguita(roadmap_id, value)
+  } else {
+    console.log("non sei loggato")
     //classico popup di login
   }
 }
@@ -115,7 +137,7 @@ function generateRecensione(recensione, isMe) {
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   const cocksHtml = generateRating(recensione.valutazione, 25) //cursore?
-  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensione.idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione'+recensione.idRecensione+'">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div></div><div class="opinione" id="opinione'+recensione.idRecensione+'">' + recensione.opinione + '</div></div>'
+  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensione.idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div></div><div class="opinione" id="opinione' + recensione.idRecensione + '">' + recensione.opinione + '</div></div>'
   recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
   return recensioneObj
 }
@@ -223,7 +245,8 @@ function updateVisualRecensione(idRecensione, messaggio, dataPubblicazione, valu
 
 //richiesta backend di commenti e recensioni
 
-function getCommentiERecensioni() { //prende da backend i commenti e recensioni e li stampa a video. nome da cambiare
+
+function drawCommentiERecensioni() { //prende da backend i commenti e recensioni e li stampa a video. nome da cambiare
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/getCommentiRecensioni?id=' + roadmapId, true);
@@ -273,18 +296,18 @@ function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok) {
-      favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="favorite(' + Math.abs(r.data.preferita - 1) + ')" src="/storage/star' + r.data.preferita + '.png" style="width:50px; height:50px;cursor: pointer;">'
-      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="width:50px; height:50px;cursor: pointer;">'
+      favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/star' + r.data.preferita + '.png" style="width:50px; height:50px;cursor: pointer;">'
+      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="width:50px; height:50px;cursor: pointer;">'
     }
   }
   xhr.send();
 }
 
-function setRoadmapFavouriteState(value) {
+function setRoadmapAsFavourite(roadmap_id, value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", '/setFavorite', true);
+  xhr.open("POST", '/setRoadmapAsFavourite', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -297,10 +320,10 @@ function setRoadmapFavouriteState(value) {
       var html
       if (value == 1) {
         value = 0
-        html = '<img id="fav" title="toglila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="fav" title="toglila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       } else {
         value = 1
-        html = '<img id="fav" title="inseriscila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="fav" title="inseriscila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       var posto_fav = document.getElementById("favorite")
       posto_fav.innerHTML = html
@@ -313,8 +336,8 @@ function setRoadmapFavouriteState(value) {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    roadmap: roadmapId,
-    favorite: value
+    roadmap_id: roadmapId,
+    newStatus: value
   }));
 }
 
@@ -340,7 +363,7 @@ function createRecensione(roadmap_id, opinione, valutazione) {
       alert("Problemi col db")
     }
   }
-  
+
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
     roadmapId: roadmap_id,
@@ -563,11 +586,11 @@ function showVisualAchievementPopup(testo, immagine) {
   setTimeout(closeVisualPopup, 5000);
 }
 
-function setRoadmapAsSeguita(user_id, roadmap_id, value) {
+function setRoadmapAsSeguita(roadmap_id, value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", '/setChecked', true);
+  xhr.open("POST", '/setRoadmapAsSeguita', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -580,17 +603,17 @@ function setRoadmapAsSeguita(user_id, roadmap_id, value) {
       var html;
       if (value == 1) {
         value = 0
-        html = '<img id="chk" title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="chk" title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       else {
         value = 1
-        html = '<img id="chk" title="inseriscila tra le percorse" onclick="setRoadmapAsSeguita(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="chk" title="inseriscila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       var posto_chk = document.getElementById("checked")
 
       posto_chk.innerHTML = html
     }
-    else if (r.ok == false) {
+    else {
       console.log(r)
       alert("Problemi col db")
     }
@@ -598,7 +621,7 @@ function setRoadmapAsSeguita(user_id, roadmap_id, value) {
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
     roadmap_id: roadmap_id,
-    check: value
+    newStatus: value
   }));
 
 

@@ -489,8 +489,9 @@ class DAO {
             return [false, error.errno];
         }
     }
-    async setFavorite(user, roadmap, valore) {
+    async setRoadmapFavouriteState(user, roadmap, valore) {
         try {
+            console.log(user,roadmap,valore)
             var connection = await this.connect();
             var query
             var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?', [user, roadmap])
@@ -507,7 +508,7 @@ class DAO {
             return [false, error.errno];
         }
     }
-    async setChecked(user, roadmap, valore) {
+    async setRoadmapCheckedState(user, roadmap, valore) {
         try {
             var connection = await this.connect();
             var see = await connection.query('SELECT * FROM roadmapuser WHERE idUtenteRegistrato = ? AND idRoadmap = ?', [user, roadmap])
