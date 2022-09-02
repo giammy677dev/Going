@@ -89,8 +89,9 @@ class HTTPinterface {
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
-        this.app.get('/searchUser', this.searchUser.bind(this));
         this.app.post('/searchRoadmap', this.searchRoadmap.bind(this));
+        this.app.get('/searchUser', this.searchUser.bind(this));
+        this.app.post('/suggestedRoadmap', this.suggestedRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
@@ -462,13 +463,18 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
+    async searchRoadmap(req, res) {
+        const r = await this.controller.searchRoadmap(req.query.ricerca, req.body.time, req.body.distance);
+        return res.send(JSON.stringify(r));
+    }
+  
     async searchUser(req, res) {
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }
 
-    async searchRoadmap(req, res) {
-        const r = await this.controller.searchRoadmap(req.query.ricerca, req.body.time, req.body.distance);
+    async suggestedRoadmap(req, res) {
+        const r = await this.controller.suggestedRoadmap(req.body.numberRoadmapToDisplay,req.body.rating);
         return res.send(JSON.stringify(r));
     }
 

@@ -116,14 +116,19 @@ class RequestController {
         return { ok: false, error: -5, data: {} } //return error!
     }
 
+    async searchRoadmap(ricerca, time, distance) {    
+        const data = await this.dao.searchRoadmap(ricerca, time, distance);
+        return { ok: true, error: data[1], data: data[2] };
+    }
+    
     async searchUser(username) {
-        if (!username || username == null) { //username nullo
-            return { ok: false, error: -4, data: { username: '' } }
-        }
-        else {
-            const data = await this.dao.searchUser(username);
-            return { ok: data[0], error: data[1], data: data[2] };
-        }
+        const data = await this.dao.searchUser(username);
+        return { ok: data[0], error: data[1], data: data[2] };
+    }
+
+    async suggestedRoadmap(roadmap, rating){
+        const data = await this.dao.suggestedRoadmap(roadmap, rating);
+        return { ok: data[0], error: data[1], data: data[2] }
     }
 
     async getPreferredFavouriteStatusByUserByRoadmap(id_user, id_roadmap){
@@ -167,11 +172,6 @@ class RequestController {
 
             return { ok: data[0], error: data[1], data: data[2] };
         }
-    }
-
-    async searchRoadmap(ricerca, time, distance) {    
-        const data = await this.dao.searchRoadmap(ricerca, time, distance);
-        return { ok: true, error: data[1], data: data[2] };
     }
 
     async getBestRoadmap() {
