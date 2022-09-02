@@ -1,3 +1,5 @@
+var percorrenza = "WALKING";
+
 function addListner(){
     document.getElementById("titolo").addEventListener('input',attivaBottone);
 }
@@ -42,6 +44,7 @@ function mostraCreate(){
         document.getElementById("percorrenzaValue").innerText= "In macchina🚗";
     }
     document.getElementById("titolo").remove();
+    percorrenza = document.querySelector('input[name="mobilitazione"]:checked').value
     document.getElementById("inputVisibilitaBox").remove();
     document.getElementById("inputPercorrenzaBox").remove();
     document.getElementById("bottoneImpostazioni").remove();

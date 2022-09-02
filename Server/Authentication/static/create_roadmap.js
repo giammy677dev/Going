@@ -23,8 +23,10 @@ function drawDeletableStage(stage_index, stage) {
     }
     if(stage_index == 0){
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
-    }else{
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza">'+stage+'</span></div>'
+    }else
+    {
+        console.log(stage)
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+stage_index+'">#</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
     }
     
@@ -104,13 +106,15 @@ function deleteStage(toDeleteIndex) {
 }
 
 function requestDistance(marker1, marker2) {
-    var selectedMode;
+    /*var selectedMode;
     if (document.getElementById("driving_mode").checked) {
         selectedMode = document.getElementById("driving_mode").value;
     }
     else {
         selectedMode = document.getElementById("walking_mode").value;
-    }
+    }*/
+    //var selectedMode = document.querySelector('input[name="mobilitazione"]:checked').value;
+    var selectedMode = percorrenza
     console.log('Modalità: ' + selectedMode);
 
     const route = {
@@ -144,6 +148,11 @@ function requestDistance(marker1, marker2) {
                     map: map,
                     preserveViewport: true
                 });
+                console.log("dioagnaongodia")
+                var duration = (r.data.routes[0].legs[0].duration.text)
+                console.log(stage_index)
+                console.log('tempoPercorrenza'+(stage_index-1))
+                document.getElementById('tempoPercorrenza'+(stage_index-1)).innerText=duration
             }
         }
         else if (r.ok == false) {
@@ -362,7 +371,6 @@ var ClickEventHandler = (function () {
             drawDeletableStage(stage_index, stage);
 
             if (stages_list.length >= 2) {
-                //requestDistance(stages_list[stage_index - 1], stage);
                 requestDistance(stages_list[stage_index - 1], stage);
             }
 
