@@ -34,9 +34,6 @@ function blurIfNotLoggedIn(user_id, logged) {
     console.log(user_id)
     if (user_id == 0 || !logged) {
         document.getElementById('contenuto_logged').style.filter = 'blur(10px)' //contenuto_logged?
-        document.getElementById('all_page').style.overflow = 'hidden'
-        document.getElementById('all_page').style.height = '100%'
-        document.getElementById('all_page').style.margin = '0'
         document.getElementById('info_nolog').style.display = 'block'
         document.getElementById('contenuto_logged').style['pointer-events'] = 'none';
     }
