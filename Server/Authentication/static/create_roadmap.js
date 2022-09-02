@@ -24,7 +24,7 @@ function drawDeletableStage(stage_index, stage) {
     if(stage_index == 0){
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
     }else{
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/></div>'
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza">'+stage+'</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
     }
     
