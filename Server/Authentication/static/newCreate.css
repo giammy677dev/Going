@@ -30,7 +30,7 @@ body {
 
 /* PAGINA INFO */
 
-#info_header{
+#create_header{
     color: rgba(255, 255, 255, 1);
 }
 
@@ -95,7 +95,7 @@ body {
 	display: table;
 	clear: both;
 	content: "";
-    color: grey;
+    color: rgb(255, 255, 255);
 }
 
 
@@ -263,16 +263,17 @@ body {
     left: 50%;
     transform: translate(-50%, 0%);
     width: 90%;
+    margin-top: 10px;
 }
 
 .timeline .box .container .cards .card {
+    width: 100%;
     position: relative;
     display: table;
     text-align: center;
     background: #20767b61;
     border-radius: 10px;
     box-shadow: 0px 16px 15px -10px rgba(105, 96, 215, 0.0944602);
-    margin-top: 10px;
 
 }
 
@@ -429,9 +430,17 @@ a.boxclose:hover{
 }
 
 .imgFreccia{
-    height: 100px;
+    height: 60px;
 }
 
 .boxFreccia{
     text-align:center;
+}
+
+.tempoPercorrenza{
+    position: absolute;
+    left: 60%;
+    top: 50%;
+    transform: translate(-50%, 0%);
+    color: black;
 }
