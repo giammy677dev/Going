@@ -144,6 +144,7 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
+
     async getRecCom(id) {
         if (!id || id == null) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
@@ -154,18 +155,11 @@ class RequestController {
             return { ok: true, error: data[1], data: data[2] };
         }
     }
-    async searchRoadmap(ricerca) {
 
-        if (!ricerca || ricerca == null) { //ricerca nulla
-            return { ok: false, error: -4, data: { ricerca: '' } }
-        }
-        else {
-            const data = await this.dao.searchRoadmap(ricerca);
-
-            return { ok: true, error: data[1], data: data[2] };
-        }
+    async searchRoadmap(ricerca, time, distance) {    
+        const data = await this.dao.searchRoadmap(ricerca, time, distance);
+        return { ok: true, error: data[1], data: data[2] };
     }
-
 
     async getBestRoadmap() {
         const data = await this.dao.getBestRoadmap();

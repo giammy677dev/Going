@@ -176,11 +176,10 @@ class DAO {
         }
     }
 
-
     async searchUser(username) {
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT * FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
+            var result = await connection.query('SELECT id,username,avatar,birthdate FROM utenteregistrato WHERE LOWER(username) LIKE ?', ['%' + username.toLowerCase() + '%']);
             return [true, 0, { results: result[0] }];
         } catch (error) {
             return [false, error.errno, { results: [] }];
@@ -230,11 +229,26 @@ class DAO {
         }
     }
 
-    async searchRoadmap(ricerca) {
+    async searchRoadmap(ricerca, time, distance) {
         try {
             var connection = await this.connect();
-            var result = await connection.query('SELECT titolo,durata,localita,id,punteggio,distanza FROM roadmap WHERE isPublic=1 AND ((titolo LIKE ?)OR(localita LIKE ?)OR(durata LIKE ?)OR(distanza LIKE ?))', ['%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%', '%' + ricerca + '%']);
-            return [true, 0, { results: result[0] }];
+            var query = "SELECT titolo,durata,localita,id,punteggio,distanza,travelMode FROM roadmap WHERE isPublic=1 AND ((titolo LIKE '%"+ricerca+"%') OR (localita LIKE '%"+ricerca+"%'))";
+            
+            if(time != null && time > 0){
+                time=time*3600;
+                query += ' AND durata < '+time;
+            }
+
+            if(distance != null && distance > 0){
+                distance=distance*1000;
+                query += ' AND distanza < '+distance;
+            }
+
+            let selection = await connection.query(query);
+            console.log(selection[0]);
+            let results = {roadmaps: selection[0]};
+            return [true, 0, results];
+
         } catch (error) {
             return [false, error.errno, { results: [] }];
         }
@@ -615,8 +629,6 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
-
-
 
     async updateAvatar(id, new_avatar) {
         try {
