@@ -132,9 +132,9 @@ function loadMapInfo() {
     const id = urlParams.get('id')
 
     if (id != null && id >= 0) {
-        id_rm = id
+        roadmapId = id
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", '/viewrm?id=' + id, true);
+        xhr.open("GET", '/getRoadmapData?id=' + id, true);
 
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
@@ -146,7 +146,7 @@ function loadMapInfo() {
                 //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva; MATT questo va messo
                 //con lo stesso nome come fatto nel create_roadmap.js!
                 map.setZoom(16);
-                user = r.data.user;
+                roadmapCreator = r.data.user;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
             }

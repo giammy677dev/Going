@@ -55,6 +55,7 @@ function check() {
         document.getElementById("image_topnav").setAttribute("onclick", "location.href=\"/profile?id=" + r.data.info.id + "\"");
         receivedUserInfo.logged = true; //passiamo valore tramite evento! wow!
         receivedUserInfo.user = user_id
+        receivedUserInfo.username = r.data.info.username;
         document.dispatchEvent(receivedUserInfo);
       } else {
         console.log("non sei loggato!!!")

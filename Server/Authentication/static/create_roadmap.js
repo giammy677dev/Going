@@ -4,7 +4,7 @@ var durataComplessiva = 0;
 var indirizzo;
 var markers = {};
 
-document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
+document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id, e.logged) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
     stages_info[e.stage.placeId] = e.stage
@@ -21,9 +21,9 @@ function drawDeletableStage(stage_index, stage) {
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div>'
 }
 
-function blurIfNotLoggedIn(user_id) {
+function blurIfNotLoggedIn(user_id, logged) {
     console.log(user_id)
-    if (user_id == 0) {
+    if (user_id == 0 || !logged) {
         document.getElementById('contenuto').style.filter = 'blur(10px)'
         document.getElementById('all_page').style.overflow = 'hidden'
         document.getElementById('all_page').style.height = '100%'

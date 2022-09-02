@@ -12,47 +12,36 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                ssl: {
+                /*ssl: {
                     ca: fs.readFileSync(path.resolve(__dirname + "/ca", config.ca))
-                }
+                }*/
             });
             return connection;
         } catch (err) {
             console.log(err);
         }
     }
-    async viewRoadmap(id) {
+    async getRoadmapData(id) {
 
         try {
-
             var connection = await this.connect();
             var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
-
             var result_stages = await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
-
-
             var id_utente = result_rm[0][0].utenteRegistrato_id
-
-
-
             var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
-
-
-
             var result = result_rm[0][0]
             result.stages = result_stages[0]
             return [true, 0, { roadmap: result, user: result_us[0] }];
-
         }
         catch (error) {
             return [false, error.errno];
         }
     }
-    async getRecCom(id) {
+    async getCommentiRecensioni(id) {
         try {
             var connection = await this.connect();
-            var result_rec = await connection.query('select idRecensione,id,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
-            var result_comm = await connection.query('select idCommento,id,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_rec = await connection.query('select idRecensione,id as idUtente,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_comm = await connection.query('select idCommento,id as idUtente,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
 
             return [true, 0, { recensioni: result_rec[0], commenti: result_comm[0] }];
         }
@@ -297,6 +286,20 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+    async getPreferredFavouriteStatusByUserByRoadmap(id_user, id_roadmap) {
+        try {
+            var connection = await this.connect();
+            var result = await connection.query('select preferita,seguita from roadmapuser where idUtenteRegistrato=? AND idRoadmap=?', [id_user, id_roadmap])
+            if (result[0].length != 0) {
+                return [true, 0, { preferita: result[0][0].preferita, seguita: result[0][0].seguita }]
+            } else {
+                return [true, 0, { preferita: 0, seguita: 0 }]
+            }
+        } catch (error) {
+            return [false, error.errno, {}];
+        }
+        return [false, -1, {}];
+    }
 
     async getCommmentsReviewByUserRoad(user, rm) {
         try {
@@ -329,48 +332,45 @@ class DAO {
         }
     }
 
-    async setCommento(user, roadmap, mod_com, day) {
+    async createCommento(user_id, roadmap_id, messaggio, now) {
         try {
             var connection = await this.connect();
-            await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user, roadmap, mod_com, day])
-            let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [user]);
-            let results = commentsNumber[0][0].numberComments;
-            return [true, 0, results];
+            var resultCommento = await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user_id, roadmap_id, messaggio, now])
+            let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [user_id]);
+
+            return [true, 0, { idCommento: resultCommento[0].insertId, now: now, numCommentiUtente: commentsNumber[0][0].numberComments }];
         }
         catch (error) {
             return [false, error.errno];
         }
     }
 
-    async setRecensione(user, roadmap, mod_op, mod_valutazione, day) {
+    async createRecensione(user_id, roadmap_id, opinione, valutazione, now) {
         try {
-
             var connection = await this.connect();
-            var res_ins = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user, roadmap, mod_valutazione, mod_op, day])
-            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
-            var numeroRecensioniUtenteQuery = await connection.query('SELECT count(*) AS numeroRecensioniUtente FROM recensione WHERE idUtenteRegistrato = ?', [user])
+            var res_ins = await connection.query('INSERT INTO recensione (idUtenteRegistrato, idRoadmap,valutazione,opinione,dataPubblicazione) VALUES (?, ?, ?, ?,?)', [user_id, roadmap_id, valutazione, opinione, now])
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap_id])
+            var numeroRecensioniUtenteQuery = await connection.query('SELECT count(*) AS numeroRecensioniUtente FROM recensione WHERE idUtenteRegistrato = ?', [user_id])
             var numeroRecensioni = dati[0][0].numeroRecensioni
             var numeroRecensioniUtente = numeroRecensioniUtenteQuery[0][0].numeroRecensioniUtente
             var somma = dati[0][0].somma
             var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
-            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
-
-            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0], numRecensioniUtente: numeroRecensioniUtente }];
-
+            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
+            //res upd media veniva passato alla soluzione ma perchè?
+            //return [true, 0, { idRecensione: res_ins[0].insertId, res_upd_media: res_upd_media[0], numRecensioniUtente: numeroRecensioniUtente }];
+            return [true, 0, { idRecensione: res_ins[0].insertId, now: now, numRecensioniUtente: numeroRecensioniUtente }];
         }
         catch (error) {
+            console.log(error)
             return [false, error.errno];
         }
     }
-    async updateCommento(user, roadmap, mod_com, day) {
+    async updateCommento(user_id, idCommento, messaggio, now) {
         try {
-
             var connection = await this.connect();
-            var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idUtenteRegistrato=? and idRoadmap=?', [mod_com, day, user, roadmap])
-
-            return [true, 0, res[0]];
-
+            var res = await connection.query('UPDATE commento SET testo = ?, dataPubblicazione = ? WHERE idCommento = ? AND idUtenteRegistrato = ?', [messaggio, now, idCommento, user_id])
+            return [true, 0, { idCommento: res[0].insertId, now: now }];
         }
         catch (error) {
             return [false, error.errno];
@@ -418,13 +418,38 @@ class DAO {
         }
     }
 
-    async deleteRecensione(idRecensione) {
+
+    async deleteCommento(user_id, idCommento, isAdmin) {
         try {
 
             var connection = await this.connect();
-            var res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
+            var res;
+            if(isAdmin){
+                res = await connection.query('DELETE FROM commento WHERE idCommento = ?', [idCommento])
+            }else{
+                res = await connection.query('DELETE FROM commento WHERE idCommento = ? AND idUtenteRegistrato = ? ', [idCommento, user_id])
+            }
+            
+            return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
 
-            return [true, 0, res[0]];
+        }
+        catch (error) {
+            return [false, error.errno];
+        }
+    }
+
+    async deleteRecensione(user_id,idRecensione,isAdmin) {
+        try {
+
+            var connection = await this.connect();
+            var res;
+            if(isAdmin){
+                res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
+            }else{
+                res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? and idUtenteRegistrato = ? ', [idRecensione,user_id])
+            }
+
+            return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
 
         }
         catch (error) {
@@ -433,25 +458,19 @@ class DAO {
     }
 
 
-    async deleteCommento(idCommento) {
-        try {
-
-            var connection = await this.connect();
-            var res = await connection.query('DELETE FROM commento WHERE idCommento = ? ', [idCommento])
-
-            return [true, 0, res[0]];
-
-        }
-        catch (error) {
-            return [false, error.errno];
-        }
-    }
-    async updateRecensione(user, roadmap, mod_op, mod_valutazione, day) {
+    async updateRecensione(user_id, idRecensione, opinione, valutazione, now) {
         try {
             var connection = await this.connect();
-            var res_ins = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRoadmap=?', [mod_valutazione, mod_op, day, user, roadmap])
 
-            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap])
+
+            //idUtenteRegistrato serve a verificare che sia lui che ha inviato la query. un altro user non può fare le query per questo e così via.
+            //la seconda ocndizione discrimina univocamente la recensione. (idRecensione)
+            var res_ins = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRecensione=?', [valutazione, opinione, now, user_id, idRecensione])
+            console.log(res_ins)
+
+            //Ma a cosa serve vedere gli achievement sull'update della recensione? raga? tanto non altera il numero!
+            var roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ?', [idRecensione]))[0][0].idRoadmap;
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap_id])
             //console.log("dati da count: ",dati[0][0].numeroRecensioni)
             //console.log("dati da count: ",dati[0][0].somma)
 
@@ -460,9 +479,9 @@ class DAO {
             var somma = dati[0][0].somma
             var media = parseFloat(somma / numeroRecensioni)
             //console.log("dati per queri update media",media)
-            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap])
-
-            return [true, 0, { res_ins: res_ins[0], res_upd_media: res_upd_media[0] }];
+            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
+            //res upd media ancora non si sa cosa fa nel frontend
+            return [res_ins[0].affectedRows==1, 0, { idRecensione: idRecensione, now: now }]; //idRecensione ridondante ma va beneècoerente
 
 
         }
@@ -572,8 +591,8 @@ class DAO {
         }
     }
 
-    async deleteRoadmap(id_roadmap, id_user_session, isAdmin) {
-        try { 
+    async deleteRoadmap(id_roadmap, id_user_session,isAdmin) {
+        try {
             var connection = await this.connect();
             let roadmapInfo = await connection.query('SELECT utenteRegistrato_id from roadmap WHERE id = ?', [id_roadmap])
             //console.log(roadmapInfo[0][0])
@@ -591,6 +610,7 @@ class DAO {
             return [false, error.errno, { results: [] }];
         }
     }
+
 
     async updateRoadmapSeguite(id_roadmap, id_user) {
         try {
