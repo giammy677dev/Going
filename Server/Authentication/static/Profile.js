@@ -44,7 +44,7 @@ function data_user() {
           var bottone = document.createElement("input");
           bottone.setAttribute("type","button");
           bottone.setAttribute("id", "adminButton");
-          bottone.setAttribute("onclick","location.href = \"/paginaAdmin\"");
+          bottone.setAttribute("onclick","location.href = \"/adminPanel\"");
           bottone.setAttribute("value","Segnalazioni Admin");
           document.getElementById("infoBox").appendChild(bottone);
         }       

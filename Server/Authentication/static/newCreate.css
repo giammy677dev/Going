@@ -435,12 +435,13 @@ a.boxclose:hover{
 
 .boxFreccia{
     text-align:center;
+    position: relative;
 }
 
 .tempoPercorrenza{
     position: absolute;
     left: 60%;
     top: 50%;
-    transform: translate(-50%, 0%);
+    transform: translate(-50%, -50%);
     color: black;
 }
