@@ -299,13 +299,13 @@ class RequestController {
         }
         
     }
-    async setFavorite(user, roadmap, valore) {
-        const data = await this.dao.setFavorite(user, roadmap, valore);
+    async setRoadmapFavouriteState(user_id, roadmap_id, newStatus) {
+        const data = await this.dao.setRoadmapFavouriteState(user_id, roadmap_id, newStatus);
         return { ok: data[0], error: data[1], data: data[2] };
     }
 
-    async setChecked(user, roadmap, valore) {
-        const data = await this.dao.setChecked(user, roadmap, valore);
+    async setRoadmapCheckedState(user_id, roadmap_id, newStatus) {
+        const data = await this.dao.setRoadmapCheckedState(user_id, roadmap_id, newStatus);
         return { ok: data[0], error: data[1], data: data[2] };
     }
     async getPlaceInfo(id) {

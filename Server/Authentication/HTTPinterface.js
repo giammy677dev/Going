@@ -117,8 +117,8 @@ class HTTPinterface {
         this.app.post('/createRecensione', this.createRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
         this.app.post('/deleteRecensione', this.deleteRecensione.bind(this));
-        this.app.post('/setFavorite', this.setFavorite.bind(this));
-        this.app.post('/setChecked', this.setChecked.bind(this));
+        this.app.post('/setRoadmapAsFavourite', this.setRoadmapAsFavourite.bind(this));
+        this.app.post('/setRoadmapAsSeguita', this.setRoadmapAsSeguita.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
         this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
@@ -227,7 +227,7 @@ class HTTPinterface {
     }
 
     async updateCommento(req, res) {
-        const r = await this.controller.updateCommento(req.session.user_id,req.body.idCommento, req.body.messaggio);
+        const r = await this.controller.updateCommento(req.session.user_id, req.body.idCommento, req.body.messaggio);
         return res.send(JSON.stringify(r))
     }
 
@@ -250,17 +250,14 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async setFavorite(req, res) {
-        if (req.session.user_id == req.body.user_id) {
-            const r = await this.controller.setFavorite(req.body.user, req.body.roadmap, req.body.favorite);
-            return res.send(JSON.stringify(r))
-        }
+    async setRoadmapAsFavourite(req, res) {
+        const r = await this.controller.setRoadmapFavouriteState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
+        return res.send(JSON.stringify(r))
     }
-    async setChecked(req, res) {
-        if (req.session.user_id == req.body.user_id) {
-            const r = await this.controller.setChecked(req.body.user_id, req.body.roadmap_id, req.body.check);
-            return res.send(JSON.stringify(r))
-        }
+
+    async setRoadmapAsSeguita(req, res) {
+        const r = await this.controller.setRoadmapCheckedState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
+        return res.send(JSON.stringify(r))
     }
 
     async getMap(req, res) {
@@ -380,7 +377,7 @@ class HTTPinterface {
 
     async deleteRoadmap(req, res) { //OR ADMIN
         //if roadmap è sua oppure è admin.bisogna passar enelal deleteroadmap anche user id per semplificare molto il lavoro
-        const r = await this.controller.deleteRoadmap(req.query.id, req.session.user_id,req.session.isAdmin);
+        const r = await this.controller.deleteRoadmap(req.query.id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
 
