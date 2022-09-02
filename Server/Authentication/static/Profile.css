@@ -13,6 +13,7 @@ body {
     width: auto;
     height: auto;
     display: grid;
+    align-items: start;
     grid-template-columns: 1.5fr 6fr;
     grid-gap: 20px;
     margin-top: 95px;
@@ -21,7 +22,6 @@ body {
 /* Stile Sezioni */
 
 .card{
-    height: 850px;
     padding: 10px;
     margin-left: 5%;
     margin-top: 20px;
@@ -36,7 +36,6 @@ body {
 .roadmap {
     border-radius: 25px;
     width: auto;
-    height: 100%;
     margin: 0;
     float: center;
     margin-right: 2%;
@@ -58,10 +57,6 @@ body {
 
 .card h2{
     text-align: center;
-}
-
-.card p{
-    text-align: left;
 }
 
 .Evidenziato{
@@ -122,9 +117,17 @@ body {
     width: 55px;
 }
 
+.achievements fieldset {
+    margin: 10px;
+}
+
+
 .rowAchievements{
-    margin-top: 0px;
     text-align: center;
+}
+
+.rowAchievements img{
+    margin: 2.5px 3px;
 }
 
 /* Stile Sezione Roadmap */
@@ -195,6 +198,7 @@ body {
 }
 
 .grid-container>div {
+    background-color: rgba(32, 45, 48, 0.4);
     text-align: center;
     transition: all ease-in-out 0.3s;
     border-radius: 25px;
@@ -209,6 +213,33 @@ body {
 .grid-container div:hover {
     background-color: #16cdd28f;
 }
+
+.divRoadmap a{
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
+}
+
+.paragrafobutton{
+    display: none;
+}
+
+.roadmapbutton{
+    padding: 4px 8px;
+    margin-right: 0.5%;
+    font-size: 20px;
+    margin-left: 10px;
+    border: thin #000000 solid;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #000000c8;
+    border-radius: 25px;
+}
+
+.roadmapbutton:hover {
+    box-shadow: 0px 0px 10px 3px white;
+  }
 
 /* Tooltip */
 
@@ -252,3 +283,27 @@ body {
     visibility: visible;
     opacity: 1;
   }
+
+#adminButton{
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border: thin #07b7c4 solid;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #000000;
+    border-radius: 25px;
+    
+    left: 50%;
+    transform: translate(-50%, -0%);
+    position: relative;
+}
+
+#adminButton:hover {
+    /*box-shadow: 0 0px 4px 0 rgba(253, 253, 253, 0.908);*/
+    background-color: #07b7c4;
+    border: thin #000000 solid;
+}

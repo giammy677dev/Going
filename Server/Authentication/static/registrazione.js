@@ -90,7 +90,7 @@ function validation_registration() {
                 document.getElementById('infoH').style.setProperty("padding", "0px");
                 document.getElementById('infoH').style.setProperty("border-bottom", "0px");
                 document.getElementById('changeButton').value = "Login";
-                document.getElementById('changeButton').setAttribute("onclick","goTo(6,"+r.data.idUser+")");
+                document.getElementById('changeButton').setAttribute("onclick","document.getElementById('log').style.display='block'");
             }
             else if (r.ok == false) {
                 document.getElementsByClassName("second")[0].style.display = "block";

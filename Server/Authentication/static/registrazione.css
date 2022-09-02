@@ -143,3 +143,7 @@ body {
 #errorText > span{
     display:block;
 }
+
+#image_topnav{
+    display: none;
+}
