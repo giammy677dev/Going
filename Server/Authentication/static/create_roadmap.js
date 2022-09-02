@@ -26,7 +26,7 @@ function drawDeletableStage(stage_index, stage) {
     }else
     {
         console.log(stage)
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+stage_index+'">#</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+stage_index+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+stage_index+'">#</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
     }
     
@@ -77,8 +77,9 @@ function deleteStage(toDeleteIndex) {
     var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
     console.log("timestage: ", timeStage)
     document.getElementById("card" + toDeleteIndex).remove();
-    document.getElementById("line" + toDeleteIndex).remove();
-    document.getElementById("dot" + toDeleteIndex).remove();
+    if(stage_index > 0 && toDeleteIndex == 0)
+        document.getElementById("boxFreccia" + toDeleteIndex).remove();
+    //document.getElementById("dot" + toDeleteIndex).remove();
     var allTime = parseInt(document.getElementById("somma_totale").innerText)
     console.log("alltime: ", allTime)
     allTime = allTime - timeStage
@@ -89,8 +90,9 @@ function deleteStage(toDeleteIndex) {
         var newIndex = toDeleteIndex + i;
 
         var element = document.getElementById("card" + oldIndex);
-        var line = document.getElementById("line" + oldIndex);
-        var dot = document.getElementById("dot" + oldIndex);
+        var boxFreccia = document.getElementById("boxFreccia" + oldIndex);
+        var tempoPercorrenza = document.getElementById("tempoPercorrenza" + oldIndex);
+        //var dot = document.getElementById("dot" + oldIndex);
         var dur = document.getElementById("durata" + oldIndex);
 
         dur.id = "durata" + newIndex;
@@ -98,8 +100,9 @@ function deleteStage(toDeleteIndex) {
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
-        line.id = "line" + newIndex;
-        dot.id = "dot" + newIndex;
+        tempoPercorrenza.id = "tempoPercorrenza"+newIndex
+        boxFreccia.id = "boxFreccia" + newIndex;
+        //dot.id = "dot" + newIndex;
         //così se scriviamo qualcosa l'istanza è preservata
     }
     stage_index--;
