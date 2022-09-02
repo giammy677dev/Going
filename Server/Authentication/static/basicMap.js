@@ -177,7 +177,7 @@ function initMap() {
 
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
+        zoom: 6,
         center: origin,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.HYBRID] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
