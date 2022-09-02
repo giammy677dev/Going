@@ -122,37 +122,50 @@ class RequestController {
         }
         else {
             const data = await this.dao.searchUser(username);
-            return { ok: true, error: data[1], data: data[2] };
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
-    async viewRoadmap(id) {
+
+    async getPreferredFavouriteStatusByUserByRoadmap(id_user, id_roadmap){
+        if(id_user !== null && id_roadmap !== null){
+            const data = await this.dao.getPreferredFavouriteStatusByUserByRoadmap(id_user, id_roadmap);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
+        return { ok: false, error: -2, data: {} };
+    }
+    async getRoadmapData(id) {
 
         if (!id || id == null) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
         }
         else {
-            const data = await this.dao.viewRoadmap(id);
+            try{
+                const data = await this.dao.getRoadmapData(id);
 
-            console.log(data)
-            var stages = data[2].roadmap.stages;
-            var stage;
-            for (var i = 0; i < stages.length; i++) {
-                stage = stages[i];
-                stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+                var stages = data[2].roadmap.stages;
+                var stage;
+                for (var i = 0; i < stages.length; i++) {
+                    stage = stages[i];
+                    stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+                }
+                return { ok: data[0], error: data[1], data: data[2] };
+            }catch(error){
+                console.log(error)
+                return {ok:false, error:error.errno, data:{}}
             }
+           
 
-            return { ok: true, error: data[1], data: data[2] };
+            
         }
     }
-
-    async getRecCom(id) {
+    async getCommentiRecensioni(id) {
         if (!id || id == null) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
         }
         else {
-            const data = await this.dao.getRecCom(id);
+            const data = await this.dao.getCommentiRecensioni(id);
 
-            return { ok: true, error: data[1], data: data[2] };
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
@@ -189,28 +202,33 @@ class RequestController {
         else {
             const data = await this.dao.getCommmentsReviewByUserRoad(user, rm);
 
-            return { ok: true, error: data[1], data: data[2] };
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
-    async setCommento(user, roadmap, mod_com, day) {
-        if (!roadmap || !user || !user || !mod_com || !day) {
+    async createCommento(user_id,roadmap_id,messaggio) {
+        if (!roadmap_id || !user_id) {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.setCommento(user, roadmap, mod_com, day);
-            return { ok: true, error: data[1], data: data[2] };
+            console.log(user_id)
+            const now = new Date()
+            const data = await this.dao.createCommento(user_id, roadmap_id, messaggio, now);
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
-    async updateCommento(user, roadmap, mod_com, day) {
-        if (!roadmap || !user || !mod_com || !day) {
+    async updateCommento(user_id,idCommento, messaggio) {
+        if (!user_id || !idCommento || !messaggio) {
 
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.updateCommento(user, roadmap, mod_com, day);
-            return { ok: true, error: data[1], data: data[2] };
+            const now = new Date()
+            //inutile passare user_id. idCommento già identifica il commento. user_id serve solo per fare il check con la sessione
+
+            const data = await this.dao.updateCommento(user_id, idCommento, messaggio, now);
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
     async deleteUser(user_id) {
@@ -223,14 +241,25 @@ class RequestController {
         }
     }
 
-    async deleteCommento(user, commento, roadmap) {
-        if (!roadmap || !user || !commento) {
+    async deleteCommento(user_id,idCommento,isAdmin) {
+        if (!idCommento || !user_id) {
 
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.deleteCommento(user, commento, roadmap);
-            return { ok: true, error: data[1], data: data[2] };
+            const data = await this.dao.deleteCommento(user_id,idCommento,isAdmin);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
+    }
+
+    async deleteRecensione(user_id,idRecensione,isAdmin) {
+        if (!idRecensione || !user_id) {
+
+            return { ok: false, error: -4, data: '' }
+        }
+        else {
+            const data = await this.dao.deleteRecensione(user_id,idRecensione,isAdmin);
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
@@ -240,32 +269,44 @@ class RequestController {
         }
         else {
             const data = await this.dao.deleteStage(stageId);
-            return { ok: true, error: data[1], data: data[2] };
+            return { ok: data[0], error: data[1], data: data[2] };
         }
     }
-    async setRecensione(user, roadmap, mod_op, mod_val, day) {
-        if (!roadmap || !user || !user || !mod_val || !day) {
+    async createRecensione(user_id, roadmap_id, opinione, valutazione) {
+        if (!user_id || !roadmap_id || !opinione || !valutazione) {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.setRecensione(user, roadmap, mod_op, mod_val, day);
-            return { ok: true, error: data[1], data: data[2] };
+            
+            try{
+                const now = new Date()
+                const data = await this.dao.createRecensione(user_id, roadmap_id, opinione, valutazione, now);
+                return { ok: data[0], error: data[1], data: data[2] };
+            }catch(error){
+                console.log(error)
+                return { ok: false, error: -4, data: '' }
+            }
+            
         }
     }
-    async updateRecensione(user, roadmap, mod_op, mod_val, day) {
-
-        const data = await this.dao.updateRecensione(user, roadmap, mod_op, mod_val, day);
-        return { ok: true, error: data[1], data: data[2] };
-
+    async updateRecensione(user_id, idRecensione, opinione, valutazione) {
+        if (!user_id || !idRecensione || !opinione || !valutazione) {
+            return { ok: false, error: -4, data: '' }
+        }else{
+            const now = new Date()
+            const data = await this.dao.updateRecensione(user_id, idRecensione, opinione, valutazione,now);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
+        
     }
-    async setFavorite(user, roadmap, valore) {
-        const data = await this.dao.setFavorite(user, roadmap, valore);
-        return { ok: true, error: data[1], data: data[2] };
+    async setRoadmapFavouriteState(user_id, roadmap_id, newStatus) {
+        const data = await this.dao.setRoadmapFavouriteState(user_id, roadmap_id, newStatus);
+        return { ok: data[0], error: data[1], data: data[2] };
     }
 
-    async setChecked(user, roadmap, valore) {
-        const data = await this.dao.setChecked(user, roadmap, valore);
-        return { ok: true, error: data[1], data: data[2] };
+    async setRoadmapCheckedState(user_id, roadmap_id, newStatus) {
+        const data = await this.dao.setRoadmapCheckedState(user_id, roadmap_id, newStatus);
+        return { ok: data[0], error: data[1], data: data[2] };
     }
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
@@ -305,7 +346,7 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async updateSegnalazioni(segnalazioni) {
+    async processSegnalazioni(segnalazioni) {
         console.log(segnalazioni)
         for (var i = 0; i < segnalazioni.length; i++) 
         {
@@ -317,7 +358,7 @@ class RequestController {
                 if (segnalazione.action.toLowerCase() == "accept") {
                     switch (tipo) {
                         case 1:
-                            await this.dao.deleteRoadmap(idOggetto, 0, true);
+                            await this.dao.deleteRoadmap(idOggetto);
                             break;
                         case 2:
                             await this.dao.deleteUser(idOggetto);
@@ -352,8 +393,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async deleteRoadmap(id_roadmap, id_user, isAdmin) {
-        const data = await this.dao.deleteRoadmap(id_roadmap, id_user, isAdmin);
+    async deleteRoadmap(id_roadmap, id_user,isAdmin) {
+        const data = await this.dao.deleteRoadmap(id_roadmap, id_user,isAdmin);
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

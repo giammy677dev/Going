@@ -4,7 +4,7 @@ var durataComplessiva = 0;
 var indirizzo;
 var markers = {};
 
-document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
+document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id, e.logged) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
     stages_info[e.stage.placeId] = e.stage
@@ -17,19 +17,25 @@ document.addEventListener('dbMarkerClicked', (e) => {
 }, false);
 
 function drawDeletableStage(stage_index, stage) {
-    document.getElementById('lines').innerHTML += '<div class="dot" id="dot' + stage_index + '"></div><div class="line" id="line' + stage_index + '"></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div>'
+    var fotoPath = stage.fotoURL;
+    if(fotoPath==null || fotoPath==undefined){
+        var fotoPath = "/storage/loghetto.jpg"
+    }
+    if(stage_index == 0){
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
+    }else{
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza">'+stage+'</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
+    }
+    
 }
 
-function blurIfNotLoggedIn(user_id) {
+function blurIfNotLoggedIn(user_id, logged) {
     console.log(user_id)
-    if (user_id == 0) {
-        document.getElementById('contenuto').style.filter = 'blur(10px)'
-        document.getElementById('all_page').style.overflow = 'hidden'
-        document.getElementById('all_page').style.height = '100%'
-        document.getElementById('all_page').style.margin = '0'
+    if (user_id == 0 || !logged) {
+        document.getElementById('contenuto_logged').style.filter = 'blur(10px)' //contenuto_logged?
         document.getElementById('info_nolog').style.display = 'block'
-        document.getElementById('contenuto').style['pointer-events'] = 'none';
+        document.getElementById('contenuto_logged').style['pointer-events'] = 'none';
     }
 }
 
@@ -432,7 +438,7 @@ var ClickEventHandler = (function () {
             stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
-            prec = stage.durata + prec
+            prec = (stage.durata/60) + prec
             document.getElementById("somma_totale").innerText = prec
 
             infoWindow.close();

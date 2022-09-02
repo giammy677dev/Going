@@ -1,12 +1,3 @@
-var ok_in_rm = false
-var id_user = null
-var id_rm = 0
-var insert_rec = 1
-var insert_com = 1
-var points = 0
-var commento_utente
-var pref
-var fatta
 const numeroRoadmapCreate = 50;
 const numeroRoadmapSeguite = 10;
 const numeroCommenti = 10;
@@ -15,236 +6,138 @@ var testoAchievement = '';
 var immagineAchievement = '';
 
 window.onload = function () {
-  check()
-  if (document.referrer == 'http://localhost:3000/create') { //bisogna fare quando di viene da una roadmap forkata con link---> http://localhost:3000/create?roadmap_id=154
-    getRoadmapAchievementsPopup();
-  }
+  getRoadmapAchievementsPopup();
 };
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
+
 document.addEventListener('receivedUserInfo', (e) => {
+
   if (e.logged) {
-    ok_in_rm = true
     id_user = e.user
-    getCommmentsReviewByUserRoad(id_user, id_rm)
+    username = e.username
+    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
+    getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
-  else {
-    document.getElementById("container_funz").style.display = "none"
-    document.getElementById("roadmap_funz").innerHTML = "<h2>Registrati o effettua il Log In per lasciare una tua impressione sulla roadmap come hanno fatto questi Roadmappers!<h2>"
-  }
+
+  drawCommentiERecensioni()
 }, false);
 
+
+function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
+  var favouriteObj = document.getElementById("favorite")
+  var checkedObj = document.getElementById("checked")
+  favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/star0.png" style="width:50px; height:50px;cursor: pointer;">'
+  checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png" style="width:50px; height:50px;cursor: pointer;">'
+}
+
 document.addEventListener('receivedStageData', (e) => {
-  var stage = e.stage;
-  //console.log(stage)
-  if (stage.reachTime != null) {
-    var time = parseInt(stage.reachTime) / 60;
-  } else {
-    time = ''
-  }
-  document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + time + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
+  drawVisualStage(e.stage);
 }, false);
 
 document.addEventListener('receivedRoadmapData', (e) => {
+
   var day = new Date(roadmap.dataCreazione)
-  var month = day.getMonth() + 1;
   var minuti = Math.round(roadmap.durata / 60)
 
   document.getElementById("titolo").innerText = roadmap.titolo
-  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
+  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + day.getMonth() + 1 + "/" + day.getFullYear()
   document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
   document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
-  document.getElementById("utente").innerText = ' 👤 ' + user[0].username
+  document.getElementById("utente").innerText = ' 👤 ' + roadmapCreator
   document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
-  if(id_user!=null){
-    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" +roadmap.id+ ")")
-  }else{
-    document.getElementById('segnalazione_roadmap').setAttribute('style','display:none')
-  }
-  
-  if (roadmap.punteggio != null) {
-    const html_cock = printBicchieri(roadmap.punteggio, 35, 'auto')
-    document.getElementById("rating").innerHTML += html_cock
-  }
-  loadRecCom();
+  document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
+  drawVisualFavouriteSeguitaBottoni(roadmap.id)
 }, false);
 
-function getCommmentsReviewByUserRoad(id_user, id_rm) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", '/getCommmentsReviewByUserRoad?id_user=' + id_user + '&id_rm=' + id_rm, true);
 
-  xhr.onload = function (event) {
+//isMe permette di customizzare la recensione o il commento esteticamente in base al flag se sei tu o no.
+// per come è pensato, i tuoi commenti e recensioni vanno tutti al top grazie all'if in drawCommentiERecensioni()
 
-    const r = JSON.parse(event.target.responseText);
+//popups for recensioni e commenti
 
-    //console.log(r.data)
-    const chk_rec = r.data.results_rec.length
-    const chk_com = r.data.results_com.length
-    pref = r.data.pref
-    fatta = r.data.fatta
-    var posto_fav = document.getElementById("favorite")
-    var posto_fatta = document.getElementById("checked")
-
-    if (pref == 0 || pref == null) {
-      posto_fav.innerHTML = '<img id="fav"  title="inseriscila tra i preferiti" onclick="favorite(1)"src="/storage/star0.png" style="width:50px; height:50px;cursor: pointer;"></img>'
-    } else if (pref == 1) {
-      posto_fav.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="favorite(0)" src="/storage/star' + pref + '.png" style="width:50px; height:50px;cursor: pointer;">'
-    }
-
-    if (fatta == 0 || fatta == null) {
-      posto_fatta.innerHTML = '<img id="chk"  title="inseriscila tra le percorse" src="/storage/check0.png" onclick="checked(1)" style="width:50px; height:50px;cursor: pointer;">'
-    } else if (fatta == 1) {
-      posto_fatta.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="checked(0)" src="/storage/check' + fatta + '.png" style="width:50px; height:50px;cursor: pointer;">'
-    }
-
-    if (r.ok == true) {
-      if (chk_rec == 1) {
-        const rec = r.data.results_rec[0]
-        insert_rec = 0
-        document.getElementById("save_recbtn").innerHTML = "Modifica/Aggiungi opinione/valutazione";
-        const rating = rec.valutazione
-
-        points = rating
-        const html_cock = printBicchieri(rating, 50, 'auto')
-
-        document.getElementById("cocks").innerHTML = html_cock
-        var elements = document.getElementById('cocks').children;
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].setAttribute("id", i)
-          elements[i].setAttribute("title", i + 1)
-
-        }
-
-        if (rec.opinione != null) {
-          document.getElementById("lab_rec").innerHTML = "La tua recensione!"
-          document.getElementById("us_rec").innerText = rec.opinione
-          document.getElementById("us_rec").setAttribute("disabled", "disabled")
-          document.getElementById("save_recbtn").setAttribute("onclick", "abilitaRec()");
-        }
-      }
-      if (chk_rec == 0) {
-        const html_cock = '<img id="0" onclick="rating(0)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="1" onclick="rating(1)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="2" onclick="rating(2)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="3" onclick="rating(3)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;"><img id="4" onclick="rating(4)" src="/storage/cocktailVuotoPiccolo.png" style="width:50px;height: 50px;cursor:pointer;">'
-        document.getElementById("cocks").innerHTML = html_cock
-      }
-
-      if (chk_com > 0) {
-        //console.log(r.data.results_com)
-        commento_utente = r.data.results_com
-        //console.log(commento_utente)
-      }
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
-  }
-  xhr.send();
-}
-
-function abilitaRec() {
-  document.getElementById("us_rec").removeAttribute("disabled")
-  document.getElementById("save_recbtn").innerHTML = "Salva Valutazione e/o opinione";
-  document.getElementById("save_recbtn").setAttribute("onclick", "saveRec()");
-  var elements = document.getElementById('cocks').children;
-  for (let i = 0; i < elements.length; i++) {
-
-    elements[i].setAttribute('style', 'width: 50px; height: 50px;cursor: pointer')
-    elements[i].setAttribute('onclick', 'rating(' + i + ')')
+function openRecensioniPopup(roadmap_id,value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
+    //createRecensione(roadmap_id,"test",5)
+  } else {
+    //classico popup di login
   }
 }
 
-function abilitaCom() {
-  document.getElementById("us_com").removeAttribute("disabled")
-  document.getElementById("save_combtn").innerHTML = "Salva Commento";
-  document.getElementById("save_combtn").setAttribute("onclick", "saveCom()");
-}
-
-function loadRecCom() {
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("GET", '/getRecCom?id=' + id_rm, true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-    const len_rc = r.data.recensioni.length
-    const len_com = r.data.commenti.length
-    console.log(r.data.commenti)
-    console.log(r.data.recensioni)
-    if (r.ok == true) {
-      if (len_rc !== undefined && len_rc > 0) {
-        const recensioni = r.data.recensioni
-        //console.log("quante recensioni:", recensioni)
-        for (let i = 0; i < len_rc; i++) {
-          var day = new Date(recensioni[i].dataPubblicazione)
-          var month = day.getMonth() + 1;
-          const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const cocksHtml = printBicchieri(recensioni[i].valutazione, 25)
-          var opHtml = recensioni[i].opinione
-          if (opHtml == null) {
-            opHtml = '<div style="font-style: italic;">Non è stata lasciata una opinione insieme alla valutazione</div>'
-          }
-          const html_rec = '<div class="recensione" id="recensione"><div class="datirec" id="datirec' + recensioni[i].idRecensione + '"><a class="boxclose" id="segn' + recensioni[i].idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensioni[i].idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensioni[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div><div class="opinione" id="opinione">' + opHtml + '</div></div>'
-          document.getElementById("recensioni").innerHTML += html_rec
-          var html = '<div class="popup_segnal" id="segnal_rec' + recensioni[i].idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensioni[i].idRecensione + '"></input><div onclick="segnalaRec(' + recensioni[i].idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensioni[i].idRecensione + ')">Chiudi</div></div>'
-          document.getElementById("recensioni").innerHTML += html
-        }
-      }
-      else {
-        const html_recvuoto = '<h4 style="font-style: italic;">Non sono state ancora scritte recensioni per questa roadmap</h4>'
-        document.getElementById("recensioni").innerHTML += html_recvuoto
-      }
-      if (len_com !== undefined && len_com > 0) {
-        const commenti = r.data.commenti
-        //console.log("quanti commenti:", 
-        for (let i = 0; i < len_com; i++) {
-          var html_funz = '<a class="boxclose" id="segn' + commenti[i].idCommento + '" title="segnala commento" onclick=""openSegnCom(' + commenti[i].idCommento + ')">⚠️</a>'
-          if (r.data.commenti[i].id == id_user) {
-            console.log(commenti[i].testo)
-            html_funz += '<a class="boxclose" id="update' + commenti[i].idCommento + '" title="modifica commento" onclick="updPreview(' + commenti[i].idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commenti[i].idCommento + '" title="elimina commento" onclick="deleteCom(' + commenti[i].idCommento + ')">❌</a>'
-          }
-          var day = new Date(commenti[i].dataPubblicazione)
-          var month = day.getMonth() + 1;
-          const dataHtml = ' 🗓 ' + day.getDate() + "/" + month + "/" + day.getFullYear()
-          const html_com = '<div class="commento" id="commento"><div class="daticomm" id="daticomm' + commenti[i].idCommento + '"><div class="text_commento" value="' + commenti[i].testo + '" id="text_commento' + commenti[i].idCommento + '">' + commenti[i].testo + '</div> ' + html_funz + '<div class="whoCom" id="whoCom">' + ' 👤' + commenti[i].username + '</div><div class="data_pub" id="data_pub">' + dataHtml + '</div></div></div>'
-          document.getElementById("commenti").innerHTML += html_com
-          var html = '<div class="popup_segnal" id="segnal_com' + commenti[i].idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commenti[i].idCommento + '"></input><div onclick="m(' + commenti[i].idCommento + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commenti[i].idCommento + ')">Chiudi</div></div>'
-          document.getElementById("commenti").innerHTML += html
-        }
-      }
-      else {
-        const html_comvuoto = '<h4 style="font-style: italic;">Non sono stati ancora scritti commenti per questa roadmap</h4>'
-        document.getElementById("commenti").innerHTML += html_comvuoto
-      }
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
+function openCommentoPopup(roadmap_id,value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+    //createCommento(roadmap_id,"messaggio commento")
+  } else {
+    //classico popup di login
   }
-  xhr.send();
 }
 
-function printBicchieri(punteggio, grandezza, cursore) {
-  /* prendo tutto il numero intero e stampo i cock pieni
-     verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
-     verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
+function pressLikeButton(roadmap_id, value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+    setRoadmapAsFavourite(roadmap_id, value)
+  } else {
+    console.log("non sei loggato")
+    //classico popup di login
+  }
+}
+
+function pressSeguitaButton(roadmap_id, value) {
+  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+    setRoadmapAsSeguita(roadmap_id, value)
+  } else {
+    console.log("non sei loggato")
+    //classico popup di login
+  }
+}
+
+//build di HTML di recensione e commento
+
+function generateRecensione(recensione, isMe) {
+  recensioneObj = ""
+  console.log(recensione)
+  date = new Date(recensione.dataPubblicazione);
+  const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+  const cocksHtml = generateRating(recensione.valutazione, 25) //cursore?
+  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensione.idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + cocksHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div></div><div class="opinione" id="opinione' + recensione.idRecensione + '">' + recensione.opinione + '</div></div>'
+  recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
+  return recensioneObj
+}
+
+function generateCommento(commento, isMe) {
+  console.log(commento)
+  var commentoObj = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick=""openSegnCom(' + commento.idCommento + ')">⚠️</a>'
+
+  if (commento.idUtente == user_id) { // commento.id bro???
+    commentoObj += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="updPreview(' + commento.idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
+  }
+  var date = new Date(commento.dataPubblicazione)
+  const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+  commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + commentoObj + '<div class="whoCom" id="whoCom">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div></div></div>'
+  commentoObj += '<div class="popup_segnal" id="segnal_com' + commento.idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commento.idCommento + '"></input><div onclick="m(' + commento.idCommento + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commento.idCommento + ')">Chiudi</div></div>'
+  return commentoObj
+}
+
+function generateRating(punteggio, grandezza, cursore) {
+  /*prendo tutto il numero intero e stampo i cock pieni
+    verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
+    verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
 
   const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px; cursor: ' + cursore + ';">'
   const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
   const html_cocktailVuoto = '<img src="/storage/cocktailVuotoPiccolo.png" style="width:' + grandezza + 'px;height: ' + grandezza + 'px;cursor: ' + cursore + ';">'
-  var html_globale = " "
+  var ratingObj = ""
   var counterStamp = 0;
+
   if (Number.isInteger(punteggio)) {
     for (var iteratorInt = 0; iteratorInt < punteggio; iteratorInt++) {
       counterStamp++;
-      html_globale += html_cocktailPieno
+      ratingObj += html_cocktailPieno
     }
   } else {
     for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
       counterStamp++;
-      html_globale += html_cocktailPieno
+      ratingObj += html_cocktailPieno
     }
 
     //Inizio controllo sul decimale
@@ -252,56 +145,322 @@ function printBicchieri(punteggio, grandezza, cursore) {
     decimal = decimal.toFixed(2);
 
     if (decimal >= 0.25 && decimal < 0.75) {
-      html_globale += html_cocktailMezzo
+      ratingObj += html_cocktailMezzo
       counterStamp++;
     }
     else if (decimal >= 0.75) {
-      html_globale += html_cocktailPieno
+      ratingObj += html_cocktailPieno
       counterStamp++;
     }
   }
 
   while (counterStamp < 5) {
     counterStamp++;
-    html_globale += html_cocktailVuoto
+    ratingObj += html_cocktailVuoto
   }
-  return html_globale
+  return ratingObj
 }
 
-function rating(value) {
-  points = value + 1
-  const html_cock = printBicchieri(points, 50, 'pointer')
-  document.getElementById("cocks").innerHTML = html_cock
-  var elements = document.getElementById('cocks').children;
-  for (let i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('onclick', 'rating(' + i + ')')
+//stampare/modificare/rimuovere da HTML gli oggetti
+
+function drawVisualStage(stage) {
+  document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + parseInt(stage.reachTime) / 60 + '</div><div class="line" id="line"></div>'
+  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
+}
+
+function drawVisualRecensione(recensione, isMe) {
+  if (isMe) { //è tuo
+    document.getElementById("recensioni").innerHTML += generateRecensione(recensione, true)
+  } else {
+    document.getElementById("recensioni").innerHTML = generateRecensione(recensione, false) + document.getElementById("recensioni").innerHTML
   }
 }
 
-function favorite(value) {
+function drawVisualCommento(commento, isMe) {
+  if (isMe) { //tuo commento va sopra
+    document.getElementById("commenti").innerHTML += generateCommento(commento, true)
+  } else {
+    document.getElementById("commenti").innerHTML = generateCommento(commento, false) + document.getElementById("commenti").innerHTML
+  }
+}
+
+function removeVisualCommento(idCommento) {
+  //'<div class="commento" id="commento'+commento.idCommento+'">
+  document.getElementById('commento' + idCommento).remove();
+}
+
+function updateVisualCommento(idCommento, messaggio, dataPubblicazione) {
+  document.getElementById('text_commento' + idCommento).innerText = messaggio;
+  document.getElementById('data_pub_commento' + idCommento).innerText = dataPubblicazione;
+}
+
+function removeVisualRecensione(idRecensione) {
+  document.getElementById('recensione' + idRecensione).remove();
+  //<div class="recensione" id="recensione'+recensione.idRecensione+'">
+}
+
+function updateVisualRecensione(idRecensione, messaggio, dataPubblicazione, valutazione) {
+  document.getElementById('opinione' + idRecensione).innerText = messaggio;
+  document.getElementById('data_pub_recensione' + idRecensione).innerText = dataPubblicazione;
+  document.getElementById('valutazione' + idRecensione).innerHTML = generateRating(valutazione, 25)
+}
+
+//richiesta backend di commenti e recensioni
+
+
+function drawCommentiERecensioni() { //prende da backend i commenti e recensioni e li stampa a video. nome da cambiare
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", '/getCommentiRecensioni?id=' + roadmapId, true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+    const lengthRecensioni = r.data.recensioni.length
+    const lengthCommenti = r.data.commenti.length
+
+    if (r.ok) {
+      if (lengthRecensioni > 0) {
+        const recensioni = r.data.recensioni
+        recensioni.forEach(recensione => {
+          drawVisualRecensione(recensione, recensione.idUtente == user_id);
+        });
+      }
+      else {
+        const html_recvuoto = '<h4 style="font-style: italic;">Non sono state ancora scritte recensioni per questa roadmap</h4>'
+        document.getElementById("recensioni").innerHTML += html_recvuoto
+      }
+
+      if (lengthCommenti > 0) {
+        const commenti = r.data.commenti
+        commenti.forEach(commento => {
+          drawVisualCommento(commento, commento.idUtente == user_id);
+
+        });
+      }
+      else {
+        const html_comvuoto = '<h4 style="font-style: italic;">Non sono stati ancora scritti commenti per questa roadmap</h4>'
+        document.getElementById("commenti").innerHTML += html_comvuoto
+      }
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.send();
+}
+
+function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
+  var favouriteObj = document.getElementById("favorite")
+  var checkedObj = document.getElementById("checked") //roadmap "seguita"
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", '/getPreferredFavouriteStatusByUserByRoadmap?user_id=' + user_id + '&roadmap_id=' + roadmap_id, true);
+  xhr.onload = function (event) {
+    const r = JSON.parse(event.target.responseText);
+    if (r.ok) {
+      favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/star' + r.data.preferita + '.png" style="width:50px; height:50px;cursor: pointer;">'
+      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="width:50px; height:50px;cursor: pointer;">'
+    }
+  }
+  xhr.send();
+}
+
+function setRoadmapAsFavourite(roadmap_id, value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", '/setFavorite', true);
+  xhr.open("POST", '/setRoadmapAsFavourite', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
     console.log(r)
-    if (r.ok == true) {
+    if (r.ok) {
       //uscita
       console.log("messo ", value, "in preferite")
       const prec_value = value
       var html
       if (value == 1) {
         value = 0
-        html = '<img id="fav" title="toglila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="fav" title="toglila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       } else {
         value = 1
-        html = '<img id="fav" title="inseriscila tra le preferite" onclick="favorite(' + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="fav" title="inseriscila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       var posto_fav = document.getElementById("favorite")
       posto_fav.innerHTML = html
+
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    roadmap_id: roadmapId,
+    newStatus: value
+  }));
+}
+
+//funzioni su recensione backend
+
+function createRecensione(roadmap_id, opinione, valutazione) {
+  //var opinione = document.getElementById("us_rec").value
+  console.log("test")
+
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", '/createRecensione', true);
+  xhr.onload = function (event) {
+    const r = JSON.parse(event.target.responseText);
+
+    if (r.ok) {
+      const newRecensione = { idRecensione: r.data.idRecensione, dataPubblicazione: r.data.now, valutazione: valutazione, username: username, opinione: opinione } //da popolare..
+      drawVisualRecensione(newRecensione, true) //isme!
+      getReviewAchievementPopup(r.data.numRecensioniUtente);
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    roadmapId: roadmap_id,
+    opinione: opinione || "",
+    valutazione: valutazione
+  }));
+}
+
+function updateRecensione(idRecensione, opinione, valutazione) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", '/updateRecensione', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+
+      updateVisualRecensione(idRecensione, opinione, r.data.now, valutazione)
+      alert("Compliementi!!")
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    idRecensione: idRecensione,
+    opinione: opinione,
+    valutazione: valutazione
+  }));
+}
+
+function deleteRecensione(idRecensione) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", '/deleteRecensione', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    if (r.ok) {
+      removeVisualRecensione(idRecensione);
+      //qui va cambiata dinamicamente la pagina elimiando il commento con codice idCommento 
+      alert("Complimenti!!")
+
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    idRecensione: idRecensione
+  }));
+}
+
+//funzioni su commento backend
+
+function createCommento(roadmap_id, messaggioCommento) {
+  //var messaggioCommento = document.getElementById("us_com").value
+  if (messaggioCommento == "") return;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/createCommento', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok) {
+      //in realtà la data pubblicazione va presa dal server. per il momento ho messo quella locale
+      //altrimenti se si hanno gmt diversi non c'è coerenza con la View dell'utente.
+      const newCommento = { idCommento: r.data.idCommento, dataPubblicazione: r.data.now, testo: messaggioCommento, username: username }
+      console.log(newCommento)
+      drawVisualCommento(newCommento, true);
+      getCommentAchievementPopup(r.data);
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    roadmap_id: roadmap_id,
+    messaggio: messaggioCommento
+  }));
+}
+
+function updateCommento(id_commento, messaggioCommento) {
+  var xhr = new XMLHttpRequest();
+  //testo = document.getElementById(id).value
+  xhr.open("POST", '/updateCommento', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    //il ritortno di update commento non ha senso
+    console.log(r)
+    if (r.ok == true) {
+      updateVisualCommento(id_commento, messaggioCommento, r.data.now);
+      //qui va cambiata dinamicamente la pagina aggiungendo il commento con codice idCommento 
+      alert("Compliementi!!")
+      //location.reload() no refresh!
+    }
+    else if (r.ok == false) {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    idCommento: id_commento,
+    messaggio: messaggioCommento
+  }));
+}
+
+function deleteCommento(idCommento) {
+
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", '/deleteCommento', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      removeVisualCommento(idCommento);
+      //qui va cambiata dinamicamente la pagina elimiando il commento con codice idCommento 
+      alert("Complimenti!!")
 
     }
     else if (r.ok == false) {
@@ -311,17 +470,89 @@ function favorite(value) {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    user: id_user,
-    roadmap: id_rm,
-    favorite: value
+    idCommento: idCommento
   }));
 }
 
-function checked(value) {
+//segnalazioni 
+
+function segnalaOggetto(user_id, recensione_id, motivazione, tipo) {
+  /*testo = document.getElementById("motiv_rec" + id_rec).value
+  if (testo == ' ' || testo == '') {
+    testo = null
+  }*/
+
+  /*
+  TYPE ENUM:
+    1 : ROADMAP
+    2 : PROFILO
+    3: RECENSIONE 
+    4 : COMMENTO
+    */
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok) {
+      alert("Hai segnalato questo oggetto!!")
+    }
+    else {
+      console.log(r)
+      alert("Hai già segnalato!")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    tipo: tipo, //hardcoded type 3 = recensione
+    idOggetto: recensione_id,
+    motivazione: motivazione
+  }));
+}
+
+//achievements
+
+function getRoadmapAchievementsPopup() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", '/getRoadmapAchievementsPopup', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    if (r.ok == true) {
+      if (r.data == numeroRoadmapCreate) {
+        testoAchievement = "Hai creato " + numeroRoadmapCreate + " roadmap!";
+        immagineAchievement = '/storage/achievements/topRoadmapper.png'
+        showVisualAchievementPopup(testoAchievement, immagineAchievement);
+      }
+      else if (r.data == 1) {
+        testoAchievement = "Hai creato la tua prima roadmap!";
+        immagineAchievement = '/storage/achievements/roadmap.png'
+        showVisualAchievementPopup(testoAchievement, immagineAchievement);
+      }
+    }
+  }
+
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    id_user: id_user
+  }));
+}
+
+function showVisualAchievementPopup(testo, immagine) {
+  document.getElementById('textAchievement').innerText = testo;
+  document.getElementById('imageAchievement').setAttribute('src', immagine);
+  document.getElementById("roadmapAchievementPopup").style.display = "block";
+  setTimeout(closeVisualPopup, 5000);
+}
+
+function setRoadmapAsSeguita(roadmap_id, value) {
   //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", '/setChecked', true);
+  xhr.open("POST", '/setRoadmapAsSeguita', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -334,341 +565,62 @@ function checked(value) {
       var html;
       if (value == 1) {
         value = 0
-        html = '<img id="chk" title="toglila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="chk" title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       else {
         value = 1
-        html = '<img id="chk" title="inseriscila tra le percorse" onclick="checked(' + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
+        html = '<img id="chk" title="inseriscila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
       var posto_chk = document.getElementById("checked")
 
       posto_chk.innerHTML = html
     }
-    else if (r.ok == false) {
+    else {
       console.log(r)
       alert("Problemi col db")
     }
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    user: id_user,
-    roadmap: id_rm,
-    check: value
+    roadmap_id: roadmap_id,
+    newStatus: value
   }));
 
 
 }
-function saveRec() {
-  if (points > 0) {
-    var opinione = document.getElementById("us_rec").value
-    if (opinione == "") {
-      opinione = null
-    }
-    var valutazione = points
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    console.log(insert_rec)
-    console.log(today)
-    console.log(valutazione)
-    console.log(opinione)
-    console.log(id_rm)
-    console.log(id_user)
 
-
-    if (insert_rec == 1) {
-      var xhr = new XMLHttpRequest();
-
-      xhr.open("POST", '/setRecensione', true);
-      xhr.onload = function (event) {
-
-        const r = JSON.parse(event.target.responseText);
-
-        console.log(r)
-        if (r.ok == true) {
-          getReviewAchievementPopup(r.data.numRecensioniUtente);
-        }
-        else if (r.ok == false) {
-          console.log(r)
-          alert("Problemi col db")
-        }
-      }
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-        user: id_user,
-        roadmap: id_rm,
-        mod_opinione: opinione,
-        mod_valutazione: valutazione,
-        day: today
-      }));
-    }
-    if (insert_rec == 0) {
-      var xhr = new XMLHttpRequest();
-
-      xhr.open("POST", '/updateRecensione', true);
-      xhr.onload = function (event) {
-
-        const r = JSON.parse(event.target.responseText);
-
-        console.log(r)
-        if (r.ok == true) {
-          alert("Compliementi!!")
-          location.reload()
-        }
-        else if (r.ok == false) {
-          console.log(r)
-          alert("Problemi col db")
-        }
-      }
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-        user: id_user,
-        roadmap: id_rm,
-        mod_opinione: opinione,
-        mod_valutazione: valutazione,
-        day: today
-      }));
-
-    }
-  }
-  else {
-    alert("nooooooooo")
+function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { //NON VIENE CHIAMATA DA NESSUNA PARTE, chiedere a Matteo dove inserirla
+  if (numeroRoadmapSeguiteDaQuery == numeroRoadmapSeguite) {
+    testoAchievement = "Hai completato " + numeroRoadmapSeguite + " roadmap!";
+    immagineAchievement = '/storage/achievements/followRoadmap.png';
+    showVisualAchievementPopup(testoAchievement, immagineAchievement);
   }
 }
 
-//if numero_commenti > X--> mostra achievements
-
-function saveCom() {
-  com = document.getElementById("us_com").value
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1; //January is 0!
-  var yyyy = today.getFullYear();
-  today = yyyy + '-' + mm + '-' + dd;
-
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", '/setCommento', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      getCommentAchievementPopup(r.data);
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
+function getReviewAchievementPopup(numeroRecensioniDaQuery) {
+  if (numeroRecensioniDaQuery == numeroRecensioni) {
+    testoAchievement = "Hai lasciato " + numeroRecensioni + " recensioni!";
+    immagineAchievement = '/storage/achievements/review.png';
+    showVisualAchievementPopup(testoAchievement, immagineAchievement);
   }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user: id_user,
-    roadmap: id_rm,
-    mod_com: com,
-    day: today
-  }));
 }
-function deleteCom(commento) {
 
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", '/deleteCommento', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      alert("Complimenti!!")
-      location.reload()
-
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
+function getCommentAchievementPopup(numeroCommentiDaQuery) {
+  if (numeroCommentiDaQuery == numeroCommenti) {
+    testoAchievement = "Hai lasciato " + numeroCommenti + " commenti!";
+    immagineAchievement = '/storage/achievements/comment.png';
+    showVisualAchievementPopup(testoAchievement, immagineAchievement);
   }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user: id_user,
-    commento: commento,
-    roadmap: id_rm
-  }));
 }
 
-function updPreview(id) {
-  console.log(id)
-  var txt
-  for (let i = 0; i < commento_utente.length; i++) {
-    if (commento_utente[i].idCommento == id) {
-      txt = commento_utente[i].testo
-    }
-  }
-
-  console.log(txt)
-  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="' + id + '"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
-
-}
-function updateCom(id) {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1; //January is 0!
-  var yyyy = today.getFullYear();
-  today = yyyy + '-' + mm + '-' + dd;
-  var xhr = new XMLHttpRequest();
-  testo = document.getElementById(id).value
-  xhr.open("POST", '/updateCommento', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      alert("Compliementi!!")
-      location.reload()
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Problemi col db")
-    }
-  }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user: id_user,
-    roadmap: id_rm,
-    id_com: id,
-    mod_com: testo,
-    day: today
-  }));
+function closeVisualPopup() {
+  document.getElementById("roadmapAchievementPopup").style.display = "none";
 }
 
-function writeCom() {
-  document.getElementById("write_new_com").setAttribute("style", "display:block")
-  document.getElementById("write_com").innerHTML = "Salva il tuo commento"
-  document.getElementById("write_com").setAttribute("onclick", "saveCom()");
-}
+//other
 
 function forkaggio() {
-  location.href = "/create?roadmap_id=" + id_rm
-}
-
-function openSegnRec(id_rec) {
-  document.getElementById("segnal_rec" + id_rec).style.display = "block";
-}
-
-function closeSegnRec(id_rec) {
-  document.getElementById("segnal_rec" + id_rec).style.display = "none";
-}
-
-function openSegnCom(id_com) {
-  document.getElementById("segnal_com" + id_com).style.display = "block";
-}
-
-function closeSegnCom(id_com) {
-  document.getElementById("segnal_com" + id_com).style.display = "none";
-}
-
-function segnalaRec(id_rec) {
-  /*1: roadmap
-2: profilo
-3: recensione rm
-4: commento rm*/
-  testo = document.getElementById("motiv_rec" + id_rec).value
-  if (testo == ' ' || testo == '') {
-    testo = null
-  }
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", '/report', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      alert("Hai segnalato questa recensione!!")
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Hai già segnalato!")
-    }
-  }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user_id: id_user,
-    tipo: 3,
-    idOggetto: id_rec,
-    motivazione: testo
-  }));
-}
-
-function segnalaComm(id_comm) {
-  /*1: roadmap
-2: profilo
-3: recensione rm
-4: commento rm*/
-  testo = document.getElementById("motiv" + id_comm).value
-  if (testo == ' ' || testo == '') {
-    testo = null
-  }
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", '/report', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      alert("Hai segnalato questa recensione!!")
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Hai già segnalato!")
-    }
-  }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user_id: id_user,
-    tipo: 3,
-    idOggetto: id_comm,
-    motivazione: testo
-  }));
-}
-
-function segnalaRoadmap(id_rm) {
-  /*1: roadmap
-2: profilo
-3: recensione rm
-4: commento rm*/
-  testo = document.getElementById("motiv_rm").value
-  if (testo == ' ' || testo == '') {
-    testo = null
-  }
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", '/report', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      alert("Hai segnalato questa recensione!!")
-    }
-    else if (r.ok == false) {
-      console.log(r)
-      alert("Hai già segnalato!")
-    }
-  }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    user_id: id_user,
-    tipo: 1,
-    idOggetto: id_rm,
-    motivazione: testo
-  }));
+  location.href = "/create?id=" + roadmapId
 }
 
 var ClickEventHandler = (function () {
@@ -692,7 +644,6 @@ var ClickEventHandler = (function () {
 
   ClickEventHandler.prototype.openInfoBox = function (placeId, latLng) {
     var content = ""
-    console.log("DIOASNGOIAD")
     for (var i = 0; i < roadmap.stages.length; i++) {
       console.log("test")
       if (roadmap.stages[i].placeId == placeId) {
@@ -712,64 +663,53 @@ var ClickEventHandler = (function () {
   return ClickEventHandler;
 }());
 
-function getRoadmapAchievementsPopup() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", '/getRoadmapAchievementsPopup', true);
-  xhr.onload = function (event) {
+/* 
+function rating(value) {
+  points = value + 1
+  const html_cock = printBicchieri(points, 50, 'pointer')
+  document.getElementById("cocks").innerHTML = html_cock
+  var elements = document.getElementById('cocks').children;
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('onclick', 'rating(' + i + ')')
+  }
+}
 
-    const r = JSON.parse(event.target.responseText);
-
-    if (r.ok == true) {
-      if (r.data == numeroRoadmapCreate) {
-        testoAchievement = "Hai creato " + numeroRoadmapCreate + " roadmap!";
-        immagineAchievement = '/storage/achievements/topRoadmapper.png'
-        showAchievementPopup(testoAchievement, immagineAchievement);
-      }
-      else if (r.data == 1) {
-        testoAchievement = "Hai creato la tua prima roadmap!";
-        immagineAchievement = '/storage/achievements/roadmap.png'
-        showAchievementPopup(testoAchievement, immagineAchievement);
-      }
+function updPreview(id) {
+  console.log(id)
+  var txt
+  for (let i = 0; i < commento_utente.length; i++) {
+    if (commento_utente[i].idCommento == id) {
+      txt = commento_utente[i].testo
     }
   }
 
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    id_user: id_user
-  }));
+  console.log(txt)
+  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="' + id + '"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
+
 }
 
-function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { //NON VIENE CHIAMATA DA NESSUNA PARTE, chiedere a Matteo dove inserirla
-  if (numeroRoadmapSeguiteDaQuery == numeroRoadmapSeguite) {
-    testoAchievement = "Hai completato " + numeroRoadmapSeguite + " roadmap!";
-    immagineAchievement = '/storage/achievements/followRoadmap.png';
-    showAchievementPopup(testoAchievement, immagineAchievement);
-  }
+
+function writeCom() {
+  document.getElementById("write_new_com").setAttribute("style", "display:block")
+  document.getElementById("write_com").innerHTML = "Salva il tuo commento"
+  document.getElementById("write_com").setAttribute("onclick", "saveCom()");
 }
 
-function getReviewAchievementPopup(numeroRecensioniDaQuery) {
-  if (numeroRecensioniDaQuery == numeroRecensioni) {
-    testoAchievement = "Hai lasciato " + numeroRecensioni + " recensioni!";
-    immagineAchievement = '/storage/achievements/review.png';
-    showAchievementPopup(testoAchievement, immagineAchievement);
-  }
+
+function openSegnRec(id_rec) {
+  document.getElementById("segnal_rec" + id_rec).style.display = "block";
 }
 
-function getCommentAchievementPopup(numeroCommentiDaQuery) {
-  if (numeroCommentiDaQuery == numeroCommenti) {
-    testoAchievement = "Hai lasciato " + numeroCommenti + " commenti!";
-    immagineAchievement = '/storage/achievements/comment.png';
-    showAchievementPopup(testoAchievement, immagineAchievement);
-  }
+function closeSegnRec(id_rec) {
+  document.getElementById("segnal_rec" + id_rec).style.display = "none";
 }
 
-function showAchievementPopup(testo, immagine) {
-  document.getElementById('textAchievement').innerText = testo;
-  document.getElementById('imageAchievement').setAttribute('src', immagine);
-  document.getElementById("roadmapAchievementPopup").style.display = "block";
-  setTimeout(closePopup, 5000);
+function openSegnCom(id_com) {
+  document.getElementById("segnal_com" + id_com).style.display = "block";
 }
 
-function closePopup() {
-  document.getElementById("roadmapAchievementPopup").style.display = "none";
+function closeSegnCom(id_com) {
+  document.getElementById("segnal_com" + id_com).style.display = "none";
 }
+
+*/

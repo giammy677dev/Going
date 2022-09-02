@@ -107,22 +107,24 @@ class HTTPinterface {
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/view_roadmap', this.view_roadmap.bind(this));
-        this.app.get('/viewrm', this.viewrm.bind(this));
-        this.app.get('/getRecCom', this.getRecCom.bind(this));
+        this.app.get('/getRoadmapData', this.getRoadmapData.bind(this));
+        this.app.get('/getCommentiRecensioni', this.getCommentiRecensioni.bind(this));
         this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
-        this.app.post('/setCommento', this.setCommento.bind(this));
+        this.app.post('/createCommento', this.createCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/deleteCommento', this.deleteCommento.bind(this));
         this.app.post('/deleteStage', this.deleteStage.bind(this));
-        this.app.post('/setRecensione', this.setRecensione.bind(this));
+        this.app.post('/createRecensione', this.createRecensione.bind(this));
         this.app.post('/updateRecensione', this.updateRecensione.bind(this));
-        this.app.post('/setFavorite', this.setFavorite.bind(this));
-        this.app.post('/setChecked', this.setChecked.bind(this));
+        this.app.post('/deleteRecensione', this.deleteRecensione.bind(this));
+        this.app.post('/setRoadmapAsFavourite', this.setRoadmapAsFavourite.bind(this));
+        this.app.post('/setRoadmapAsSeguita', this.setRoadmapAsSeguita.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
         this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
         this.app.get('/getSegnalazioni', this.getSegnalazioni.bind(this));
-        this.app.post('/updateSegnalazioni', this.updateSegnalazioni.bind(this));
+        this.app.post('/updateSegnalazioni', this.processSegnalazioni.bind(this));
+        this.app.get('/getPreferredFavouriteStatusByUserByRoadmap', this.getPreferredFavouriteStatusByUserByRoadmap.bind(this));
 
 
         this.app.post("/createRoadmap", this.upload.any(20), this.createRoadmap.bind(this)); //max 20 files?
@@ -130,21 +132,6 @@ class HTTPinterface {
         this.app.post('/updateAvatar', this.updateAvatar.bind(this));
         this.app.post('/getMarkersFromRect', this.getMarkersFromRect.bind(this))
         this.app.post('/deleteUser', this.deleteUser.bind(this));
-
-        // http://localhost:3000/home
-        /*this.app.get('/home', function (req, res) {
-            // If the user is loggedin
-            if (req.session.loggedin) {
-                // Output username
-                console.log(req.session);
-                res.send('Welcome back, ' + req.session.username + '!');
-            }
-            else {
-                // Not logged in
-                res.send('Please login to view this page!');
-            }
-            res.end();
-        });*/
     }
 
     async isLogWho(req, res) {
@@ -191,8 +178,8 @@ class HTTPinterface {
         return res.sendFile(__dirname + '/static/view_roadmap.html');
     }
 
-    async viewrm(req, res) {
-        const r = await this.controller.viewRoadmap(req.query.id);
+    async getRoadmapData(req, res) { //era viewrm
+        const r = await this.controller.getRoadmapData(req.query.id);
 
         if (req.session.loggedin) { //salva info per eventuale fork
             req.session.placeDetails = {}; //reset
@@ -215,46 +202,61 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
+    //inutile
     async getCommmentsReviewByUserRoad(req, res) {
         //console.log(req.query)
         const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
 
-    async getRecCom(req, res) {
-        const r = await this.controller.getRecCom(req.query.id);
+    async getPreferredFavouriteStatusByUserByRoadmap(req, res) {
+        //console.log(req.query)
+        const r = await this.controller.getPreferredFavouriteStatusByUserByRoadmap(req.query.user_id, req.query.roadmap_id);
         return res.send(JSON.stringify(r));
     }
 
-    async setCommento(req, res) {
-        const r = await this.controller.setCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
+    async getCommentiRecensioni(req, res) {
+        const r = await this.controller.getCommentiRecensioni(req.query.id);
+        return res.send(JSON.stringify(r));
+    }
+
+    async createCommento(req, res) {
+        const r = await this.controller.createCommento(req.session.user_id, req.body.roadmap_id, req.body.messaggio);
         return res.send(JSON.stringify(r))
+
     }
 
     async updateCommento(req, res) {
-        const r = await this.controller.updateCommento(req.body.user, req.body.roadmap, req.body.mod_com, req.body.day);
+        const r = await this.controller.updateCommento(req.session.user_id, req.body.idCommento, req.body.messaggio);
         return res.send(JSON.stringify(r))
     }
+
     async deleteCommento(req, res) {
-        const r = await this.controller.deleteCommento(req.body.user, req.body.commento, req.body.roadmap);
+        const r = await this.controller.deleteCommento(req.session.user_id, req.body.idCommento, req.session.isAdmin);
         return res.send(JSON.stringify(r))
     }
-    async setRecensione(req, res) {
-        const r = await this.controller.setRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
+
+    async deleteRecensione(req, res) {
+        const r = await this.controller.deleteRecensione(req.session.user_id, req.body.idRecensione, req.session.isAdmin);
+        return res.send(JSON.stringify(r))
+    }
+    async createRecensione(req, res) {
+        const r = await this.controller.createRecensione(req.session.user_id, req.body.roadmapId, req.body.opinione, req.body.valutazione);
         return res.send(JSON.stringify(r))
     }
 
     async updateRecensione(req, res) {
-        const r = await this.controller.updateRecensione(req.body.user, req.body.roadmap, req.body.mod_opinione, req.body.mod_valutazione, req.body.day);
+        const r = await this.controller.updateRecensione(req.session.user_id, req.body.idRecensione, req.body.opinione, req.body.valutazione);
         return res.send(JSON.stringify(r))
     }
 
-    async setFavorite(req, res) {
-        const r = await this.controller.setFavorite(req.body.user, req.body.roadmap, req.body.favorite);
+    async setRoadmapAsFavourite(req, res) {
+        const r = await this.controller.setRoadmapFavouriteState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
-    async setChecked(req, res) {
-        const r = await this.controller.setChecked(req.body.user, req.body.roadmap, req.body.check);
+
+    async setRoadmapAsSeguita(req, res) {
+        const r = await this.controller.setRoadmapCheckedState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
 
@@ -271,28 +273,28 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    
+
     async getSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if(req.session.isAdmin || true){ // || true da togliere a tutti! solo per testing!
-            
+        if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
+
             r = await this.controller.getSegnalazioni();
 
         }
         return res.send(JSON.stringify(r));
     }
 
-    async updateSegnalazioni(req, res) {
+    async processSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if(req.session.isAdmin || true){ // || true da togliere a tutti! solo per testing!
-            r = await this.controller.updateSegnalazioni(req.body);
+        if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
+            r = await this.controller.processSegnalazioni(req.body);
         }
         return res.send(JSON.stringify(r));
     }
-    
+
     async deleteStage(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if(req.session.isAdmin){
+        if (req.session.isAdmin) {
             r = await this.controller.deleteStage(req.body.stageId);
         }
         return res.send(JSON.stringify(r))
@@ -373,7 +375,8 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async deleteRoadmap(req, res) {
+    async deleteRoadmap(req, res) { //OR ADMIN
+        //if roadmap è sua oppure è admin.bisogna passar enelal deleteroadmap anche user id per semplificare molto il lavoro
         const r = await this.controller.deleteRoadmap(req.query.id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
@@ -538,10 +541,10 @@ class HTTPinterface {
             console.log('user session is alive')
         }
         //qua bisogna checkare che se non si passa il parametro id deve capire da solo che è quello dentro session.
-        
-        if(req.session.isAdmin){
+
+        if (req.session.isAdmin) {
             return res.sendFile(__dirname + '/static/AdminPanel.html');
-        }else{
+        } else {
             return res.sendFile(__dirname + '/static/error.html');
         }
     }

@@ -158,12 +158,13 @@
               <div class="cocktails" id="cocks">
               </div>
             </div>
-            <label id="lab_rec" for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
+            <!--<label id="lab_rec" for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
             <textarea id="us_rec" name="us_rec" style="font-size: 25px;" autocomplete="off" rows="2"
-              cols="40"></textarea>
-            <div class="btn" id="save_recbtn" onclick="saveRec()">Salva valutazione e opinione</div>
+              cols="40"></textarea>-->
+            <div class="btn" id="save_recbtn" onclick="openReviewPopup()">AGGIUNGI RECENSIONE</div>
           </div>
-          <div class="btn" id="write_com" onclick="writeCom()">Scrivi un nuovo commento</div>
+          <div class="btn" id="write_com" onclick="openCommentoPopup()">AGGIUNGI COMMENTO</div> <!--OPEN COMMENTO POPUP E RECENSIONE POPUP
+          CONTROLLANO SE SEI LOGGATO. SE SEI LOGGATO FANNO VEDERE RECENSIONE POPUP ALTRIMENTI IL POPUP DI LOGIN-->
           <div id="write_new_com" style="display: none;">
             <div id="contenuto-testo">
               <input type="text" id="us_com" autocomplete="off" name="us_com" size="20" />
@@ -195,16 +196,6 @@
 
   </div>
 
-  <script>
-    var rec = document.getElementById("us_rec");
-    rec.addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        document.getElementById("save_recbtn").click();
-      }
-    });
-
-  </script>
 
 </body>
 
