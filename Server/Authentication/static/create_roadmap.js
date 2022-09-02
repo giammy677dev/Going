@@ -4,7 +4,7 @@ var durataComplessiva = 0;
 var indirizzo;
 var markers = {};
 
-document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id) }, false);
+document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id, e.logged) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
     stages_info[e.stage.placeId] = e.stage
@@ -30,15 +30,15 @@ function drawDeletableStage(stage_index, stage) {
     
 }
 
-function blurIfNotLoggedIn(user_id) {
+function blurIfNotLoggedIn(user_id, logged) {
     console.log(user_id)
-    if (user_id == 0) {
-        document.getElementById('contenuto').style.filter = 'blur(10px)'
+    if (user_id == 0 || !logged) {
+        document.getElementById('contenuto_logged').style.filter = 'blur(10px)' //contenuto_logged?
         document.getElementById('all_page').style.overflow = 'hidden'
         document.getElementById('all_page').style.height = '100%'
         document.getElementById('all_page').style.margin = '0'
         document.getElementById('info_nolog').style.display = 'block'
-        document.getElementById('contenuto').style['pointer-events'] = 'none';
+        document.getElementById('contenuto_logged').style['pointer-events'] = 'none';
     }
 }
 
@@ -441,7 +441,7 @@ var ClickEventHandler = (function () {
             stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
-            prec = stage.durata + prec
+            prec = (stage.durata/60) + prec
             document.getElementById("somma_totale").innerText = prec
 
             infoWindow.close();

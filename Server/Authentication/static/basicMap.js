@@ -130,13 +130,14 @@ function loadMapInfo() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id')
-
+    console.log(id)
     if (id != null && id >= 0) {
-        id_rm = id
+        roadmapId = id
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", '/viewrm?id=' + id, true);
+        xhr.open("GET", '/getRoadmapData?id=' + id, true);
 
-        xhr.onload = function (event) {
+        xhr.onload = function (event) 
+        {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
                 //console.log("teetstetst")
@@ -145,8 +146,8 @@ function loadMapInfo() {
                 stages_list = roadmap.stages;
                 //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva; MATT questo va messo
                 //con lo stesso nome come fatto nel create_roadmap.js!
-                map.setZoom(16);
-                user = r.data.user;
+                //map.setZoom(2);
+                roadmapCreator = r.data.user[0].username;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
             }
@@ -176,7 +177,7 @@ function initMap() {
 
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
+        zoom: 10,
         center: origin,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
@@ -197,10 +198,13 @@ function initMap() {
 
         if (zoom <= minZoomForExNovoMarkers) {
             Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                db_markers[key][0].setVisible(false);
+                //db_markers[key][0].setVisible(false);
+                db_markers[key][0].setMap(null);
+                delete db_markers[key] //remove element from dict too
             });
         }
         else {
+            console.log("ZOOM BROOO")
             drawExNovoStages();
         }
     });
