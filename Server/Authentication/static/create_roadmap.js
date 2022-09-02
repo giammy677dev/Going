@@ -1,8 +1,8 @@
 var stages_list = []; //lista degli stage
 var lastPlaceId = 0;
-var durataComplessiva = 0;
 var indirizzo;
 var markers = {};
+var durataComplessiva = 0;
 
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id, e.logged) }, false);
 
@@ -26,10 +26,15 @@ function drawDeletableStage(stage_index, stage) {
     }else
     {
         console.log(stage)
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+stage_index+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+stage_index+'">#</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage_index)+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage_index)+'">#</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
     }
     
+}
+
+function addDurata(durata){
+    durataComplessiva += durata;
+    document.getElementById('somma_totale').innerText = durataComplessiva/60; //minuti o qua va la funzione di diego che da m va a ore etc
 }
 
 function blurIfNotLoggedIn(user_id, logged) {
@@ -42,7 +47,6 @@ function blurIfNotLoggedIn(user_id, logged) {
 }
 
 function deleteStage(toDeleteIndex) {
-    
     if(markers[toDeleteIndex] !== undefined){ //ex novo case cover
         markers[toDeleteIndex].setMap(null);
         delete markers[toDeleteIndex]
@@ -55,15 +59,20 @@ function deleteStage(toDeleteIndex) {
     if (toDeleteIndex == 0) {
 
         if (stages_list.length > 1) {
+            addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex].setMap(null);
+            
             distance_renderers.splice(toDeleteIndex, 1);
             lastPlaceId = 0
         }
     } else if (toDeleteIndex == stages_list.length - 1) {
+        addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
         distance_renderers[toDeleteIndex - 1].setMap(null);
         distance_renderers.splice(toDeleteIndex - 1, 1);
         lastPlaceId = stages_list[toDeleteIndex - 1].placeId
     } else {
+        addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+        addDurata(-distance_renderers[toDeleteIndex-1].directions.routes[0].legs[0].distance.value);
         distance_renderers[toDeleteIndex].setMap(null);
         distance_renderers[toDeleteIndex - 1].setMap(null);
         distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
@@ -76,9 +85,8 @@ function deleteStage(toDeleteIndex) {
     //tolto un elemento!
     var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
     console.log("timestage: ", timeStage)
-    document.getElementById("card" + toDeleteIndex).remove();
-    if(stage_index > 0 && toDeleteIndex == 0)
-        document.getElementById("boxFreccia" + toDeleteIndex).remove();
+        
+    
     //document.getElementById("dot" + toDeleteIndex).remove();
     var allTime = parseInt(document.getElementById("somma_totale").innerText)
     console.log("alltime: ", allTime)
@@ -90,8 +98,10 @@ function deleteStage(toDeleteIndex) {
         var newIndex = toDeleteIndex + i;
 
         var element = document.getElementById("card" + oldIndex);
-        var boxFreccia = document.getElementById("boxFreccia" + oldIndex);
-        var tempoPercorrenza = document.getElementById("tempoPercorrenza" + oldIndex);
+
+        var boxFreccia = document.getElementById("boxFreccia" + (oldIndex));
+        var tempoPercorrenza = document.getElementById("tempoPercorrenza" + (oldIndex));
+
         //var dot = document.getElementById("dot" + oldIndex);
         var dur = document.getElementById("durata" + oldIndex);
 
@@ -100,11 +110,20 @@ function deleteStage(toDeleteIndex) {
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
-        tempoPercorrenza.id = "tempoPercorrenza"+newIndex
-        boxFreccia.id = "boxFreccia" + newIndex;
+        tempoPercorrenza.id = "tempoPercorrenza"+(newIndex)
+        boxFreccia.id = "boxFreccia" + (newIndex);
         //dot.id = "dot" + newIndex;
         //così se scriviamo qualcosa l'istanza è preservata
     }
+    
+    document.getElementById("card" + toDeleteIndex).remove();
+    if(toDeleteIndex == 0 && stages_list.length > 0)
+    {
+        document.getElementById("boxFreccia" + (toDeleteIndex)).remove();
+    }else if(toDeleteIndex!=0){
+        document.getElementById("boxFreccia" + (toDeleteIndex)).remove();
+    }
+
     stage_index--;
 }
 
@@ -151,11 +170,8 @@ function requestDistance(marker1, marker2) {
                     map: map,
                     preserveViewport: true
                 });
-                console.log("dioagnaongodia")
-                var duration = (r.data.routes[0].legs[0].duration.text)
-                console.log(stage_index)
-                console.log('tempoPercorrenza'+(stage_index-1))
-                document.getElementById('tempoPercorrenza'+(stage_index-1)).innerText=duration
+                addDurata(r.data.routes[0].legs[0].duration.value);
+                document.getElementById('tempoPercorrenza'+(stage_index-1)).innerText=r.data.routes[0].legs[0].duration.text
             }
         }
         else if (r.ok == false) {
@@ -348,6 +364,8 @@ var ClickEventHandler = (function () {
             stage.nome = StageName.value;
             //secondi!!!
             stage.durata = parseInt(durataElement.value) * 60;
+
+            addDurata(stage.durata)
             stage.placeId = placeId;
 
 
@@ -370,7 +388,6 @@ var ClickEventHandler = (function () {
 
             stages_list.push(to_send_stage)
             lastPlaceId = placeId;
-
             drawDeletableStage(stage_index, stage);
 
             if (stages_list.length >= 2) {
@@ -430,7 +447,7 @@ var ClickEventHandler = (function () {
             /*Nodo gia esistente*/
             //secondi!!!!
             stage.durata = parseInt(durataElement.value) * 60;
-
+            addDurata(stage.durata)
             stage.placeId = placeId;
             stage.latitudine = latLng.lat();
             stage.longitudine = latLng.lng();

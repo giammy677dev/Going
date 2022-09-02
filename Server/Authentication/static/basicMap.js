@@ -180,17 +180,19 @@ function initMap() {
         zoom: 10,
         center: origin,
         mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.ROADMAP] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
+            mapTypeIds: [google.maps.MapTypeId.HYBRID] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
         },
+        
         disableDefaultUI: true,
-        mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
+        mapTypeId: "hybrid",
+        //mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
         scaleControl: true,
         zoomControl: true,
         gestureHandling: "greedy",
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
         },
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        //mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
     map.addListener('zoom_changed', function () {
