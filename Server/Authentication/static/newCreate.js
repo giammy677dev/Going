@@ -38,10 +38,10 @@ function mostraCreate(){
     }
     
     if (document.getElementById("driving_mode").checked) {
-        document.getElementById("percorrenzaValue").innerText= "A piedi🚶‍♂️";
+        document.getElementById("percorrenzaValue").innerText= "In macchina🚗";
     }
     else {
-        document.getElementById("percorrenzaValue").innerText= "In macchina🚗";
+        document.getElementById("percorrenzaValue").innerText= "A piedi🚶‍♂️";
     }
     document.getElementById("titolo").remove();
     percorrenza = document.querySelector('input[name="mobilitazione"]:checked').value

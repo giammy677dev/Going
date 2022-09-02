@@ -22,7 +22,7 @@ function validation_login() {
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok == true) {
-        location.href = "/profile?id="+r.data.id;
+        window.location.reload();
     }
     else if (r.ok == false && r.error == "-3") {
         document.getElementById("Response_Login").innerText = "❗Username o Password Errati. Riprovare";
