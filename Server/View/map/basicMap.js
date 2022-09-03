@@ -36,7 +36,6 @@ function drawObjects(stages) {
 
         if (i != 0) {
             routeHelper = { origin: stages[i - 1].placeId, destination: stages[i].placeId, travelMode: roadmap.travelMode }
-            //TRAVEL MODE dipende dal campo roadmap.travelMode ancora da aggiungere nel db
             distance_renderers[i - 1] = new google.maps.DirectionsRenderer();
             distance_renderers[i - 1].setOptions({
                 directions: {
@@ -58,7 +57,6 @@ function drawObjects(stages) {
     map.setCenter(bounds.getCenter());
     map.fitBounds(bounds)
     //map.setZoom(map.getZoom() - 1);  //edge marker case cover
-
 }
 
 function drawExNovoStages() {
@@ -126,7 +124,6 @@ function drawExNovoStages() {
 }
 
 function loadMapInfo() {
-
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id')
@@ -140,7 +137,6 @@ function loadMapInfo() {
         {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
-                //console.log("teetstetst")
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
@@ -180,9 +176,8 @@ function initMap() {
         zoom: 6,
         center: origin,
         mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.HYBRID] //, google.maps.MapTypeId.HYBRID] --> volendo si può aggiungere questo
+            mapTypeIds: [google.maps.MapTypeId.HYBRID]
         },
-        
         disableDefaultUI: true,
         mapTypeId: "hybrid",
         //mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
@@ -197,7 +192,6 @@ function initMap() {
 
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
-
         if (zoom <= minZoomForExNovoMarkers) {
             Object.keys(db_markers).forEach(function (key) { // iter on markers 
                 //db_markers[key][0].setVisible(false);
@@ -206,7 +200,6 @@ function initMap() {
             });
         }
         else {
-            console.log("ZOOM BROOO")
             drawExNovoStages();
         }
     });
