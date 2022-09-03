@@ -1,4 +1,3 @@
-
 function searchRoadmap(ricerca) {
     var xhr = new XMLHttpRequest();
 
@@ -77,7 +76,6 @@ function searchUser(ricerca) {
         const r = JSON.parse(event.target.responseText);
 
         if (r.ok == true) {
-
             var elements = document.getElementsByClassName("user");
             for (var i = 0; i < elements.length; i++) {
                 elements[i].innerHTML = ""
@@ -112,10 +110,8 @@ function searchUser(ricerca) {
                 document.getElementById("risultati_utenti").style.display = "none"
                 document.getElementById("titolo_info_utenti").innerText = "NESSUN RISULTATO";
             }
-
         }
     }
-
     xhr.send()
 }
 
@@ -127,7 +123,7 @@ function searchExplore() {
         document.getElementById("risultati_roadmap").style.display = "none"
         document.getElementById("ricerca_utenti").style.display = "none"
         document.getElementById("risultati_utenti").style.display = "none"
-        document.getElementById("Response_Research").innerText = "❗Campo Vuoto. Riprovare";
+        document.getElementById("Response_Research").innerText = "❗ Campo Vuoto. Riprovare";
     }
     else {
         document.getElementById("Response_Research").innerText = "";
