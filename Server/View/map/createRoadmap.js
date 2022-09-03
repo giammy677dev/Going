@@ -12,19 +12,18 @@ document.addEventListener('receivedStageData', (e) => {
 }, false);
 
 document.addEventListener('dbMarkerClicked', (e) => {
-    console.log("test");
     ClickEventHandler.prototype.openAddBox(e.placeId, e.latLng);
 }, false);
 
 function drawDeletableStage(stage_index, stage) {
     var fotoPath = stage.fotoURL;
-    if(fotoPath==null || fotoPath==undefined){
+    if (fotoPath==null || fotoPath==undefined) {
         var fotoPath = "/storage/loghetto.jpg"
     }
-    if(stage_index == 0){
+    if (stage_index == 0) {
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
-    }else
-    {
+    }
+    else {
         console.log(stage)
         document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage_index)+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage_index)+'">#</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
@@ -57,7 +56,6 @@ function deleteStage(toDeleteIndex) {
     circles.splice(toDeleteIndex, 1);
 
     if (toDeleteIndex == 0) {
-
         if (stages_list.length > 1) {
             addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex].setMap(null);
