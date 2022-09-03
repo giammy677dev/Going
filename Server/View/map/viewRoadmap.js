@@ -38,14 +38,21 @@ document.addEventListener('receivedStageData', (e) => {
 document.addEventListener('receivedRoadmapData', (e) => {
 
   var day = new Date(roadmap.dataCreazione)
-  var minuti = Math.round(roadmap.durata / 60)
+  var minuti = convertHMS(roadmap.durata)
+  var distance = convertKM(roadmap.distanza)
+  
+  if(roadmap.travelmode == "WALKING"){
+    document.getElementById("distanza").innerText = ' 🚶 ' + distance;
+  }
+  else{
+    document.getElementById("distanza").innerText = ' 🚗 ' + distance;
+  }
 
   document.getElementById("titolo").innerText = roadmap.titolo
-  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + day.getMonth() + 1 + "/" + day.getFullYear()
-  document.getElementById("durata").innerText = ' ⏱ ' + minuti + ' minuti'
+  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
+  document.getElementById("durata").innerText = ' ⏱ ' + minuti;
   document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
   document.getElementById("utente").innerText = ' 👤 ' + roadmapCreator
-  document.getElementById("distanza").innerText = '🚶 ' + roadmap.distanza + ' metri'
   document.getElementById("descrizione").innerText = roadmap.descrizione
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
   drawVisualFavouriteSeguitaBottoni(roadmap.id)
@@ -660,6 +667,29 @@ var ClickEventHandler = (function () {
   };
   return ClickEventHandler;
 }());
+
+function convertHMS(value) {
+  const sec = parseInt(value, 10); // convert value to number if it's string
+  let hours   = Math.floor(sec / 3600); // get hours
+  let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+  let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+  // add 0 if value < 10; Example: 2 => 02
+  if (minutes < 10) {minutes = "0"+minutes;}
+  if (seconds < 10) {seconds = "0"+seconds;}
+  return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+}
+
+function convertKM(value){
+  if(value<1000){
+    var x=value+" m"
+    return x;
+  }
+  else{
+    var km = value / 1000;
+    var x=km.toFixed(1)+" km"
+    return x
+  }
+}
 
 /* 
 function rating(value) {
