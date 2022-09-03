@@ -13,8 +13,6 @@ function asBounds(boundsObject) {
 function typecastRoutes(routes) {
     routes.forEach(function (route) {
         route.bounds = asBounds(route.bounds);
-        // I don't think `overview_path` is used but it exists on the
-        // response of DirectionsService.route()
         routes.overview_path = asPath(route.overview_polyline);
 
         route.legs.forEach(function (leg) {

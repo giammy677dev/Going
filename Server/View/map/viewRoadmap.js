@@ -12,7 +12,6 @@ window.onload = function () {
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
 document.addEventListener('receivedUserInfo', (e) => {
-
   if (e.logged) {
     id_user = e.user
     username = e.username
@@ -690,54 +689,3 @@ function convertKM(value){
     return x
   }
 }
-
-/* 
-function rating(value) {
-  points = value + 1
-  const html_cock = printBicchieri(points, 50, 'pointer')
-  document.getElementById("cocks").innerHTML = html_cock
-  var elements = document.getElementById('cocks').children;
-  for (let i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('onclick', 'rating(' + i + ')')
-  }
-}
-
-function updPreview(id) {
-  console.log(id)
-  var txt
-  for (let i = 0; i < commento_utente.length; i++) {
-    if (commento_utente[i].idCommento == id) {
-      txt = commento_utente[i].testo
-    }
-  }
-
-  console.log(txt)
-  document.getElementById('daticomm' + id).innerHTML = ' <input type="text" style="width=90%" id="' + id + '"value="' + txt + '"size="20" /><a class="boxclose" id="update' + id + '" title="salva modifiche commento" onclick="updateCom(' + id + ')">✔️</a>'
-
-}
-
-
-function writeCom() {
-  document.getElementById("write_new_com").setAttribute("style", "display:block")
-  document.getElementById("write_com").innerHTML = "Salva il tuo commento"
-  document.getElementById("write_com").setAttribute("onclick", "saveCom()");
-}
-
-
-function openSegnRec(id_rec) {
-  document.getElementById("segnal_rec" + id_rec).style.display = "block";
-}
-
-function closeSegnRec(id_rec) {
-  document.getElementById("segnal_rec" + id_rec).style.display = "none";
-}
-
-function openSegnCom(id_com) {
-  document.getElementById("segnal_com" + id_com).style.display = "block";
-}
-
-function closeSegnCom(id_com) {
-  document.getElementById("segnal_com" + id_com).style.display = "none";
-}
-
-*/
