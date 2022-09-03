@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Going - Profilo</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="Programma la tua esperienza di viaggio creando la tua roadmap oppure scegliendo tra le più belle della community!">
+	<meta name="author" content="Maraniello Mennillo Orlando Perillo Russo" />
+	<meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
+	<link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
+
+	<link rel="stylesheet" href="/View/user/profile.css">
+	<link rel="stylesheet" href="/View/static/header.css">
+
+	<script src="/View/static/header.js" type="text/javascript"></script>
+	<script src="/View/user/profile.js" type="text/javascript"></script>
+	<script src="/View/user/login.js" type="text/javascript"></script>
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+</head>
+
+<body onload="caricaHeader(), check(), data_user()">
+
+	<!-- Contenuto Pagina -->
+
+	<div class="container">
+		
+		<!-- Informazioni Utente -->
+
+		<div class="card">
+			<img class="images" id="avatar" alt="Avatar"/>
+			<div id="infoBox" class="info">
+				<h2> <b id="info_username"> </b> </h2>
+				<p id="info_email"> </p>
+				<p id="info_birthdate"> </p>
+				<div class="achievements">
+					<fieldset>
+						<legend>Achievements</legend>
+						<div class="rowAchievements">
+							<div class="tooltip"> <img id="firstRoadmapAchievement" src="/storage/achievements/roadmapLock.png"/>
+								<span class="tooltiptext">Hai creato la tua prima roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="roadmapAchievement" src="/storage/achievements/topRoadmapperLock.png"/>
+								<span class="tooltiptext">Hai creato 50 roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="followedRoadmapAchievement" src="/storage/achievements/followRoadmapLock.png"/>
+								<span class="tooltiptext">Hai completato 10 roadmap!</span>
+							</div>
+						</div>
+						<div class="rowAchievements">
+							<div class="tooltip"> <img id="reviewAchievement" src="/storage/achievements/reviewLock.png"/>
+								<span class="tooltiptext">Hai recensito 10 roadmap!</span>
+							</div>
+							<div class="tooltip"> <img id="commentAchievement" src="/storage/achievements/commentLock.png"/>
+								<span class="tooltiptext">Hai commentato 10 roadmap!</span>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+
+		<div id="choice_avatar">    
+			<p> <h2>Modifica Avatar</h2> </p>
+			
+			<p> Il tuo Avatar: </p>
+			<img class="button_avatar" id="avatar_choice">
+		
+			<p> Possibili scelte: </p>
+
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_1"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_1.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_2"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_2.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_3"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_3.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_4"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_4.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_5"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_5.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_6"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_6.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_7"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_7.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_8"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_8.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_9"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_9.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_10"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_10.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_11"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_11.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_12"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_12.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_13"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_13.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_14"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_14.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_15"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_15.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_16"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_16.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_17"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_17.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_18"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_18.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_19"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_19.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_20"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_20.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_21"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_21.png"> </button> 
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_22"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_22.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_23"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_23.png"> </button>
+			<button class="button_avatar" onclick="choice(id)" id="Avatar_24"> <img id="avatar_provisoral" src="/storage/avatar/Avatar_24.png"> </button>
+			
+			<p>
+				<input class="pulsantiForm" onclick="change_avatar()" type="submit" name="invia" value="Conferma">
+				<input type="button" class="pulsantiForm" onclick="document.getElementById('choice_avatar').style.display='none'" value="Annulla"/>
+			</p>
+				
+			</p>		
+		</div>	
+
+		<!-- Informazioni Roadmap -->
+
+		<div class="roadmap">
+
+			<!-- Navbar Sezione Roadmap -->
+
+			<button class="tablink" id="bar_roadmap_create" onclick="open_view('roadmap_create', this, '#2bcad2')"></button>
+			<button class="tablink" id="bar_roadmap_seguite" onclick="open_view('roadmap_seguite', this, '#2bcad2')"></button>
+			<button class="tablink" id="bar_roadmap_preferite" onclick="open_view('roadmap_preferite', this, '#2bcad2')"></button>
+			<!-- Sezione Roadmap Create, Seguite e Preferite -->
+
+			<div id="roadmap_create" class="tabcontent">
+				<div id="Section_Roadmap_Create" class="grid-container"> </div>	
+			</div>
+
+			<div id="roadmap_seguite" class="tabcontent">
+				<div id="Section_Roadmap_Seguite" class="grid-container"> </div>
+			</div>
+
+			<div id="roadmap_preferite" class="tabcontent">
+				<div id="Section_Roadmap_Preferite" class="grid-container"> </div>	
+			</div>
+			
+		</div>
+
+	</div>
+	
+</body>
+
+</html>

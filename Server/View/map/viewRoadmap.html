@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+  <title>Going - Roadmap</title>
+  <link rel="stylesheet" href="/View/static/header.css">
+  <script src="/View/static/header.js" type="text/javascript"></script>
+  <script src="/View/user/login.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/View/map/roadmap.css">
+
+  <script src="/View/map/basicMap.js" type="text/javascript"></script>
+  <script src="/View/map/mapUtils.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="/View/map/viewRoadmap.css">
+  <script src="/View/map/viewRoadmap.js" type="text/javascript"></script>
+</head>
+
+<body onload="caricaHeader(), check()">
+  <!-- Popup per gli Achievements-->
+  <div id="roadmapAchievementPopup">
+    <div class="popup-interno" id="contenuto-immagine">
+      <img id="imageAchievement">
+    </div>
+    <div class="popup-interno" id="contenuto-testo">
+      <h3> Congratulazioni!
+        <button type="button" id="closeBtn" onclick="closePopup()">X</button>
+      </h3>
+      <p id="textAchievement"></p>
+    </div>
+  </div>
+
+  <div class="contenuto">
+    <div class="result_query" id="result_query">
+      <div class="res" id="res">
+        <div class="titolo" id="titolo"></div>
+        <div class="citta" id="citta"></div>
+        <div class="durata" id="durata"></div>
+        <div class="utente" id="utente"></div>
+        <div class="distanza" id="distanza"></div>
+        <div class="rating" id="rating"></div>
+        <div id="segnalazione_roadmap">
+          <a class="boxclose" id="segn_rm" title="segnala roadmap"
+            onclick="document.getElementById('segnal_rm').setAttribute('style','display:block')">⚠️</a>
+          <div class="popup_segnal" id="segnal_rm">
+            <label>Inserisci motivazione (opzionale)</label>
+            <input type="text" id="motiv_rm"></input>
+            <div id="segnalaRoadmap" class="btn">Segnala</div>
+            <div class="btn" onclick="document.getElementById('segnal_rm').setAttribute('style','display:none')">Chiudi
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container_top">
+
+      <div class="mappa_rm">
+        <!--The div element for the map -->
+        <div id="map">asdasd</div>
+        <script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
+          defer></script>
+      </div>
+
+      <div class="all">
+        <div class="body-cards">
+          <div class="main">
+
+            <div class="cardTop">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z"
+                fill="#FF768E" />
+              </svg>
+            </div>
+
+            <div class="timeline">
+              <h3>Lista punti di sosta</h3>
+              <div class="box">
+                <div class="container">
+                  <div class="lines" id="lines">
+                  </div>
+                  <div class="cards" id="cards">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ult_dati" style="width: 70%; margin-top: 50px;">
+      <div class="descrizione" id="descrizione"></div>
+      <div class="data" id="data"></div>
+    </div>
+    <div id="roadmap_funz">
+
+      <div class="container_middle" id="container_funz">
+        <div class="botton_rm" id="botton_rm">
+
+          <div class="btn" id="fork_btn" onclick="forkaggio()">Forka questa Roadmap</div>
+
+          <div class="favorite" id="favorite">
+          </div>
+          <div class="cheched" id="checked">
+          </div>
+        </div>
+
+        <div class="pulsantireccom" id="pulsantireccom">
+          <div id="puls_rec">
+            <div id="touchcocktalis">
+              <div class="cocktails" id="cocks">
+              </div>
+            </div>
+            <!--<label id="lab_rec" for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
+            <textarea id="us_rec" name="us_rec" style="font-size: 25px;" autocomplete="off" rows="2"
+              cols="40"></textarea>-->
+            <div class="btn" id="save_recbtn" onclick="openReviewPopup()">AGGIUNGI RECENSIONE</div>
+          </div>
+          <div class="btn" id="write_com" onclick="openCommentoPopup()">AGGIUNGI COMMENTO</div> <!--OPEN COMMENTO POPUP E RECENSIONE POPUP
+          CONTROLLANO SE SEI LOGGATO. SE SEI LOGGATO FANNO VEDERE RECENSIONE POPUP ALTRIMENTI IL POPUP DI LOGIN-->
+          <div id="write_new_com" style="display: none;">
+            <div id="contenuto-testo">
+              <input type="text" id="us_com" autocomplete="off" name="us_com" size="20" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container_bottom">
+      <div class="lab_recensioni" id="lab_recensioni">
+        <h2>Recensioni della roadmap</h2>
+        <div class="recensioni" id="recensioni">
+
+        </div>
+      </div>
+
+      <div class="lab_commenti" id="lab_commenti">
+        <h2>Commenti alla roadmap</h2><br>
+
+        <div class="commenti" id="commenti">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="footer">
+
+  </div>
+</body>
+</html>
