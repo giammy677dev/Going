@@ -26,8 +26,8 @@ document.addEventListener('receivedUserInfo', (e) => {
 function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
   var favouriteObj = document.getElementById("favorite")
   var checkedObj = document.getElementById("checked")
-  favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/star0.png" style="width:50px; height:50px;cursor: pointer;">'
-  checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png" style="width:50px; height:50px;cursor: pointer;">'
+  favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/star0.png"/>'
+  checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png"/>'
 }
 
 document.addEventListener('receivedStageData', (e) => {

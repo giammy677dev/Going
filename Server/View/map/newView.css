@@ -1,50 +1,50 @@
-*{
-	font-family: "Poppins", sans-serif;
-	box-sizing: border-box;
+* {
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-	background-image: url(/storage/sfondoProva2.jpg);
-	background-size: cover;
-	background-attachment: fixed;
+    background-image: url(/storage/sfondoProva2.jpg);
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 /* Inizio Contenuto */
 
 .row2 {
     margin-top: 80px;
-	display: table;
-	clear: both;
-	content: "";
-	/*height: 100%;*/
-	width: 100%;
-	/*border: solid 2px red;*/
+    display: table;
+    clear: both;
+    content: "";
+    /*height: 100%;*/
+    width: 100%;
+    /*border: solid 2px red;*/
 }
 
 .box {
-	width: 100%;
-	padding: 10px;
-	font-family: "Poppins", sans-serif;
+    width: 100%;
+    padding: 10px;
+    font-family: "Poppins", sans-serif;
 }
 
 .inner_box {
-	background-color: rgba(0, 0, 0, 0.8);
-	font-family: "Poppins", sans-serif;
+    background-color: rgba(0, 0, 0, 0.8);
+    font-family: "Poppins", sans-serif;
     margin: 0px 1%;
     width: 98%;
-	padding: 10px;
-	z-index: -1;
+    padding: 10px;
+    z-index: -1;
     overflow: hidden;
 }
 
 #info {
-	font-size: 25px;
-	color: rgba(255, 255, 255, 0.7);
-	font-weight: 300px;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300px;
 }
 
 #line {
-	content: "";
+    content: "";
     width: 120px;
     height: 1px;
     display: inline-block;
@@ -53,32 +53,45 @@ body {
 }
 
 #titolo_info {
-	font-size: 35px;
-	font-weight: 400px;
-	color: white;
+    font-size: 35px;
+    font-weight: 400px;
+    color: white;
 }
 
-#titolo{
-    float:left;
-	font-size: 35px;
-	font-weight: 400px;
-	color: white;
+#titolo {
+    float: left;
+    font-size: 35px;
+    font-weight: 400px;
+    color: white;
 }
 
 #favorite, #checked{
     float:right;
+    height: 30px;
+    margin-left: 7.5px;
 }
 
-#segnalazione_roadmap{
+#fav, #chk{
+    height: 100%;
+    cursor: pointer;
+}
+
+#second_row{
+    display: table;
+    width: 100%;
+}
+
+#boxIcon{
     float:right;
 }
 
 .res{
     display: inline-flex;
-    float:left;
+    justify-content: space-around;
     padding: 10px 10px;
     font-size: 25px;
     color:white;
+    width: 100%;
 }
 
 .res div:not(:first-child):not(:last-child) {
@@ -86,8 +99,8 @@ body {
     margin-right: 20px;
 }
 
-.infoRoadmap{
-    float:left;
+.infoRoadmap {
+    float: left;
 }
 
 /* Contenuto Segnalazione */
@@ -137,4 +150,225 @@ body {
 .buttonSegnalazione:hover {
     /*box-shadow: 0px 0px 10px #18d26e;*/
     box-shadow: 0px 0px 10px white;
+}
+
+#segn_rm{
+    font-size: 20px;
+    cursor: pointer;
+}
+/* Zona Mappa */
+
+.mappa_rm {
+    width: 100%;
+    height: fit-content;
+    float: center;
+    border: 4px solid #4ce0ebb0;
+}
+
+.container_middle {
+    margin-top: 15px;
+    width: auto;
+    display: grid;
+    grid-template-columns: 3fr 1.5fr;
+    gap: 20px;
+}
+
+.all {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Mulish", sans-serif;
+}
+
+.body-cards {
+    justify-content: right;
+}
+
+.cardTop {
+    width: 500px;
+    height: 250px;
+    background: #00AAF8;
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    align-items: flex-end;
+}
+
+.timeline {
+    width: 100%;
+    height: fit-content;
+    background: #4ce0ebb0;
+    mix-blend-mode: normal;
+    overflow: hidden;
+    z-index: 2;
+    box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.566816);
+    border-radius: 10px;
+}
+
+.timeline h3 {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 30px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.timeline .durata {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timeline label {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    margin-left: 66px;
+    margin-top: 10px;
+    color: #ffffff;
+}
+
+.timeline .box {
+    width: 100%;
+    height: fit-content;
+    background: #fbfcfd;
+    margin-top: 20px;
+}
+
+.timeline .box .container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+}
+
+.timeline .box .container .lines {
+    margin-left: 4%;
+    margin-top: 30px;
+}
+
+.timeline .box .container .lines .dot {
+    width: 14px;
+    height: 14px;
+    background: #1ab8c1;
+    border-radius: 7px;
+}
+
+.timeline .box .container .lines .line {
+    height: 160px;
+    width: 2px;
+    background: #1ab8c1;
+    margin-left: 5.3px;
+}
+
+.timeline .box .container .cards {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: 90%;
+    margin-top: 10px;
+}
+
+.timeline .box .container .cards .card {
+    width: 100%;
+    position: relative;
+    display: table;
+    text-align: center;
+    background: #20767b61;
+    border-radius: 10px;
+    box-shadow: 0px 16px 15px -10px rgba(105, 96, 215, 0.0944602);
+
+}
+
+.timeline .box .container .cards .card h4 {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 19px;
+    margin-bottom: 5px;
+    color: #2b2862;
+}
+
+.timeline .box .container .cards .card p {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 22px;
+    color: #2b2862;
+}
+
+.timeline .box .bottom {
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 0 2px #eeeeee50;
+    padding-top: 45px;
+}
+
+.timeline .box .bottom .btn {
+    width: 80%;
+    font-size: 20px;
+    border: thin #07b7c4 solid;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    background-color: #179fa7;
+    border-radius: 25px;
+
+    left: 50%;
+    transform: translate(-50%, -0%);
+    position: relative;
+}
+
+.timeline .box .bottom .btn:hover {
+    background-color: #07b7c4;
+    border: thin #238a8a solid;
+    cursor: pointer;
+}
+
+.fotoStageBox{
+    float: left;
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
+}
+
+.fotoStageBox img{
+    width: 80%;
+    border: medium #07b7c4 solid;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.infoStageBox{
+    float: right;
+    width: 70%;
+}
+
+.imgFreccia{
+    height: 60px;
+}
+
+.boxFreccia{
+    text-align:center;
+    position: relative;
+}
+
+.tempoPercorrenza{
+    position: absolute;
+    left: 60%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
 }

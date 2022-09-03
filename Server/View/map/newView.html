@@ -54,29 +54,79 @@
         <div class="box">
             <div class="inner_box">
                 <div class="inner_row">
-                    <span id="info"> INFORMAZIONI ROADMAP </span> <span id="line"></span>
-                    <br>
-                    <span class="titolo" id="titolo"> </span>
-                    <div id="segnalazione_roadmap">
-                        <a class="boxclose" id="segn_rm" title="segnala roadmap"
-                            onclick="document.getElementById('segnal_rm').setAttribute('style','display:block')">⚠️</a>
-                    </div>
+                  <span id="info"> INFORMAZIONI ROADMAP </span> <span id="line"></span>
+                  <div id="boxIcon">
+                    <a class="boxclose" id="segn_rm" title="segnala roadmap"
+                      onclick="document.getElementById('segnal_rm').setAttribute('style','display:block')">⚠️</a>
                     <div class="cheched" id="checked"> </div>
                     <div class="favorite" id="favorite"> </div>
+                  </div>
+                  <br>
+                  <div id="second_row">
+                    <span class="titolo" id="titolo"> </span>
+                  </div>
                 </div>
-                <br>
-                <div class="inner_row">
-                    <div class="res" id="res">
-                        <div class="citta" id="citta"></div>
-                        <div class="durata" id="durata"></div>
-                        <div class="utente" id="utente"></div>
-                        <div class="distanza" id="distanza"></div>
-                        <div class="rating" id="rating"></div>
-                        <div id="data"></div>
-                    </div>
+                <div class="res" id="res">
+                  <div class="citta" id="citta"></div>
+                  <div class="utente" id="utente"></div>
+                  <div id="data"></div>
+                  <div class="durata" id="durata"></div>
+                  <div class="distanza" id="distanza"></div>
+                  <div class="rating" id="rating"></div>
                 </div>
             </div>
         </div>
+ 
+        <div class="box" id="mapBox">
+            <div class="inner_box">
+              <div class="inner_row">
+                <div class="container_middle">
+                  <div class="mappa_rm">
+                    <!--The div element for the map -->
+                    <div id="map"></div>
+                    <script
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
+                      defer></script>
+                  </div>
+    
+    
+                  <div class="all">
+                    <div class="body-cards">
+                      <div class="main">
+    
+                        <div class="timeline">
+                          <h3>ITINERARIO DI VIAGGIO</h3>
+                          <p id="testoDurata">⏱Tempo di viaggio: <span class="durata" id="somma_totale">0</span> minuti</p>
+                          <div class="box">
+    
+                            <div class="container">
+    
+                              <div class="cards" id="cards">
+    
+                              </div>
+    
+                            </div>
+                            <script src="/View/map/createRoadmap.js" type="text/javascript"></script>
+                            <!--
+                            <div class="bottom">
+    
+    
+                              <div class="btn" id="submit_btn" onclick="submitRoadmap()">Conferma Creazione Roadmap</div>
+    
+                              <script src="/View/map/createRoadmap.js" type="text/javascript"></script>
+                            </div>
+                            -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+  <!---->     
 
         <div class="box" id="mapBox">
             <div class="inner_box">
@@ -90,10 +140,13 @@
             </div>
         </div>
 
+        <!--
+
         <div class="container_top">
 
             <div class="mappa_rm">
               <!--The div element for the map -->
+              <!--
               <div id="map">asdasd</div>
               <script
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
@@ -126,6 +179,8 @@
               </div>
             </div>
           </div>
+
+        -->
       
           <div id="ult_dati" style="width: 70%; margin-top: 50px;">
             <div class="descrizione" id="descrizione"></div>
