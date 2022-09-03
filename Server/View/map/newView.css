@@ -67,18 +67,31 @@ body {
 
 #favorite, #checked{
     float:right;
+    height: 30px;
+    margin-left: 7.5px;
 }
 
-#segnalazione_roadmap{
+#fav, #chk{
+    height: 100%;
+    cursor: pointer;
+}
+
+#second_row{
+    display: table;
+    width: 100%;
+}
+
+#boxIcon{
     float:right;
 }
 
 .res{
     display: inline-flex;
-    float:left;
+    justify-content: space-around;
     padding: 10px 10px;
     font-size: 25px;
     color:white;
+    width: 100%;
 }
 
 .res div:not(:first-child):not(:last-child) {
@@ -137,4 +150,9 @@ body {
 .buttonSegnalazione:hover {
     /*box-shadow: 0px 0px 10px #18d26e;*/
     box-shadow: 0px 0px 10px white;
+}
+
+#segn_rm{
+    font-size: 20px;
+    cursor: pointer;
 }
