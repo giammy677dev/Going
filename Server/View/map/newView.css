@@ -1,0 +1,140 @@
+*{
+	font-family: "Poppins", sans-serif;
+	box-sizing: border-box;
+}
+
+body {
+	background-image: url(/storage/sfondoProva2.jpg);
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+/* Inizio Contenuto */
+
+.row2 {
+    margin-top: 80px;
+	display: table;
+	clear: both;
+	content: "";
+	/*height: 100%;*/
+	width: 100%;
+	/*border: solid 2px red;*/
+}
+
+.box {
+	width: 100%;
+	padding: 10px;
+	font-family: "Poppins", sans-serif;
+}
+
+.inner_box {
+	background-color: rgba(0, 0, 0, 0.8);
+	font-family: "Poppins", sans-serif;
+    margin: 0px 1%;
+    width: 98%;
+	padding: 10px;
+	z-index: -1;
+    overflow: hidden;
+}
+
+#info {
+	font-size: 25px;
+	color: rgba(255, 255, 255, 0.7);
+	font-weight: 300px;
+}
+
+#line {
+	content: "";
+    width: 120px;
+    height: 1px;
+    display: inline-block;
+    background: #4ce0eb;
+    margin: 10px 5px;
+}
+
+#titolo_info {
+	font-size: 35px;
+	font-weight: 400px;
+	color: white;
+}
+
+#titolo{
+    float:left;
+	font-size: 35px;
+	font-weight: 400px;
+	color: white;
+}
+
+#favorite, #checked{
+    float:right;
+}
+
+#segnalazione_roadmap{
+    float:right;
+}
+
+.res{
+    display: inline-flex;
+    float:left;
+    padding: 10px 10px;
+    font-size: 25px;
+    color:white;
+}
+
+.res div:not(:first-child):not(:last-child) {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.infoRoadmap{
+    float:left;
+}
+
+/* Contenuto Segnalazione */
+
+.popup_segnal h2 {
+    margin-top: 0px;
+}
+
+#segnal_rm {
+    font-size: 26px;
+    display: none;
+    z-index: 2;
+    font-family: serif;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.92);
+    position: fixed;
+    width: 70%;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    border: thin #2ec8d1 solid;
+    overflow: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+}
+
+#motiv_rm {
+    font-size: 17px;
+    width: 80%;
+    background-color: #081a2359;
+    border: 1px solid #c0c0c0;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.buttonSegnalazione {
+    font-size: 20px;
+    padding: 5px 30px;
+    margin-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #019ba4;
+    color: white;
+}
+
+.buttonSegnalazione:hover {
+    /*box-shadow: 0px 0px 10px #18d26e;*/
+    box-shadow: 0px 0px 10px white;
+}

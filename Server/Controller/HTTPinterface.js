@@ -148,7 +148,8 @@ class HTTPinterface {
     }
 
     async view_roadmap(req, res) {
-        return res.sendFile('viewRoadmap.html', { root: path.join(__dirname, '../View/map') });
+        //return res.sendFile('viewRoadmap.html', { root: path.join(__dirname, '../View/map') });
+        return res.sendFile('newView.html', { root: path.join(__dirname, '../View/map') });
     }
 
     async signup_page(req, res) {
