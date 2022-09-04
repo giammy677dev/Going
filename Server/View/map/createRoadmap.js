@@ -17,23 +17,23 @@ document.addEventListener('dbMarkerClicked', (e) => {
 
 function drawDeletableStage(stage_index, stage) {
     var fotoPath = stage.fotoURL;
-    if (fotoPath==null || fotoPath==undefined) {
+    if (fotoPath == null || fotoPath == undefined) {
         var fotoPath = "/storage/loghetto.jpg"
     }
     if (stage_index == 0) {
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
     }
     else {
         console.log(stage)
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage_index)+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage_index)+'">#</span></div>'
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata/60 + ' mins </div></p></div></div>'
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage_index) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage_index) + '">#</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
     }
-    
+
 }
 
-function addDurata(durata){
+function addDurata(durata) {
     durataComplessiva += durata;
-    document.getElementById('somma_totale').innerText = durataComplessiva/60; //minuti o qua va la funzione di diego che da m va a ore etc
+    document.getElementById('somma_totale').innerText = convertHMS(durataComplessiva); //minuti o qua va la funzione di diego che da m va a ore etc
 }
 
 function blurIfNotLoggedIn(user_id, logged) {
@@ -46,7 +46,7 @@ function blurIfNotLoggedIn(user_id, logged) {
 }
 
 function deleteStage(toDeleteIndex) {
-    if(markers[toDeleteIndex] !== undefined){ //ex novo case cover
+    if (markers[toDeleteIndex] !== undefined) { //ex novo case cover
         markers[toDeleteIndex].setMap(null);
         delete markers[toDeleteIndex]
     }
@@ -59,7 +59,7 @@ function deleteStage(toDeleteIndex) {
         if (stages_list.length > 1) {
             addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex].setMap(null);
-            
+
             distance_renderers.splice(toDeleteIndex, 1);
             lastPlaceId = 0
         }
@@ -70,7 +70,7 @@ function deleteStage(toDeleteIndex) {
         lastPlaceId = stages_list[toDeleteIndex - 1].placeId
     } else {
         addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
-        addDurata(-distance_renderers[toDeleteIndex-1].directions.routes[0].legs[0].distance.value);
+        addDurata(-distance_renderers[toDeleteIndex - 1].directions.routes[0].legs[0].distance.value);
         distance_renderers[toDeleteIndex].setMap(null);
         distance_renderers[toDeleteIndex - 1].setMap(null);
         distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
@@ -83,8 +83,8 @@ function deleteStage(toDeleteIndex) {
     //tolto un elemento!
     var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
     console.log("timestage: ", timeStage)
-        
-    
+
+
     //document.getElementById("dot" + toDeleteIndex).remove();
     var allTime = parseInt(document.getElementById("somma_totale").innerText)
     console.log("alltime: ", allTime)
@@ -108,17 +108,16 @@ function deleteStage(toDeleteIndex) {
         element.id = "card" + newIndex;
         element.innerHTML = element.innerHTML.replace("boxclose" + oldIndex, "boxclose" + newIndex).replace("deleteStage(" + oldIndex + ")", "deleteStage(" + newIndex + ")")
 
-        tempoPercorrenza.id = "tempoPercorrenza"+(newIndex)
+        tempoPercorrenza.id = "tempoPercorrenza" + (newIndex)
         boxFreccia.id = "boxFreccia" + (newIndex);
         //dot.id = "dot" + newIndex;
         //così se scriviamo qualcosa l'istanza è preservata
     }
-    
+
     document.getElementById("card" + toDeleteIndex).remove();
-    if(toDeleteIndex == 0 && stages_list.length > 0)
-    {
+    if (toDeleteIndex == 0 && stages_list.length > 0) {
         document.getElementById("boxFreccia" + (toDeleteIndex)).remove();
-    }else if(toDeleteIndex!=0){
+    } else if (toDeleteIndex != 0) {
         document.getElementById("boxFreccia" + (toDeleteIndex)).remove();
     }
 
@@ -161,7 +160,7 @@ function requestDistance(marker1, marker2) {
                     preserveViewport: true
                 });
                 addDurata(r.data.routes[0].legs[0].duration.value);
-                document.getElementById('tempoPercorrenza'+(stage_index-1)).innerText=r.data.routes[0].legs[0].duration.text
+                document.getElementById('tempoPercorrenza' + (stage_index - 1)).innerText = r.data.routes[0].legs[0].duration.text
             }
         }
         else if (r.ok == false) {
@@ -176,7 +175,7 @@ function requestDistance(marker1, marker2) {
 function submitRoadmap() {
     var isPub = visibilita == 'Pubblica' ? 1 : 0;
 
-    
+
     var description = document.getElementById("areaDescrizione").value
 
     if (title == "") {
@@ -214,6 +213,16 @@ function submitRoadmap() {
         }
         xhr.send(formData);
     }
+}
+
+function convertHMS(value) {
+    const sec = parseInt(value, 10); // convert value to number if it's string
+    let hours = Math.floor(sec / 3600); // get hours
+    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+    return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
 }
 
 var ClickEventHandler = (function () {
@@ -452,7 +461,7 @@ var ClickEventHandler = (function () {
             stage_index++;
 
             var prec = parseInt(document.getElementById("somma_totale").innerText)
-            prec = (stage.durata/60) + prec
+            prec = (stage.durata / 60) + prec
             document.getElementById("somma_totale").innerText = prec
 
             infoWindow.close();
