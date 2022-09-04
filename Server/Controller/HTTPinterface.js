@@ -25,7 +25,7 @@ class HTTPinterface {
         this.port = config.port;
 
         this.server.listen(process.env.PORT || this.port, () => {
-            console.log(`HTTP auth Server started on port ${this.server.address().port} :)`);
+            console.log(`HTTP auth Server started on port ${this.server.address().port} :))`);
         });
     }
 
