@@ -156,11 +156,9 @@ class RequestController {
                 console.log(error)
                 return { ok: false, error: error.errno, data: {} }
             }
-
-
-
         }
     }
+    
     async getCommentiRecensioni(roadmap_id) {
         if (!roadmap_id || roadmap_id == null) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
@@ -391,7 +389,7 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async updateRoadmapSeguite(id_roadmap, id_user) {
+    /*async updateRoadmapSeguite(id_roadmap, id_user) {
         const data = await this.dao.updateRoadmapSeguite(id_roadmap, id_user);
         return { ok: data[0], error: data[1], data: data[2] }
     }
@@ -399,7 +397,7 @@ class RequestController {
     async updateRoadmapPreferite(id_roadmap, id_user) {
         const data = await this.dao.updateRoadmapPreferite(id_roadmap, id_user);
         return { ok: data[0], error: data[1], data: data[2] }
-    }
+    }*/
 
     async updateAvatar(id, new_avatar) {
         const data = await this.dao.updateAvatar(id, new_avatar);

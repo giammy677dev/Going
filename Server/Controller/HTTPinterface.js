@@ -98,9 +98,9 @@ class HTTPinterface {
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
-        this.app.get('/deleteRoadmap', this.deleteRoadmap.bind(this));
-        this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
-        this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));
+        this.app.post('/deleteRoadmap', this.deleteRoadmap.bind(this));
+        /*this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
+        this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));*/
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
@@ -174,11 +174,11 @@ class HTTPinterface {
     async isLogWho(req, res) {
         var r
         if (req.session.loggedin) {
-            r = { ok: true, whoLog: req.session.user_id }
+            r = { ok: true, error:0,whoLog: req.session.user_id }
             return res.send(JSON.stringify(r))
         }
         else {
-            r = { ok: false, whoLog: null }
+            r = { ok: false, error:-1,whoLog: null }
             return res.send(JSON.stringify(r))
         }
     }
@@ -189,21 +189,26 @@ class HTTPinterface {
     }
 
     async login(req, res) {
-
-        const r = await this.controller.login(req.body.username, req.body.password);
-        if (r.ok) {
-            req.session.loggedin = true;
-            req.session.user_id = r.data.id;
-            req.session.username = r.data.username;
-            req.session.email = r.data.email
-            req.session.birthdate = r.data.birthdate;
-            req.session.isAdmin = r.data.isAdmin;
-            req.session.avatar = r.data.avatar;
-            req.session.placeDetails = {}
-            req.session.distanceDetails = {}
-            //req.session.userType = 0, 1, 2, 3.  
-            //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
+        var r;
+        if (!req.session.loggedin) {
+            r = await this.controller.login(req.body.username, req.body.password);
+            if (r.ok) {
+                req.session.loggedin = true;
+                req.session.user_id = r.data.id;
+                req.session.username = r.data.username;
+                req.session.email = r.data.email
+                req.session.birthdate = r.data.birthdate;
+                req.session.isAdmin = r.data.isAdmin;
+                req.session.avatar = r.data.avatar;
+                req.session.placeDetails = {}
+                req.session.distanceDetails = {}
+                //req.session.userType = 0, 1, 2, 3.  
+                //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
+            }
+        } else {
+            r = { ok: false, error: -1, data: {} }
         }
+
         return res.send(JSON.stringify(r));
     }
 
@@ -275,11 +280,13 @@ class HTTPinterface {
     }
 
     async setRoadmapAsFavourite(req, res) {
+        console.log(req.body)
         const r = await this.controller.setRoadmapFavouriteState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
 
     async setRoadmapAsSeguita(req, res) {
+        console.log(req.body)
         const r = await this.controller.setRoadmapCheckedState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
@@ -393,11 +400,11 @@ class HTTPinterface {
 
     async deleteRoadmap(req, res) { //OR ADMIN
         //if roadmap è sua oppure è admin.bisogna passar enelal deleteroadmap anche user id per semplificare molto il lavoro
-        const r = await this.controller.deleteRoadmap(req.query.id, req.session.user_id, req.session.isAdmin);
+        const r = await this.controller.deleteRoadmap(req.body.roadmap_id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
 
-    async updateRoadmapSeguite(req, res) {
+    /*async updateRoadmapSeguite(req, res) {
         const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
@@ -405,7 +412,7 @@ class HTTPinterface {
     async updateRoadmapPreferite(req, res) {
         const r = await this.controller.updateRoadmapPreferite(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
-    }
+    }*/
 
     async getPlaceInfo(req, res) {
         if (req.session.loggedin || true) { // da mettere!

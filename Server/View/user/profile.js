@@ -6,7 +6,7 @@ const number_create = 50;
 const number_seguite = 10;
 const number_reviews = 10;
 const number_commenti = 10;
-var isMe=0;
+var isMe = 0;
 
 document.addEventListener('receivedUserInfo', (e) => {
   roadmap_create()
@@ -35,19 +35,19 @@ function data_user() {
       document.getElementById("avatar").src = r.data.info.avatar;
 
       if (r.data.isMe) {
-        isMe=1;
-        document.getElementById('avatar').setAttribute("onclick","load_choice_avatar()");
+        isMe = 1;
+        document.getElementById('avatar').setAttribute("onclick", "load_choice_avatar()");
         document.getElementById("avatar").addEventListener('mouseover', MouseUp);
         document.getElementById("avatar").addEventListener('mouseout', MouseOut);
 
-        if(r.data.info.isAdmin){
+        if (r.data.info.isAdmin) {
           var bottone = document.createElement("input");
-          bottone.setAttribute("type","button");
+          bottone.setAttribute("type", "button");
           bottone.setAttribute("id", "adminButton");
-          bottone.setAttribute("onclick","location.href = \"/adminPanel\"");
-          bottone.setAttribute("value","Segnalazioni Admin");
+          bottone.setAttribute("onclick", "location.href = \"/adminPanel\"");
+          bottone.setAttribute("value", "Segnalazioni Admin");
           document.getElementById("infoBox").appendChild(bottone);
-        }       
+        }
       }
     }
   }
@@ -55,13 +55,13 @@ function data_user() {
   xhr.send();
 }
 
-function Age(birthdate){
+function Age(birthdate) {
   var today = new Date();
   var birthDate = new Date(birthdate);
 
   var age = today.getFullYear() - birthDate.getFullYear();
   var m = today.getMonth() - birthDate.getMonth();
-  
+
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
@@ -82,23 +82,23 @@ function MouseOut() {
 
 function convertHMS(value) {
   const sec = parseInt(value, 10); // convert value to number if it's string
-  let hours   = Math.floor(sec / 3600); // get hours
+  let hours = Math.floor(sec / 3600); // get hours
   let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
   let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
   // add 0 if value < 10; Example: 2 => 02
-  if (minutes < 10) {minutes = "0"+minutes;}
-  if (seconds < 10) {seconds = "0"+seconds;}
-  return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+  if (minutes < 10) { minutes = "0" + minutes; }
+  if (seconds < 10) { seconds = "0" + seconds; }
+  return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
 }
 
-function convertKM(value){
-  if(value<1000){
-    var x=value+" m"
+function convertKM(value) {
+  if (value < 1000) {
+    var x = value + " m"
     return x;
   }
-  else{
+  else {
     var km = value / 1000;
-    var x=km.toFixed(1)+" km"
+    var x = km.toFixed(1) + " km"
     return x
   }
 }
@@ -131,32 +131,32 @@ function roadmap_create() {
         var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>"
         } else {
-          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>"
         }
 
-        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱ " + tempo + " </span>";
+        html += "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span>" +
+          " <span class=\"interno\">⏱ " + tempo + " </span>";
 
-        if(r.data.roadmaps[i].travelMode == "WALKING"){
+        if (r.data.roadmaps[i].travelMode == "WALKING") {
           html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
         }
-        else{
+        else {
           html += "<span class=\"interno\">🚗 " + km + "</span>";
         }
-             
+
         document.getElementById("divRoadmap_0_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 0, i);
-      
-        if(isMe){
+
+        if (isMe) {
           var paragrafo = document.createElement("p");
-          paragrafo.setAttribute("class","paragrafobutton");
+          paragrafo.setAttribute("class", "paragrafobutton");
           var bottone = document.createElement("input");
-          bottone.setAttribute("type","button");
+          bottone.setAttribute("type", "button");
           bottone.setAttribute("class", "roadmapbutton");
-          bottone.setAttribute("onclick","DeleteRoadmapCreata("+i+","+ r.data.roadmaps[i].id + ")");
-          bottone.setAttribute("value","Elimina Roadmap");
+          bottone.setAttribute("onclick", "DeleteRoadmapCreata(" + i + "," + r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value", "Elimina Roadmap");
           paragrafo.appendChild(bottone);
           spazioRoadmap.appendChild(paragrafo);
         }
@@ -192,33 +192,33 @@ function roadmap_seguite() {
         var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>"
         } else {
-          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>"
         }
-        
-        html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱ " + tempo + " </span>";
 
-        if(r.data.roadmaps[i].travelMode == "WALKING"){
+        html += "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span>" +
+          " <span class=\"interno\">⏱ " + tempo + " </span>";
+
+        if (r.data.roadmaps[i].travelMode == "WALKING") {
           html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
         }
-        else{
+        else {
           html += "<span class=\"interno\">🚗 " + km + "</span>";
         }
-                  
+
 
         document.getElementById("divRoadmap_1_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 1, i);
-      
-        if(isMe){
+
+        if (isMe) {
           var paragrafo = document.createElement("p");
-          paragrafo.setAttribute("class","paragrafobutton");
+          paragrafo.setAttribute("class", "paragrafobutton");
           var bottone = document.createElement("input");
-          bottone.setAttribute("type","button");
+          bottone.setAttribute("type", "button");
           bottone.setAttribute("class", "roadmapbutton");
-          bottone.setAttribute("onclick","updateRoadmapSeguite("+i+","+ r.data.roadmaps[i].id + ")");
-          bottone.setAttribute("value","Rimuovi da Seguite");
+          bottone.setAttribute("onclick", "rimuoviRoadmapDaiSeguiti(" + i + "," + r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value", "Rimuovi da Seguite");
           paragrafo.appendChild(bottone);
           spazioRoadmap.appendChild(paragrafo);
         }
@@ -255,32 +255,32 @@ function roadmap_preferite() {
         var html = "<a title=\"visualizza Roadmap\"href=\"view_roadmap?id=" + r.data.roadmaps[i].id + "\">";
 
         if (r.data.roadmaps[i].isPublic) {
-          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🌎 " + r.data.roadmaps[i].titolo + "</span><\a>"
         } else {
-          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>" 
+          html += "<span class=\"inEvidenza\">🔒 " + r.data.roadmaps[i].titolo + "</span><\a>"
         }
-        
-       html += "<p><span class=\"interno\">🏙 "+ r.data.roadmaps[i].localita + "</span>" +
-                  " <span class=\"interno\">⏱ " + tempo + " </span>";
 
-        if(r.data.roadmaps[i].travelMode == "WALKING"){
+        html += "<p><span class=\"interno\">🏙 " + r.data.roadmaps[i].localita + "</span>" +
+          " <span class=\"interno\">⏱ " + tempo + " </span>";
+
+        if (r.data.roadmaps[i].travelMode == "WALKING") {
           html += "<span class=\"interno\">🚶‍♂️ " + km + "</span>";
         }
-        else{
+        else {
           html += "<span class=\"interno\">🚗 " + km + "</span>";
         }
 
         document.getElementById("divRoadmap_2_" + i).innerHTML = html;
         printCocktail(r.data.roadmaps[i].punteggio, 2, i);
-      
-        if(isMe){
+
+        if (isMe) {
           var paragrafo = document.createElement("p");
-          paragrafo.setAttribute("class","paragrafobutton");
+          paragrafo.setAttribute("class", "paragrafobutton");
           var bottone = document.createElement("input");
-          bottone.setAttribute("type","button");
+          bottone.setAttribute("type", "button");
           bottone.setAttribute("class", "roadmapbutton");
-          bottone.setAttribute("onclick","updateRoadmapPreferite("+i+","+ r.data.roadmaps[i].id + ")");
-          bottone.setAttribute("value","Rimuovi da Preferite");
+          bottone.setAttribute("onclick", "rimuoviRoadmapDaiPreferiti(" + i + "," + r.data.roadmaps[i].id + ")");
+          bottone.setAttribute("value", "Rimuovi da Preferite");
           paragrafo.appendChild(bottone);
           spazioRoadmap.appendChild(paragrafo);
         }
@@ -342,8 +342,8 @@ function conMouseOver(target) {
     document.getElementById(target).childNodes[i].style.width = '35px';
     document.getElementById(target).childNodes[i].style.height = '35px';
   }
-  if(isMe){
-    document.getElementById(target).childNodes[7].style.setProperty("display","block");
+  if (isMe) {
+    document.getElementById(target).childNodes[7].style.setProperty("display", "block");
   }
 }
 
@@ -353,16 +353,16 @@ function conMouseOut(target) {
     document.getElementById(target).childNodes[i].style.width = '25px';
     document.getElementById(target).childNodes[i].style.height = '25px';
   }
-  if(isMe){
-    document.getElementById(target).childNodes[7].style.setProperty("display","none");
+  if (isMe) {
+    document.getElementById(target).childNodes[7].style.setProperty("display", "none");
   }
 }
 
 
-function DeleteRoadmapCreata(number, id) {
+function DeleteRoadmapCreata(number, roadmap_id) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/deleteRoadmap?id=' + id, true);
+  xhr.open("POST", '/deleteRoadmap', true);
 
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
@@ -371,14 +371,15 @@ function DeleteRoadmapCreata(number, id) {
       document.getElementById("divRoadmap_0_" + number).remove();
     }
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
 
-  xhr.send();
+  xhr.send(JSON.stringify({ roadmap_id: roadmap_id }));
 }
 
-function updateRoadmapSeguite(number, id) {
+function rimuoviRoadmapDaiSeguiti(number, roadmap_id) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/updateRoadmapSeguite?id=' + id, true);
+  xhr.open("POST", '/setRoadmapAsSeguita', true);
 
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
@@ -387,23 +388,27 @@ function updateRoadmapSeguite(number, id) {
       document.getElementById("divRoadmap_1_" + number).remove();
     }
   }
-  xhr.send();
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  xhr.send(JSON.stringify({ roadmap_id: roadmap_id, newStatus: 0 }));
 }
 
-function updateRoadmapPreferite(number, id) {
+function rimuoviRoadmapDaiPreferiti(number, roadmap_id) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/updateRoadmapPreferite?id=' + id, true);
+  xhr.open("POST", '/setRoadmapAsFavourite', true);
 
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok == true) {
-      document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Seguite (" + r.data + ")";
+      document.getElementById("bar_roadmap_preferite").innerText = "Roadmap Preferite (" + r.data + ")";
       document.getElementById("divRoadmap_2_" + number).remove();
     }
   }
+  xhr.setRequestHeader('Content-Type', 'application/json');
 
-  xhr.send();
+
+  xhr.send(JSON.stringify({ roadmap_id: roadmap_id, newStatus: 0 }));
 }
 
 // Script Cambiamento Avatar

@@ -12,6 +12,7 @@ const instance_data = {
     email: "giammy677@gmail.com",
     birthdate: "1995-09-10"//html birthdate format (just like frontend does)
 }
+const user_id = 5;
 
 beforeAll(async () => {
     await agent.post("/auth").send({
@@ -36,7 +37,19 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
         expect(json_response.data.logged).toEqual(true);
-        expect(json_response.data.info.id).toEqual(5);
+        expect(json_response.data.info.id).toEqual(user_id);
+    });
+
+    test("Test user isLogWho info quando loggato", async () => {
+
+        const res = await agent.get("/isLogWho").send();
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
+        expect(json_response.whoLog).toEqual(user_id);
     });
 
     test("Test creazione commento invalido (messaggio vuoto)", async () => {
@@ -142,30 +155,97 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         //console.log(json_response)
         expect(json_response.ok).toEqual(true);
     });
-    /*
-        test("Test delete commento valida di un altro utente", async () => {
+
+    test("Test delete commento valida di un altro utente", async () => {
+
+        var commentoAltruiId = 8;
+        const res = await agent.post("/deleteCommento").send({ idCommento: commentoAltruiId });
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(false);
+        //expect(json_response.error).toEqual(0); 
+    });
+
+    test("Test delete recensione valida di un altro utente", async () => {
+        var recensioneAltruiId = 21;
+        const res = await agent.post("/deleteRecensione").send({ idRecensione: recensioneAltruiId });
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("Test aggiungi Roadmap dai preferiti", async () => {
+        const res = await agent.post("/setRoadmapAsFavourite").send({ roadmap_id:roadmap_id ,newStatus:1});
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+    });
+
+    test("Test rimuovi Roadmap dai preferiti", async () => {
+        const res = await agent.post("/setRoadmapAsFavourite").send({ roadmap_id:roadmap_id ,newStatus:0});
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+    });
+
+    test("Test aggiungi Roadmap alle roadmap seguite", async () => {
+        const res = await agent.post("/setRoadmapAsSeguita").send({ roadmap_id:roadmap_id ,newStatus:1});
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+    });
+
+    test("Test rimuovi Roadmap dalle roadmap seguite", async () => {
+        const res = await agent.post("/setRoadmapAsSeguita").send({ roadmap_id:roadmap_id ,newStatus:0});
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+    });
+
+    test("Test set Roadmap as checked", async () => {
+        var recensioneAltruiId = 21;
+        const res = await agent.post("/deleteRecensione").send({ idRecensione: recensioneAltruiId });
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(false);
+    });
+
     
-            var commentoAltruiId=8;
-            const res = await agent.post("/deleteCommento").send({idCommento:commentoAltruiId});
-    
-            expect(res.statusCode).toEqual(200);
-            json_response = JSON.parse(res.text)
-            //console.log(json_response)
-            expect(json_response.ok).toEqual(false);
-            //expect(json_response.error).toEqual(0); 
-        });    
-        
-        test("Test delete recensione valida di un altro utente", async () => {
-            var recensioneAltruiId=21;
-            const res = await agent.post("/deleteRecensione").send({idRecensione:recensioneAltruiId});
-    
-            expect(res.statusCode).toEqual(200);
-            json_response = JSON.parse(res.text)
-            //console.log(json_response)
-            expect(json_response.ok).toEqual(false);
+    test("Test prendi info da user getDataUser", async () => {
+        const res = await agent.get("/getDataUser").send({ user_id:user_id});
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        console.log(json_response)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0);
+
+        expect(json_response.data.info.id).toEqual(user_id);
+        expect(json_response.data.isMe).toEqual(true);
+    });
+
+    test("Test login (ma già loggato)", async () => {
+        const res = await agent.post("/auth").send({
+            username: instance_data.username,
+            password: instance_data.password
         });
-    
-        */
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(false);
+        expect(json_response.error).toEqual(-1);
+    });
+
 
     test("test di logout avendo effettuato il login", async () => {
         const res = await agent.post("/logout").send({})
@@ -175,4 +255,5 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
     })
+    
 });

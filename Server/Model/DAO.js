@@ -481,15 +481,19 @@ class DAO {
             var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?', [user, roadmap])
             if (see[0].length == 0) {
                 //mai messo nulla
-                query = await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) vALUES (?,?,?)', [user, roadmap, valore])
+                query = await connection.query('INSERT INTO roadmapuser (idUtenteRegistrato,idRoadmap,preferita) VALUES (?,?,?)', [user, roadmap, valore])
             }
             else {
                 query = await connection.query('UPDATE roadmapuser SET preferita=? where idUtenteRegistrato=? and idRoadmap=?', [valore, user, roadmap])
             }
-            return [true, 0, query[0]];
+
+            let numberFollowedResult = await connection.query('SELECT COUNT(*) AS numberFollowedRoadmap FROM roadmapuser WHERE preferita = 1 and idUtenteRegistrato = ?', [user])
+            let results = numberFollowedResult[0][0].numberFollowedRoadmap;
+
+            return [true, 0, results];
         }
         catch (error) {
-            return [false, error.errno];
+            return [false, error.errno, {}];
         }
     }
 
