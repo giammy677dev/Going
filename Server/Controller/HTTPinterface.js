@@ -270,6 +270,7 @@ class HTTPinterface {
     }
 
     async createRecensione(req, res) {
+        console.log(req.body);
         const r = await this.controller.createRecensione(req.session.user_id, req.body.roadmapId, req.body.opinione, req.body.valutazione);
         return res.send(JSON.stringify(r))
     }

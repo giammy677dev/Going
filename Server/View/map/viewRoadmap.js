@@ -114,13 +114,21 @@ function pressSeguitaButton(roadmap_id, value) {
 
 function generateRecensione(recensione, isMe) {
   recensioneObj = ""
-  console.log(recensione)
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   const ratingHtml = generateRating(recensione.valutazione, 25) //cursore?
-  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup('+recensione.idRecensione+',3)">⚠️</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
-  recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
-  return recensioneObj
+  
+  if (isMe) {
+    document.getElementsByClassName("descrizioneRoadmap")[1].style.display = "none";
+    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec" style="color: #019ba4">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup('+recensione.idRecensione+',3)">⚠️</a><a class="boxclose" id="deleteRec' + recensione.idRecensione + '" title="Modifica recensione" onclick="openBoxUpdateRec(' + recensione.idRecensione + ')">🖊</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
+    recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
+  }
+  else {
+    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup('+recensione.idRecensione+',3)">⚠️</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
+    recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
+  }
+  
+  return recensioneObj;
 }
 
 function generateCommento(commento, isMe) {
@@ -128,7 +136,7 @@ function generateCommento(commento, isMe) {
   var commentoIcon = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick="openSegnalazionePopup('+commento.idCommento+',4)">⚠️</a>'
 
   if (isMe) {
-    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="updPreview(' + commento.idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')"></a>'
+    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="updPreview(' + commento.idCommento + ')">🖊</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">✖</a>'
   }
   var date = new Date(commento.dataPubblicazione)
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
@@ -374,7 +382,8 @@ function setRoadmapAsSeguita(roadmap_id, value) {
 
 //funzioni su recensione backend
 
-function createRecensione(valutazione) {
+function createRecensione() {
+  var valutazione = document.getElementById("ratingRecensione").value
   var opinione = document.getElementById("us_rec").value
   var xhr = new XMLHttpRequest();
 
@@ -401,21 +410,20 @@ function createRecensione(valutazione) {
   }));
 }
 
-function updateRecensione(idRecensione, opinione, valutazione) {
+function updateRecensione(idRecensione) {
   var xhr = new XMLHttpRequest();
+  var valutazione = document.getElementById("ratingRecensione").value;
+  var opinione = document.getElementById("us_rec").value;
 
   xhr.open("POST", '/updateRecensione', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
-    console.log(r)
     if (r.ok == true) {
       updateVisualRecensione(idRecensione, opinione, r.data.now, valutazione)
-      alert("Complimenti!!")
     }
     else if (r.ok == false) {
-      console.log(r)
       alert("Problemi col db")
     }
   }
@@ -442,7 +450,6 @@ function deleteRecensione(idRecensione) {
 
     }
     else {
-      console.log(r)
       alert("Problemi col db")
     }
   }
@@ -706,7 +713,7 @@ function convertHMS(value) {
   return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
 }
 
-function convertKM(value){
+function convertKM(value) {
   if(value<1000){
     var x=value+" m"
     return x;
@@ -716,4 +723,13 @@ function convertKM(value){
     var x=km.toFixed(1)+" km"
     return x
   }
+}
+
+function setRatingRecensione(value) {
+  document.getElementById("ratingRecensione").value = value;
+}
+
+function openBoxUpdateRec(idRecensione) {
+  document.getElementById('popupRecensione').setAttribute('style','display:block');
+  document.getElementById('save_recbtn').setAttribute("onclick", "updateRecensione(" + idRecensione + ")");
 }
