@@ -12,9 +12,9 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                ssl: {
+                /*ssl: {
                     ca: fs.readFileSync(__dirname + '/../config/ca/' + config.ca)
-                }
+                }*/
             });
             return connection;
         } catch (err) {
@@ -38,11 +38,11 @@ class DAO {
         }
     }
 
-    async getCommentiRecensioni(id) {
+    async getCommentiRecensioni(roadmap_id) {
         try {
             var connection = await this.connect();
-            var result_rec = await connection.query('select idRecensione,id as idUtente,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
-            var result_comm = await connection.query('select idCommento,id as idUtente,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [id])
+            var result_rec = await connection.query('select idRecensione,id as idUtente,username,valutazione,opinione,dataPubblicazione from recensione inner join utenteRegistrato on recensione.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [roadmap_id])
+            var result_comm = await connection.query('select idCommento,id as idUtente,username,testo,dataPubblicazione from commento inner join utenteRegistrato on commento.idUtenteRegistrato=utenteRegistrato.id where idRoadmap=?', [roadmap_id])
 
             return [true, 0, { recensioni: result_rec[0], commenti: result_comm[0] }];
         }
@@ -359,7 +359,7 @@ class DAO {
             return [true, 0, { idRecensione: res_ins[0].insertId, now: now, numRecensioniUtente: numeroRecensioniUtente }];
         }
         catch (error) {
-            console.log(error)
+            console.log(error.errno)
             return [false, error.errno];
         }
     }

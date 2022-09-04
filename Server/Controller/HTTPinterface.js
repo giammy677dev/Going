@@ -24,9 +24,11 @@ class HTTPinterface {
 
         this.port = config.port;
 
-        this.server.listen(process.env.PORT || this.port, () => {
-            console.log(`HTTP auth Server started on port ${this.server.address().port} :))`);
-        });
+        if (process.env.NODE_ENV !== 'test') { //EADDRINUSE bug in parallel instances of server in test cases
+            this.server.listen(process.env.PORT || this.port, () => {
+                console.log(`HTTP auth Server started on port ${this.server.address().port} :))`);
+            });
+        }
     }
 
     initServer() {
@@ -61,7 +63,7 @@ class HTTPinterface {
         this.app.use(bodyParser.raw());
         this.app.use(cors({ origin: '*' }));
 
-        this.app.use(session({
+        this.app.use(session({ //qui va sovrascritta la session 
             secret: 'secret',
             resave: true,
             saveUninitialized: true
@@ -187,6 +189,7 @@ class HTTPinterface {
     }
 
     async login(req, res) {
+
         const r = await this.controller.login(req.body.username, req.body.password);
         if (r.ok) {
             req.session.loggedin = true;
@@ -260,6 +263,7 @@ class HTTPinterface {
         const r = await this.controller.deleteRecensione(req.session.user_id, req.body.idRecensione, req.session.isAdmin);
         return res.send(JSON.stringify(r))
     }
+
     async createRecensione(req, res) {
         const r = await this.controller.createRecensione(req.session.user_id, req.body.roadmapId, req.body.opinione, req.body.valutazione);
         return res.send(JSON.stringify(r))
@@ -304,7 +308,7 @@ class HTTPinterface {
     async processSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
-            r = await this.controller.processSegnalazioni(req.body,req.session.user_id,req.session.isAdmin);
+            r = await this.controller.processSegnalazioni(req.body, req.session.user_id, req.session.isAdmin);
         }
         return res.send(JSON.stringify(r));
     }
@@ -317,20 +321,16 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async logout(req, res) {
-        console.log("req.session=", req.session)
-        console.log("req.session.user_id=", req.session.user_id)
-        console.log("req.body=", req.body)
-
-        if (req.body.id == req.session.user_id) { //richiesta giusta
+    async logout(req, res) { //logout body.id redundant. session already has ur id.
+        if (req.session.user_id !== undefined && req.session.user_id > 0 && req.session.loggedin) { //richiesta giusta
             req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
             req.session.username = ''
-            req.session.user_id = '0'
-            console.log("req.session=", req.session)
+            req.session.user_id = 0 //era '0'
+            req.session.isAdmin = 0;
             //non uso req.session = {} perché nella sessione possono esserci anche altre info!
-            return res.send({ ok: true })
+            return res.send({ ok: true, error: 0, data: {} })
         }
-        return res.send({ ok: false })
+        return res.send({ ok: false, error: -1, data: {} })
         //nessuna chiamata al DB.
     }
 
@@ -480,14 +480,14 @@ class HTTPinterface {
         const r = await this.controller.searchRoadmap(req.query.ricerca, req.body.time, req.body.distance);
         return res.send(JSON.stringify(r));
     }
-  
+
     async searchUser(req, res) {
         const r = await this.controller.searchUser(req.query.username);
         return res.send(JSON.stringify(r));
     }
 
     async suggestedRoadmap(req, res) {
-        const r = await this.controller.suggestedRoadmap(req.body.numberRoadmapToDisplay,req.body.rating);
+        const r = await this.controller.suggestedRoadmap(req.body.numberRoadmapToDisplay, req.body.rating);
         return res.send(JSON.stringify(r));
     }
 

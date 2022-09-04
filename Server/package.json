@@ -2,10 +2,10 @@
   "name": "going",
   "version": "1.0.0",
   "description": "Repository of the project carried out for the Software Architecture Design exam, for the Master's Degree course in Computer Engineering at the Federico II University of Naples.",
-  "main": "mainService",
+  "main": "app",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "jest"
+    "test": "jest --watchAll --verbose"
   },
   "repository": {
     "type": "git",
