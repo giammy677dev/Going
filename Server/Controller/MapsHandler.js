@@ -23,7 +23,7 @@ class MapsHandler {
                     key: config.GOOGLE_MAPS_BACKEND_API_KEY,
                     //fields:['icon'] if necessary
                 },
-                timeout: 1000, // milliseconds
+                timeout: 10000, // milliseconds
             });
             data_from_google = data_from_google.data;
 
@@ -76,7 +76,7 @@ class MapsHandler {
                     key: config.GOOGLE_MAPS_BACKEND_API_KEY,
                     //fields:['icon'] if necessary
                 },
-                timeout: 1000, // milliseconds
+                timeout: 10000, // milliseconds
             });
             const res = (data_from_google.data.results[0]);
             res.latitudine = res.geometry.location.lat;

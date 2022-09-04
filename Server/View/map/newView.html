@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Going - Crea</title>
+  <title>Going - Roadmap</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <meta name="description"
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <div class="popup_segnal" id="segnal_rm">
+  <div class="popup" id="segnal_rm">
     <h2>EFFETTUA SEGNALAZIONE</h2>
     <textarea type="text" rows="4" name="descrizione" id="motiv_rm" placeholder="Inserisci la motivazione"></textarea>
     <br>
@@ -100,27 +100,7 @@
                   <span id="descrizione"></span>
                 </fieldset>
 
-              <fieldset class="descrizioneRoadmap">
-                <legend> Recensione </legend>
-                <div id="touchcocktals">
-                  <div id="cocktail"> </div>
-                </div>
-                <label id="lab_rec" for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
-                <textarea id="us_rec" name="us_rec" style="font-size: 25px;" rows="2" cols="40">
-                  </textarea>
-                <input type="button" id="save_recbtn" onclick="openReviewPopup()" class="buttonSegnalazione"
-                  value="AGGIUNGI RECENSIONE" />
-              </fieldset>
-
-              <fieldset class="descrizioneRoadmap">
-                <legend> Commento </legend>
-                <label id="lab_com" for="us_com style=" font-size: 25px;">Commento (facoltativa)</label>
-                <textarea id="us_com" name="us_com" style="font-size: 25px;" rows="2" cols="40">
-                  </textarea>
-
-                <input type="button" id="write_com" onclick="openCommentoPopup()" class="buttonSegnalazione"
-                  value="AGGIUNGI COMMENTO" />
-              </fieldset>
+              
             </div>
             
             <div class="all">
@@ -160,31 +140,40 @@
 
     <!-- Zona Recensioni e Commenti -->
 
+    <div class="popup" id="popupRecensione">
+      <h2>EFFETTUA RECENSIONE</h2>
+      <div id="touchcocktals">
+        <div id="cocktail"> </div>
+      </div>
+      <textarea id="us_rec" name="us_rec" autocomplete="off" rows="6" placeholder="Motiva la tua valutazione! (facoltativo)"></textarea><br>
+      <input type="button" id="save_recbtn" onclick="createRecensione()" class="buttonSegnalazione"
+        value="CARICA RECENSIONE" />
+      <input type="button" id="save_recbtn" onclick="document.getElementById('popupRecensione').setAttribute('style','display:none')" class="buttonSegnalazione"
+        value="ANNULLA"/>
+    </div>
+
     <div class="box" id="mapBox">
       <div class="inner_box">
         <div class="inner_row">
           <span id="info">COMMUNITY</span> <span id="line"></span>
-          <br>
-          <span id="titolo_info"> RECENSIONI E COMMENTI </span>
         </div>
-        <div class="inner_row">
+        <div class="inner_row" id="commRec">
           <div class="settore recensioni">
-            <div class="lab_recensioni" id="lab_recensioni">
-              <h2>Recensioni della roadmap</h2>
-              <div class="recensioni" id="recensioni">
-
-              </div>
+            <span class="titolo" id="titolo">Recensioni📝</span>
+            <fieldset class="descrizioneRoadmap">
+              <legend> La mia recensione </legend>
+              <span id="avvisoRecensione">Non hai effettuato alcuna recensione.</span><br>
+              <div class="center"><input type="button" id="do_rec" onclick="openRecensionePopup()" class="buttonSegnalazione" value="EFFETTUA RECENSIONE"/></div>
+            </fieldset>
+          </div>
+          
+          <div class="settore commenti">
+            <span class="titolo" id="titolo">Commenti💭</span>
+            <div id="rowCommento">
+              <textarea id="us_com" name="us_com" autocomplete="off" rows="2"></textarea>
+              <input type="button" id="write_com" onclick="openCommentoPopup()" class="buttonSegnalazione" value="Invia" />
             </div>
           </div>
-
-          <div class="lab_commenti" id="lab_commenti">
-            <h2>Commenti alla roadmap</h2><br>
-
-            <div class="commenti" id="commenti">
-
-            </div>
-          </div>
-
         </div>
       </div>
     </div>

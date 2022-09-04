@@ -174,13 +174,10 @@ function requestDistance(marker1, marker2) {
 }
 
 function submitRoadmap() {
-    var isPub = 1;
-    var visibilita = document.querySelector('input[name="visibilita"]:checked').value;
-    if (visibilita == "Privata") {
-        isPub = 0
-    }
-    var title = document.getElementById("titolo").value
-    var description = document.getElementById("descrizione").value
+    var isPub = visibilita == 'Pubblica' ? 1 : 0;
+
+    
+    var description = document.getElementById("areaDescrizione").value
 
     if (title == "") {
         alert("Titolo vuoto")
@@ -208,11 +205,10 @@ function submitRoadmap() {
         xhr.onload = function (event) {
 
             const r = JSON.parse(event.target.responseText);
-            if (r.ok == true) {
-                //alert("creata la stages_list")
+            if (r.ok) {
                 location.href = "/view_roadmap?id=" + r.data.roadmapId;
             }
-            else if (r.ok == false) {
+            else {
                 alert("Problemi creazione stages_list")
             }
         }
