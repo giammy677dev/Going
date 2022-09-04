@@ -374,7 +374,6 @@ class HTTPinterface {
         r.data.logged = isLogged;
         r.data.isAdmin = req.session.isAdmin || 0;
         return res.send(JSON.stringify(r));
-
     }
 
     async getRoadmapCreate(req, res) {
