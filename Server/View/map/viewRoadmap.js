@@ -61,11 +61,13 @@ document.addEventListener('receivedRoadmapData', (e) => {
 
 //popups for recensioni e commenti
 
-function openRecensioniPopup(roadmap_id,value) {
+function openRecensionePopup() {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
+    document.getElementById('popupRecensione').setAttribute('style','display:block');
     //createRecensione(roadmap_id,"test",5)
   } else {
     //classico popup di login
+    document.getElementById('log').setAttribute('style','display:block');
   }
 }
 
@@ -311,10 +313,8 @@ function setRoadmapAsFavourite(roadmap_id, value) {
 
 //funzioni su recensione backend
 
-function createRecensione(roadmap_id, opinione, valutazione) {
-  //var opinione = document.getElementById("us_rec").value
-  console.log("test")
-
+function createRecensione(valutazione) {
+  var opinione = document.getElementById("us_rec").value
   var xhr = new XMLHttpRequest();
 
   xhr.open("POST", '/createRecensione', true);
@@ -334,7 +334,7 @@ function createRecensione(roadmap_id, opinione, valutazione) {
 
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    roadmapId: roadmap_id,
+    roadmapId: roadmapId,
     opinione: opinione || "",
     valutazione: valutazione
   }));
