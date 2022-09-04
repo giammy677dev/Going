@@ -1,4 +1,8 @@
+const { isNoSubstitutionTemplateLiteral } = require("typescript");
+
 var percorrenza = "WALKING";
+var visibilita = "Privata";
+var title = "default"
 
 function addListner(){
     document.getElementById("titolo").addEventListener('input',attivaBottone);
@@ -31,10 +35,10 @@ function mostraCreate(){
     document.getElementById("titleValue").innerText= document.getElementById("titolo").value;
     
     if (document.getElementById("priv").checked) {
-        document.getElementById("visiblitaValue").innerText= "Privata🔒";
+        document.getElementById("visibilitaValue").innerText= "Privata🔒";
     }
     else {
-        document.getElementById("visiblitaValue").innerText= "Pubblica🌎";
+        document.getElementById("visibilitaValue").innerText= "Pubblica🌎";
     }
     
     if (document.getElementById("driving_mode").checked) {
@@ -43,9 +47,15 @@ function mostraCreate(){
     else {
         document.getElementById("percorrenzaValue").innerText= "A piedi🚶‍♂️";
     }
+    title = document.getElementById("titolo").value
     document.getElementById("titolo").remove();
     percorrenza = document.querySelector('input[name="mobilitazione"]:checked').value
+    visibilita = document.querySelector('input[name="visibilita"]:checked').value
+    
+    //initMap()
     document.getElementById("inputVisibilitaBox").remove();
     document.getElementById("inputPercorrenzaBox").remove();
     document.getElementById("bottoneImpostazioni").remove();
+
+    initMap();
 }
