@@ -22,7 +22,6 @@ class RequestController {
                 const data = await this.dao.register(username, password, email, birthdate);
                 return { ok: data[0], error: data[1], data: data[2] };
             }
-
         }
         else {
             return { ok: false, error: -2 }
@@ -240,9 +239,8 @@ class RequestController {
         }
     }
 
-    async deleteCommento(user_id,idCommento,isAdmin) {
+    async deleteCommento(user_id, idCommento, isAdmin) {
         if (!idCommento || !user_id) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -251,9 +249,8 @@ class RequestController {
         }
     }
 
-    async deleteRecensione(user_id,idRecensione,isAdmin) {
+    async deleteRecensione(user_id, idRecensione, isAdmin) {
         if (!idRecensione || !user_id) {
-
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -271,12 +268,12 @@ class RequestController {
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
+
     async createRecensione(user_id, roadmap_id, opinione, valutazione) {
         if (!user_id || !roadmap_id || !opinione || !valutazione) {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            
             try{
                 const now = new Date()
                 const data = await this.dao.createRecensione(user_id, roadmap_id, opinione, valutazione, now);
@@ -284,20 +281,20 @@ class RequestController {
             }catch(error){
                 console.log(error)
                 return { ok: false, error: -4, data: '' }
-            }
-            
+            }   
         }
     }
+
     async updateRecensione(user_id, idRecensione, opinione, valutazione) {
         if (!user_id || !idRecensione || !opinione || !valutazione) {
             return { ok: false, error: -4, data: '' }
-        }else{
+        } else {
             const now = new Date()
             const data = await this.dao.updateRecensione(user_id, idRecensione, opinione, valutazione,now);
             return { ok: data[0], error: data[1], data: data[2] };
         }
-        
     }
+
     async setRoadmapFavouriteState(user_id, roadmap_id, newStatus) {
         const data = await this.dao.setRoadmapFavouriteState(user_id, roadmap_id, newStatus);
         return { ok: data[0], error: data[1], data: data[2] };
@@ -307,6 +304,7 @@ class RequestController {
         const data = await this.dao.setRoadmapCheckedState(user_id, roadmap_id, newStatus);
         return { ok: data[0], error: data[1], data: data[2] };
     }
+
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
         //a google maps api!!
@@ -333,13 +331,13 @@ class RequestController {
     }
 
     async getPlaceFromCoords(lat, lng) {
-
         //stesso discorso di placeinfo!! c'è bisogno di una chiamata al db pe vedere se già esiste. se già esiste è inutile 
         //fare chiamate a google
 
         const data = await this.mapsHandler.getPlaceFromCoords(lat, lng);
         return { ok: data[0], error: data[1], data: data[2] }
     }
+
     async getSegnalazioni() {
         const data = await this.dao.getSegnalazioni();
         return { ok: data[0], error: data[1], data: data[2] }
@@ -347,8 +345,7 @@ class RequestController {
 
     async processSegnalazioni(segnalazioni) {
         console.log(segnalazioni)
-        for (var i = 0; i < segnalazioni.length; i++) 
-        {
+        for (var i = 0; i < segnalazioni.length; i++) {
             var segnalazione = segnalazioni[i];
             const objInfo = (await this.dao.getOggettoBySegnalazione(segnalazione.idSegnalazione))[2];
             if (objInfo != null) {
