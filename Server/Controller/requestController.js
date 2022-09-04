@@ -204,7 +204,7 @@ class RequestController {
     }
 
     async createCommento(user_id, roadmap_id, messaggio) {
-        if (!roadmap_id || !user_id || !messaggio || messaggio.length == 0) {
+        if (!roadmap_id || !user_id || !messaggio || messaggio == "") {
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -240,7 +240,7 @@ class RequestController {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.deleteCommento(user_id, idCommento, isAdmin);
+            const data = await this.dao.deleteCommento(idCommento, user_id, isAdmin);
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
@@ -250,7 +250,7 @@ class RequestController {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            const data = await this.dao.deleteRecensione(user_id, idRecensione, isAdmin);
+            const data = await this.dao.deleteRecensione(idRecensione, user_id, isAdmin);
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
@@ -320,10 +320,13 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async reportObject(tipo, idOggetto, motivazione) {
-        const data = await this.dao.aggiungiReport(tipo, idOggetto, motivazione);
+    async reportObject(idUtente, tipo, idOggetto, motivazione) {
+        if(!idUtente || !tipo || !idOggetto){
+            return { ok: false, error: -1, data: {}}
+        }
+        const data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
 
-        return { ok: data[0], error: data[1] }
+        return { ok: data[0], error: data[1], data:data[2]}
     }
 
     async getPlaceFromCoords(lat, lng) {
@@ -343,6 +346,7 @@ class RequestController {
         console.log(segnalazioni)
         for (var i = 0; i < segnalazioni.length; i++) {
             var segnalazione = segnalazioni[i];
+            console.log(segnalazione)
             const objInfo = (await this.dao.getOggettoBySegnalazione(segnalazione.idSegnalazione))[2];
             if (objInfo !== null) {
                 const idOggetto = objInfo.idOggetto;
@@ -353,7 +357,7 @@ class RequestController {
                             await this.dao.deleteRoadmap(idOggetto, id_user, isAdmin);
                             break;
                         case 2:
-                            await this.dao.deleteUser(idOggetto, id_user, isAdmin);
+                            await this.dao.deleteUser(idOggetto, isAdmin);
                             break;
                         case 3:
                             await this.dao.deleteRecensione(idOggetto, id_user, isAdmin);
