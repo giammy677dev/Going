@@ -65,6 +65,10 @@ body {
     color: white;
 }
 
+.utente, .citta{
+    cursor:pointer;
+}
+
 #favorite, #checked{
     float:right;
     height: 30px;
@@ -110,11 +114,11 @@ body {
     margin-top: 0px;
 }
 
-#segnal_rm {
+
+.popup_segnal{
     font-size: 26px;
     display: none;
     z-index: 2;
-    font-family: serif;
     color: white;
     background-color: rgba(0, 0, 0, 0.92);
     position: fixed;
@@ -129,11 +133,10 @@ body {
     padding: 20px;
 }
 
-.popup_segnal{
+.popup{
     font-size: 26px;
     display: none;
     z-index: 2;
-    font-family: serif;
     color: white;
     background-color: rgba(0, 0, 0, 0.92);
     position: fixed;
@@ -435,4 +438,83 @@ legend{
 
 #us_com{
     display:block;
+    float: left;
+    width: 80%;
+    font-size: 15px;
+    resize: none;
+    height: 45px;
 }
+
+#commRec{
+    display: table;
+    position: relative;
+    width: 100%;
+}
+
+.settore{
+    width: 49.5%;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.31);
+    color: white;
+}
+
+.recensioni{
+    float: left;
+}
+
+.commenti{
+    float: right;
+}
+
+#us_rec{
+    width: 80%;
+}
+
+#rowCommento{
+    display: table;
+    width: 100%;
+}
+
+#write_com{
+    margin-top: 0px;
+    width: 20%;
+    float: left;
+    height: 45px;
+}
+
+.center{
+    text-align: center;
+}
+
+/* Settare rate */
+
+  .rate{
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+  }
+  
+  .rate:not(:checked)>input {
+    position: absolute;
+    top: -9999px;
+  }
+  
+  .rate:not(:checked)>label {
+    float: right;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ccc;
+  }
+  
+  .rate:not(:checked)>label:before {
+    content: url(/storage/cocktailVuotoPiccolo.png);
+  }
+  
+  .rate>input:checked~label {
+    content: url(/storage/cocktailPienoPiccolo.png);
+  }
+  
