@@ -12,9 +12,9 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                ssl: {
+                /*ssl: {
                     ca: fs.readFileSync(__dirname + '/../config/ca/' + config.ca)
-                }
+                }*/
             });
             return connection;
         } catch (err) {
@@ -110,23 +110,26 @@ class DAO {
         }
     }
 
-    async deleteUser(user_id) {
+    async deleteUser(id_user_to_delete, isAdmin) {
         try {
-            var connection = await this.connect();
-            let selection = await connection.query('SELECT email FROM utenteregistrato WHERE id = ?', [user_id]);
-            await connection.query('INSERT INTO blacklist (email) VALUES(?)', [selection[0][0].email]);
-            await connection.query('DELETE FROM utenteregistrato WHERE id = ?', [user_id])
-            return [true, 0, {}];
+            if (isAdmin) {
+                var connection = await this.connect();
+                let selection = await connection.query('SELECT email FROM utenteregistrato WHERE id = ?', [id_user_to_delete]);
+                await connection.query('INSERT INTO blacklist (email) VALUES(?)', [selection[0][0].email]);
+                await connection.query('DELETE FROM utenteregistrato WHERE id = ?', [id_user_to_delete])
+                return [true, 0, {}];
+            }
+            return [false, -1, {}];
         }
         catch (error) {
             return [false, error.errno || -1, {}];
         }
     }
 
-    async aggiungiReport(tipo, idOggetto, motivazione) {
+    async aggiungiReport(idUtente, tipo, idOggetto, motivazione) {
         try {
             var connection = await this.connect();
-            await connection.query('INSERT INTO segnalazione (tipo, idOggetto, motivazione) VALUES (?, ?, ?)', [tipo, idOggetto, motivazione]);
+            await connection.query('INSERT INTO segnalazione (idUtente, tipo, idOggetto, motivazione) VALUES (?, ?, ?, ?)', [idUtente, tipo, idOggetto, motivazione]);
             return [true, 0];
         } catch (error) {
             console.log(error)
@@ -359,7 +362,6 @@ class DAO {
             return [true, 0, { idRecensione: res_ins[0].insertId, now: now, numRecensioniUtente: numeroRecensioniUtente }];
         }
         catch (error) {
-            console.log(error.errno)
             return [false, error.errno];
         }
     }
@@ -414,7 +416,7 @@ class DAO {
         }
     }
 
-    async deleteCommento(user_id, idCommento, isAdmin) {
+    async deleteCommento(idCommento, user_id, isAdmin) {
         try {
 
             var connection = await this.connect();
@@ -433,7 +435,7 @@ class DAO {
         }
     }
 
-    async deleteRecensione(user_id, idRecensione, isAdmin) {
+    async deleteRecensione(idRecensione, user_id, isAdmin) {
         try {
 
             var connection = await this.connect();
@@ -458,7 +460,8 @@ class DAO {
             //idUtenteRegistrato serve a verificare che sia lui che ha inviato la query. un altro user non può fare le query per questo e così via.
             //la seconda condizione discrimina univocamente la recensione. (idRecensione)
             var res_ins = await connection.query('UPDATE recensione SET valutazione=?, opinione=?, dataPubblicazione=? where idUtenteRegistrato=? and idRecensione=?', [valutazione, opinione, now, user_id, idRecensione])
-            var roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ?', [idRecensione]))[0][0].idRoadmap;
+            var roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ?', [idRecensione]))
+            roadmap_id = roadmap_id[0][0].idRoadmap;
             var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap_id])
 
             var numeroRecensioni = dati[0][0].numeroRecensioni
@@ -469,15 +472,15 @@ class DAO {
             return [res_ins[0].affectedRows == 1, 0, { idRecensione: idRecensione, now: now }]; //idRecensione ridondante ma va bene è coerente
         }
         catch (error) {
+            console.log(error)
             return [false, error.errno];
         }
     }
 
     async setRoadmapFavouriteState(user, roadmap, valore) {
         try {
-            console.log(user, roadmap, valore)
             var connection = await this.connect();
-            var query
+            var query;
             var see = await connection.query('select * from roadmapuser where idUtenteRegistrato=? and idRoadmap=?', [user, roadmap])
             if (see[0].length == 0) {
                 //mai messo nulla
@@ -538,7 +541,7 @@ class DAO {
         try {
             var connection = await this.connect();
 
-            var query = 'SELECT * FROM segnalazione';
+            var query = 'SELECT * FROM segnalazione ORDER BY idSegnalazione';
             let selection = await connection.query(query);
             let results = { segnalazioni: selection[0] };
             return [true, 0, results];

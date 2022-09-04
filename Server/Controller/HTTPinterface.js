@@ -280,13 +280,11 @@ class HTTPinterface {
     }
 
     async setRoadmapAsFavourite(req, res) {
-        console.log(req.body)
         const r = await this.controller.setRoadmapFavouriteState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
 
     async setRoadmapAsSeguita(req, res) {
-        console.log(req.body)
         const r = await this.controller.setRoadmapCheckedState(req.session.user_id, req.body.roadmap_id, req.body.newStatus);
         return res.send(JSON.stringify(r))
     }
@@ -454,7 +452,7 @@ class HTTPinterface {
 
     async reportObject(req, res) {
         if (req.session.loggedin || true) { // da mettere!
-            const r = await this.controller.reportObject(req.body.tipo, req.body.idOggetto, req.body.motivazione);
+            const r = await this.controller.reportObject(req.session.user_id, req.body.tipo, req.body.idOggetto, req.body.motivazione);
             return res.send(JSON.stringify(r));
         }
     }
