@@ -59,7 +59,6 @@ body {
 }
 
 #titolo {
-    float: left;
     font-size: 35px;
     font-weight: 400px;
     color: white;
@@ -469,6 +468,7 @@ legend{
 #rowCommento{
     display: table;
     width: 100%;
+    margin-top: 15px;
 }
 
 #write_com{
@@ -480,4 +480,60 @@ legend{
 
 .center{
     text-align: center;
+}
+.comment{
+    margin-top: 10px;
+}
+
+.row1Recensioni, .row1Commenti{
+    display: table;
+    width: 100%;
+    color: #fbfcfdbd;
+    font-weight: 500;
+}
+
+.row1Recensioni div{
+    float: left;
+    margin-right: 10px;
+}
+
+.row1Recensioni a{
+    float: right;
+}
+
+.row1Commenti div{
+    float: left;
+    margin-right: 10px;
+}
+
+.row1Commenti a{
+    float: right;
+}
+
+.valutazione{
+    text-align: center;
+}
+
+.opinione, .text_commento{
+    margin: 10px 0px;
+    text-align: center;
+}
+
+.recensione{
+    box-shadow: 0px 0px 3px 1px rgba(255, 255, 255, 0.7);
+    padding: 6px;
+    margin-top: 10px;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.commento{
+    box-shadow: 0px 0px 3px 1px rgba(255, 255, 255, 0.7);
+    padding: 6px;
+    margin-top: 10px;
+    background-color: #2331305e;
+    border-radius: 15px;
+}
+
+.boxclose{
+    cursor: pointer;
 }
