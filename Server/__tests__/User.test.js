@@ -1,28 +1,31 @@
-const Server = require('../HTTPinterface.js');
+const Server = require('../Controller/HTTPinterface.js');
+
 const request = require("supertest");
 const assert = require('assert');
 
-
 const app = new Server()
+
 beforeAll(done => {
     done()
 })
 
 afterAll(done => {
     // Closing the DB connection allows Jest to exit successfully.
+    
     done()
 })
 
 describe("Test User (block #1)", () => {
+    var agent = request.agent(app.app);
 
     const instance_data = {
-        username: "tesastol1ino",
-        password: "trottolino",
-        email: "2we1casmio0@gmail.com",
-        birthdate: "1999-05-01"//html birthdate format (just like frontend does)
+        username: "giammy677",
+        password: "asdf1234",
+        email: "giammy677@gmail.com",
+        birthdate: "1995-09-10"//html birthdate format (just like frontend does)
     }
 
-    /*test("Test di registrazione", async () => {
+    /*test("Test di registrazione", async () => { //ok test but one time-test. una volta registrato il test non va a buon fine. stesso username.
         const res = await request(app.app).post("/register").send({
             username: instance_data.username,
             password: instance_data.password,
@@ -37,8 +40,75 @@ describe("Test User (block #1)", () => {
 
     });*/
 
-    test("Test auth", async () => {
-        const res = await request(app.app).post("/auth").send({
+    test("test di register con email già utilizzata", async () => {
+        const res = await agent.post("/register").send({
+            userName: "ilmiousername",
+            password: "lamiapassword",
+            email: "giammy677@gmail.com",
+            birthdate: "1995-09-10"
+        })
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("test di register con username già utilizzato", async () => {
+        const res = await agent.post("/register").send({
+            userName: "giammy677",
+            password: "lamiapassword",
+            email: "maildiversa@gmail.com",
+            birthdate: "1995-09-10"
+        })
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("test di register con email bannata", async () => {
+        const res = await agent.post("/register").send({
+            userName: "ilmiousername",
+            password: "lamiapassword",
+            email: "mailbannata@gmail.com",
+            birthdate: "1995-09-10"
+        })
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("Test user general info quando NON loggato", async () => {
+        const res = await agent.get("/getUserStatus").send();
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
+        expect(json_response.data.logged).toEqual(false); //isme!
+    });
+
+    test("Test di login con credenziali errate", async () => {
+        const res = await agent.post("/auth").send({
+            username: "giammy677",
+            password: "passwordacaso"
+        })
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("test di logout senza aver effettuato il login", async () => {
+        
+        const res = await agent.post("/logout").send({ 
+            id:5
+        })
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+
+        expect(json_response.ok).toEqual(false);
+    });
+
+    test("Test login (account esistente e dati corretti)", async () => {
+        const res = await agent.post("/auth").send({
             username: instance_data.username,
             password: instance_data.password
         });
@@ -47,117 +117,39 @@ describe("Test User (block #1)", () => {
         json_response = JSON.parse(res.text)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
-        
+        expect(json_response.data).toEqual({id:5,username:'giammy677',isAdmin:1});
+
         //await new Promise((r) => setTimeout(r, 2000));
     });
 
-    test("Test getDataUser", async () => {
-        const res = await request(app.app).get("/getDataUser").send();
+    test("Test user general info quando loggato", async () => {
+        
+        const res = await agent.get("/getUserStatus").send();
+        
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
+        expect(json_response.data.info.id).toEqual(5);
+        expect(json_response.data.logged).toEqual(true);
+    });
+
+
+    /*test("test di logout avendo effettuato il login", async () => {
+        /*await agent.post("/auth").send({
+            username: instance_data.username,
+            password: instance_data.password
+        });
+        
+        const res = await request(mockApp).post("/logout").send({ 
+            id:5
+        })
+
+
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        console.log(json_response)
         expect(json_response.ok).toEqual(true);
-        expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
-        expect(json_response.data[1]).toEqual(true); //isme!
-    });
+    })*/
 
-    /*test("Test di login prima di aver verificato l'account", async () => {
-        const res = await request(app.app).post("/login").send({
-            userName: "test",
-            password: "test"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = false;
-            })
-    });
-
-    test("Verifica dell'account", async () =>{
-        const res = await request(app.app).post("/activate").send({
-            id: id,
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = true;
-        })
-    });
-
-    test("Test di login correttamente eseguito", async () => {
-        const res = await request(app.app).post("/login").send({
-            userName: "test",
-            password: "test"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = true;
-            res.body.id != null;
-            res.body.token != null;
-            res.body.prk != 'test';
-            res.body.puk != 'test';
-        })
-        id = res.body.id;
-        token = res.body.token;
-        console.log(token)
-    });
-
-    test("Test di login con credenziali errate", async () => {
-        const res = await request(app.app).post("/login").send({
-            userName: "test",
-            password: "test1"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = false;
-        })
-    });
-
-    test("test di register con email già utilizzata", async () => {
-        const res = await request(app.app).post("/register").send({
-            userName: "test2",
-            password: "test",
-            email: "test@test.it",
-            prk: "test",
-            puk: "test"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = false;
-        });
-    });
-
-    test("test di register con username già utilizzato", async () => {
-        const res = await request(app.app).post("/register").send({
-            userName: "test",
-            password: "test1",
-            email: "test1@test.it",
-            prk: "test",
-            puk: "test"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = false;
-        })});
-
-    test("test checktoken con token non valido", async () => {
-        const res = await request(app.app).post("/checktoken").send({
-            id: id,
-            token: "test"
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = false;
-        })}
-    );
-
-    test("test checktoken con token valido", async () => {
-        const res = await request(app.app).post("/checktoken").send({
-            id: id,
-            token: token
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = true;
-
-        })});
-
-    test("test di logout", async () => {
-        const res = await request(app.app).post("/logout").send({
-            id: id
-        })
-        .expect(200).expect((res) => {
-            res.body.ok = true;
-        })});*/
 });

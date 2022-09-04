@@ -89,6 +89,6 @@ function logout() {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    id: user_id
+    
   }));
 }

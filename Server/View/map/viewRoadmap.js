@@ -112,21 +112,21 @@ function generateRecensione(recensione, isMe) {
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   const ratingHtml = generateRating(recensione.valutazione, 25) //cursore?
-  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensione.idRecensione + ')">⚠️</a><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div><div class="whoRec" id="whoRec">' + ' 👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div></div><div class="opinione" id="opinione' + recensione.idRecensione + '">' + recensione.opinione + '</div></div>'
+  recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnRec(' + recensione.idRecensione + ')">⚠️</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
   recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
   return recensioneObj
 }
 
 function generateCommento(commento, isMe) {
   console.log(commento)
-  var commentoObj = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick=""openSegnCom(' + commento.idCommento + ')">⚠️</a>'
+  var commentoIcon = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick=""openSegnCom(' + commento.idCommento + ')">⚠️</a>'
 
   if (commento.idUtente == user_id) { // commento.id bro???
-    commentoObj += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="updPreview(' + commento.idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
+    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="updPreview(' + commento.idCommento + ')">🔄</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
   }
   var date = new Date(commento.dataPubblicazione)
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-  commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + commentoObj + '<div class="whoCom" id="whoCom">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div></div></div>'
+  var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>'+commentoIcon+'</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + commentoObj + '</div></div>'
   commentoObj += '<div class="popup_segnal" id="segnal_com' + commento.idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commento.idCommento + '"></input><div onclick="m(' + commento.idCommento + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commento.idCommento + ')">Chiudi</div></div>'
   return commentoObj
 }

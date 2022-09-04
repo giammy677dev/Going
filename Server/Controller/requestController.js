@@ -162,12 +162,12 @@ class RequestController {
 
         }
     }
-    async getCommentiRecensioni(id) {
-        if (!id || id == null) { //rm nullo
+    async getCommentiRecensioni(roadmap_id) {
+        if (!roadmap_id || roadmap_id == null) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
         }
         else {
-            const data = await this.dao.getCommentiRecensioni(id);
+            const data = await this.dao.getCommentiRecensioni(roadmap_id);
 
             return { ok: data[0], error: data[1], data: data[2] };
         }
@@ -206,11 +206,10 @@ class RequestController {
     }
 
     async createCommento(user_id, roadmap_id, messaggio) {
-        if (!roadmap_id || !user_id) {
+        if (!roadmap_id || !user_id || !messaggio || messaggio.length == 0) {
             return { ok: false, error: -4, data: '' }
         }
         else {
-            console.log(user_id)
             const now = new Date()
             const data = await this.dao.createCommento(user_id, roadmap_id, messaggio, now);
             return { ok: data[0], error: data[1], data: data[2] };
@@ -224,8 +223,6 @@ class RequestController {
         }
         else {
             const now = new Date()
-            //inutile passare user_id. idCommento già identifica il commento. user_id serve solo per fare il check con la sessione
-
             const data = await this.dao.updateCommento(user_id, idCommento, messaggio, now);
             return { ok: data[0], error: data[1], data: data[2] };
         }
@@ -271,7 +268,7 @@ class RequestController {
     }
 
     async createRecensione(user_id, roadmap_id, opinione, valutazione) {
-        if (!user_id || !roadmap_id || !opinione || !valutazione) {
+        if (!user_id || !roadmap_id || !opinione || !valutazione || valutazione > 5 || valutazione < 1) {
             return { ok: false, error: -4, data: '' }
         }
         else {
@@ -287,7 +284,7 @@ class RequestController {
     }
 
     async updateRecensione(user_id, idRecensione, opinione, valutazione) {
-        if (!user_id || !idRecensione || !opinione || !valutazione) {
+        if (!user_id || !idRecensione || !opinione || !valutazione || opinione.length == 0 || valutazione < 1 || valutazione > 5) {
             return { ok: false, error: -4, data: '' }
         } else {
             const now = new Date()
