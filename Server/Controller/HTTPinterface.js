@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const requestController = require('./requestController.js');
+const mainController = require('./MainController.js');
 const mysql = require('mysql2');
 const session = require('express-session');
 const path = require('path');
@@ -19,7 +19,7 @@ class HTTPinterface {
         this.app = express();
         this.server = http.createServer(this.app);
 
-        this.controller = new requestController()
+        this.controller = new mainController()
         this.initServer();
 
         this.port = config.port;

@@ -3,8 +3,8 @@ const user = 'giammy677';
 const password = 'Asdf1234';
 const database = 'going';
 const port = process.env.port || 3000;
-
-/*const host = 'localhost';
+/*
+const host = 'localhost';
 const user = 'root';
 const password = 'going';
 const database = 'mydb';
