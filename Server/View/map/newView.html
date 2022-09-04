@@ -60,10 +60,9 @@
         <div class="inner_row">
           <span id="info"> INFORMAZIONI ROADMAP </span> <span id="line"></span>
           <div id="boxIcon">
-            <a class="boxclose" id="segn_rm" title="segnala roadmap"
-              onclick="document.getElementById('segnal_rm').setAttribute('style','display:block')">⚠️</a>
-            <div class="cheched" id="checked"> </div>
+            <a class="boxclose" id="segn_rm" title="segnala roadmap" onclick="openSegnalazionePopup()">⚠️</a>
             <div class="favorite" id="favorite"> </div>
+            <div class="cheched" id="checked"> </div>
           </div>
           <br>
           <div id="second_row">
@@ -96,12 +95,10 @@
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
                 defer></script>
 
-              <div id="descriptionRoadmap">
                 <fieldset class="descrizioneRoadmap">
                   <legend>Descrizione Roadmap</legend>
                   <span id="descrizione"></span>
                 </fieldset>
-              </div>
 
               <fieldset class="descrizioneRoadmap">
                 <legend> Recensione </legend>
@@ -109,7 +106,7 @@
                   <div id="cocktail"> </div>
                 </div>
                 <label id="lab_rec" for="us_rec" style="font-size: 25px;">Opinione (facoltativa)</label>
-                <textarea id="us_rec" name="us_rec" style="font-size: 25px;" autocomplete="off" rows="2" cols="40">
+                <textarea id="us_rec" name="us_rec" style="font-size: 25px;" rows="2" cols="40">
                   </textarea>
                 <input type="button" id="save_recbtn" onclick="openReviewPopup()" class="buttonSegnalazione"
                   value="AGGIUNGI RECENSIONE" />
@@ -118,35 +115,43 @@
               <fieldset class="descrizioneRoadmap">
                 <legend> Commento </legend>
                 <label id="lab_com" for="us_com style=" font-size: 25px;">Commento (facoltativa)</label>
-                <textarea id="us_com" name="us_com" style="font-size: 25px;" autocomplete="off" rows="2" cols="40">
+                <textarea id="us_com" name="us_com" style="font-size: 25px;" rows="2" cols="40">
                   </textarea>
 
                 <input type="button" id="write_com" onclick="openCommentoPopup()" class="buttonSegnalazione"
                   value="AGGIUNGI COMMENTO" />
               </fieldset>
             </div>
-
+            
             <div class="all">
               <div class="body-cards">
                 <div class="main">
-
+      
                   <div class="timeline">
-                    <h3>ITINERARIO DI VIAGGIO</h3>
-                    <p id="testoDurata">⏱Tempo di viaggio: <span class="durata" id="somma_totale">0</span> minuti</p>
-                    <div class="box">
+                      <h3>ITINERARIO DI VIAGGIO</h3>
+                      <p id="testoDurata">⏱Tempo di viaggio: <span class="durata" id="somma_totale">0</span> minuti</p>
+                      <div class="box">
 
-                      <div class="container">
+                        <div class="container">
 
-                        <div class="cards" id="cards">
+                          <div class="cards" id="cards">
+
+                          </div>
 
                         </div>
+                        <div class="bottom">
 
+
+                          <div class="btn" id="submit_btn" onclick="submitRoadmap()">Conferma Creazione Roadmap</div>
+
+                          <script src="/View/map/createRoadmap.js" type="text/javascript"></script>
+                        </div>
                       </div>
-                      <script src="/View/map/createRoadmap.js" type="text/javascript"></script>
                     </div>
-                  </div>
                 </div>
               </div>
+            </div>
+        
             </div>
           </div>
         </div>
