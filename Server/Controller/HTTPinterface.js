@@ -304,7 +304,7 @@ class HTTPinterface {
     async processSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
-            r = await this.controller.processSegnalazioni(req.body);
+            r = await this.controller.processSegnalazioni(req.body,req.session.user_id,req.session.isAdmin);
         }
         return res.send(JSON.stringify(r));
     }

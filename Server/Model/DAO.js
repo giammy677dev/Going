@@ -105,6 +105,7 @@ class DAO {
             const res = await connection.query('INSERT INTO roadmap (titolo, isPublic, durata, localita, descrizione, punteggio, dataCreazione, travelMode, distanza, utenteRegistrato_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [titolo, isPublic, durata, localita, descrizione, null, dataCreazione, travelMode, distanza, utenteRegistrato_id]);
             return [true, 0, res[0]];
         } catch (error) {
+            console.log(error)
             return [false, error.errno, {}];
         }
     }
