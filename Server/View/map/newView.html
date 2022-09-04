@@ -63,7 +63,7 @@
                   </div>
                   <br>
                   <div id="second_row">
-                    <span class="titolo" id="titolo"> </span>
+                    <span class="titolo" id="titolo"> </span> <input type="button" class="bottone" id="fork_btn" value="Forka questa Roadmap" onclick="forkaggio()"/>
                   </div>
                 </div>
                 <div class="res" id="res">
@@ -87,6 +87,10 @@
                     <script
                       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
                       defer></script>
+                    <fieldset class="descrizioneRoadmap" >
+                      <legend>Descrizione Roadmap</legend>
+                      <span id="descrizione"></span>
+                    </fieldset>
                   </div>
     
     
@@ -131,11 +135,28 @@
         <div class="box" id="mapBox">
             <div class="inner_box">
                 <div class="inner_row">
-                    <span id="info"> STAGE ROADMAP </span> <span id="line"></span>
+                    <span id="info">COMMUNITY</span> <span id="line"></span>
                     <br>
-                    <span id="titolo_info"> AGGIUNGI STAGE ALLA ROADMAP </span>
+                    <span id="titolo_info"> RECENSIONI E COMMENTI </span>
                 </div>
                 <div class="inner_row">
+                  <div class="settore recensioni">
+                    <div class="lab_recensioni" id="lab_recensioni">
+                      <h2>Recensioni della roadmap</h2>
+                      <div class="recensioni" id="recensioni">
+              
+                      </div>
+                    </div>
+                  </div>
+                  
+                    <div class="lab_commenti" id="lab_commenti">
+                      <h2>Commenti alla roadmap</h2><br>
+              
+                      <div class="commenti" id="commenti">
+              
+                      </div>
+                    </div>
+                  
                 </div>
             </div>
         </div>
@@ -193,12 +214,12 @@
       
                 <div class="btn" id="fork_btn" onclick="forkaggio()">Forka questa Roadmap</div>
       
-                <!--
+                
                 <div class="favorite" id="favorite">
                 </div>
                 <div class="cheched" id="checked">
                 </div>
-            -->
+            
               </div>
       
               <div class="pulsantireccom" id="pulsantireccom">
