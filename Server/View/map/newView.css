@@ -64,6 +64,10 @@ body {
     color: white;
 }
 
+.utente, .citta{
+    cursor:pointer;
+}
+
 #favorite, #checked{
     float:right;
     height: 30px;
@@ -537,3 +541,36 @@ legend{
 .boxclose{
     cursor: pointer;
 }
+
+/* Settare rate */
+
+  .rate{
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+  }
+  
+  .rate:not(:checked)>input {
+    position: absolute;
+    top: -9999px;
+  }
+  
+  .rate:not(:checked)>label {
+    float: right;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ccc;
+  }
+  
+  .rate:not(:checked)>label:before {
+    content: url(/storage/cocktailVuotoPiccolo.png);
+  }
+  
+  .rate>input:checked~label {
+    content: url(/storage/cocktailPienoPiccolo.png);
+  }
+  

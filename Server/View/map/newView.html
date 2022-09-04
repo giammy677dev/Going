@@ -60,10 +60,9 @@
         <div class="inner_row">
           <span id="info"> INFORMAZIONI ROADMAP </span> <span id="line"></span>
           <div id="boxIcon">
-            <a class="boxclose" id="segn_rm" title="segnala roadmap"
-              onclick="document.getElementById('segnal_rm').setAttribute('style','display:block')">⚠️</a>
-            <div class="cheched" id="checked"> </div>
+            <a class="boxclose" id="segn_rm" title="segnala roadmap" onclick="openSegnalazionePopup()">⚠️</a>
             <div class="favorite" id="favorite"> </div>
+            <div class="cheched" id="checked"> </div>
           </div>
           <br>
           <div id="second_row">
@@ -96,37 +95,31 @@
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPAAQaGDsfG0K4lksFbcEetDuNw85mlH8&callback=initMap&v=weekly&libraries=places,geometry"
                 defer></script>
 
-              <div id="descriptionRoadmap">
                 <fieldset class="descrizioneRoadmap">
                   <legend>Descrizione Roadmap</legend>
                   <span id="descrizione"></span>
                 </fieldset>
-              </div>
 
               
             </div>
-
+            
             <div class="all">
               <div class="body-cards">
                 <div class="main">
-
+      
                   <div class="timeline">
-                    <h3>ITINERARIO DI VIAGGIO</h3>
-                    <p id="testoDurata">⏱Tempo di viaggio: <span class="durata" id="somma_totale">0</span> minuti</p>
+                    <h3>Lista punti di sosta</h3>
                     <div class="box">
-
                       <div class="container">
-
                         <div class="cards" id="cards">
-
                         </div>
-
                       </div>
-                      <script src="/View/map/createRoadmap.js" type="text/javascript"></script>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+        
             </div>
           </div>
         </div>
@@ -137,8 +130,19 @@
 
     <div class="popup" id="popupRecensione">
       <h2>EFFETTUA RECENSIONE</h2>
-      <div id="touchcocktals">
-        <div id="cocktail"> </div>
+      <div id="select_rating">
+        <div class="rate">
+          <input type="radio" id="star5" name="rate" value="5" />
+          <label for="star5" title="text">5 stars</label>
+          <input type="radio" id="star4" name="rate" value="4" />
+          <label for="star4" title="text">4 stars</label>
+          <input type="radio" id="star3" name="rate" value="3" />
+          <label for="star3" title="text">3 stars</label>
+          <input type="radio" id="star2" name="rate" value="2" />
+          <label for="star2" title="text">2 stars</label>
+          <input type="radio" id="star1" name="rate" value="1" />
+          <label for="star1" title="text">1 star</label>
+        </div>
       </div>
       <textarea id="us_rec" name="us_rec" autocomplete="off" rows="6" placeholder="Motiva la tua valutazione! (facoltativo)"></textarea><br>
       <input type="button" id="save_recbtn" onclick="createRecensione()" class="buttonSegnalazione"

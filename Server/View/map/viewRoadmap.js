@@ -18,6 +18,9 @@ document.addEventListener('receivedUserInfo', (e) => {
     document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
+  else{
+    drawVisualFavouriteSeguitaBottoni(roadmap.id)
+  }
 
   drawCommentiERecensioni()
 }, false);
@@ -38,21 +41,19 @@ document.addEventListener('receivedRoadmapData', (e) => {
   else{
     document.getElementById("distanza").innerText = ' 🚗 ' + distance;
   }
-
-  if(roadmap.descrizione == null){
-    document.getElementById("descriptionRoadmap").setAttribute("display","none");
-  }
-
+  
   document.getElementById("titolo").innerText = roadmap.titolo
   document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
   document.getElementById("durata").innerText = ' ⏱ ' + minuti;
+  
   document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
+  document.getElementById("citta").setAttribute("onclick","location.href = '/explore?ricerca=" + roadmap.localita +"'");
+
   document.getElementById("utente").innerText = ' 👤 ' + roadmapCreator
+  document.getElementById("utente").setAttribute("onclick","location.href = '/profile?id=" + roadmap.utenteRegistrato_id+"'");
+
   document.getElementById("descrizione").innerText = roadmap.descrizione
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
-  drawVisualFavouriteSeguitaBottoni(roadmap.id)
-
-  document.getElementById("cocktail").innerHTML += generateRating(0, 35, 'auto');
 }, false);
 
 
@@ -61,7 +62,15 @@ document.addEventListener('receivedRoadmapData', (e) => {
 
 //popups for recensioni e commenti
 
-function openRecensionePopup() {
+function openSegnalazionePopup(){
+  if (user_id > 0) {
+    document.getElementById('segnal_rm').setAttribute('style','display:block');
+  } else {
+    document.getElementById('log').style.display='block';
+  }
+}
+
+function openRecensionePopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
     document.getElementById('popupRecensione').setAttribute('style','display:block');
     //createRecensione(roadmap_id,"test",5)
@@ -80,20 +89,18 @@ function openCommentoPopup(roadmap_id,value) {
 }
 
 function pressLikeButton(roadmap_id, value) {
-  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+  if (user_id > 0) {
     setRoadmapAsFavourite(roadmap_id, value)
   } else {
-    console.log("non sei loggato")
-    //classico popup di login
+    document.getElementById('log').style.display='block';
   }
 }
 
 function pressSeguitaButton(roadmap_id, value) {
-  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+  if (user_id > 0) {
     setRoadmapAsSeguita(roadmap_id, value)
   } else {
-    console.log("non sei loggato")
-    //classico popup di login
+    document.getElementById('log').style.display='block';
   }
 }
 
@@ -168,13 +175,24 @@ function generateRating(punteggio, grandezza, cursore) {
 function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
   var favouriteObj = document.getElementById("favorite")
   var checkedObj = document.getElementById("checked")
-  favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/star0.png"/>'
-  checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png"/>'
+  favouriteObj.innerHTML = '<img id="fav" onclick="pressLikeButton(' + roadmap_id + ',0)" src="/storage/heart0.png"/>'
+  checkedObj.innerHTML = '<img id="chk" onclick="pressSeguitaButton(' + roadmap_id + ',0)" src="/storage/check0.png"/>'
 }
 
 function drawVisualStage(stage) {
-  document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + parseInt(stage.reachTime) / 60 + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
+    var fotoPath = stage.fotoURL;
+
+    if (stage.isExNovo == 1 && stage.fotoId == null) {
+      var fotoPath = "/storage/loghetto.jpg";
+    }
+    if (stage.ordine == 0) {
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    }
+    else {
+        console.log(stage)
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage.ordine )+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage.ordine )+'">'+ convertHMS(stage.reachTime)+'</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    }
 }
 
 function drawVisualRecensione(recensione, isMe) {
@@ -266,8 +284,8 @@ function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok) {
-      favouriteObj.innerHTML = '<img id="fav"  title="toglila tra i preferiti" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/star' + r.data.preferita + '.png" style="width:50px; height:50px;cursor: pointer;">'
-      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="width:50px; height:50px;cursor: pointer;">'
+      favouriteObj.innerHTML = '<img id="fav" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/heart' + r.data.preferita + '.png" style="cursor: pointer;">'
+      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="cursor: pointer;">'
     }
   }
   xhr.send();
@@ -290,11 +308,11 @@ function setRoadmapAsFavourite(roadmap_id, value) {
       var html
       if (value == 1) {
         value = 0
-        html = '<img id="fav" title="toglila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       } else {
         value = 1
-        html = '<img id="fav" title="inseriscila tra le preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/star' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
       }
+
+      html = '<img id="fav" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + value + ')"src="/storage/heart' + prec_value + '.png" style="cursor: pointer;"></img>'
       var posto_fav = document.getElementById("favorite")
       posto_fav.innerHTML = html
 
@@ -307,6 +325,43 @@ function setRoadmapAsFavourite(roadmap_id, value) {
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
     roadmap_id: roadmapId,
+    newStatus: value
+  }));
+}
+
+function setRoadmapAsSeguita(roadmap_id, value) {
+  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", '/setRoadmapAsSeguita', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    console.log(r)
+    if (r.ok == true) {
+      console.log("messo ", value, "in seguite")
+      getFollowedRoadmapAchievementPopup(r.data)
+      const prec_value = value;
+      var html;
+      if (value == 1) {
+        value = 0
+      }
+      else {
+        value = 1
+      }
+      html = '<img id="chk" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="cursor: pointer;"></img>'
+      var posto_chk = document.getElementById("checked")
+      posto_chk.innerHTML = html
+    }
+    else {
+      console.log(r)
+      alert("Problemi col db")
+    }
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    roadmap_id: roadmap_id,
     newStatus: value
   }));
 }
@@ -552,45 +607,6 @@ function showVisualAchievementPopup(testo, immagine) {
   document.getElementById('imageAchievement').setAttribute('src', immagine);
   document.getElementById("roadmapAchievementPopup").style.display = "block";
   setTimeout(closeVisualPopup, 5000);
-}
-
-function setRoadmapAsSeguita(roadmap_id, value) {
-  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", '/setRoadmapAsSeguita', true);
-  xhr.onload = function (event) {
-
-    const r = JSON.parse(event.target.responseText);
-
-    console.log(r)
-    if (r.ok == true) {
-      console.log("messo ", value, "in seguite")
-      getFollowedRoadmapAchievementPopup(r.data)
-      const prec_value = value;
-      var html;
-      if (value == 1) {
-        value = 0
-        html = '<img id="chk" title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
-      }
-      else {
-        value = 1
-        html = '<img id="chk" title="inseriscila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + value + ')"src="/storage/check' + prec_value + '.png" style="width:50px; height:50px;cursor: pointer;"></img>'
-      }
-      var posto_chk = document.getElementById("checked")
-
-      posto_chk.innerHTML = html
-    }
-    else {
-      console.log(r)
-      alert("Problemi col db")
-    }
-  }
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    roadmap_id: roadmap_id,
-    newStatus: value
-  }));
 }
 
 function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { //NON VIENE CHIAMATA DA NESSUNA PARTE, chiedere a Matteo dove inserirla
