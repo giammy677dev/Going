@@ -1,15 +1,14 @@
-/*const host = 'going.mysql.database.azure.com';
+const host = 'going.mysql.database.azure.com';
 const user = 'giammy677';
 const password = 'Asdf1234';
 const database = 'going';
 const port = process.env.port || 3000;
-*/
 
-const host = 'localhost';
+/*const host = 'localhost';
 const user = 'root';
 const password = 'going';
 const database = 'mydb';
-const port = process.env.port || 3000;
+const port = process.env.port || 3000;*/
 
 const ca = 'DigiCertGlobalRootCA.crt.pem'
 const GOOGLE_MAPS_BACKEND_API_KEY = 'AIzaSyDkhHdG46Po1AyvEnEsk8PALxscMRpEYCs'
