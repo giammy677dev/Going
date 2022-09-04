@@ -447,7 +447,7 @@ class HTTPinterface {
 
     async reportObject(req, res) {
         if (req.session.loggedin || true) { // da mettere!
-            const r = await this.controller.reportObject(req.session.user_id, req.body.tipo, req.body.idOggetto, req.body.motivazione);
+            const r = await this.controller.reportObject(req.body.tipo, req.body.idOggetto, req.body.motivazione);
             return res.send(JSON.stringify(r));
         }
     }

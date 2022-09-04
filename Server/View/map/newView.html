@@ -47,7 +47,7 @@
     <h2>EFFETTUA SEGNALAZIONE</h2>
     <textarea type="text" rows="4" name="descrizione" id="motiv_rm" placeholder="Inserisci la motivazione"></textarea>
     <br>
-    <input class="buttonSegnalazione" id="segnalaRoadmap" type="submit" name="invia" value="Segnala" onclick="" />
+    <input class="buttonSegnalazione" id="segnalaRoadmap" type="submit" name="invia" value="Segnala" />
     <input type="button" onclick="document.getElementById('segnal_rm').setAttribute('style','display:none')"
       class="buttonSegnalazione" value="Annulla" />
   </div>
@@ -60,7 +60,7 @@
         <div class="inner_row">
           <span id="info"> INFORMAZIONI ROADMAP </span> <span id="line"></span>
           <div id="boxIcon">
-            <a class="boxclose" id="segn_rm" title="segnala roadmap" onclick="openSegnalazionePopup()">⚠️</a>
+            <a class="boxclose" id="segn_rm" title="segnala roadmap" onclick="openSegnalazionePopup(1,1)">⚠️</a>
             <div class="favorite" id="favorite"> </div>
             <div class="cheched" id="checked"> </div>
           </div>

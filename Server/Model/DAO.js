@@ -12,9 +12,9 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                /*ssl: {
+                ssl: {
                     ca: fs.readFileSync(__dirname + '/../config/ca/' + config.ca)
-                }*/
+                }
             });
             return connection;
         } catch (err) {
@@ -123,10 +123,10 @@ class DAO {
         }
     }
 
-    async aggiungiReport(user_id, tipo, idOggetto, motivazione) {
+    async aggiungiReport(tipo, idOggetto, motivazione) {
         try {
             var connection = await this.connect();
-            await connection.query('INSERT INTO segnalazione (idUtente, tipo, idOggetto, motivazione) VALUES (?, ?, ?, ?)', [user_id, tipo, idOggetto, motivazione]);
+            await connection.query('INSERT INTO segnalazione (tipo, idOggetto, motivazione) VALUES (?, ?, ?)', [tipo, idOggetto, motivazione]);
             return [true, 0];
         } catch (error) {
             console.log(error)

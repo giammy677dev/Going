@@ -322,8 +322,8 @@ class RequestController {
         return { ok: data[0], error: data[1], data: data[2] }
     }
 
-    async reportObject(user_id, tipo, idOggetto, motivazione) {
-        const data = await this.dao.aggiungiReport(user_id, tipo, idOggetto, motivazione);
+    async reportObject(tipo, idOggetto, motivazione) {
+        const data = await this.dao.aggiungiReport(tipo, idOggetto, motivazione);
 
         return { ok: data[0], error: data[1] }
     }
