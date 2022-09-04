@@ -41,16 +41,19 @@ document.addEventListener('receivedRoadmapData', (e) => {
   else{
     document.getElementById("distanza").innerText = ' 🚗 ' + distance;
   }
-
+  
   document.getElementById("titolo").innerText = roadmap.titolo
   document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
   document.getElementById("durata").innerText = ' ⏱ ' + minuti;
+  
   document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
-  document.getElementById("utente").innerHTML = '<a> 👤 ' + roadmapCreator
+  document.getElementById("citta").setAttribute("onclick","location.href = '/explore?ricerca=" + roadmap.localita +"'");
+
+  document.getElementById("utente").innerText = ' 👤 ' + roadmapCreator
+  document.getElementById("utente").setAttribute("onclick","location.href = '/profile?id=" + roadmap.utenteRegistrato_id+"'");
+
   document.getElementById("descrizione").innerText = roadmap.descrizione
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
-
-  document.getElementById("cocktail").innerHTML += generateRating(0, 35, 'auto');
 }, false);
 
 
@@ -67,7 +70,7 @@ function openSegnalazionePopup(){
   }
 }
 
-function openRecensioniPopup(roadmap_id,value) {
+function openRecensionePopup(roadmap_id,value) {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
     document.getElementById('popupRecensione').setAttribute('style','display:block');
     //createRecensione(roadmap_id,"test",5)
@@ -177,8 +180,19 @@ function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
 }
 
 function drawVisualStage(stage) {
-  document.getElementById('lines').innerHTML += '<div class="dot" id="dot">' + parseInt(stage.reachTime) / 60 + '</div><div class="line" id="line"></div>'
-  document.getElementById('cards').innerHTML += '<div class="card" id="card"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di sosta: ' + stage.durata + ' min </p>'
+    var fotoPath = stage.fotoURL;
+
+    if (stage.isExNovo == 1 && stage.fotoId == null) {
+      var fotoPath = "/storage/loghetto.jpg";
+    }
+    if (stage.ordine == 0) {
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    }
+    else {
+        console.log(stage)
+        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage.ordine )+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage.ordine )+'">'+ convertHMS(stage.reachTime)+'</span></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    }
 }
 
 function drawVisualRecensione(recensione, isMe) {
