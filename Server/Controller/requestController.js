@@ -44,6 +44,7 @@ class RequestController {
     calculateDuration(stages, distance_data) {
         var durata = stages[0].durata;
         for (var i = 1; i < stages.length; i++) {
+            durata += stages[i].durata;
             durata += distance_data[stages[i - 1].placeId + "|" + stages[i].placeId].routes[0].legs[0].duration.value ////CONVENZIONE è IN SECONDI
         }
         return durata

@@ -175,7 +175,6 @@ function requestDistance(marker1, marker2) {
 function submitRoadmap() {
     var isPub = visibilita == 'Pubblica' ? 1 : 0;
 
-
     var description = document.getElementById("areaDescrizione").value
 
     if (title == "") {
@@ -312,6 +311,8 @@ var ClickEventHandler = (function () {
         durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
 
         var durataElement = document.createElement('input');
+        durataElement.setAttribute("type","number")
+        durataElement.setAttribute("min","1")
         durataElement.id = "durata";
 
         var inputElement = document.createElement('input');
@@ -330,72 +331,82 @@ var ClickEventHandler = (function () {
         spn.appendChild(inputElement);
 
         inputElement.addEventListener('click', function () {
-            circles[stage_index] = new google.maps.Circle({
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.35,
-                map,
-                center: latLng,
-                radius: 3,
-            });
 
-            markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
-                position: latLng,
-                map: map,
-                icon: customMarker,
-                visible: true,
-            });
+            if(StageName.value == ""){
+                alert("Inserisci il nome dello stage");
+            }
+            else if (durataElement.value == "" || durataElement.value < 0) {
+                alert("Inserisci tempo di sosta");
+            }
+            else {
+                circles[stage_index] = new google.maps.Circle({
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    map,
+                    center: latLng,
+                    radius: 3,
+                });
 
-            markers[stage_index].addListener("click", (e) => {
-                ClickEventHandler.prototype.openAddBox(placeId, latLng);
-            });
+                markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
+                    position: latLng,
+                    map: map,
+                    icon: customMarker,
+                    visible: true,
+                });
 
-
-            /*Nodo ex novo*/
-            stage.indirizzo = indirizzo
-            stage.index = stage_index
-            stage.nome = StageName.value;
-            //secondi!!!
-            stage.durata = parseInt(durataElement.value) * 60;
-
-            addDurata(stage.durata)
-            stage.placeId = placeId;
+                markers[stage_index].addListener("click", (e) => {
+                    ClickEventHandler.prototype.openAddBox(placeId, latLng);
+                });
 
 
-            console.log(PhotoFile.files)
-            stage.foto = PhotoFile.files[0];
-            stage.latitudine = latLng.lat();
-            stage.longitudine = latLng.lng();
+                /*Nodo ex novo*/
+                stage.indirizzo = indirizzo
+                stage.index = stage_index
+                stage.nome = StageName.value;
+                //secondi!!!
+                stage.durata = parseInt(durataElement.value) * 60;
 
-            stages_info[placeId] = stage;
-            console.log(stage.foto)
-            console.log(stage.foto)
-            console.log(stage.foto)
-            console.log(stage.foto)
-            to_send_stage.placeId = stage.placeId;
-            to_send_stage.titolo = stage.titolo;
-            to_send_stage.foto = stage.foto;
-            to_send_stage.website = stage.website;
-            to_send_stage.durata = stage.durata;
-            to_send_stage.nome = stage.nome;
+                addDurata(stage.durata)
+                stage.placeId = placeId;
 
-            stages_list.push(to_send_stage)
-            lastPlaceId = placeId;
-            drawDeletableStage(stage_index, stage);
 
-            if (stages_list.length >= 2) {
-                requestDistance(stages_list[stage_index - 1], stage);
+                console.log(PhotoFile.files)
+                stage.foto = PhotoFile.files[0];
+                stage.latitudine = latLng.lat();
+                stage.longitudine = latLng.lng();
+
+                stages_info[placeId] = stage;
+                console.log(stage.foto)
+                console.log(stage.foto)
+                console.log(stage.foto)
+                console.log(stage.foto)
+                to_send_stage.placeId = stage.placeId;
+                to_send_stage.titolo = stage.titolo;
+                to_send_stage.foto = stage.foto;
+                to_send_stage.website = stage.website;
+                to_send_stage.durata = stage.durata;
+                to_send_stage.nome = stage.nome;
+
+                stages_list.push(to_send_stage)
+                lastPlaceId = placeId;
+                drawDeletableStage(stage_index, stage);
+
+                if (stages_list.length >= 2) {
+                    requestDistance(stages_list[stage_index - 1], stage);
+                }
+
+                stage_index++;
+
+                var prec = parseInt(document.getElementById("somma_totale").innerText)
+                prec = stage.durata + prec
+                document.getElementById("somma_totale").innerText = prec
+
+                infoWindow.close();
             }
 
-            stage_index++;
-
-            var prec = parseInt(document.getElementById("somma_totale").innerText)
-            prec = stage.durata + prec
-            document.getElementById("somma_totale").innerText = prec
-
-            infoWindow.close();
         });
 
         infoWindow = new google.maps.InfoWindow({
@@ -412,59 +423,65 @@ var ClickEventHandler = (function () {
         }
         infoWindow.close();
 
-
         var stage = {}
         var to_send_stage = {}
 
         var durataShow = document.createElement('p');
         durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
+
         var durataElement = document.createElement('input');
+        durataElement.setAttribute("type","number")
+        durataElement.setAttribute("min","1")
         durataElement.id = "durata";
 
         var inputElement = document.createElement('input');
         inputElement.type = "submit"
         inputElement.value = "Aggiungi stage"
 
-
         inputElement.addEventListener('click', function () {
 
-            circles[stage_index] = new google.maps.Circle({
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.35,
-                map,
-                center: latLng,
-                radius: 3,
-            });
-
-            /*Nodo gia esistente*/
-            //secondi!!!!
-            stage.durata = parseInt(durataElement.value) * 60;
-            addDurata(stage.durata)
-            stage.placeId = placeId;
-            stage.latitudine = latLng.lat();
-            stage.longitudine = latLng.lng();
-
-            to_send_stage.durata = stage.durata;
-            to_send_stage.placeId = stage.placeId;
-
-            stages_list.push(to_send_stage);
-            lastPlaceId = placeId;
-            drawDeletableStage(stage_index, stage)
-
-            if (stages_list.length >= 2) {
-                requestDistance(stages_list[stage_index - 1], stage);
+            if (durataElement.value == "" || durataElement.value < 0) {
+                alert("Inserisci tempo di sosta");
             }
+            if (durataElement.value != "" && durataElement.value > 0) {
+                circles[stage_index] = new google.maps.Circle({
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    map,
+                    center: latLng,
+                    radius: 3,
+                });
 
-            stage_index++;
+                /*Nodo gia esistente*/
+                //secondi!!!!
+                stage.durata = parseInt(durataElement.value) * 60;
+                addDurata(stage.durata)
+                stage.placeId = placeId;
+                stage.latitudine = latLng.lat();
+                stage.longitudine = latLng.lng();
 
-            var prec = parseInt(document.getElementById("somma_totale").innerText)
-            prec = (stage.durata / 60) + prec
-            document.getElementById("somma_totale").innerText = prec
+                to_send_stage.durata = stage.durata;
+                to_send_stage.placeId = stage.placeId;
 
-            infoWindow.close();
+                stages_list.push(to_send_stage);
+                lastPlaceId = placeId;
+                drawDeletableStage(stage_index, stage)
+
+                if (stages_list.length >= 2) {
+                    requestDistance(stages_list[stage_index - 1], stage);
+                }
+
+                stage_index++;
+
+                var prec = parseInt(document.getElementById("somma_totale").innerText)
+                prec = (stage.durata / 60) + prec
+                document.getElementById("somma_totale").innerText = prec
+
+                infoWindow.close();
+            }
         });
 
         var spn = document.createElement("span");
