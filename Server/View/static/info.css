@@ -118,4 +118,12 @@ body {
 	height: 460px;
 	
 }
+
+.containerImmagineInfo{
+	width: 100%;
+}
+
+.containerImmagineInfo img{
+	width: 100%;
+}
 /* FINE PAGINA INFO */
