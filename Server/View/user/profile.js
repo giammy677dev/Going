@@ -419,12 +419,14 @@ function load_choice_avatar() {
 }
 
 function choice(id) {
-  document.getElementById("avatar_choice").setAttribute("src", "/storage/avatar/" + id + ".png")
+  //document.getElementById("avatar_choice").setAttribute("src", "/storage/avatar/" + id + ".png")
+  document.getElementById("avatar_choice").setAttribute("src", "/storage/avatar/Avatar_" + id + ".png")
+  document.getElementById("avatar_choice").setAttribute("avatarIndex", id)
 }
 
 function change_avatar() {
-  var new_avatar = document.getElementById("avatar_choice").getAttribute("src");
-
+  //var new_avatar = document.getElementById("avatar_choice").getAttribute("src");
+  var new_avatar_index = document.getElementById("avatar_choice").getAttribute("avatarIndex");
   var xhr = new XMLHttpRequest();
 
   xhr.open("POST", '/updateAvatar', true);
@@ -433,14 +435,14 @@ function change_avatar() {
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok == true) {
-      document.getElementById("avatar").setAttribute("src", new_avatar);
+      document.getElementById("avatar").setAttribute("src", "/storage/avatar/Avatar_" + new_avatar_index + ".png");
       document.getElementById('choice_avatar').style.display = 'none';
     }
   }
 
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    new_avatar: new_avatar
+    new_avatar_index: Number(new_avatar_index)
   }));
 }
 

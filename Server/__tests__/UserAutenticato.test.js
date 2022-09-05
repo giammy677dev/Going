@@ -7,12 +7,14 @@ const app = new Server()
 var agent = request.agent(app.app);
 
 const instance_data = {
-    username: "giammy677",
+    /*username: "giammy677",
     password: "asdf1234",
     email: "giammy677@gmail.com",
-    birthdate: "1995-09-10"//html birthdate format (just like frontend does)
+    birthdate: "1995-09-10"//html birthdate format (just like frontend does)*/
+    username: "dieghino",
+    password: "dieghino"
 }
-const user_id = 5;
+const user_id = 1;
 
 beforeAll(async () => {
     await agent.post("/auth").send({
@@ -93,7 +95,6 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         //console.log(json_response)
         expect(json_response.ok).toEqual(false);
         //expect(json_response.error).toEqual(0); 
-
     });
 
 
@@ -128,7 +129,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        console.log(json_response)
+        //console.log(json_response)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
     });
@@ -235,6 +236,8 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.data.isMe).toEqual(true);
     });
 
+
+
     test("Test login (ma già loggato)", async () => {
         const res = await agent.post("/auth").send({
             username: instance_data.username,
@@ -248,7 +251,19 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
     });
 
 
-    test("test di logout avendo effettuato il login", async () => {
+    test("Test update avatar", async () => {
+
+        const res = await agent.post("/updateAvatar").send({
+            new_avatar_index:14
+        });
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0);
+    });
+
+    test("Test di logout avendo effettuato il login", async () => {
         const res = await agent.post("/logout").send({})
 
         expect(res.statusCode).toEqual(200);
@@ -256,5 +271,4 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
     })
-    
 });

@@ -24,7 +24,6 @@ class UserController {
         }
     }
     async login(username, password) {
-        console.log("test")
         //Ensure the input fields exists and are not empty
         if (username && password) {
             password = md5(password);
@@ -54,9 +53,13 @@ class UserController {
         const data = await this.dao.setRoadmapCheckedState(user_id, roadmap_id, newStatus);
         return { ok: data[0], error: data[1], data: data[2] };
     }
-    async updateAvatar(id, new_avatar) {
-        const data = await this.dao.updateAvatar(id, new_avatar);
-        return { ok: data[0], error: data[1], data: data[2] }
+    async updateAvatar(id, new_avatar_index) {
+        if(new_avatar_index !== null && new_avatar_index > 0)
+        {
+            const data = await this.dao.updateAvatar(id, "/storage/avatar/Avatar_" + new_avatar_index + ".png");
+            return { ok: data[0], error: data[1], data: data[2] }
+        }
+        
     }
 
 }
