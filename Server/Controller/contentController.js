@@ -4,10 +4,20 @@ class ContentController {
     }
 
     async searchUser(username) {
-        const data = await this.dao.searchUser(username);
-        return { ok: data[0], error: data[1], data: data[2] };
+        var data;
+        if(!username || username == ""){
+            return {ok:false,error:-1,data:{}}
+        }else{
+            data = await this.dao.searchUser(username);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
     }
+
     async suggestedRoadmap(roadmap, rating) {
+        if(!roadmap || !rating || rating <= 0 || rating > 5 || roadmap > 20 || roadmap < 1)
+        {
+            return {ok:false,error:-1,data:{}}
+        }
         const data = await this.dao.suggestedRoadmap(roadmap, rating);
         return { ok: data[0], error: data[1], data: data[2] }
     }
