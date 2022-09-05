@@ -159,6 +159,15 @@ body {
     margin-bottom: 10px;
 }
 
+#commSpace {
+    font-size: 17px;
+    width: 80%;
+    background-color: #081a2359;
+    border: 1px solid #c0c0c0;
+    color: white;
+    margin-bottom: 10px;
+}
+
 .buttonSegnalazione {
     font-size: 20px;
     padding: 5px 30px;
@@ -544,9 +553,16 @@ legend{
 
 /* Settare rate */
 
-  .rate{
-    float: left;
-    height: 46px;
+#select_rating{
+    width: 100%;
+    text-align: center;
+  }
+  
+  .rate {
+    
+    display: table;
+    margin:0px auto;
+    margin-bottom: 20px;
     padding: 0 10px;
   }
   

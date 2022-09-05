@@ -47,8 +47,17 @@
     <h2>EFFETTUA SEGNALAZIONE</h2>
     <textarea type="text" rows="4" name="descrizione" id="motiv_rm" placeholder="Inserisci la motivazione"></textarea>
     <br>
-    <input class="buttonSegnalazione" id="segnalaRoadmap" type="submit" name="invia" value="Segnala" />
+    <input type="button" class="buttonSegnalazione" id="segnalaRoadmap" name="invia" value="Segnala" />
     <input type="button" onclick="document.getElementById('segnal_rm').setAttribute('style','display:none')"
+      class="buttonSegnalazione" value="Annulla" />
+  </div>
+
+  <div class="popup" id="modif_com">
+    <h2>MODIFICA COMMENTO</h2>
+    <textarea type="text" rows="4" name="commento" id="commSpace"></textarea>
+    <br>
+    <input type="button" class="buttonSegnalazione" id="modifComment" name="invia" value="Modifica" />
+    <input type="button" onclick="document.getElementById('modif_com').setAttribute('style','display:none')"
       class="buttonSegnalazione" value="Annulla" />
   </div>
 
@@ -132,15 +141,15 @@
       <div id="select_rating">
         <div class="rate" id="ratingRecensione">
           <input type="radio" id="star5" name="rate" value="5" onclick="setRatingRecensione(5)"/>
-          <label for="star5" title="text">5 stars</label>
+          <label for="star5" title="text"></label>
           <input type="radio" id="star4" name="rate" value="4" onclick="setRatingRecensione(4)"/>
-          <label for="star4" title="text">4 stars</label>
+          <label for="star4" title="text"></label>
           <input type="radio" id="star3" name="rate" value="3" onclick="setRatingRecensione(3)"/>
-          <label for="star3" title="text">3 stars</label>
+          <label for="star3" title="text"></label>
           <input type="radio" id="star2" name="rate" value="2" onclick="setRatingRecensione(2)"/>
-          <label for="star2" title="text">2 stars</label>
+          <label for="star2" title="text"></label>
           <input type="radio" id="star1" name="rate" value="1" onclick="setRatingRecensione(1)"/>
-          <label for="star1" title="text">1 star</label>
+          <label for="star1" title="text"></label>
         </div>
       </div>
       <textarea id="us_rec" name="us_rec" autocomplete="off" rows="6" placeholder="Motiva la tua valutazione! (facoltativo)"></textarea><br>

@@ -17,25 +17,26 @@ function drawSegnalazioni() {
       var tr = document.createElement('tr');
 
       for (const [key, value] of Object.entries(segnalazioni[0] || {})) {
-        var td1 = document.createElement('td');
+        var td1 = document.createElement('th');
         var text1 = document.createTextNode(key);
         td1.appendChild(text1);
         tr.appendChild(td1);
       }
-      var td1 = document.createElement('td');
+      var td1 = document.createElement('th');
       var text1 = document.createTextNode("accept");
       td1.appendChild(text1);
       tr.appendChild(td1);
-      var td1 = document.createElement('td');
+      var td1 = document.createElement('th');
       var text1 = document.createTextNode("delete");
       td1.appendChild(text1);
       tr.appendChild(td1);
 
       table.appendChild(tr);
+      
 
       segnalazioni.forEach(function (segnalazione) {
         var tr = document.createElement('tr');
-        segnalazione.motivazione = getTypeNameFromType(segnalazione.motivazione)
+        //segnalazione.motivazione = getTypeNameFromType(segnalazione.motivazione)
 
         for (const [key, value] of Object.entries(segnalazione)) {
           var td1 = document.createElement('td');
@@ -62,7 +63,7 @@ function drawSegnalazioni() {
 
         table.appendChild(tr);
       });
-      document.body.appendChild(table);
+      document.getElementById("boxTable").appendChild(table);
     }
   }
 
@@ -88,9 +89,12 @@ function handleSegnalazioni() {
 
     if (r.ok) {
       //update page if everything goes well. f5
+      window.alert("operazione eseguita!");
+      location.href = "/adminPanel";
     }
   }
 
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify(body));
+  
 }

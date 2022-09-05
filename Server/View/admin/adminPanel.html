@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <HEAD>
-  <title>Going - About</title>
+  <title>Going - Admin Panel</title>
   <meta charset="utf-8" />
   <meta name="description" content="Programma la tua esperienza di viaggio creando la tua roadmap oppure scegliendo tra le più belle della community!">
   <meta name="author" content="Maraniello Mennillo Orlando Perillo Russo" />
   <meta name="keywords" content="Going, going, viaggi, travel, roadmap" />
   <link rel="icon" href="/storage/favicon.jpg" type="image/jpg" />
   <script src="/View/user/login.js" type="text/javascript"></script>
-  <link rel="stylesheet" href="/View/static/about.css"> <!--QUA VA CAMBIATO! per il momento sto usando lo stesso-->
+  <link rel="stylesheet" href="/View/admin/adminPanel.css"> 
   <link rel="stylesheet" href="/View/static/header.css">
   <script src="/View/static/header.js" type="text/javascript"></script>
   <script src="/View/admin/adminPanel.js" type="text/javascript"></script>
@@ -21,8 +21,17 @@
 <body onload="caricaHeader(), check(), drawSegnalazioni()">
 
   <div class="contenuto">
-    
-    <input type="button" value ="UPDATE" onclick="handleSegnalazioni()">
+    <div class="row">
+      <div class="inner_row">
+        <span id="info"> GESTIONE ADMIN</span> <span id="line"></span>
+        <br>
+        <span id="titolo_info">TABELLA SEGNALAZIONI</span>
+      </div>
+      <div id="boxTable"></div>
+      <div id="centerdiv">
+        <input class="button" type="button" value="UPDATE" onclick="handleSegnalazioni()">
+      </div>
+    </div>
   </div>
-</div>
+
 </body>
