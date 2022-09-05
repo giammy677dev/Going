@@ -21,7 +21,7 @@ function check() {
         document.getElementById("firstButtLog").setAttribute("onclick","document.getElementById('logout').style.display='block'");
   
         console.log(document.getElementById("secondButtLog"))
-        document.getElementById("secondButtLog").innerHTML = "Profile";
+        document.getElementById("secondButtLog").innerHTML = "Profilo";
         document.getElementById("secondButtLog").setAttribute("href","/profile?id="+r.data.info.id);
       }
     }
