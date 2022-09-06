@@ -34,7 +34,7 @@ class HTTPinterface {
     initServer() {
         this.storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, './' + config.stagesFolder))
+                cb(null, path.join(__dirname, '../storage/' + config.stagesFolder))
             },
             filename: function (req, file, cb) {
                 const split = file.originalname.split(".");

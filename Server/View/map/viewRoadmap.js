@@ -196,7 +196,7 @@ function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
 function drawVisualStage(stage) {
   var fotoPath = stage.fotoURL;
 
-  if (stage.isExNovo == 1 && stage.fotoId == null) {
+  if (stage.isExNovo == 1 && stage.fotoID == null) {
     var fotoPath = "/storage/loghetto.jpg";
   }
   if (stage.ordine == 0) {
