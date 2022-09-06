@@ -97,9 +97,8 @@ function searchUser(ricerca) {
                     document.getElementById("titolo_info_utenti").innerText = "1 RISULTATO";
                 }
 
-                var age = Age(r.data.users[i].birthdate);
-
                 for (var i = 0; i < r.data.users.length; i++) {
+                    var age = Age(r.data.users[i].birthdate);
                     const html_code = '<a class="link_user" href="/profile?id=' + r.data.users[i].id + '"><div class="new_item-user" ><img src="' + r.data.users[i].avatar + '"><br>' + r.data.users[i].username + '<br>' + age + ' anni </div></a>'
                     const posto = document.getElementById("items-user");
                     posto.insertAdjacentHTML("beforeend", html_code);
