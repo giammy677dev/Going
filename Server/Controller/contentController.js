@@ -91,6 +91,7 @@ class ContentController {
             return { ok: false, error: -4, data: '' }
         }
         else {
+            console.log(user_id, idRecensione, isAdmin)
             const data = await this.dao.deleteRecensione(idRecensione, user_id, isAdmin);
             return { ok: data[0], error: data[1], data: data[2] };
         }

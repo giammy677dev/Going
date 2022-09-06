@@ -211,8 +211,9 @@ describe("Test ROADMAP (block #4)", () => {
     });
 
     test("Test delete stage", async () => {
-        const POIplaceId = 'ChIJp_DwHJEJag0Rt1arlDMk8vc'; "El Tajo Garden Center"
-        const res = await agent.post("/deleteStage").send({placeId:POIplaceId});
+        const roadmap_data = await agent.get("/getRoadmapData?id="+roadmap_id1).send();
+        stageId = (JSON.parse(roadmap_data.text)).data.roadmap.stages[0].idStage
+        const res = await agent.post("/deleteStage").send({idStage:stageId});
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
         //console.log(json_response)
