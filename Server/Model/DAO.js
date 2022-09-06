@@ -12,9 +12,9 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                /*ssl: {
+                ssl: {
                     ca: fs.readFileSync(__dirname + '/../config/ca/' + config.ca)
-                }*/
+                }
             });
             return connection;
         } catch (err) {
@@ -137,8 +137,8 @@ class DAO {
         }
     }
 
-    async getStageIdFromPlaceId(placeId){
-        
+    async getStageIdFromPlaceId(placeId) {
+
         try {
             var connection = await this.connect();
             const response = await connection.query('SELECT idStage from stage where placeId = ?', [placeId]);
@@ -149,7 +149,7 @@ class DAO {
         }
     }
     async createStage(placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita) {
-        
+
         try {
             var connection = await this.connect();
             await connection.query('INSERT INTO stage (placeId, isExNovo, latitudine, longitudine, indirizzo, nome,  website, fotoID,localita) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita]);
@@ -391,11 +391,11 @@ class DAO {
     async deleteStage(stageId) {
         try {
             var connection = await this.connect();
-            const placeId = (await connection.query('SELECT placeId from stage where idStage = ?',[stageId]))[0][0].placeId
+            const placeId = (await connection.query('SELECT placeId from stage where idStage = ?', [stageId]))[0][0].placeId
             console.log(placeId)
             var res = await connection.query('SELECT roadmap_id FROM stageinroadmap WHERE stage_placeId = ?', [placeId])
             var roadmap_list = res[0];
-            for(var i = 0; i < roadmap_list.length;i++){
+            for (var i = 0; i < roadmap_list.length; i++) {
                 await connection.query('DELETE FROM roadmap WHERE id = ?', [roadmap_list[i].roadmap_id]);
             }
 
@@ -427,7 +427,9 @@ class DAO {
 
             var connection = await this.connect();
             let selection = await connection.query('SELECT idOggetto,tipo FROM segnalazione WHERE idSegnalazione = ?', [idSegnalazione]);
-
+            if (selection[0].length == 0) {
+                return [false, -1, []];
+            }
             return [true, 0, selection[0][0] || null];
         }
         catch (error) {

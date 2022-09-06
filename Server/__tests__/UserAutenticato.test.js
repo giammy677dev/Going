@@ -42,17 +42,6 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.data.info.id).toEqual(user_id);
     });
 
-    test("Test user isLogWho info quando loggato", async () => {
-
-        const res = await agent.get("/isLogWho").send();
-
-        expect(res.statusCode).toEqual(200);
-        json_response = JSON.parse(res.text)
-        //console.log(json_response)
-        expect(json_response.ok).toEqual(true);
-        expect(json_response.error).toEqual(0); //per testarla va cambiata la chiamata da array aj son. care.
-        expect(json_response.whoLog).toEqual(user_id);
-    });
 
     test("Test creazione commento invalido (messaggio vuoto)", async () => {
 
@@ -134,7 +123,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.error).toEqual(0);
     });
 
-    test("Test delete commento valida", async () => {
+    test("Test delete commento valido", async () => {
 
         const res = await agent.post("/deleteCommento").send({ idCommento: commento_id });
 

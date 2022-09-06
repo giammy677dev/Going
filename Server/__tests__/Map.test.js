@@ -189,12 +189,12 @@ describe("Test ROADMAP (block #4)", () => {
         stages.push({ durata: 1050, placeId: POIplaceId }) //nodo POI (cache hit)
 
         const roadmapObj = { titolo: 'test', descrizione: 'test', isPublic: 0, stages: stages }
-        console.log(roadmapObj)
+        //console.log(roadmapObj)
         const res = await agent.post("/createRoadmap").send(roadmapObj);
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        console.log(json_response)
+        //console.log(json_response)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
         expect(json_response.data.roadmapId > 0).toEqual(true);
@@ -217,7 +217,7 @@ describe("Test ROADMAP (block #4)", () => {
         const res = await agent.post("/deleteStage").send({placeId:POIplaceId});
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        console.log(json_response)
+        //console.log(json_response)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
     });

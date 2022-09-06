@@ -4,28 +4,26 @@ var user_id=0
 function check() {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", '/isLogWho', true);
+  xhr.open("GET", '/getUserStatus', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
-    if (r.ok == true) {
-      console.log("sei loggato!!! con questo id", r.whoLog)
-      console.log(r)
-      ok=r.ok
-      user_id=r.whoLog
-      
-      console.log(document.getElementById("firstButtLog"))
-      document.getElementById("firstButtLog").innerHTML = "Logout";
-      document.getElementById("firstButtLog").setAttribute("onclick","document.getElementById('logout').style.display='block'");
-
-      console.log(document.getElementById("secondButtLog"))
-      document.getElementById("secondButtLog").innerHTML = "Profilo";
-      document.getElementById("secondButtLog").setAttribute("href","/profile?id="+user_id);
-    }
-    else if (r.ok == false) {
-      console.log("non sei loggato!!!")
-      console.log(r)
+    if (r.ok) {
+      console.log("test")
+      console.log(r.data)
+      if(r.data.logged){
+        ok=r.ok
+        user_id=r.whoLog
+        
+        console.log(document.getElementById("firstButtLog"))
+        document.getElementById("firstButtLog").innerHTML = "Logout";
+        document.getElementById("firstButtLog").setAttribute("onclick","document.getElementById('logout').style.display='block'");
+  
+        console.log(document.getElementById("secondButtLog"))
+        document.getElementById("secondButtLog").innerHTML = "Profilo";
+        document.getElementById("secondButtLog").setAttribute("href","/profile?id="+r.data.info.id);
+      }
     }
   }
   xhr.send();

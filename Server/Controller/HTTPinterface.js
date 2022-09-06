@@ -83,7 +83,6 @@ class HTTPinterface {
         this.app.use('/storage', express.static('storage')); //Assets
 
         //Back-end calls
-        this.app.get('/isLogWho', this.isLogWho.bind(this));
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
@@ -118,7 +117,7 @@ class HTTPinterface {
         this.app.post('/setRoadmapAsSeguita', this.setRoadmapAsSeguita.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
-        this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
+        this.app.post('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
         this.app.get('/getSegnalazioni', this.getSegnalazioni.bind(this));
         this.app.post('/updateSegnalazioni', this.processSegnalazioni.bind(this));
         this.app.get('/getPreferredFavouriteStatusByUserByRoadmap', this.getPreferredFavouriteStatusByUserByRoadmap.bind(this));
@@ -166,23 +165,12 @@ class HTTPinterface {
         if (req.session.isAdmin) {
             return res.sendFile('adminPanel.html', { root: path.join(__dirname, '../View/admin') });
         } else {
-            return res.sendFile('error.html', { root: path.join(__dirname, '../View/admin') });
+            return res.sendFile('profile.html', { root: path.join(__dirname, '../View/user') }); //reindirizza al profilo se isAdmin != 1
         }
     }
 
-    //Back-end calls
-    async isLogWho(req, res) {
-        var r
-        if (req.session.loggedin) {
-            r = { ok: true, error:0,whoLog: req.session.user_id }
-            return res.send(JSON.stringify(r))
-        }
-        else {
-            r = { ok: false, error:-1,whoLog: null }
-            return res.send(JSON.stringify(r))
-        }
-    }
 
+    //backend rest api calls
     async register(req, res) {
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
@@ -229,12 +217,6 @@ class HTTPinterface {
                 }
             }
         }
-        return res.send(JSON.stringify(r));
-    }
-
-    //inutile
-    async getCommmentsReviewByUserRoad(req, res) {
-        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
         return res.send(JSON.stringify(r));
     }
 
@@ -402,16 +384,6 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    /*async updateRoadmapSeguite(req, res) {
-        const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }
-
-    async updateRoadmapPreferite(req, res) {
-        const r = await this.controller.updateRoadmapPreferite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }*/
-
     async getPlaceInfo(req, res) {
         if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
@@ -496,7 +468,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(req, res) {
+    async getBestRoadmap(res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
