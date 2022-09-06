@@ -4,6 +4,17 @@ var indirizzo;
 var markers = {};
 var durataComplessiva = 0;
 
+document.addEventListener('receivedRoadmapData', (e) => {
+    console.log(roadmap);
+    if(roadmap.travelMode=="WALKING"){
+        document.getElementById("percorrenzaValue").innerText= "A piedi🚶‍♂️";
+    }
+    else{
+        document.getElementById("percorrenzaValue").innerText= "In macchina🚗";
+    }
+    document.getElementById("inputPercorrenzaBox").remove();
+}, false);
+
 document.addEventListener('receivedUserInfo', (e) => { blurIfNotLoggedIn(user_id, e.logged) }, false);
 
 document.addEventListener('receivedStageData', (e) => {
@@ -24,7 +35,6 @@ function drawDeletableStage(stage_index, stage) {
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
     }
     else {
-        console.log(stage)
         document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage_index) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage_index) + '">#</span></div>'
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
     }
@@ -174,7 +184,7 @@ function requestDistance(marker1, marker2) {
 
 function submitRoadmap() {
     var isPub = visibilita == 'Pubblica' ? 1 : 0;
-
+    
     var description = document.getElementById("areaDescrizione").value
 
     if (title == "") {
@@ -199,9 +209,11 @@ function submitRoadmap() {
         formData.append('stages', JSON.stringify(stages_list))
 
         var xhr = new XMLHttpRequest();
+        document.body.style.cursor ="wait";
+        document.getElementById("submit_btn").remove();
         xhr.open("POST", '/createRoadmap', true);
         xhr.onload = function (event) {
-
+            
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
                 location.href = "/view_roadmap?id=" + r.data.roadmapId;
@@ -212,6 +224,7 @@ function submitRoadmap() {
         }
         xhr.send(formData);
     }
+    
 }
 
 function convertHMS(value) {
