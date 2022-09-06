@@ -301,7 +301,7 @@ class HTTPinterface {
     async deleteStage(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin) {
-            r = await this.controller.deleteStage(req.body.placeId,req.session.isAdmin);
+            r = await this.controller.deleteStage(req.body.idStage,req.session.isAdmin);
         }
         return res.send(JSON.stringify(r))
     }
