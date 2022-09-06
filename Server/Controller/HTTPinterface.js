@@ -220,12 +220,6 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    //inutile
-    async getCommmentsReviewByUserRoad(req, res) {
-        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
-        return res.send(JSON.stringify(r));
-    }
-
     async getPreferredFavouriteStatusByUserByRoadmap(req, res) {
         const r = await this.controller.getPreferredFavouriteStatusByUserByRoadmap(req.query.user_id, req.query.roadmap_id);
         return res.send(JSON.stringify(r));
@@ -390,16 +384,6 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    /*async updateRoadmapSeguite(req, res) {
-        const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }
-
-    async updateRoadmapPreferite(req, res) {
-        const r = await this.controller.updateRoadmapPreferite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }*/
-
     async getPlaceInfo(req, res) {
         if (req.session.loggedin || true) { // da mettere!
             const isExNovo = 0;
@@ -484,7 +468,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(req, res) {
+    async getBestRoadmap(res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
