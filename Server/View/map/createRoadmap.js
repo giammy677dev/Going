@@ -68,9 +68,7 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
     circles[toDeleteIndex].setMap(null);
 
     circles.splice(toDeleteIndex, 1);
-    if (invalidPath) {
-
-
+    if (!invalidPath) {
         if (toDeleteIndex == 0) {
             if (stages_list.length > 1) {
                 addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
@@ -80,7 +78,8 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
                 lastPlaceId = 0
             }
         } else if (toDeleteIndex == stages_list.length - 1) {
-            addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+            
+            //addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex - 1].setMap(null);
             distance_renderers.splice(toDeleteIndex - 1, 1);
             lastPlaceId = stages_list[toDeleteIndex - 1].placeId
@@ -162,7 +161,7 @@ function requestDistance(marker1, marker2) {
             if (status !== 'OK') {
                 window.alert('Directions request failed due to ' + status);
                 console.log("deleting last stage")
-                deleteStage(stage_index - 1)
+                deleteStage(stage_index - 1,true)
                 return;
             } else {
                 distance_renderers[stage_index - 2] = new google.maps.DirectionsRenderer();
@@ -182,7 +181,7 @@ function requestDistance(marker1, marker2) {
             }
         }
         else {
-            deleteStage(stage_index - 1)
+            deleteStage(stage_index - 1,true)
         }
     }
 
