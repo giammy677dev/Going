@@ -8,6 +8,7 @@ class MapController {
         this.dao = dao;
         this.mapsHandler = new MapsHandler();
     }
+
     calculateDuration(stages, distance_data) {
         var durata = stages[0].durata;
         for (var i = 1; i < stages.length; i++) {
@@ -16,6 +17,7 @@ class MapController {
         }
         return durata
     }
+
     calculateDistance(stages, distance_data) {
         var distanza = 0;
         for (var i = 1; i < stages.length; i++) {

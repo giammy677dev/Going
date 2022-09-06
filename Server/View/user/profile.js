@@ -504,3 +504,37 @@ function getAchievements() {
 
   xhr.send();
 }
+
+function segnalaProfilo() {
+  if (user_id > 0) {
+    document.getElementById('segnalaProfilo').setAttribute('style', 'display:block');
+    document.getElementById("motiv_profilo").value = "";
+    document.getElementById('inviaSegnalazione').setAttribute("onclick", "inviaSegnalazione(" + id + ",2)");
+  } else {
+    document.getElementById('log').style.display = 'block';
+  }
+}
+
+function inviaSegnalazione(id_oggetto, tipo) {
+  var motivazione = document.getElementById("motiv_profilo").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", '/report', true);
+  xhr.onload = function (event) {
+
+    const r = JSON.parse(event.target.responseText);
+
+    if (r.ok) {
+      alert("Hai segnalato questo oggetto!!")
+    }
+    else {
+      alert("Hai già segnalato!")
+    }
+    document.getElementById('segnalaProfilo').setAttribute('style', 'display:none');
+  }
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    tipo: tipo,
+    idOggetto: id_oggetto,
+    motivazione: motivazione
+  }));
+}

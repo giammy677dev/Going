@@ -588,7 +588,7 @@ function segnalaOggetto(id_oggetto, tipo) {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    tipo: tipo, //hardcoded type 3 = recensione
+    tipo: tipo,
     idOggetto: id_oggetto,
     motivazione: motivazione
   }));

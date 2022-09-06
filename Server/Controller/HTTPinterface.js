@@ -91,7 +91,6 @@ class HTTPinterface {
         this.app.post('/suggestedRoadmap', this.suggestedRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         //this.app.get('/getMap', this.getMap.bind(this));
-        //this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
         this.app.get('/getUserStatus', this.getUserStatus.bind(this));
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
@@ -168,7 +167,6 @@ class HTTPinterface {
             return res.sendFile('profile.html', { root: path.join(__dirname, '../View/user') }); //reindirizza al profilo se isAdmin != 1
         }
     }
-
 
     //backend rest api calls
     async register(req, res) {
@@ -330,9 +328,8 @@ class HTTPinterface {
         */
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
 
-            //req.body.stages = JSON.parse(req.body.stages);
+            req.body.stages = JSON.parse(req.body.stages);
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files || []);
-            //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
             }
@@ -344,11 +341,6 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
-
-    /*async getExNovoStages(req, res) {
-        const r = await this.controller.getExNovoStages();
-        return res.send(r);
-    }*/
 
     async getDataUser(req, res) { //getDataUser != isLogWho!
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
@@ -468,7 +460,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(res) {
+    async getBestRoadmap(req, res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
