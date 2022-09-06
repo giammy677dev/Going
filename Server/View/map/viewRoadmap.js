@@ -1,7 +1,7 @@
 const numeroRoadmapCreate = 50;
 const numeroRoadmapSeguite = 10;
-const numeroCommenti = 2;
-const numeroRecensioni = 10;
+const numeroCommenti = 10;
+const numeroRecensioni = 3;
 var testoAchievement = '';
 var immagineAchievement = '';
 
@@ -11,7 +11,8 @@ document.addEventListener('receivedUserInfo', (e) => {
   if (e.logged) {
     id_user = e.user
     username = e.username
-    document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmap.id+", 1)");
+    
+    document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmapId+", 1)");
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
 
     if (new URL(document.referrer).pathname == "/create") {
@@ -19,7 +20,7 @@ document.addEventListener('receivedUserInfo', (e) => {
     }
   }
   else {
-    drawVisualFavouriteSeguitaBottoni(roadmap.id)
+    drawVisualFavouriteSeguitaBottoni(roadmapId)
   }
 
   drawCommentiERecensioni()
@@ -137,7 +138,7 @@ function generateCommento(commento, isMe) {
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   if (isMe) {
 
-    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
+    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCommento' + commento.idCommento + '" title="elimina commento" onclick="deleteCommento(' + commento.idCommento + ')">❌</a>'
     var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="color: #019ba4; cursor: pointer" onclick="location.href = /profile?id=' + commento.idUtente + '/">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
 
   } else {
@@ -486,7 +487,7 @@ function deleteRecensione(idRecensione) {
 //funzioni su commento backend
 
 function createCommento() {
-  var messaggioCommento = document.getElementById("commIns").value
+  var messaggioCommento = document.getElementById("us_com").value
   if (messaggioCommento == "") return;
 
   var xhr = new XMLHttpRequest();
@@ -497,12 +498,10 @@ function createCommento() {
 
     console.log("r: ",r)
     if (r.ok) {
-      //in realtà la data pubblicazione va presa dal server. per il momento ho messo quella locale
-      //altrimenti se si hanno gmt diversi non c'è coerenza con la View dell'utente.
       const newCommento = { idCommento: r.data.idCommento, dataPubblicazione: r.data.now, testo: messaggioCommento, username: username }
       console.log("newComme: ",newCommento)
       drawVisualCommento(newCommento, true);
-      getCommentAchievementPopup(r.data);
+      getCommentAchievementPopup(r.data.numCommentiUtente);
       document.getElementById('ins_com').style.display = 'none';
        
     }
@@ -666,6 +665,7 @@ function getReviewAchievementPopup(numeroRecensioniDaQuery) {
 }
 
 function getCommentAchievementPopup(numeroCommentiDaQuery) {
+  console.log('ciao')
   if (numeroCommentiDaQuery == numeroCommenti) {
     testoAchievement = "Hai lasciato " + numeroCommenti + " commenti!";
     immagineAchievement = '/storage/achievements/comment.png';
