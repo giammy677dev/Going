@@ -15,7 +15,7 @@ document.addEventListener('receivedUserInfo', (e) => {
   if (e.logged) {
     id_user = e.user
     username = e.username
-    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
+    //document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
   else {
@@ -200,12 +200,12 @@ function drawVisualStage(stage) {
     var fotoPath = "/storage/loghetto.jpg";
   }
   if (stage.ordine == 0) {
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
   }
   else {
     console.log(stage)
     document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage.ordine) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage.ordine) + '">' + convertHMS(stage.reachTime) + '</span></div>'
-    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
   }
 }
 
@@ -563,7 +563,6 @@ function deleteCommento(idCommento) {
 //segnalazioni 
 
 function segnalaOggetto(id_oggetto, tipo) {
-
   var motivazione = document.getElementById("motiv_rm").value;
 
   /*testo = document.getElementById("motiv_rec" + id_rec).value
