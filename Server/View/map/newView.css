@@ -199,8 +199,11 @@ body {
     border: 4px solid #4ce0ebb0;
 }
 
-.descrizioneRoadmap{
+.mappa_rm fieldset{
     margin-top: 20px;
+}
+
+.descrizioneRoadmap{
     width: 100%;
     border: medium #019ba4 solid;
     color: white;
