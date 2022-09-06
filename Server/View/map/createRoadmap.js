@@ -275,6 +275,7 @@ var ClickEventHandler = (function () {
         }
     };
     ClickEventHandler.prototype.openCreateBox = function (latLng) {
+        infoWindow.close();
         var stage = {}
         var to_send_stage = {}
 
