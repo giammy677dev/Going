@@ -76,7 +76,7 @@ function openSegnalazionePopup(oggetto,tipo){
   }
 }
 
-function openRecensionePopup(roadmap_id,value) {
+function openRecensionePopup() {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
     document.getElementById('popupRecensione').setAttribute('style','display:block');
     //createRecensione(roadmap_id,"test",5)
@@ -86,7 +86,7 @@ function openRecensionePopup(roadmap_id,value) {
   }
 }
 
-function openCommentoPopup(roadmap_id,value) {
+function openCommentoPopup() {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
     //createCommento(roadmap_id,"messaggio commento")
   } else {

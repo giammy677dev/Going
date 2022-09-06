@@ -83,7 +83,7 @@ class HTTPinterface {
         this.app.use('/storage', express.static('storage')); //Assets
 
         //Back-end calls
-        this.app.get('/isLogWho', this.isLogWho.bind(this));
+        /*this.app.get('/isLogWho', this.isLogWho.bind(this));*/
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
@@ -106,7 +106,6 @@ class HTTPinterface {
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/getRoadmapData', this.getRoadmapData.bind(this));
         this.app.get('/getCommentiRecensioni', this.getCommentiRecensioni.bind(this));
-        this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/createCommento', this.createCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/deleteCommento', this.deleteCommento.bind(this));
@@ -232,12 +231,6 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    //inutile
-    async getCommmentsReviewByUserRoad(req, res) {
-        const r = await this.controller.getCommmentsReviewByUserRoad(req.query.id_user, req.query.id_rm);
-        return res.send(JSON.stringify(r));
-    }
-
     async getPreferredFavouriteStatusByUserByRoadmap(req, res) {
         const r = await this.controller.getPreferredFavouriteStatusByUserByRoadmap(req.query.user_id, req.query.roadmap_id);
         return res.send(JSON.stringify(r));
@@ -290,7 +283,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async getMap(req, res) {
+    async getMap(res) {
         const r = await this.controller.getMap();
         return res.send(r);
     }
@@ -364,7 +357,7 @@ class HTTPinterface {
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
 
-    async getExNovoStages(req, res) {
+    async getExNovoStages(res) {
         const r = await this.controller.getExNovoStages();
         return res.send(r);
     }
@@ -402,16 +395,6 @@ class HTTPinterface {
         const r = await this.controller.deleteRoadmap(req.body.roadmap_id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
-
-    /*async updateRoadmapSeguite(req, res) {
-        const r = await this.controller.updateRoadmapSeguite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }
-
-    async updateRoadmapPreferite(req, res) {
-        const r = await this.controller.updateRoadmapPreferite(req.query.id, req.session.user_id);
-        return res.send(JSON.stringify(r));
-    }*/
 
     async getPlaceInfo(req, res) {
         if (req.session.loggedin || true) { // da mettere!
@@ -497,7 +480,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(req, res) {
+    async getBestRoadmap(res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
