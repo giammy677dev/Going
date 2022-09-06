@@ -1,8 +1,6 @@
 const Server = require('../Controller/HTTPinterface.js');
-
 const request = require("supertest");
 const assert = require('assert');
-const { TravelMode } = require('@googlemaps/google-maps-services-js');
 
 const app = new Server()
 var agent = request.agent(app.app);
@@ -152,8 +150,8 @@ describe("Test ROADMAP (block #4)", () => {
         stages.push({ nome: 'testName', durata: 1500, placeId: exNovoPlaceId }) //nodo Ex Novo
         stages.push({ durata: 1000, placeId: POIplaceId }) //nodo POI
 
-        const roadmapObj = { titolo: 'test', descrizione: 'test', isPublic: 1, stages: stages }
-        //console.log(roadmapObj)
+        const roadmapObj = { titolo: 'test', descrizione: 'test', isPublic: 1, stages: JSON.stringify(stages) }
+
         const res = await agent.post("/createRoadmap").send(roadmapObj);
 
         expect(res.statusCode).toEqual(200);
@@ -188,7 +186,7 @@ describe("Test ROADMAP (block #4)", () => {
         stages.push({ durata: 950, placeId: exNovoPlaceId }) //nodo Ex Novo (cache hit)
         stages.push({ durata: 1050, placeId: POIplaceId }) //nodo POI (cache hit)
 
-        const roadmapObj = { titolo: 'test', descrizione: 'test', isPublic: 0, stages: stages }
+        const roadmapObj = { titolo: 'test', descrizione: 'test', isPublic: 0, stages: JSON.stringify(stages) }
         //console.log(roadmapObj)
         const res = await agent.post("/createRoadmap").send(roadmapObj);
 

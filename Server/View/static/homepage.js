@@ -61,11 +61,11 @@ function ricercaHome() {
 
 function caricaRoadmap() {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", '/getBestRoadmap', true);
+  xhr.open("POST", '/suggestedRoadmap', true);
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
-    const result = r.data
-
+    const result = r.data.roadmaps
+    
     if (r.ok == true) {
 
       for (var i = 0; i < result.length; i++) {
@@ -100,7 +100,11 @@ function caricaRoadmap() {
       alert("Problemi col db")
     }
   }
-  xhr.send();
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    numberRoadmapToDisplay: 3,
+    rating : 4
+  }));
 }
 
 function printCocktail(media_valutazioni,i){
