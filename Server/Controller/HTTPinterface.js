@@ -83,7 +83,6 @@ class HTTPinterface {
         this.app.use('/storage', express.static('storage')); //Assets
 
         //Back-end calls
-        this.app.get('/isLogWho', this.isLogWho.bind(this));
         this.app.post('/register', this.register.bind(this));
         this.app.post('/auth', this.login.bind(this)); //Login
         this.app.post('/logout', this.logout.bind(this));
@@ -91,8 +90,8 @@ class HTTPinterface {
         this.app.get('/searchUser', this.searchUser.bind(this));
         this.app.post('/suggestedRoadmap', this.suggestedRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
-        this.app.get('/getMap', this.getMap.bind(this));
-        this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
+        //this.app.get('/getMap', this.getMap.bind(this));
+        //this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
         this.app.get('/getUserStatus', this.getUserStatus.bind(this));
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
@@ -106,7 +105,7 @@ class HTTPinterface {
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/getRoadmapData', this.getRoadmapData.bind(this));
         this.app.get('/getCommentiRecensioni', this.getCommentiRecensioni.bind(this));
-        this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
+        //this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/createCommento', this.createCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/deleteCommento', this.deleteCommento.bind(this));
@@ -166,23 +165,12 @@ class HTTPinterface {
         if (req.session.isAdmin) {
             return res.sendFile('adminPanel.html', { root: path.join(__dirname, '../View/admin') });
         } else {
-            return res.sendFile('error.html', { root: path.join(__dirname, '../View/admin') });
+            return res.sendFile('profile.html', { root: path.join(__dirname, '../View/user') }); //reindirizza al profilo se isAdmin != 1
         }
     }
 
-    //Back-end calls
-    async isLogWho(req, res) {
-        var r
-        if (req.session.loggedin) {
-            r = { ok: true, error:0,whoLog: req.session.user_id }
-            return res.send(JSON.stringify(r))
-        }
-        else {
-            r = { ok: false, error:-1,whoLog: null }
-            return res.send(JSON.stringify(r))
-        }
-    }
 
+    //backend rest api calls
     async register(req, res) {
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
         return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
@@ -270,7 +258,6 @@ class HTTPinterface {
     }
 
     async createRecensione(req, res) {
-        console.log(req.body);
         const r = await this.controller.createRecensione(req.session.user_id, req.body.roadmapId, req.body.opinione, req.body.valutazione);
         return res.send(JSON.stringify(r))
     }
@@ -290,15 +277,15 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async getMap(req, res) {
+    /*async getMap(req, res) {
         const r = await this.controller.getMap();
         return res.send(r);
-    }
+    }*/
 
     async deleteUser(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin) {
-            r = await this.controller.deleteUser(req.body.user_id);
+            r = await this.controller.deleteUser(req.body.user_id,req.session.isAdmin);
         }
         return res.send(JSON.stringify(r))
     }
@@ -322,7 +309,7 @@ class HTTPinterface {
     async deleteStage(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin) {
-            r = await this.controller.deleteStage(req.body.stageId);
+            r = await this.controller.deleteStage(req.body.placeId,req.session.isAdmin);
         }
         return res.send(JSON.stringify(r))
     }
@@ -349,8 +336,8 @@ class HTTPinterface {
         */
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
 
-            req.body.stages = JSON.parse(req.body.stages);
-            const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files);
+            //req.body.stages = JSON.parse(req.body.stages);
+            const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files || []);
             //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
@@ -364,10 +351,10 @@ class HTTPinterface {
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
 
-    async getExNovoStages(req, res) {
+    /*async getExNovoStages(req, res) {
         const r = await this.controller.getExNovoStages();
         return res.send(r);
-    }
+    }*/
 
     async getDataUser(req, res) { //getDataUser != isLogWho!
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
@@ -432,7 +419,7 @@ class HTTPinterface {
             const isExNovo = 1;
             const r = await this.controller.getPlaceFromCoords(req.query.lat, req.query.lng);
             if (r.ok) {
-                console.log(r.data.place_id)
+                //console.log(r.data.place_id)
                 if (req.session.placeDetails === undefined)
                     req.session.placeDetails = {}
                 req.session.placeDetails[r.data.place_id] = [r.data, isExNovo];
@@ -460,7 +447,7 @@ class HTTPinterface {
 
     async updateAvatar(req, res) {
         if (req.session.loggedin) {
-            const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar);
+            const r = await this.controller.updateAvatar(req.session.user_id, req.body.new_avatar_index);
             return res.send(JSON.stringify(r));
         }
     }

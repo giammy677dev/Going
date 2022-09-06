@@ -11,11 +11,12 @@ beforeAll(done => {
 
 afterAll(done => {
     // Closing the DB connection allows Jest to exit successfully.
-    
+
     done()
 })
 
 describe("Test User (block #1)", () => {
+
     var agent = request.agent(app.app);
 
     const instance_data = {
@@ -97,9 +98,9 @@ describe("Test User (block #1)", () => {
     });
 
     test("test di logout senza aver effettuato il login", async () => {
-        
-        const res = await agent.post("/logout").send({ 
-            id:5
+
+        const res = await agent.post("/logout").send({
+            id: 5
         })
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
@@ -117,15 +118,15 @@ describe("Test User (block #1)", () => {
         json_response = JSON.parse(res.text)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
-        expect(json_response.data).toEqual({id:5,username:'giammy677',isAdmin:1});
+        expect(json_response.data).toEqual({ id: 5, username: 'giammy677', isAdmin: 1 });
 
         //await new Promise((r) => setTimeout(r, 2000));
     });
 
     test("Test user general info quando loggato", async () => {
-        
+
         const res = await agent.get("/getUserStatus").send();
-        
+
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
         expect(json_response.ok).toEqual(true);
@@ -135,21 +136,39 @@ describe("Test User (block #1)", () => {
     });
 
 
-    /*test("test di logout avendo effettuato il login", async () => {
-        /*await agent.post("/auth").send({
-            username: instance_data.username,
-            password: instance_data.password
-        });
-        
-        const res = await request(mockApp).post("/logout").send({ 
-            id:5
-        })
+    test("Test preleva roadmap create da utente loggato", async () => {
 
-
+        const user_id = 5;
+        const res = await agent.get("/getRoadmapCreate?id=" + user_id).send();
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
+        //console.log(json_response)
         expect(json_response.ok).toEqual(true);
-    })*/
+        expect(json_response.error).toEqual(0);
+    });
+
+    test("Test preleva roadmap seguite da utente loggato", async () => {
+
+        const user_id = 5;
+        const res = await agent.get("/getRoadmapSeguite?id=" + user_id).send();
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0);
+    });
+    
+    test("Test preleva roadmap preferite da utente loggato", async () => {
+        const user_id = 5;
+        const res = await agent.get("/getRoadmapPreferite?id=" + user_id).send();
+
+        expect(res.statusCode).toEqual(200);
+        json_response = JSON.parse(res.text)
+        //console.log(json_response)
+        expect(json_response.ok).toEqual(true);
+        expect(json_response.error).toEqual(0);
+    });
 
 });
