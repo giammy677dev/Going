@@ -45,7 +45,7 @@ function blurIfNotLoggedIn(user_id, logged) {
     }
 }
 
-function deleteStage(toDeleteIndex) {
+function deleteStage(toDeleteIndex, invalidPath = false) {
     if (markers[toDeleteIndex] !== undefined) { //ex novo case cover
         markers[toDeleteIndex].setMap(null);
         delete markers[toDeleteIndex]
@@ -54,31 +54,33 @@ function deleteStage(toDeleteIndex) {
     circles[toDeleteIndex].setMap(null);
 
     circles.splice(toDeleteIndex, 1);
+    if (invalidPath) {
 
-    if (toDeleteIndex == 0) {
-        if (stages_list.length > 1) {
-            addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+
+        if (toDeleteIndex == 0) {
+            if (stages_list.length > 1) {
+                addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+                distance_renderers[toDeleteIndex].setMap(null);
+
+                distance_renderers.splice(toDeleteIndex, 1);
+                lastPlaceId = 0
+            }
+        } else if (toDeleteIndex == stages_list.length - 1) {
+            addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+            distance_renderers[toDeleteIndex - 1].setMap(null);
+            distance_renderers.splice(toDeleteIndex - 1, 1);
+            lastPlaceId = stages_list[toDeleteIndex - 1].placeId
+        } else {
+            addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+            addDurata(0 || -distance_renderers[toDeleteIndex - 1].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex].setMap(null);
-
-            distance_renderers.splice(toDeleteIndex, 1);
-            lastPlaceId = 0
+            distance_renderers[toDeleteIndex - 1].setMap(null);
+            distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
+            lastPlaceId = stages_list[toDeleteIndex - 1].placeId
+            //si calcola distanza tra A->C
+            requestDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
         }
-    } else if (toDeleteIndex == stages_list.length - 1) {
-        addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
-        distance_renderers[toDeleteIndex - 1].setMap(null);
-        distance_renderers.splice(toDeleteIndex - 1, 1);
-        lastPlaceId = stages_list[toDeleteIndex - 1].placeId
-    } else {
-        addDurata(-distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
-        addDurata(-distance_renderers[toDeleteIndex - 1].directions.routes[0].legs[0].distance.value);
-        distance_renderers[toDeleteIndex].setMap(null);
-        distance_renderers[toDeleteIndex - 1].setMap(null);
-        distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
-        lastPlaceId = stages_list[toDeleteIndex - 1].placeId
-        //si calcola distanza tra A->C
-        requestDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
     }
-
     stages_list.splice(toDeleteIndex, 1); //4) eliminare istanza nella stages_list
     //tolto un elemento!
     var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
@@ -138,13 +140,15 @@ function requestDistance(marker1, marker2) {
     xhr.open("POST", '/getRoute', true);
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
-        console.log(r)
-        if (r.ok == true) {
+        console.log(r.ok)
+        if (r.ok) {
             const response = r.data;
             const status = response.status;
             console.log(response)
             if (status !== 'OK') {
                 window.alert('Directions request failed due to ' + status);
+                console.log("deleting last stage")
+                deleteStage(stage_index - 1)
                 return;
             } else {
                 distance_renderers[stage_index - 2] = new google.maps.DirectionsRenderer();
@@ -163,8 +167,8 @@ function requestDistance(marker1, marker2) {
                 document.getElementById('tempoPercorrenza' + (stage_index - 1)).innerText = r.data.routes[0].legs[0].duration.text
             }
         }
-        else if (r.ok == false) {
-            alert("Nodi non trovati")
+        else {
+            deleteStage(stage_index - 1)
         }
     }
 
@@ -204,7 +208,7 @@ function submitRoadmap() {
 
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
-                //location.href = "/view_roadmap?id=" + r.data.roadmapId;
+                location.href = "/view_roadmap?id=" + r.data.roadmapId;
             }
             else {
                 alert("Problemi creazione stages_list")
@@ -311,8 +315,8 @@ var ClickEventHandler = (function () {
         durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
 
         var durataElement = document.createElement('input');
-        durataElement.setAttribute("type","number")
-        durataElement.setAttribute("min","1")
+        durataElement.setAttribute("type", "number")
+        durataElement.setAttribute("min", "1")
         durataElement.id = "durata";
 
         var inputElement = document.createElement('input');
@@ -332,7 +336,7 @@ var ClickEventHandler = (function () {
 
         inputElement.addEventListener('click', function () {
 
-            if(StageName.value == ""){
+            if (StageName.value == "") {
                 alert("Inserisci il nome dello stage");
             }
             else if (durataElement.value == "" || durataElement.value < 0) {
@@ -430,8 +434,8 @@ var ClickEventHandler = (function () {
         durataShow.textContent = "Quanti minuti devi sostare questo nodo?"
 
         var durataElement = document.createElement('input');
-        durataElement.setAttribute("type","number")
-        durataElement.setAttribute("min","1")
+        durataElement.setAttribute("type", "number")
+        durataElement.setAttribute("min", "1")
         durataElement.id = "durata";
 
         var inputElement = document.createElement('input');
