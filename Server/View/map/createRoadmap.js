@@ -157,12 +157,7 @@ function requestDistance(marker1, marker2) {
                     },
                     suppressMarkers: true,
                     map: map,
-                    preserveViewport: true,
-                    polylineOptions:new google.maps.Polyline({
-                        strokeColor: '#ff0000',
-                        strokeOpacity: 0.5,
-                        strokeWeight: 8
-                        })
+                    preserveViewport: true
                 });
                 addDurata(r.data.routes[0].legs[0].duration.value);
                 document.getElementById('tempoPercorrenza' + (stage_index - 1)).innerText = r.data.routes[0].legs[0].duration.text
