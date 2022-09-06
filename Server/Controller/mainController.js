@@ -54,9 +54,9 @@ class MainController {
         return await this.contentController.getBestRoadmap()
     }
 
-    async getExNovoStages() {
+    /*async getExNovoStages() {
         return await this.mapController.getExNovoStages()
-    }
+    }*/
 
     async getDataUser(id_query, id_session) {
         return await this.userController.getDataUser(id_query, id_session)
@@ -73,8 +73,8 @@ class MainController {
     async updateCommento(user_id, idCommento, messaggio) {
         return await this.contentController.updateCommento(user_id, idCommento, messaggio) 
     }
-    async deleteUser(user_id) {
-        return await this.contentController.deleteUser(user_id) 
+    async deleteUser(user_id,isAdmin) {
+        return await this.contentController.deleteUser(user_id,isAdmin) 
     }
 
     async deleteCommento(user_id, idCommento, isAdmin) {
@@ -85,8 +85,8 @@ class MainController {
         return await this.contentController.deleteRecensione(user_id, idRecensione, isAdmin) 
     }
 
-    async deleteStage(stageId) {
-        return await this.contentController.deleteStage(stageId) 
+    async deleteStage(placeId,isAdmin) {
+        return await this.contentController.deleteStage(placeId,isAdmin) 
     }
 
     async createRecensione(user_id, roadmap_id, opinione, valutazione) {
@@ -145,10 +145,9 @@ class MainController {
         return await this.mapController.deleteRoadmap(id_roadmap, id_user, isAdmin)
     }
 
-    async updateAvatar(id, new_avatar) {
-        return await this.userController.updateAvatar(id, new_avatar)
+    async updateAvatar(id, new_avatar_index) {
+        return await this.userController.updateAvatar(id, new_avatar_index)
     }
-
 
     async getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup) {
         return await this.mapController.getMarkersFromRect(centerLatInf, centerLatSup, centerLngInf, centerLngSup)

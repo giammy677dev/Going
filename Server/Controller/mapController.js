@@ -64,7 +64,7 @@ class MapController {
                 else //è exnovo!
                 {
                     stage.fotoURL = stages_img_dict[stage.placeId] || null;
-                    console.log(stage.fotoURL)
+                    //console.log(stage.fotoURL)
                     await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita)
 
                 }
@@ -76,7 +76,7 @@ class MapController {
                 await this.dao.addStageInstanceToRoadmap(roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route)
 
             }
-            console.log(roadmap_id)
+            //console.log(roadmap_id)
             return { ok: true, error: 0, data: { roadmapId: roadmap_id } }
         }
         return { ok: false, error: -5, data: {} } //return error!
@@ -107,10 +107,10 @@ class MapController {
         }
     }
     
-    async getExNovoStages() {
+    /*async getExNovoStages() {
         const data = await this.dao.getExNovoStages();
         return { ok: data[0], error: data[1], data: data[2] }
-    }
+    }*/
 
     async getPlaceInfo(id) {
         //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
@@ -118,7 +118,7 @@ class MapController {
         
         const localHit = await this.dao.placeIDExists(id);
         if (localHit[0] && localHit[2].found) {
-            console.log("place exists in db!")
+            //console.log("place exists in db!")
             return { ok: localHit[0], error: localHit[1], data: localHit[2].result }
         }
         const data = await this.mapsHandler.getPlaceDetails(id);
@@ -126,8 +126,10 @@ class MapController {
     }
 
     async getRoute(placeId1, placeId2, travelMode) {
+        if(!placeId1 || !placeId2 || !travelMode){
+            return {ok:false,error:-1,data:{}}
+        }
         const data = await this.mapsHandler.getRoute(placeId1, placeId2, travelMode);
-        //console.log(data)
         return { ok: data[0], error: data[1], data: data[2] }
     }
 

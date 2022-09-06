@@ -26,14 +26,16 @@ class MapsHandler {
                 timeout: 10000, // milliseconds
             });
             data_from_google = data_from_google.data;
-
+            if(data_from_google.status != "OK"){
+                return [false, -3, {}]
+            }
             return [
                 true, 0, data_from_google
             ]
         } catch (error) {
             console.log(error)
+            return [false, error.errno, {}]
         }
-        return { ok: false, error: -1 } //errore? -1?
     }
 
     async getPlaceDetails(place_id) {
@@ -46,7 +48,14 @@ class MapsHandler {
                 },
                 timeout: 10000, // milliseconds. qual è il timeout di default?
             });
+            
+            if(data_from_google.data.status != "OK"){
+                return [false, -3, {}]
+            }
+
             data_from_google = data_from_google.data.result;
+            
+            
             if (data_from_google.photos !== undefined) {
                 data_from_google.foto = data_from_google.photos[0].photo_reference
                 data_from_google.fotoURL = this.getPhotoUrl(data_from_google.foto)
@@ -61,9 +70,10 @@ class MapsHandler {
                 true, 0, data_from_google
             ]
         } catch (error) {
-            console.log(error)
+            //console.log(error)
+            return [false,-1 ,{}] 
         }
-        return { ok: false, error: -1 } //errore? -1?
+       //errore? -1?
     }
 
     async getPlaceFromCoords(lat, lng) {

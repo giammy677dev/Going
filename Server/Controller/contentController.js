@@ -4,10 +4,20 @@ class ContentController {
     }
 
     async searchUser(username) {
-        const data = await this.dao.searchUser(username);
-        return { ok: data[0], error: data[1], data: data[2] };
+        var data;
+        if(!username || username == ""){
+            return {ok:false,error:-1,data:{}}
+        }else{
+            data = await this.dao.searchUser(username);
+            return { ok: data[0], error: data[1], data: data[2] };
+        }
     }
+
     async suggestedRoadmap(roadmap, rating) {
+        if(!roadmap || !rating || rating <= 0 || rating > 5 || roadmap > 20 || roadmap < 1)
+        {
+            return {ok:false,error:-1,data:{}}
+        }
         const data = await this.dao.suggestedRoadmap(roadmap, rating);
         return { ok: data[0], error: data[1], data: data[2] }
     }
@@ -35,7 +45,7 @@ class ContentController {
         const data = await this.dao.getBestRoadmap();
         return { ok: data[0], error: data[1], data: data[2] }
     }
-    
+
     async createCommento(user_id, roadmap_id, messaggio) {
         if (!roadmap_id || !user_id || !messaggio || messaggio == "") {
             return { ok: false, error: -4, data: '' }
@@ -57,12 +67,12 @@ class ContentController {
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
-    async deleteUser(user_id) {
+    async deleteUser(user_id, isAdmin) {
         if (!user_id) {
             return { ok: false, error: -4, data: {} }
         }
         else {
-            const data = await this.dao.deleteUser(user_id);
+            const data = await this.dao.deleteUser(user_id, isAdmin);
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
@@ -87,13 +97,19 @@ class ContentController {
         }
     }
 
-    async deleteStage(stageId) {
-        if (!stageId) {
+    async deleteStage(placeId, isAdmin) {
+        if (!placeId || !isAdmin || isAdmin == false) {
             return { ok: false, error: -4, data: {} }
         }
         else {
-            const data = await this.dao.deleteStage(stageId);
-            return { ok: data[0], error: data[1], data: data[2] };
+            try{
+                var stageId = (await this.dao.getStageIdFromPlaceId(placeId))[2];
+                const data = await this.dao.deleteStage(stageId);
+                return { ok: data[0], error: data[1], data: data[2] };
+            }catch(error){
+                console.log(error);
+                return { ok: false, error: -5, data: {} }
+            }
         }
     }
 
@@ -124,12 +140,18 @@ class ContentController {
     }
 
     async reportObject(idUtente, tipo, idOggetto, motivazione) {
-        if(!idUtente || !tipo || !idOggetto){
-            return { ok: false, error: -1, data: {}}
+        if (!idUtente || !tipo || !idOggetto) {
+            return { ok: false, error: -1, data: {} }
         }
-        const data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
-
-        return { ok: data[0], error: data[1], data:data[2]}
+        var data;
+        if (tipo == 5) //stage reporting. transform place id to stageId
+        {
+            var idOggetto = (await this.dao.getStageIdFromPlaceId(idOggetto))[2];
+            data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione); //ora idOggetto è valido (intero)
+        } else {
+            data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
+        }
+        return { ok: data[0], error: data[1], data: data[2] }
     }
     async getSegnalazioni() {
         const data = await this.dao.getSegnalazioni();
@@ -137,10 +159,8 @@ class ContentController {
     }
 
     async processSegnalazioni(segnalazioni, id_user, isAdmin) {
-        console.log(segnalazioni)
         for (var i = 0; i < segnalazioni.length; i++) {
             var segnalazione = segnalazioni[i];
-            console.log(segnalazione)
             const objInfo = (await this.dao.getOggettoBySegnalazione(segnalazione.idSegnalazione))[2];
             if (objInfo !== null) {
                 const idOggetto = objInfo.idOggetto;
