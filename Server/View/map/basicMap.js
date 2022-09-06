@@ -44,12 +44,7 @@ function drawObjects(stages) {
                 },
                 suppressMarkers: true,
                 map: map,
-                preserveViewport: true,
-                polylineOptions:new google.maps.Polyline({
-                    strokeColor: '#ff0000',
-                    strokeOpacity: 0.5,
-                    strokeWeight: 8
-                    })
+                preserveViewport: true
             });
 
         }
