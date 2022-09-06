@@ -201,7 +201,7 @@ class HTTPinterface {
     async getRoadmapData(req, res) { //era viewrm
         const r = await this.controller.getRoadmapData(req.query.id);
 
-        if (req.session.loggedin) { //salva info per eventuale fork
+        if (req.session.loggedin && r.ok) { //salva info per eventuale fork
             req.session.placeDetails = {}; //reset
             req.session.distanceDetails = {};
             //vanno popolati placeDetails & distanceDetails
