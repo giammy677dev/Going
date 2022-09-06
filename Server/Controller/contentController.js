@@ -46,6 +46,7 @@ class ContentController {
     }
 
     async createCommento(user_id, roadmap_id, messaggio) {
+        
         if (!roadmap_id || !user_id || !messaggio || messaggio == "") {
             return { ok: false, error: -4, data: '' }
         }
