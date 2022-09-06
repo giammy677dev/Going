@@ -11,7 +11,8 @@ document.addEventListener('receivedUserInfo', (e) => {
   if (e.logged) {
     id_user = e.user
     username = e.username
-    document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmap.id+", 1)");
+    
+    document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmapId+", 1)");
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
 
     if (new URL(document.referrer).pathname == "/create") {
@@ -19,7 +20,7 @@ document.addEventListener('receivedUserInfo', (e) => {
     }
   }
   else {
-    drawVisualFavouriteSeguitaBottoni(roadmap.id)
+    drawVisualFavouriteSeguitaBottoni(roadmapId)
   }
 
   drawCommentiERecensioni()
@@ -137,7 +138,7 @@ function generateCommento(commento, isMe) {
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   if (isMe) {
 
-    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
+    commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCommento' + commento.idCommento + '" title="elimina commento" onclick="deleteCommento(' + commento.idCommento + ')">❌</a>'
     var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="color: #019ba4; cursor: pointer" onclick="location.href = /profile?id=' + commento.idUtente + '/">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
 
   } else {
