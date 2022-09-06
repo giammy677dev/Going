@@ -35,9 +35,7 @@ function drawDeletableStage(stage_index, stage) {
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
     }
     else {
-
-        console.log(stage)
-        var durataBetween=Math.round(stage.reachTime/60)
+        var durataBetween= convertHMS(stage.reachTime);
         document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage_index) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage_index) + '">'+durataBetween+'</span></div>'
 
         document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
@@ -232,16 +230,6 @@ function submitRoadmap() {
         xhr.send(formData);
     }
     
-}
-
-function convertHMS(value) {
-    const sec = parseInt(value, 10); // convert value to number if it's string
-    let hours = Math.floor(sec / 3600); // get hours
-    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
-    if (minutes < 10) { minutes = "0" + minutes; }
-    if (seconds < 10) { seconds = "0" + seconds; }
-    return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
 }
 
 var ClickEventHandler = (function () {

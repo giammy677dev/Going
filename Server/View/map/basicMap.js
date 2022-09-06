@@ -229,3 +229,14 @@ function initMap() {
 
     new ClickEventHandler(map, origin);
 }
+
+
+function convertHMS(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+  
+    var hDisplay = h > 0 ? h + (h == 1 ? " ora " : " ore ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " minuto " : " minuti ") : "";
+    return hDisplay + mDisplay;
+  }
