@@ -216,7 +216,7 @@ function submitRoadmap() {
             
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
-                //location.href = "/view_roadmap?id=" + r.data.roadmapId;
+                location.href = "/view_roadmap?id=" + r.data.roadmapId;
             }
             else {
                 alert("Problemi creazione stages_list")
