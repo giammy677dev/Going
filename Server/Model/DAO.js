@@ -467,6 +467,13 @@ class DAO {
             } else {
                 res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? and idUtenteRegistrato = ? ', [idRecensione, user_id])
             }
+            //ricalcolo media
+            var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap_id])
+
+            var numeroRecensioni = dati[0][0].numeroRecensioni
+            var somma = dati[0][0].somma
+            var media = parseFloat(somma / numeroRecensioni)
+            var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
 
             return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
 

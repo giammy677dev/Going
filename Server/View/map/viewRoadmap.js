@@ -15,10 +15,10 @@ document.addEventListener('receivedUserInfo', (e) => {
   if (e.logged) {
     id_user = e.user
     username = e.username
-    document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
+    //document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
-  else{
+  else {
     drawVisualFavouriteSeguitaBottoni(roadmap.id)
   }
 
@@ -34,23 +34,23 @@ document.addEventListener('receivedRoadmapData', (e) => {
   var day = new Date(roadmap.dataCreazione)
   var minuti = convertHMS(roadmap.durata)
   var distance = convertKM(roadmap.distanza)
-  
-  if(roadmap.travelmode == "WALKING"){
+
+  if (roadmap.travelmode == "WALKING") {
     document.getElementById("distanza").innerText = ' 🚶 ' + distance;
   }
-  else{
+  else {
     document.getElementById("distanza").innerText = ' 🚗 ' + distance;
   }
-  
+
   document.getElementById("titolo").innerText = roadmap.titolo
-  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
+  document.getElementById("data").innerText = ' 🗓 ' + day.getDate() + "/" + (day.getMonth() + 1) + "/" + day.getFullYear()
   document.getElementById("durata").innerText = ' ⏱ ' + minuti;
-  
+
   document.getElementById("citta").innerText = ' 🏙 ' + roadmap.localita
-  document.getElementById("citta").setAttribute("onclick","location.href = '/explore?ricerca=" + roadmap.localita +"'");
+  document.getElementById("citta").setAttribute("onclick", "location.href = '/explore?ricerca=" + roadmap.localita + "'");
 
   document.getElementById("utente").innerText = ' 👤 ' + roadmapCreator
-  document.getElementById("utente").setAttribute("onclick","location.href = '/profile?id=" + roadmap.utenteRegistrato_id+"'");
+  document.getElementById("utente").setAttribute("onclick", "location.href = '/profile?id=" + roadmap.utenteRegistrato_id + "'");
 
   document.getElementById("descrizione").innerText = roadmap.descrizione
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
@@ -62,27 +62,27 @@ document.addEventListener('receivedRoadmapData', (e) => {
 
 //popups for recensioni e commenti
 
-function openSegnalazionePopup(oggetto,tipo){
-  if(oggetto == "1"){
+function openSegnalazionePopup(oggetto, tipo) {
+  if (oggetto == "1") {
     oggetto = roadmap.id;
   }
-  
+
   if (user_id > 0) {
-    document.getElementById('segnal_rm').setAttribute('style','display:block');
-    document.getElementById("motiv_rm").value= "";
-    document.getElementById('segnalaRoadmap').setAttribute("onclick", "segnalaOggetto("+oggetto+","+tipo+")");
+    document.getElementById('segnal_rm').setAttribute('style', 'display:block');
+    document.getElementById("motiv_rm").value = "";
+    document.getElementById('segnalaRoadmap').setAttribute("onclick", "segnalaOggetto(" + oggetto + "," + tipo + ")");
   } else {
-    document.getElementById('log').style.display='block';
+    document.getElementById('log').style.display = 'block';
   }
 }
 
 function openRecensionePopup() {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
-    document.getElementById('popupRecensione').setAttribute('style','display:block');
+    document.getElementById('popupRecensione').setAttribute('style', 'display:block');
     //createRecensione(roadmap_id,"test",5)
   } else {
     //classico popup di login
-    document.getElementById('log').setAttribute('style','display:block');
+    document.getElementById('log').setAttribute('style', 'display:block');
   }
 }
 
@@ -98,7 +98,7 @@ function pressLikeButton(roadmap_id, value) {
   if (user_id > 0) {
     setRoadmapAsFavourite(roadmap_id, value)
   } else {
-    document.getElementById('log').style.display='block';
+    document.getElementById('log').style.display = 'block';
   }
 }
 
@@ -106,7 +106,7 @@ function pressSeguitaButton(roadmap_id, value) {
   if (user_id > 0) {
     setRoadmapAsSeguita(roadmap_id, value)
   } else {
-    document.getElementById('log').style.display='block';
+    document.getElementById('log').style.display = 'block';
   }
 }
 
@@ -117,29 +117,29 @@ function generateRecensione(recensione, isMe) {
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   const ratingHtml = generateRating(recensione.valutazione, 25) //cursore?
-  
+
   if (isMe) {
     document.getElementsByClassName("descrizioneRoadmap")[1].style.display = "none";
-    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec" style="color: #019ba4">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup('+recensione.idRecensione+',3)">⚠️</a><a class="boxclose" id="updateRec' + recensione.idRecensione + '" title="Modifica recensione" onclick="openBoxUpdateRec(' + recensione.idRecensione + ')">🖊</a><a class="boxclose" id="deleteRec' + recensione.idRecensione + '" title="Elimina recensione" onclick="">❌</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
+    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec" style="color: #019ba4">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup(' + recensione.idRecensione + ',3)">⚠️</a><a class="boxclose" id="updateRec' + recensione.idRecensione + '" title="Modifica recensione" onclick="openBoxUpdateRec(' + recensione.idRecensione + ')">🖊</a><a class="boxclose" id="deleteRec' + recensione.idRecensione + '" title="Elimina recensione" onclick="">❌</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
     recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
   }
   else {
-    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup('+recensione.idRecensione+',3)">⚠️</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
+    recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup(' + recensione.idRecensione + ',3)">⚠️</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
     recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
   }
-  
+
   return recensioneObj;
 }
 
 function generateCommento(commento, isMe) {
-  var commentoIcon = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick="openSegnalazionePopup('+commento.idCommento+',4)">⚠️</a>'
+  var commentoIcon = '<a class="boxclose" id="segn' + commento.idCommento + '" title="segnala commento" onclick="openSegnalazionePopup(' + commento.idCommento + ',4)">⚠️</a>'
   var date = new Date(commento.dataPubblicazione)
-  const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()  
+  const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   if (isMe) {
     commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
-    var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="color: #019ba4">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>'+commentoIcon+'</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
-  }else{
-    var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>'+commentoIcon+'</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
+    var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="color: #019ba4">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
+  } else {
+    var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
   }
   commentoObj += '<div class="popup_segnal" id="segnal_com' + commento.idCommento + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_com' + commento.idCommento + '"></input><div onclick="m(' + commento.idCommento + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnCom(' + commento.idCommento + ')">Chiudi</div></div>'
   return commentoObj
@@ -194,19 +194,19 @@ function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
 }
 
 function drawVisualStage(stage) {
-    var fotoPath = stage.fotoURL;
+  var fotoPath = stage.fotoURL;
 
-    if (stage.isExNovo == 1 && stage.fotoId == null) {
-      var fotoPath = "/storage/loghetto.jpg";
-    }
-    if (stage.ordine == 0) {
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
-    }
-    else {
-        console.log(stage)
-        document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia'+(stage.ordine )+'"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza'+(stage.ordine )+'">'+ convertHMS(stage.reachTime)+'</span></div>'
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine  + '"> <div class="fotoStageBox"><img src="'+fotoPath+'"/> </div> <div class="infoStageBox"> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine  + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
-    }
+  if (stage.isExNovo == 1 && stage.fotoId == null) {
+    var fotoPath = "/storage/loghetto.jpg";
+  }
+  if (stage.ordine == 0) {
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+  }
+  else {
+    console.log(stage)
+    document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage.ordine) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage.ordine) + '">' + convertHMS(stage.reachTime) + '</span></div>'
+    document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
+  }
 }
 
 function drawVisualRecensione(recensione, isMe) {
@@ -242,7 +242,9 @@ function removeVisualRecensione(idRecensione) {
 
 function updateVisualRecensione(idRecensione, messaggio, dataPubblicazione, valutazione) {
   document.getElementById('opinione' + idRecensione).innerText = messaggio;
-  document.getElementById('data_pub_recensione' + idRecensione).innerText = dataPubblicazione;
+  var date = new Date(dataPubblicazione);
+  const now = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+  document.getElementById('data_pub_recensione' + idRecensione).innerText = now;
   document.getElementById('valutazione' + idRecensione).innerHTML = generateRating(valutazione, 25)
 }
 
@@ -298,9 +300,17 @@ function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok) {
-      console.log(r.data)
-      favouriteObj.innerHTML = '<img id="fav" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/heart' + r.data.preferita + '.png" style="cursor: pointer;">'
-      checkedObj.innerHTML = '<img id="chk"  onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="cursor: pointer;">'
+      
+      if (r.data.preferita == null || r.data.preferita == 0) {
+        favouriteObj.innerHTML = '<img id="fav" title="inseriscila tra le preferite"onclick="setRoadmapAsFavourite(' + roadmap_id + "," + 1 + ')" src="/storage/heart' + 0 + '.png" style="cursor: pointer;">'
+      } else { 
+        favouriteObj.innerHTML = '<img id="fav" title="toglila dalle preferite" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + 0 + ')" src="/storage/heart' + 1 + '.png" style="cursor: pointer;">'
+      }
+      if (r.data.seguita == null || r.data.seguita == 0) {
+        checkedObj.innerHTML = '<img id="chk"  title="inseriscila tra le seguite" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + 1 + ')" src="/storage/check' + 0 + '.png" style="cursor: pointer;">'
+      } else { 
+        checkedObj.innerHTML = '<img id="chk"  title="toglila dalle seguite" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + 0 + ')" src="/storage/check' + 1 + '.png" style="cursor: pointer;">'
+      }
     }
   }
   xhr.send();
@@ -395,6 +405,7 @@ function createRecensione() {
     if (r.ok) {
       const newRecensione = { idRecensione: r.data.idRecensione, dataPubblicazione: r.data.now, valutazione: valutazione, username: username, opinione: opinione } //da popolare..
       drawVisualRecensione(newRecensione, true) //isme!
+      document.getElementById('popupRecensione').setAttribute('style','display:none')
       getReviewAchievementPopup(r.data.numRecensioniUtente);
     }
     else {
@@ -423,6 +434,7 @@ function updateRecensione(idRecensione) {
 
     if (r.ok == true) {
       updateVisualRecensione(idRecensione, opinione, r.data.now, valutazione)
+      document.getElementById('popupRecensione').setAttribute('style','display:none')
     }
     else if (r.ok == false) {
       alert("Problemi col db")
@@ -551,8 +563,7 @@ function deleteCommento(idCommento) {
 //segnalazioni 
 
 function segnalaOggetto(id_oggetto, tipo) {
-
-  var motivazione= document.getElementById("motiv_rm").value;
+  var motivazione = document.getElementById("motiv_rm").value;
 
   /*testo = document.getElementById("motiv_rec" + id_rec).value
   if (testo == ' ' || testo == '') {
@@ -581,14 +592,14 @@ function segnalaOggetto(id_oggetto, tipo) {
       console.log(r)
       alert("Hai già segnalato!")
     }
-      //ATTENZIONE: nella segnalazione dello stage il parametro idOggetto è il placeId. come stringa.
-    document.getElementById('segnal_rm').setAttribute('style','display:none');
+    //ATTENZIONE: nella segnalazione dello stage il parametro idOggetto è il placeId. come stringa.
+    document.getElementById('segnal_rm').setAttribute('style', 'display:none');
 
-  
+
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    tipo: tipo, //hardcoded type 3 = recensione
+    tipo: tipo,
     idOggetto: id_oggetto,
     motivazione: motivazione
   }));
@@ -703,23 +714,23 @@ var ClickEventHandler = (function () {
 
 function convertHMS(value) {
   const sec = parseInt(value, 10); // convert value to number if it's string
-  let hours   = Math.floor(sec / 3600); // get hours
+  let hours = Math.floor(sec / 3600); // get hours
   let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
   let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
   // add 0 if value < 10; Example: 2 => 02
-  if (minutes < 10) {minutes = "0"+minutes;}
-  if (seconds < 10) {seconds = "0"+seconds;}
-  return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+  if (minutes < 10) { minutes = "0" + minutes; }
+  if (seconds < 10) { seconds = "0" + seconds; }
+  return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
 }
 
 function convertKM(value) {
-  if(value<1000){
-    var x=value+" m"
+  if (value < 1000) {
+    var x = value + " m"
     return x;
   }
-  else{
+  else {
     var km = value / 1000;
-    var x=km.toFixed(1)+" km"
+    var x = km.toFixed(1) + " km"
     return x
   }
 }
@@ -729,12 +740,12 @@ function setRatingRecensione(value) {
 }
 
 function openBoxUpdateRec(idRecensione) {
-  document.getElementById('popupRecensione').setAttribute('style','display:block');
+  document.getElementById('popupRecensione').setAttribute('style', 'display:block');
   document.getElementById('save_recbtn').setAttribute("onclick", "updateRecensione(" + idRecensione + ")");
 }
 
 function openBoxUpdateCom(idCom) {
-  document.getElementById('modif_com').setAttribute('style','display:block');
+  document.getElementById('modif_com').setAttribute('style', 'display:block');
   document.getElementById('modifComment').setAttribute("onclick", "updPreview(" + idCom + ")");
 }
 

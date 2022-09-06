@@ -29,6 +29,7 @@
 
 		<div class="card">
 			<img class="images" id="avatar" alt="Avatar"/>
+			<a class="reportImg" id="report" title="Segnala Profilo" onclick="segnalaProfilo()">⚠️</a>
 			<div id="infoBox" class="info">
 				<h2> <b id="info_username"> </b> </h2>
 				<p id="info_email"> </p>
@@ -125,6 +126,15 @@
 			</div>
 			
 		</div>
+
+		<div class="popup" id="segnalaProfilo">
+			<h2>EFFETTUA SEGNALAZIONE</h2>
+			<textarea type="text" rows="4" name="descrizione" id="motiv_profilo" placeholder="Inserisci la motivazione"></textarea>
+			<br>
+			<input type="button" class="buttonSegnalazione" id="inviaSegnalazione" name="invia" value="Segnala" />
+			<input type="button" onclick="document.getElementById('segnalaProfilo').setAttribute('style','display:none')"
+			  class="buttonSegnalazione" value="Annulla" />
+		  </div>
 
 	</div>
 	
