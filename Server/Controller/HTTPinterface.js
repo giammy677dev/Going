@@ -117,7 +117,7 @@ class HTTPinterface {
         this.app.post('/setRoadmapAsSeguita', this.setRoadmapAsSeguita.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
-        this.app.post('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
+        this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
         this.app.get('/getSegnalazioni', this.getSegnalazioni.bind(this));
         this.app.post('/updateSegnalazioni', this.processSegnalazioni.bind(this));
         this.app.get('/getPreferredFavouriteStatusByUserByRoadmap', this.getPreferredFavouriteStatusByUserByRoadmap.bind(this));
@@ -468,7 +468,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(res) {
+    async getBestRoadmap(req,res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }

@@ -81,7 +81,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         const res = await agent.post("/createRecensione").send({ roadmap_id: roadmap_id, opinione: 'TestRecensione1', valutazione: -1 });
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        //console.log(json_response)
+        console.log(json_response)
         expect(json_response.ok).toEqual(false);
         //expect(json_response.error).toEqual(0); 
     });
@@ -93,7 +93,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        //console.log(json_response)
+        console.log(json_response)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
         expect(json_response.data.idRecensione > 0).toEqual(true);

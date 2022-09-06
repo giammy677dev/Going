@@ -598,7 +598,7 @@ function segnalaOggetto(id_oggetto, tipo) {
 
 function getRoadmapAchievementsPopup() {
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", '/getRoadmapAchievementsPopup', true);
+  xhr.open("GET", '/getRoadmapAchievementsPopup', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -616,6 +616,7 @@ function getRoadmapAchievementsPopup() {
       }
     }
   }
+  //qua manca xhr send
 
 }
 

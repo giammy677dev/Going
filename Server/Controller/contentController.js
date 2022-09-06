@@ -68,7 +68,7 @@ class ContentController {
         }
     }
     async deleteUser(user_id, isAdmin) {
-        if (!user_id) {
+        if (!user_id || !isAdmin) {
             return { ok: false, error: -4, data: {} }
         }
         else {

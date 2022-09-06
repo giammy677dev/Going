@@ -12,9 +12,9 @@ class DAO {
                 password: config.passwordDB,
                 database: config.database,
                 //port: 3306
-                ssl: {
+                /*ssl: {
                     ca: fs.readFileSync(__dirname + '/../config/ca/' + config.ca)
-                }
+                }*/
             });
             return connection;
         } catch (err) {
