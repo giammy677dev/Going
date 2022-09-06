@@ -133,14 +133,29 @@ function loadMapInfo() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", '/getRoadmapData?id=' + id, true);
 
-        xhr.onload = function (event) 
-        {
+        xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
             if (r.ok) {
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
-                //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva; MATT questo va messo
+                console.log(roadmap)
+                console.log(stage_index)
+                console.log(stages_list)
+
+
+                if (document.getElementById("somma_totale") != undefined) {
+                    var durata
+                    const sec = parseInt(roadmap.durata, 10); // convert value to number if it's string
+                    let hours = Math.floor(sec / 3600); // get hours
+                    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+                    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+                    if (minutes < 10) { minutes = "0" + minutes; }
+                    if (seconds < 10) { seconds = "0" + seconds; }
+                    durata= hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
+                    document.getElementById("somma_totale").innerText = durata;
+                }
+                //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;// MATT questo va messo
                 //con lo stesso nome come fatto nel create_roadmap.js!
                 //map.setZoom(2);
                 roadmapCreator = r.data.user[0].username;
