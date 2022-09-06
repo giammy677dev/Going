@@ -136,7 +136,7 @@ describe("Test User (block #1)", () => {
     });
 
 
-    test("Test preleva roadmap create da utente loggato", async () => {
+    test("Test preleva roadmap create da utente registrato", async () => {
 
         const user_id = 5;
         const res = await agent.get("/getRoadmapCreate?id=" + user_id).send();
@@ -148,7 +148,7 @@ describe("Test User (block #1)", () => {
         expect(json_response.error).toEqual(0);
     });
 
-    test("Test preleva roadmap seguite da utente loggato", async () => {
+    test("Test preleva roadmap seguite da utente registrato", async () => {
 
         const user_id = 5;
         const res = await agent.get("/getRoadmapSeguite?id=" + user_id).send();
@@ -160,7 +160,7 @@ describe("Test User (block #1)", () => {
         expect(json_response.error).toEqual(0);
     });
     
-    test("Test preleva roadmap preferite da utente loggato", async () => {
+    test("Test preleva roadmap preferite da utente registrato", async () => {
         const user_id = 5;
         const res = await agent.get("/getRoadmapPreferite?id=" + user_id).send();
 
