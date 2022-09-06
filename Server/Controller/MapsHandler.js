@@ -3,10 +3,12 @@ const client = new Client({});
 const config = require('../config/config.js');
 
 class MapsHandler {
-    getPhotoUrl(photo_reference) {
-        if (photo_reference == "" || photo_reference === undefined) {
-            return ""
+    getPhotoUrl(isExNovo, photo_reference) {
+        if (photo_reference == "" || photo_reference === undefined || photo_reference == "NO") {
+            return "/storage/loghetto.jpg"
         }
+        if(isExNovo)
+            return photo_reference;
         const MAX_HEIGHT = 500;
         const MAX_WIDTH = 500;
         var url = 'https://maps.googleapis.com/maps/api/place/photo?photoreference=' + photo_reference + '&sensor=false&maxheight=' + MAX_HEIGHT + '&maxwidth=' + MAX_WIDTH + '&key=' + config.GOOGLE_MAPS_FRONTEND_API_KEY
@@ -58,7 +60,7 @@ class MapsHandler {
             
             if (data_from_google.photos !== undefined) {
                 data_from_google.foto = data_from_google.photos[0].photo_reference
-                data_from_google.fotoURL = this.getPhotoUrl(data_from_google.foto)
+                data_from_google.fotoURL = this.getPhotoUrl(0,data_from_google.foto)
             } else {
                 data_from_google.foto = "NO"
                 data_from_google.fotoURL = null

@@ -307,3 +307,56 @@ body {
     background-color: #07b7c4;
     border: thin #000000 solid;
 }
+
+/* Contenuto Segnalazione */
+
+.popup h2 {
+    margin-top: 0px;
+}
+
+.popup{
+    font-size: 26px;
+    display: none;
+    z-index: 2;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.92);
+    position: fixed;
+    width: 70%;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    border: thin #2ec8d1 solid;
+    overflow: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+}
+
+#motiv_profilo {
+    font-size: 17px;
+    width: 80%;
+    background-color: #081a2359;
+    border: 1px solid #c0c0c0;
+    color: white;
+    margin-bottom: 10px;
+    font-family: "Poppins", sans-serif;
+}
+
+.buttonSegnalazione {
+    font-size: 20px;
+    padding: 5px 30px;
+    margin-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #019ba4;
+    color: white;
+}
+
+.buttonSegnalazione:hover {
+    /*box-shadow: 0px 0px 10px #18d26e;*/
+    box-shadow: 0px 0px 10px white;
+}
+
+#report {
+    cursor: pointer;
+}

@@ -8,19 +8,17 @@ class MapController {
         this.dao = dao;
         this.mapsHandler = new MapsHandler();
     }
+
     calculateDuration(stages, distance_data) {
-        console.log(stages)
         var durata = stages[0].durata;
         for (var i = 1; i < stages.length; i++) {
-            console.log(stages[i-1])
-            console.log(stages[i])
-            console.log(distance_data[stages[i - 1].placeId + "|" + stages[i].placeId])
             durata += stages[i].durata;
             
             durata += distance_data[stages[i - 1].placeId + "|" + stages[i].placeId].routes[0].legs[0].duration.value ////CONVENZIONE è IN SECONDI
         }
         return durata
     }
+
     calculateDistance(stages, distance_data) {
         var distanza = 0;
         for (var i = 1; i < stages.length; i++) {
@@ -31,7 +29,7 @@ class MapController {
 
     getFileName(file) {
         const split = file.originalname.split(".");
-        return config.stagesFolder + "/" + file.fieldname + "." + split[split.length - 1]
+        return '/storage/'+config.stagesFolder + "/" + file.fieldname + "." + split[split.length - 1]
     }
     
     async createRoadmap(user_id, roadmap, session_data, distance_data, stages_img) {
@@ -69,7 +67,6 @@ class MapController {
                 else //è exnovo!
                 {
                     stage.fotoURL = stages_img_dict[stage.placeId] || null;
-                    //console.log(stage.fotoURL)
                     await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita)
 
                 }
@@ -102,7 +99,7 @@ class MapController {
                 var stage;
                 for (var i = 0; i < stages.length; i++) {
                     stage = stages[i];
-                    stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.fotoID)
+                    stage.fotoURL = this.mapsHandler.getPhotoUrl(stage.isExNovo==1, stage.fotoID)
                 }
                 return { ok: data[0], error: data[1], data: data[2] };
             } catch (error) {

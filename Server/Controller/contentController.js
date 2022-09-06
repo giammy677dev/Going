@@ -5,18 +5,17 @@ class ContentController {
 
     async searchUser(username) {
         var data;
-        if(!username || username == ""){
-            return {ok:false,error:-1,data:{}}
-        }else{
+        if (!username || username == "") {
+            return { ok: false, error: -1, data: {} }
+        } else {
             data = await this.dao.searchUser(username);
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
     async suggestedRoadmap(roadmap, rating) {
-        if(!roadmap || !rating || rating <= 0 || rating > 5 || roadmap > 20 || roadmap < 1)
-        {
-            return {ok:false,error:-1,data:{}}
+        if (!roadmap || !rating || rating <= 0 || rating > 5 || roadmap > 20 || roadmap < 1) {
+            return { ok: false, error: -1, data: {} }
         }
         const data = await this.dao.suggestedRoadmap(roadmap, rating);
         return { ok: data[0], error: data[1], data: data[2] }
@@ -69,7 +68,7 @@ class ContentController {
         }
     }
     async deleteUser(user_id, isAdmin) {
-        if (!user_id) {
+        if (!user_id || !isAdmin) {
             return { ok: false, error: -4, data: {} }
         }
         else {
@@ -93,21 +92,21 @@ class ContentController {
             return { ok: false, error: -4, data: '' }
         }
         else {
+            console.log(user_id, idRecensione, isAdmin)
             const data = await this.dao.deleteRecensione(idRecensione, user_id, isAdmin);
             return { ok: data[0], error: data[1], data: data[2] };
         }
     }
 
-    async deleteStage(placeId, isAdmin) {
-        if (!placeId || !isAdmin || isAdmin == false) {
+    async deleteStage(idStage, isAdmin) {
+        if (!idStage || !isAdmin || isAdmin == false) {
             return { ok: false, error: -4, data: {} }
         }
         else {
-            try{
-                var stageId = (await this.dao.getStageIdFromPlaceId(placeId))[2];
+            try {
                 const data = await this.dao.deleteStage(stageId);
                 return { ok: data[0], error: data[1], data: data[2] };
-            }catch(error){
+            } catch (error) {
                 console.log(error);
                 return { ok: false, error: -5, data: {} }
             }
@@ -144,14 +143,14 @@ class ContentController {
         if (!idUtente || !tipo || !idOggetto) {
             return { ok: false, error: -1, data: {} }
         }
-        var data;
+        /*var data;
         if (tipo == 5) //stage reporting. transform place id to stageId
         {
             var idOggetto = (await this.dao.getStageIdFromPlaceId(idOggetto))[2];
             data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione); //ora idOggetto è valido (intero)
-        } else {
-            data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
-        }
+        } else {*/
+        const data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
+        //}
         return { ok: data[0], error: data[1], data: data[2] }
     }
     async getSegnalazioni() {

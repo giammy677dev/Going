@@ -137,7 +137,7 @@ class DAO {
         }
     }
 
-    async getStageIdFromPlaceId(placeId) {
+    /*async getStageIdFromPlaceId(placeId) {
 
         try {
             var connection = await this.connect();
@@ -147,7 +147,7 @@ class DAO {
         } catch (error) {
             return [false, error.errno, {}];
         }
-    }
+    }*/
     async createStage(placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita) {
 
         try {
@@ -393,7 +393,6 @@ class DAO {
         try {
             var connection = await this.connect();
             const placeId = (await connection.query('SELECT placeId from stage where idStage = ?', [stageId]))[0][0].placeId
-            console.log(placeId)
             var res = await connection.query('SELECT roadmap_id FROM stageinroadmap WHERE stage_placeId = ?', [placeId])
             var roadmap_list = res[0];
             for (var i = 0; i < roadmap_list.length; i++) {
@@ -460,12 +459,14 @@ class DAO {
 
     async deleteRecensione(idRecensione, user_id, isAdmin) {
         try {
-
+            console.log(idRecensione,user_id,isAdmin)
             var connection = await this.connect();
             var res;
+
             var roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ?', [idRecensione]))
             roadmap_id = roadmap_id[0][0].idRoadmap;
             
+
             if (isAdmin) {
                 res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
             } else {
@@ -474,15 +475,16 @@ class DAO {
             //ricalcolo media
             var dati = await connection.query('SELECT count(*) AS numeroRecensioni, SUM(valutazione) AS somma FROM recensione WHERE idRoadmap = ?', [roadmap_id])
 
-            var numeroRecensioni = dati[0][0].numeroRecensioni
-            var somma = dati[0][0].somma
-            var media = parseFloat(somma / numeroRecensioni)
+            var numeroRecensioni = parseInt(dati[0][0].numeroRecensioni) || 1
+            var somma = parseFloat(dati[0][0].somma) || 0
+            var media = parseFloat(somma / numeroRecensioni) || 0
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
             
             return [res[0].affectedRows != 0, res[0].affectedRows - 1, {media:media}];
 
         }
         catch (error) {
+            //console.log(error)
             return [false, error.errno];
         }
     }

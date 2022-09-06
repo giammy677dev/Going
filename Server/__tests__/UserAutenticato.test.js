@@ -93,11 +93,14 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        //console.log(json_response)
+        console.log(json_response)
+        console.log(json_response)
+        console.log(json_response)
         expect(json_response.ok).toEqual(true);
         expect(json_response.error).toEqual(0);
         expect(json_response.data.idRecensione > 0).toEqual(true);
         recensione_id = json_response.data.idRecensione;
+
     });
 
     test("Test creazione recensione valida (ma già pubblicata)", async () => {
@@ -135,13 +138,11 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
     });
 
     test("Test delete recensione valida", async () => {
-
-        //console.log(recensione_id)
         const res = await agent.post("/deleteRecensione").send({ idRecensione: recensione_id });
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)
-        //console.log(json_response)
+        console.log(json_response)
         expect(json_response.ok).toEqual(true);
     });
 
@@ -201,7 +202,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
         expect(json_response.ok).toEqual(true);
     });
 
-    test("Test set Roadmap as checked", async () => {
+    test("Test set rimuovi recensione altrui", async () => {
         var recensioneAltruiId = 21;
         const res = await agent.post("/deleteRecensione").send({ idRecensione: recensioneAltruiId });
 

@@ -39,7 +39,7 @@ describe("Test Achievement (block #5)", () => {
 
     test("Test preleva achievement numero roadmap create da utente", async () => {
         const user_id = 5;
-        const res = await agent.get("/getRoadmapAchievementsPopup?id=" + user_id).send();
+        const res = await agent.get("/getRoadmapAchievementsPopup").send();
 
         expect(res.statusCode).toEqual(200);
         json_response = JSON.parse(res.text)

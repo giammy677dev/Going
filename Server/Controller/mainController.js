@@ -86,8 +86,8 @@ class MainController {
         return await this.contentController.deleteRecensione(user_id, idRecensione, isAdmin) 
     }
 
-    async deleteStage(placeId,isAdmin) {
-        return await this.contentController.deleteStage(placeId,isAdmin) 
+    async deleteStage(idStage,isAdmin) {
+        return await this.contentController.deleteStage(idStage,isAdmin) 
     }
 
     async createRecensione(user_id, roadmap_id, opinione, valutazione) {

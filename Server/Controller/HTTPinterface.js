@@ -34,7 +34,7 @@ class HTTPinterface {
     initServer() {
         this.storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, './' + config.stagesFolder))
+                cb(null, path.join(__dirname, '../storage/' + config.stagesFolder))
             },
             filename: function (req, file, cb) {
                 const split = file.originalname.split(".");
@@ -91,7 +91,6 @@ class HTTPinterface {
         this.app.post('/suggestedRoadmap', this.suggestedRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
         //this.app.get('/getMap', this.getMap.bind(this));
-        //this.app.get('/getExNovoStages', this.getExNovoStages.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
         this.app.get('/getUserStatus', this.getUserStatus.bind(this));
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
@@ -117,7 +116,7 @@ class HTTPinterface {
         this.app.post('/setRoadmapAsSeguita', this.setRoadmapAsSeguita.bind(this));
         this.app.post('/report', this.reportObject.bind(this));
         this.app.get('/getAchievements', this.getAchievements.bind(this));
-        this.app.post('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
+        this.app.get('/getRoadmapAchievementsPopup', this.getRoadmapAchievementsPopup.bind(this));
         this.app.get('/getSegnalazioni', this.getSegnalazioni.bind(this));
         this.app.post('/updateSegnalazioni', this.processSegnalazioni.bind(this));
         this.app.get('/getPreferredFavouriteStatusByUserByRoadmap', this.getPreferredFavouriteStatusByUserByRoadmap.bind(this));
@@ -169,7 +168,6 @@ class HTTPinterface {
         }
     }
 
-
     //backend rest api calls
     async register(req, res) {
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
@@ -203,7 +201,7 @@ class HTTPinterface {
     async getRoadmapData(req, res) { //era viewrm
         const r = await this.controller.getRoadmapData(req.query.id);
 
-        if (req.session.loggedin) { //salva info per eventuale fork
+        if (req.session.loggedin && r.ok) { //salva info per eventuale fork
             req.session.placeDetails = {}; //reset
             req.session.distanceDetails = {};
             //vanno popolati placeDetails & distanceDetails
@@ -304,7 +302,7 @@ class HTTPinterface {
     async deleteStage(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin) {
-            r = await this.controller.deleteStage(req.body.placeId,req.session.isAdmin);
+            r = await this.controller.deleteStage(req.body.idStage,req.session.isAdmin);
         }
         return res.send(JSON.stringify(r))
     }
@@ -330,10 +328,9 @@ class HTTPinterface {
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
         */
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
-            
+
             req.body.stages = JSON.parse(req.body.stages);
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files || []);
-            //const 
             if (r.ok) {
                 console.log("OK ROADMAP")
             }
@@ -345,11 +342,6 @@ class HTTPinterface {
         }
         return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
     }
-
-    /*async getExNovoStages(req, res) {
-        const r = await this.controller.getExNovoStages();
-        return res.send(r);
-    }*/
 
     async getDataUser(req, res) { //getDataUser != isLogWho!
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
@@ -469,7 +461,7 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getBestRoadmap(res) {
+    async getBestRoadmap(req, res) {
         const r = await this.controller.getBestRoadmap();
         return res.send(JSON.stringify(r));
     }
