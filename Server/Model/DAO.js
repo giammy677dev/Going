@@ -137,7 +137,7 @@ class DAO {
         }
     }
 
-    async getStageIdFromPlaceId(placeId) {
+    /*async getStageIdFromPlaceId(placeId) {
 
         try {
             var connection = await this.connect();
@@ -147,7 +147,7 @@ class DAO {
         } catch (error) {
             return [false, error.errno, {}];
         }
-    }
+    }*/
     async createStage(placeId, isExNovo, latitudine, longitudine, indirizzo, nome, website, fotoID, localita) {
 
         try {
