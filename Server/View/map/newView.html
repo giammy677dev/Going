@@ -61,15 +61,6 @@
     <input type="button" onclick="document.getElementById('modif_com').setAttribute('style','display:none')"
       class="buttonSegnalazione" value="Annulla" />
   </div>
-  <div class="popup" id="ins_com">
-    <h2>INSERISCI COMMENTO</h2>
-    
-    <textarea rows="4" name="commIns" autocomplete="off" id="commIns"></textarea>
-    <br>
-    <input type="button" class="buttonSegnalazione" id="textCommento" onclick="createCommento()" name="invia" value="Invia" />
-    <input type="button" onclick="document.getElementById('ins_com').setAttribute('style','display:none')"
-      class="buttonSegnalazione" value="Annulla" />
-  </div>
 
   <!-- Zona superiore Informazioni -->
 
@@ -190,10 +181,12 @@
           
           <div class="settore commenti">
             <span class="titolo" id="titolo">Commenti💭</span><br>
-            <input type="button" id="write_com" onclick="writeCommento()" style="width: fit-content;" class="buttonSegnalazione" value="Inserisci un commento" /><br>
-            
             <div class="comment" id="commenti">
-
+              <!--<input type="button" id="write_com" onclick="writeCommento()" style="width: fit-content;" class="buttonSegnalazione" value="Inserisci un commento" /><br>-->
+            </div>
+            <div id="rowCommento">
+              <textarea id="us_com" name="us_com" autocomplete="off" rows="2" placeholder="Inserisci un commento"></textarea>
+              <input type="button" id="write_com" onclick="createCommento()" class="buttonSegnalazione" value="Invia" />
             </div>
           </div>
         </div>
