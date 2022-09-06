@@ -298,8 +298,9 @@ function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
   xhr.onload = function (event) {
     const r = JSON.parse(event.target.responseText);
     if (r.ok) {
+      console.log(r.data)
       favouriteObj.innerHTML = '<img id="fav" onclick="setRoadmapAsFavourite(' + roadmap_id + "," + Math.abs(r.data.preferita - 1) + ')" src="/storage/heart' + r.data.preferita + '.png" style="cursor: pointer;">'
-      checkedObj.innerHTML = '<img id="chk"  title="toglila tra le percorse" onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="cursor: pointer;">'
+      checkedObj.innerHTML = '<img id="chk"  onclick="setRoadmapAsSeguita(' + roadmap_id + "," + Math.abs(r.data.seguita - 1) + ')" src="/storage/check' + r.data.seguita + '.png" style="cursor: pointer;">'
     }
   }
   xhr.send();
@@ -597,7 +598,7 @@ function segnalaOggetto(id_oggetto, tipo) {
 
 function getRoadmapAchievementsPopup() {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", '/getRoadmapAchievementsPopup', true);
+  xhr.open("POST", '/getRoadmapAchievementsPopup', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
@@ -616,10 +617,6 @@ function getRoadmapAchievementsPopup() {
     }
   }
 
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-    id_user: id_user
-  }));
 }
 
 function showVisualAchievementPopup(testo, immagine) {
