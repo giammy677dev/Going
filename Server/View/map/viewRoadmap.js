@@ -15,7 +15,7 @@ document.addEventListener('receivedUserInfo', (e) => {
   if (e.logged) {
     id_user = e.user
     username = e.username
-    //document.getElementById("segnal_rm").setAttribute("onclick", "segnalaRoadmap(" + roadmapId + ")")
+    document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmap.id+", 1)");
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
   }
   else {
@@ -63,10 +63,6 @@ document.addEventListener('receivedRoadmapData', (e) => {
 //popups for recensioni e commenti
 
 function openSegnalazionePopup(oggetto, tipo) {
-  if (oggetto == "1") {
-    oggetto = roadmap.id;
-  }
-
   if (user_id > 0) {
     document.getElementById('segnal_rm').setAttribute('style', 'display:block');
     document.getElementById("motiv_rm").value = "";
@@ -203,7 +199,6 @@ function drawVisualStage(stage) {
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
   }
   else {
-    console.log(stage)
     document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage.ordine) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage.ordine) + '">' + convertHMS(stage.reachTime) + '</span></div>'
     document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage.ordine + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"><a class="boxclose" id="segn' + stage.idStage + '" title="segnala stage" onclick="openSegnalazionePopup(' + stage.idStage + ',5)">⚠️</a> <h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage.ordine + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
   }
