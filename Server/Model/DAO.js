@@ -350,6 +350,7 @@ class DAO {
             var connection = await this.connect();
             var resultCommento = await connection.query('INSERT INTO commento (idUtenteRegistrato, idRoadmap, testo,dataPubblicazione) VALUES (?, ?, ?, ?)', [user_id, roadmap_id, messaggio, now])
             let commentsNumber = await connection.query('SELECT COUNT(*) AS numberComments FROM commento WHERE idUtenteRegistrato = ?', [user_id]);
+            
             return [true, 0, { idCommento: resultCommento[0].insertId, now: now, numCommentiUtente: commentsNumber[0][0].numberComments }];
         }
         catch (error) {
@@ -370,7 +371,7 @@ class DAO {
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
             //res upd media veniva passato alla soluzione ma perchè?
             //return [true, 0, { idRecensione: res_ins[0].insertId, res_upd_media: res_upd_media[0], numRecensioniUtente: numeroRecensioniUtente }];
-            return [true, 0, { idRecensione: res_ins[0].insertId, now: now, numRecensioniUtente: numeroRecensioniUtente }];
+            return [true, 0, { idRecensione: res_ins[0].insertId, now: now, numRecensioniUtente: numeroRecensioniUtente,media:media }];
         }
         catch (error) {
             return [false, error.errno];
@@ -461,8 +462,10 @@ class DAO {
             console.log(idRecensione,user_id,isAdmin)
             var connection = await this.connect();
             var res;
-            const roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ? ', [idRecensione]))[0][0].idRoadmap;
-            console.log(roadmap_id)
+
+            var roadmap_id = (await connection.query('SELECT idRoadmap FROM recensione WHERE idRecensione = ?', [idRecensione]))
+            roadmap_id = roadmap_id[0][0].idRoadmap;
+            
 
             if (isAdmin) {
                 res = await connection.query('DELETE FROM recensione WHERE idRecensione = ? ', [idRecensione])
@@ -476,8 +479,8 @@ class DAO {
             var somma = parseFloat(dati[0][0].somma) || 0
             var media = parseFloat(somma / numeroRecensioni) || 0
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
-
-            return [res[0].affectedRows != 0, res[0].affectedRows - 1, {}];
+            
+            return [res[0].affectedRows != 0, res[0].affectedRows - 1, {media:media}];
 
         }
         catch (error) {
@@ -500,8 +503,9 @@ class DAO {
             var somma = dati[0][0].somma
             var media = parseFloat(somma / numeroRecensioni)
             var res_upd_media = await connection.query('UPDATE roadmap SET punteggio = ? WHERE id=?', [media, roadmap_id])
+            
             //res upd media ancora non si sa cosa fa nel frontend
-            return [res_ins[0].affectedRows == 1, 0, { idRecensione: idRecensione, now: now }]; //idRecensione ridondante ma va bene è coerente
+            return [res_ins[0].affectedRows == 1, 0, { idRecensione: idRecensione, now: now,media:media }]; //idRecensione ridondante ma va bene è coerente
         }
         catch (error) {
             console.log(error)

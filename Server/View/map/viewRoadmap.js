@@ -1,13 +1,9 @@
 const numeroRoadmapCreate = 50;
 const numeroRoadmapSeguite = 10;
-const numeroCommenti = 10;
+const numeroCommenti = 2;
 const numeroRecensioni = 10;
 var testoAchievement = '';
 var immagineAchievement = '';
-
-window.onload = function () {
-  getRoadmapAchievementsPopup();
-};
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
@@ -17,6 +13,10 @@ document.addEventListener('receivedUserInfo', (e) => {
     username = e.username
     document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmap.id+", 1)");
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
+
+    if (new URL(document.referrer).pathname == "/create") {
+      getRoadmapAchievementsPopup();
+    }
   }
   else {
     drawVisualFavouriteSeguitaBottoni(roadmap.id)
@@ -82,11 +82,14 @@ function openRecensionePopup() {
   }
 }
 
-function openCommentoPopup() {
+function writeCommento() {
   if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
-    //createCommento(roadmap_id,"messaggio commento")
+   
+      document.getElementById('ins_com').style.display = 'block';
+  
   } else {
     //classico popup di login
+    document.getElementById('log').setAttribute('style', 'display:block');
   }
 }
 
@@ -113,9 +116,11 @@ function generateRecensione(recensione, isMe) {
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   const ratingHtml = generateRating(recensione.valutazione, 25) //cursore?
+
   if (isMe) {
     document.getElementsByClassName("descrizioneRoadmap")[1].style.display = "none";
     recensioneObj = '<div class="recensione" id="recensione' + recensione.idRecensione + '"><div class="datirec" id="datirec' + recensione.idRecensione + '"><div class="row1Recensioni"><div class="whoRec" id="whoRec" style="color: #019ba4; cursor: pointer" onclick="location.href = /profile?id=' + recensione.idUtente + '/">👤' + recensione.username + '</div><div class="data_pub" id="data_pub_recensione' + recensione.idRecensione + '">' + dataPubblicazione + '</div><a class="boxclose" id="segn' + recensione.idRecensione + '" title="segnala recensione" onclick="openSegnalazionePopup(' + recensione.idRecensione + ',3)">⚠️</a><a class="boxclose" id="updateRec' + recensione.idRecensione + '" title="Modifica recensione" onclick="openBoxUpdateRec(' + recensione.idRecensione + ')">🖊</a><a class="boxclose" id="deleteRec' + recensione.idRecensione + '" title="Elimina recensione" onclick="">❌</a></div><div class="opinione" id="opinione' + recensione.idRecensione + '">"' + recensione.opinione + '"</div><div class="valutazione" id="valutazione' + recensione.idRecensione + '">' + ratingHtml + '</div></div></div>'
+
     recensioneObj += '<div class="popup_segnal" id="segnal_rec' + recensione.idRecensione + '"><label>Inserisci motivazione (opzionale)</label><input type="text" id="motiv_rec' + recensione.idRecensione + '"></input><div onclick="segnalaRec(' + recensione.idRecensione + ')"  class="btn">Segnala</div><div class="btn" onclick="closeSegnRec(' + recensione.idRecensione + ')">Chiudi</div></div>'
   }
   else {
@@ -131,8 +136,10 @@ function generateCommento(commento, isMe) {
   var date = new Date(commento.dataPubblicazione)
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
   if (isMe) {
+
     commentoIcon += '<a class="boxclose" id="update' + commento.idCommento + '" title="modifica commento" onclick="openBoxUpdateCom(' + commento.idCommento + ')" >🖊</a><a class="boxclose" id="deleteCom' + commento.idCommento + '" title="elimina commento" onclick="deleteCom(' + commento.idCommento + ')">❌</a>'
     var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="color: #019ba4; cursor: pointer" onclick="location.href = /profile?id=' + commento.idUtente + '/">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
+
   } else {
     var commentoObj = '<div class="commento" id="commento' + commento.idCommento + '"><div class="daticomm" id="daticomm' + commento.idCommento + '"><div class="row1Commenti"><div class="whoCom" id="whoCom" style="cursor: pointer" onclick="location.href = /profile?id=' + commento.idUtente + '/">' + ' 👤' + commento.username + '</div><div class="data_pub" id="data_pub_commento' + commento.idCommento + '">' + dataPubblicazione + '</div>' + commentoIcon + '</div><div class="text_commento" value="' + commento.testo + '" id="text_commento' + commento.idCommento + '">' + commento.testo + '</div> ' + '</div></div>'
   }
@@ -220,13 +227,15 @@ function drawVisualCommento(commento, isMe) {
 }
 
 function removeVisualCommento(idCommento) {
-  //'<div class="commento" id="commento'+commento.idCommento+'">
+ 
   document.getElementById('commento' + idCommento).remove();
 }
 
 function updateVisualCommento(idCommento, messaggio, dataPubblicazione) {
   document.getElementById('text_commento' + idCommento).innerText = messaggio;
-  document.getElementById('data_pub_commento' + idCommento).innerText = dataPubblicazione;
+  var date = new Date(dataPubblicazione);
+  const now = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+  document.getElementById('data_pub_commento' + idCommento).innerText = now;
 }
 
 function removeVisualRecensione(idRecensione) {
@@ -343,7 +352,7 @@ function setRoadmapAsFavourite(roadmap_id, value) {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    roadmap_id: roadmapId,
+    roadmap_id: roadmap_id,
     newStatus: value
   }));
 }
@@ -390,6 +399,9 @@ function setRoadmapAsSeguita(roadmap_id, value) {
 function createRecensione() {
   var valutazione = document.getElementById("ratingRecensione").value
   var opinione = document.getElementById("us_rec").value
+  if(opinione==""){
+    opinione=" "
+  }
   var xhr = new XMLHttpRequest();
 
   xhr.open("POST", '/createRecensione', true);
@@ -400,6 +412,7 @@ function createRecensione() {
       const newRecensione = { idRecensione: r.data.idRecensione, dataPubblicazione: r.data.now, valutazione: valutazione, username: username, opinione: opinione } //da popolare..
       drawVisualRecensione(newRecensione, true) //isme!
       document.getElementById('popupRecensione').setAttribute('style','display:none')
+      document.getElementById('rating').innerHTML = generateRating(r.data.media, 35, 'auto')
       getReviewAchievementPopup(r.data.numRecensioniUtente);
     }
     else {
@@ -411,7 +424,7 @@ function createRecensione() {
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
     roadmapId: roadmapId,
-    opinione: opinione || "",
+    opinione: opinione,
     valutazione: valutazione
   }));
 }
@@ -420,14 +433,19 @@ function updateRecensione(idRecensione) {
   var xhr = new XMLHttpRequest();
   var valutazione = document.getElementById("ratingRecensione").value;
   var opinione = document.getElementById("us_rec").value;
-
+ 
+  if(opinione==" "){
+    opinione="<i>Non è stata scritta una opinione</i>"
+  }
   xhr.open("POST", '/updateRecensione', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok == true) {
+      console.log(r)
       updateVisualRecensione(idRecensione, opinione, r.data.now, valutazione)
+      document.getElementById('rating').innerHTML = generateRating(r.data.media, 35, 'auto')
       document.getElementById('popupRecensione').setAttribute('style','display:none')
     }
     else if (r.ok == false) {
@@ -449,12 +467,11 @@ function deleteRecensione(idRecensione) {
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
-
+    console.log(r)
     if (r.ok) {
       removeVisualRecensione(idRecensione);
-      //qui va cambiata dinamicamente la pagina elimiando il commento con codice idCommento 
-      alert("Complimenti!!")
-
+      document.getElementById('rating').innerHTML = generateRating(r.data.media, 35, 'auto')
+      document.getElementsByClassName("descrizioneRoadmap")[1].style.display = "block";
     }
     else {
       alert("Problemi col db")
@@ -468,8 +485,8 @@ function deleteRecensione(idRecensione) {
 
 //funzioni su commento backend
 
-function createCommento(roadmap_id, messaggioCommento) {
-  //var messaggioCommento = document.getElementById("us_com").value
+function createCommento() {
+  var messaggioCommento = document.getElementById("commIns").value
   if (messaggioCommento == "") return;
 
   var xhr = new XMLHttpRequest();
@@ -478,14 +495,16 @@ function createCommento(roadmap_id, messaggioCommento) {
 
     const r = JSON.parse(event.target.responseText);
 
-    console.log(r)
+    console.log("r: ",r)
     if (r.ok) {
       //in realtà la data pubblicazione va presa dal server. per il momento ho messo quella locale
       //altrimenti se si hanno gmt diversi non c'è coerenza con la View dell'utente.
       const newCommento = { idCommento: r.data.idCommento, dataPubblicazione: r.data.now, testo: messaggioCommento, username: username }
-      console.log(newCommento)
+      console.log("newComme: ",newCommento)
       drawVisualCommento(newCommento, true);
       getCommentAchievementPopup(r.data);
+      document.getElementById('ins_com').style.display = 'none';
+       
     }
     else {
       console.log(r)
@@ -494,26 +513,27 @@ function createCommento(roadmap_id, messaggioCommento) {
   }
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({
-    roadmap_id: roadmap_id,
+    roadmap_id: roadmapId,
     messaggio: messaggioCommento
   }));
 }
 
-function updateCommento(id_commento, messaggioCommento) {
+function updateCommento(id_commento) {
   var xhr = new XMLHttpRequest();
-  //testo = document.getElementById(id).value
+  
+  var messaggioCommento= document.getElementById("commUpd").value
   xhr.open("POST", '/updateCommento', true);
   xhr.onload = function (event) {
 
     const r = JSON.parse(event.target.responseText);
 
-    //il ritortno di update commento non ha senso
+    
     console.log(r)
     if (r.ok == true) {
       updateVisualCommento(id_commento, messaggioCommento, r.data.now);
+      document.getElementById('modif_com').setAttribute('style','display:none')
       //qui va cambiata dinamicamente la pagina aggiungendo il commento con codice idCommento 
-      alert("Compliementi!!")
-      //location.reload() no refresh!
+      
     }
     else if (r.ok == false) {
       console.log(r)
@@ -539,8 +559,6 @@ function deleteCommento(idCommento) {
     console.log(r)
     if (r.ok == true) {
       removeVisualCommento(idCommento);
-      //qui va cambiata dinamicamente la pagina elimiando il commento con codice idCommento 
-      alert("Complimenti!!")
 
     }
     else if (r.ok == false) {
@@ -621,8 +639,7 @@ function getRoadmapAchievementsPopup() {
       }
     }
   }
-  //qua manca xhr send
-
+  xhr.send();
 }
 
 function showVisualAchievementPopup(testo, immagine) {
@@ -740,6 +757,7 @@ function openBoxUpdateRec(idRecensione) {
 
 function openBoxUpdateCom(idCom) {
   document.getElementById('modif_com').setAttribute('style', 'display:block');
-  document.getElementById('modifComment').setAttribute("onclick", "updPreview(" + idCom + ")");
+  const mes_old=document.getElementById('text_commento'+idCom).getAttribute('value')  
+  document.getElementById('commUpd').value=mes_old
+  document.getElementById('modifComment').setAttribute("onclick", "updateCommento(" + idCom + ")");
 }
-

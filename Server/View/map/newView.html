@@ -37,7 +37,7 @@
     </div>
     <div class="popup-interno" id="contenuto-testo">
       <h3> Congratulazioni!
-        <button type="button" id="closeBtn" onclick="closePopup()">X</button>
+        <button type="button" id="closeBtn" onclick="closeVisualPopup()">X</button>
       </h3>
       <p id="textAchievement"></p>
     </div>
@@ -54,10 +54,20 @@
 
   <div class="popup" id="modif_com">
     <h2>MODIFICA COMMENTO</h2>
-    <textarea type="text" rows="4" name="commento" id="commSpace"></textarea>
+   
+    <textarea rows="4" name="commUpd" autocomplete="off" id="commUpd"></textarea>
     <br>
     <input type="button" class="buttonSegnalazione" id="modifComment" name="invia" value="Modifica" />
     <input type="button" onclick="document.getElementById('modif_com').setAttribute('style','display:none')"
+      class="buttonSegnalazione" value="Annulla" />
+  </div>
+  <div class="popup" id="ins_com">
+    <h2>INSERISCI COMMENTO</h2>
+    
+    <textarea rows="4" name="commIns" autocomplete="off" id="commIns"></textarea>
+    <br>
+    <input type="button" class="buttonSegnalazione" id="textCommento" onclick="createCommento()" name="invia" value="Invia" />
+    <input type="button" onclick="document.getElementById('ins_com').setAttribute('style','display:none')"
       class="buttonSegnalazione" value="Annulla" />
   </div>
 
@@ -167,24 +177,23 @@
         <div class="inner_row" id="commRec">
           <div class="settore recensioni">
             <span class="titolo" id="titolo">Recensioni📝</span><br>
-            <div class="recension" id="recensioni">
-
-            </div>
             <fieldset class="descrizioneRoadmap">
               <legend> La mia recensione </legend>
               <span id="avvisoRecensione">Non hai effettuato alcuna recensione.</span><br>
               <div class="center"><input type="button" id="do_rec" onclick="openRecensionePopup()" class="buttonSegnalazione" value="EFFETTUA RECENSIONE"/></div>
             </fieldset>
+            <div class="recension" id="recensioni">
+
+            </div>
+            
           </div>
           
           <div class="settore commenti">
             <span class="titolo" id="titolo">Commenti💭</span><br>
+            <input type="button" id="write_com" onclick="writeCommento()" style="width: fit-content;" class="buttonSegnalazione" value="Inserisci un commento" /><br>
+            
             <div class="comment" id="commenti">
 
-            </div>
-            <div id="rowCommento">
-              <textarea id="us_com" name="us_com" autocomplete="off" rows="2" placeholder="Inserisci un commento"></textarea>
-              <input type="button" id="write_com" onclick="openCommentoPopup()" class="buttonSegnalazione" value="Invia" />
             </div>
           </div>
         </div>
