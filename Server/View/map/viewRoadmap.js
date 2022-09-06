@@ -1,13 +1,9 @@
 const numeroRoadmapCreate = 50;
 const numeroRoadmapSeguite = 10;
-const numeroCommenti = 10;
+const numeroCommenti = 2;
 const numeroRecensioni = 10;
 var testoAchievement = '';
 var immagineAchievement = '';
-
-window.onload = function () {
-  getRoadmapAchievementsPopup();
-};
 
 document.addEventListener('dbMarkerClicked', (e) => { ClickEventHandler.prototype.openInfoBox(e.placeId, e.latLng); }, false);
 
@@ -17,6 +13,10 @@ document.addEventListener('receivedUserInfo', (e) => {
     username = e.username
     document.getElementById("segn_rm").setAttribute("onclick", "openSegnalazionePopup("+roadmap.id+", 1)");
     getPreferredFavouriteStatusByUserByRoadmap(id_user, roadmapId);
+
+    if (new URL(document.referrer).pathname == "/create") {
+      getRoadmapAchievementsPopup();
+    }
   }
   else {
     drawVisualFavouriteSeguitaBottoni(roadmap.id)
@@ -621,8 +621,7 @@ function getRoadmapAchievementsPopup() {
       }
     }
   }
-  //qua manca xhr send
-
+  xhr.send();
 }
 
 function showVisualAchievementPopup(testo, immagine) {
@@ -742,4 +741,3 @@ function openBoxUpdateCom(idCom) {
   document.getElementById('modif_com').setAttribute('style', 'display:block');
   document.getElementById('modifComment').setAttribute("onclick", "updPreview(" + idCom + ")");
 }
-
