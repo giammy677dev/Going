@@ -335,8 +335,8 @@ class HTTPinterface {
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
         */
         if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
-
-            //req.body.stages = JSON.parse(req.body.stages);
+            
+            req.body.stages = JSON.parse(req.body.stages);
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files || []);
             //const 
             if (r.ok) {
