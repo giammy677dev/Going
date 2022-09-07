@@ -280,7 +280,7 @@ class HTTPinterface {
 
     async getSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
+        if (req.session.isAdmin) { 
             r = await this.controller.getSegnalazioni();
         }
         return res.send(JSON.stringify(r));
@@ -288,7 +288,7 @@ class HTTPinterface {
 
     async processSegnalazioni(req, res) {
         var r = { ok: false, error: -1, data: {} }
-        if (req.session.isAdmin || true) { // || true da togliere a tutti! solo per testing!
+        if (req.session.isAdmin) { 
             r = await this.controller.processSegnalazioni(req.body, req.session.user_id, req.session.isAdmin);
         }
         return res.send(JSON.stringify(r));
@@ -322,7 +322,7 @@ class HTTPinterface {
         2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
         3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
         */
-        if (req.session.loggedin || true) { // || TRUE VA TOLTO!! solo per testare  
+        if (req.session.loggedin) { 
 
             req.body.stages = JSON.parse(req.body.stages);
             const r = await this.controller.createRoadmap(req.session.user_id, req.body, req.session.placeDetails, req.session.distanceDetails, req.files || []);
@@ -366,14 +366,14 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async deleteRoadmap(req, res) { //OR ADMIN
+    async deleteRoadmap(req, res) { 
         //if roadmap è sua oppure è admin.bisogna passar enelal deleteroadmap anche user id per semplificare molto il lavoro
         const r = await this.controller.deleteRoadmap(req.body.roadmap_id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
 
     async getPlaceInfo(req, res) {
-        if (req.session.loggedin || true) { // da mettere!
+        if (req.session.loggedin ) { 
             const isExNovo = 0;
             const r = await this.controller.getPlaceInfo(req.query.placeId);
             if (req.session.placeDetails === undefined) {
@@ -387,7 +387,7 @@ class HTTPinterface {
     }
 
     async getPlaceFromCoords(req, res) {
-        if (req.session.loggedin || true) { // da mettere!
+        if (req.session.loggedin) { 
             const isExNovo = 1;
             const r = await this.controller.getPlaceFromCoords(req.query.lat, req.query.lng);
             if (r.ok) {
@@ -401,7 +401,7 @@ class HTTPinterface {
     }
 
     async getRoute(req, res) {
-        if (req.session.loggedin || true) { // da mettere!
+        if (req.session.loggedin ) { 
             const r = await this.controller.getRoute(req.body.origin, req.body.destination, req.body.travelMode);
             if (r.ok) {
                 req.session.distanceDetails[req.body.origin + "|" + req.body.destination] = r.data;
@@ -411,7 +411,7 @@ class HTTPinterface {
     }
 
     async reportObject(req, res) {
-        if (req.session.loggedin || true) { // da mettere!
+        if (req.session.loggedin ) { 
             const r = await this.controller.reportObject(req.session.user_id, req.body.tipo, req.body.idOggetto, req.body.motivazione);
             return res.send(JSON.stringify(r));
         }
@@ -425,10 +425,8 @@ class HTTPinterface {
     }
 
     async getMarkersFromRect(req, res) {
-        if (req.session.loggedin | true) { //MOMENTANEO TRUE
-            const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
-            return res.send(JSON.stringify(r));
-        }
+        const r = await this.controller.getMarkersFromRect(req.body.centerLatInf, req.body.centerLatSup, req.body.centerLngInf, req.body.centerLngSup);
+        return res.send(JSON.stringify(r));
     }
 
     async getAchievements(req, res) {
