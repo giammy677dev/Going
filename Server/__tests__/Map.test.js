@@ -25,7 +25,6 @@ const new_stages = []
 describe("Test ROADMAP (block #4)", () => {
 
     var roadmap_id1;
-
     var roadmap_id2;
     var exNovoPlaceId;
 
@@ -131,7 +130,7 @@ describe("Test ROADMAP (block #4)", () => {
     test("Test creazione roadmap con nodi ex-novo + non nel db (cache miss) (driving)", async () => {
         //TRAVELMODE: DRIVING
         const travelMode = 'DRIVING'; //to be set one time at beginning of roadmap creation
-
+        
         //EX NOVO NODE
         const lat1 = 39.882687856056144
         const lng1 = -3.9775724709033966

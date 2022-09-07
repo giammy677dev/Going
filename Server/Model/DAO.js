@@ -22,16 +22,23 @@ class DAO {
         }
     }
 
-    async getRoadmapData(id) {
+    async getRoadmapData(id,user_id,isAdmin) {
         try {
             var connection = await this.connect();
             var result_rm = await connection.query('SELECT * FROM roadmap WHERE id=?', [id])
-            var result_stages = await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
             var id_utente = result_rm[0][0].utenteRegistrato_id
-            var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
-            var result = result_rm[0][0]
-            result.stages = result_stages[0]
-            return [true, 0, { roadmap: result, user: result_us[0] }];
+            if(result_rm[0][0].isPublic == 1 || id_utente == user_id || isAdmin ){
+                var result_stages = await connection.query('SELECT * FROM stage INNER JOIN stageInRoadmap on stage.placeId=stageInRoadmap.stage_placeId WHERE stageInRoadmap.roadmap_id=? ORDER BY ordine ', [id])
+            
+                var result_us = await connection.query('SELECT username FROM utenteRegistrato WHERE id=?', [id_utente])
+                var result = result_rm[0][0]
+                result.stages = result_stages[0]
+                return [true, 0, { roadmap: result, user: result_us[0] }];
+            }else
+            {
+                return [false, -7, { roadmap: {} }];
+            }
+           
         }
         catch (error) {
             return [false, error.errno];
@@ -326,7 +333,7 @@ class DAO {
         return [false, -1, {}];
     }
 
-    async getCommmentsReviewByUserRoad(user, rm) {
+    /*async getCommmentsReviewByUserRoad(user, rm) {
         try {
             var connection = await this.connect();
             var pref = 0
@@ -343,7 +350,7 @@ class DAO {
         catch (error) {
             return [false, error.errno];
         }
-    }
+    }*/
 
     async createCommento(user_id, roadmap_id, messaggio, now) {
         try {

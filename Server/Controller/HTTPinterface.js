@@ -199,7 +199,7 @@ class HTTPinterface {
     }
 
     async getRoadmapData(req, res) { //era viewrm
-        const r = await this.controller.getRoadmapData(req.query.id);
+        const r = await this.controller.getRoadmapData(req.query.id, req.session.user_id || 0,req.session.isAdmin || 0);
 
         if (req.session.loggedin && r.ok) { //salva info per eventuale fork
             req.session.placeDetails = {}; //reset

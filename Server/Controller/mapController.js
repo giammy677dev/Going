@@ -87,15 +87,15 @@ class MapController {
         const data = await this.dao.searchRoadmap(ricerca, time, distance);
         return { ok: true, error: data[1], data: data[2] };
     }
-    async getRoadmapData(id) {
-        if (!id || id == null) { //rm nullo
+    async getRoadmapData(id,user_id,isAdmin) {
+        if (!id || id == null || user_id===undefined || isAdmin===undefined) { //rm nullo
             return { ok: false, error: -4, data: { id: '' } }
         }
         else {
             try {
-                const data = await this.dao.getRoadmapData(id);
+                const data = await this.dao.getRoadmapData(id,user_id,isAdmin);
 
-                var stages = data[2].roadmap.stages;
+                var stages = data[2].roadmap.stages || [];
                 var stage;
                 for (var i = 0; i < stages.length; i++) {
                     stage = stages[i];

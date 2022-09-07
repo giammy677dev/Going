@@ -42,8 +42,8 @@ class MainController {
         return await this.contentController.getPreferredFavouriteStatusByUserByRoadmap(id_user, id_roadmap);
     }
 
-    async getRoadmapData(id) {
-        return await this.mapController.getRoadmapData(id);
+    async getRoadmapData(id,user_id,isAdmin) {
+        return await this.mapController.getRoadmapData(id,user_id,isAdmin);
     }
     
     async getCommentiRecensioni(roadmap_id) {
