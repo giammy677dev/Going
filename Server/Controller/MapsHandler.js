@@ -23,9 +23,8 @@ class MapsHandler {
                     destination: "place_id:" + placeId2,
                     mode: travelMode.toLowerCase(),
                     key: config.GOOGLE_MAPS_BACKEND_API_KEY,
-                    //fields:['icon'] if necessary
                 },
-                timeout: 10000, // milliseconds
+                timeout: 10000, 
             });
             data_from_google = data_from_google.data;
             if(data_from_google.status != "OK"){
@@ -46,9 +45,8 @@ class MapsHandler {
                 params: {
                     place_id: place_id,
                     key: config.GOOGLE_MAPS_BACKEND_API_KEY,
-                    //fields:['icon'] if necessary
                 },
-                timeout: 10000, // milliseconds. qual è il timeout di default?
+                timeout: 10000, 
             });
             
             if(data_from_google.data.status != "OK"){
@@ -72,21 +70,19 @@ class MapsHandler {
                 true, 0, data_from_google
             ]
         } catch (error) {
-            //console.log(error)
             return [false,-1 ,{}] 
         }
-       //errore? -1?
     }
 
     async getPlaceFromCoords(lat, lng) {
         try {
-            //var locat = new google.maps.LatLng(lat, lng);
+        
 
             var data_from_google = await client.geocode({
                 params: {
                     latlng: lat + "," + lng,
                     key: config.GOOGLE_MAPS_BACKEND_API_KEY,
-                    //fields:['icon'] if necessary
+                    
                 },
                 timeout: 10000, // milliseconds
             });
@@ -94,12 +90,12 @@ class MapsHandler {
             res.latitudine = res.geometry.location.lat;
             res.longitudine = res.geometry.location.lng;
             res.localita = res.address_components[2].long_name;
-            //console.log(res)
+            
             return [true, 0, res]
         } catch (error) {
             console.log(error)
         }
-        return [false, -1, {}] //errore? -1?
+        return [false, -1, {}] 
     }
 }
 

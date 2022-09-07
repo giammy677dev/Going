@@ -8,64 +8,8 @@
     <link rel="stylesheet" href="/static/going.css">
     <link rel="stylesheet" href="/static/main.css">
     <link rel="text/javascript" href="/static/prova.json">
-    <!--
-        COSE DA SISTEMARE IN MAIN
-        --Stelle mezze, non funziona bene
-        
-    -->
+
     <script>
-
-        // /*
-        //         function richiestaRMMain() {
-        //     const parole = ["citta", "start", "finish", "durata", "star"]
-        //     /*qua richiesta per avere alcune roadmap*/
-
-        //     /*var username = document.getElementById("username1").value;
-        //     var password = document.getElementById("password1").value;*/
-        //     /*var xhr = new XMLHttpRequest();
-        //     xhr.open("GET", '/ricercaMain', true);
-        //     xhr.onload = function (event) {
-        //         const r = JSON.parse(event.target.responseText);
-
-        //         if (r.ok == true) {
-
-        //             /*
-        //             console.log(r.data[i].citta)
-        //             r.data.lenght
-        //             */
-        //             for (var i = 0; i <r.data.lenght; i++) {
-        //                 let citta = r.data[i].citta;
-        //                 let start = r.data[i].start;
-        //                 let finish = r.data[i].finish;
-        //                 let durata = r.data[i].durata;
-        //                 let media_valutazioni = r.data[i].media_valutazioni;
-
-        //                 let j = i + 1
-        //                 cit = parole[0].concat(j)
-        //                 st = parole[1].concat(j)
-        //                 fn = parole[2].concat(j)
-        //                 dur = parole[3].concat(j)
-        //                 stel = parole[4].concat(j)
-
-        //                 document.getElementById(cit).innerText = citta;
-        //                 document.getElementById(st).innerText = start;
-        //                 document.getElementById(fn).innerText = finish;
-        //                 document.getElementById(dur).innerText = durata;
-        //                 funcStar(media_valutazioni, stel);
-        //             }
-        //         }
-        //         else {
-        //             alert("login non avvenuto con successo")
-        //         }
-        //     }
-        //     xhr.setRequestHeader('Content-Type', 'application/json');
-        //     xhr.send();
-        //     /*xhr.send(JSON.stringify({
-        //         username: username,
-        //         password: password
-        //     }))*/
-
-        // }
 
         function ricercaMain() {
             var ricerca = document.getElementById("search").value;
@@ -79,7 +23,6 @@
 
         function richiestaRMMain() {
             const parole = ["citta", "start", "finish", "durata", "star"]
-            /*qua richiesta per avere alcune roadmap*/
             fetch("/static/prova.json")
                 .then(response => response.json())
                 .then(data => {

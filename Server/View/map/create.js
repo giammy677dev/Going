@@ -51,7 +51,6 @@ function mostraCreate(){
     document.getElementById("titolo").remove();
     visibilita = document.querySelector('input[name="visibilita"]:checked').value
     
-    //initMap()
     document.getElementById("inputVisibilitaBox").remove();
     if(document.querySelector('input[name="mobilitazione"]:checked')!=null){
         percorrenza = document.querySelector('input[name="mobilitazione"]:checked').value

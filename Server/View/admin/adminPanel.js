@@ -36,7 +36,6 @@ function drawSegnalazioni() {
 
       segnalazioni.forEach(function (segnalazione) {
         var tr = document.createElement('tr');
-        //segnalazione.motivazione = getTypeNameFromType(segnalazione.motivazione)
 
         for (const [key, value] of Object.entries(segnalazione)) {
           var td1 = document.createElement('td');
@@ -88,7 +87,6 @@ function handleSegnalazioni() {
     const r = JSON.parse(event.target.responseText);
 
     if (r.ok) {
-      //update page if everything goes well. f5
       window.alert("operazione eseguita!");
       location.href = "/adminPanel";
     }

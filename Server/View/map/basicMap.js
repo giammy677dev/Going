@@ -2,7 +2,7 @@ var map;
 var roadmap;
 let customMarker = './storage/marker.png'
 var db_markers = {};
-var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
+var stages_info = {}; 
 var stage_index = 0;
 var infoWindow;
 var circles = [];
@@ -47,7 +47,6 @@ function drawObjects(stages) {
             });
 
         }
-        //drawNewStage(i, stage);
         receivedStageData.stage_index = i;
         receivedStageData.stage = stage;
         document.dispatchEvent(receivedStageData)
@@ -55,7 +54,6 @@ function drawObjects(stages) {
 
     map.setCenter(bounds.getCenter());
     map.fitBounds(bounds)
-    //map.setZoom(map.getZoom() - 1);  //edge marker case cover
 }
 
 function drawExNovoStages() {
@@ -69,13 +67,13 @@ function drawExNovoStages() {
     xhr.onload = function (event) {
         const r = JSON.parse(event.target.responseText);
         if (r.ok) {
-            Object.keys(db_markers).forEach(function (key) { // iter on markers 
+            Object.keys(db_markers).forEach(function (key) { 
                 db_markers[key][1] = 0;
             });
 
             for (var i = 0; i < r.data.length; i++) {
                 const placeId = r.data[i].placeId;
-                if (db_markers[placeId] === undefined) { //non c'è ma dovrebbe esserci! lo aggiungo!
+                if (db_markers[placeId] === undefined) { 
                     const latLng = new google.maps.LatLng(r.data[i].latitudine, r.data[i].longitudine);
 
                     let marker = new google.maps.Marker({
@@ -85,9 +83,8 @@ function drawExNovoStages() {
                         visible: false,
                     });
 
-                    db_markers[placeId] = [marker, 1]; //flag 1 = deve rimanere
+                    db_markers[placeId] = [marker, 1]; 
 
-                    //add event on click
                     db_markers[placeId][0].addListener("click", (e) => {
                         dbMarkerClicked.placeId = placeId;
                         dbMarkerClicked.latLng = latLng;
@@ -144,9 +141,6 @@ function loadMapInfo() {
                     document.getElementById("somma_totale").innerText = convertHMS(roadmap.durata);
                     durataComplessiva = roadmap.durata;
                 }
-                //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;// MATT questo va messo
-                //con lo stesso nome come fatto nel create_roadmap.js!
-                //map.setZoom(2);
                 roadmapCreator = r.data.user[0].username;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
@@ -177,7 +171,7 @@ function getPlaceDetails(placeId) {
 }
 
 function initMap() {
-    loadMapInfo(); //loads roadmap if roadmap_id != null
+    loadMapInfo();
 
     var origin = { lat: 40.85, lng: 14.26 };
     map = new google.maps.Map(document.getElementById("map"), {
@@ -188,23 +182,20 @@ function initMap() {
         },
         disableDefaultUI: true,
         mapTypeId: "hybrid",
-        //mapTypeControl: false, //se aggiungiamo anche il tipo di mappa ibrida di sopra bisogna mettere questo parametro a true
         scaleControl: true,
         zoomControl: true,
         gestureHandling: "greedy",
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE
         },
-        //mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
     map.addListener('zoom_changed', function () {
         var zoom = map.getZoom();
         if (zoom <= minZoomForExNovoMarkers) {
-            Object.keys(db_markers).forEach(function (key) { // iter on markers 
-                //db_markers[key][0].setVisible(false);
+            Object.keys(db_markers).forEach(function (key) { 
                 db_markers[key][0].setMap(null);
-                delete db_markers[key] //remove element from dict too
+                delete db_markers[key] 
             });
         }
         else {

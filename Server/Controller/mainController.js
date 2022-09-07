@@ -54,10 +54,6 @@ class MainController {
         return await this.contentController.getBestRoadmap()
     }
 
-    /*async getExNovoStages() {
-        return await this.mapController.getExNovoStages()
-    }*/
-
     async getDataUser(id_query, id_session) {
         return await this.userController.getDataUser(id_query, id_session)
     }

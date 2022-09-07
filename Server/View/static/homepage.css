@@ -17,8 +17,6 @@ body {
     margin: 0px;
     top: 0;
     position: fixed;
-    /*background: #040404 url(../img/bg.jpg) top right no-repeat;
-      background-size: cover;*/
     left: 0;
     right: 0;
     top: 0;
@@ -98,11 +96,8 @@ body {
 
 .pulsantiLog {
     display: block;
-    /*margin-top: 50px;*/
     position: absolute;
-    /*top: 50%;*/
     left: 30%;
-    /*transform: translate(-50%, -50%);*/
     width: 80%;
     padding: 20px;
     font-family: "Poppins", sans-serif;
@@ -198,7 +193,6 @@ body {
   }
   
   .pulsantiForm:hover{ 
-      /*box-shadow: 0px 0px 10px #18d26e;*/
       box-shadow: 0px 0px 10px white;
   }
   
@@ -331,10 +325,6 @@ body {
     transition: all ease-in-out 0.3s;
     border-radius: 25px;
     box-shadow: 0 1px 4px 1px rgb(255 255 255 / 53%);
-    /*border: thin  rgba(69, 3, 3, 0.915) solid;*/
-    /*vecchio stile*/
-    /*background-color: rgba(255, 255, 255, 0.08);*/
-    /*box-shadow: 0 1px 1px 2px rgba(8, 8, 8, 0.599);*/
 }
 
 .grid-container a {
@@ -369,7 +359,6 @@ body {
 }
 
 .boxRicerca input {
-    /*background-color: #7e534a75;*/
     color: rgba(0, 0, 0, 0.8)
 }
 

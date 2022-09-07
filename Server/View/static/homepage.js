@@ -108,9 +108,6 @@ function caricaRoadmap() {
 }
 
 function printCocktail(media_valutazioni,i){
-  /* prendo tutto il numero intero e stampo i cock pieni
-    verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
-    verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
     var spazioRoadmap = document.getElementById("divRoadmap" + i);
     const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
     const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
@@ -165,14 +162,13 @@ function printCocktail(media_valutazioni,i){
   }
   
   function convertHMS(value) {
-    const sec = parseInt(value, 10); // convert value to number if it's string
-    let hours   = Math.floor(sec / 3600); // get hours
-    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
-    // add 0 if value < 10; Example: 2 => 02
+    const sec = parseInt(value, 10); 
+    let hours   = Math.floor(sec / 3600); 
+    let minutes = Math.floor((sec - (hours * 3600)) / 60); 
+    let seconds = sec - (hours * 3600) - (minutes * 60); 
     if (minutes < 10) {minutes = "0"+minutes;}
     if (seconds < 10) {seconds = "0"+seconds;}
-    return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+    return hours+':'+minutes+':'+seconds;
   }
   
   function convertKM(value){

@@ -1,4 +1,4 @@
-var stages_list = []; //lista degli stage
+var stages_list = []; 
 var lastPlaceId = 0;
 var indirizzo;
 var markers = {};
@@ -52,14 +52,14 @@ function addDurata(durata) {
 function blurIfNotLoggedIn(user_id, logged) {
     console.log(user_id)
     if (user_id == 0 || !logged) {
-        document.getElementById('contenuto_logged').style.filter = 'blur(10px)' //contenuto_logged?
+        document.getElementById('contenuto_logged').style.filter = 'blur(10px)' 
         document.getElementById('info_nolog').style.display = 'block'
         document.getElementById('contenuto_logged').style['pointer-events'] = 'none';
     }
 }
 
 function deleteStage(toDeleteIndex, invalidPath = false) {
-    if (markers[toDeleteIndex] !== undefined) { //ex novo case cover
+    if (markers[toDeleteIndex] !== undefined) { 
         markers[toDeleteIndex].setMap(null);
         delete markers[toDeleteIndex]
     }
@@ -86,13 +86,12 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
             addDurata(0 || -distance_renderers[toDeleteIndex - 1].directions.routes[0].legs[0].distance.value);
             distance_renderers[toDeleteIndex].setMap(null);
             distance_renderers[toDeleteIndex - 1].setMap(null);
-            distance_renderers.splice(toDeleteIndex - 1, 2); //remove 2 elements!
+            distance_renderers.splice(toDeleteIndex - 1, 2); 
             lastPlaceId = stages_list[toDeleteIndex - 1].placeId
-            //si calcola distanza tra A->C
             requestDistance(stages_list[toDeleteIndex - 1], stages_list[toDeleteIndex + 1])
         }
     }
-    stages_list.splice(toDeleteIndex, 1); //4) eliminare istanza nella stages_list
+    stages_list.splice(toDeleteIndex, 1); 
 
     const remainingCards = stages_list.length - toDeleteIndex;
     for (var i = 0; i < remainingCards; i++) {
@@ -104,7 +103,6 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
         var boxFreccia = document.getElementById("boxFreccia" + (oldIndex));
         var tempoPercorrenza = document.getElementById("tempoPercorrenza" + (oldIndex));
 
-        //var dot = document.getElementById("dot" + oldIndex);
         var dur = document.getElementById("durata" + oldIndex);
 
         dur.id = "durata" + newIndex;
@@ -114,8 +112,6 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
 
         tempoPercorrenza.id = "tempoPercorrenza" + (newIndex)
         boxFreccia.id = "boxFreccia" + (newIndex);
-        //dot.id = "dot" + newIndex;
-        //così se scriviamo qualcosa l'istanza è preservata
     }
 
     document.getElementById("card" + toDeleteIndex).remove();
@@ -155,8 +151,6 @@ function requestDistance(marker1, marker2) {
                 distance_renderers[stage_index - 2].setOptions({
                     directions: {
                         routes: typecastRoutes(response.routes),
-                        // "ub" is important and not returned by web service it's an
-                        // object containing "origin", "destination" and "travelMode"
                         request: route
                     },
                     suppressMarkers: true,
@@ -190,8 +184,6 @@ function submitRoadmap() {
         const formData = new FormData();
         for (var i = 0; i < stages_list.length; i++) {
             if (stages_list[i].foto !== undefined) {
-
-                //formData.append("files", stages_list[i].foto);
                 formData.append(stages_list[i].placeId, stages_list[i].foto);
             }
         }
@@ -226,19 +218,16 @@ var ClickEventHandler = (function () {
         this.map = map;
 
         this.placesService = new google.maps.places.PlacesService(map);
-        //this.infowindow = new google.maps.InfoWindow();
         infoWindow = new google.maps.InfoWindow();
         this.infowindowContent = document.getElementById("infowindow-content");
-        //this.infowindow.setContent(this.infowindowContent);
         infoWindow.setContent("placeholder");
-        // Listen for clicks on the map
 
         this.map.addListener("click", this.handleClick.bind(this));
     }
     ClickEventHandler.prototype.handleClick = function (event) {
         console.log("You clicked on: " + event.latLng);
         console.log(event)
-        if ("placeId" in event) { //POI
+        if ("placeId" in event) {
             console.log(event)
             console.log("You clicked on place:" + event.placeId);
             event.stop();
@@ -247,7 +236,7 @@ var ClickEventHandler = (function () {
             }
         }
         else {
-            this.openCreateBox(event.latLng); //ex novo node
+            this.openCreateBox(event.latLng);
         }
     };
     ClickEventHandler.prototype.openCreateBox = function (latLng) {
@@ -344,7 +333,7 @@ var ClickEventHandler = (function () {
                     radius: 3,
                 });
 
-                markers[stage_index] = new google.maps.Marker({ //qua va aggiustato l'evento
+                markers[stage_index] = new google.maps.Marker({ 
                     position: latLng,
                     map: map,
                     icon: customMarker,
@@ -355,12 +344,9 @@ var ClickEventHandler = (function () {
                     ClickEventHandler.prototype.openAddBox(placeId, latLng);
                 });
 
-
-                /*Nodo ex novo*/
                 stage.indirizzo = indirizzo
                 stage.index = stage_index
                 stage.nome = StageName.value;
-                //secondi!!!
                 stage.durata = parseInt(durataElement.value) * 60;
 
                 addDurata(stage.durata)
@@ -403,7 +389,7 @@ var ClickEventHandler = (function () {
         return;
     };
     ClickEventHandler.prototype.openAddBox = function (placeId, latLng) {
-        if (lastPlaceId == placeId) { //stesso nodo due volte di fila!
+        if (lastPlaceId == placeId) { 
             return;
         }
         infoWindow.close();
@@ -439,9 +425,6 @@ var ClickEventHandler = (function () {
                     center: latLng,
                     radius: 3,
                 });
-
-                /*Nodo gia esistente*/
-                //secondi!!!!
                 stage.durata = parseInt(durataElement.value) * 60;
                 addDurata(stage.durata)
                 stage.placeId = placeId;

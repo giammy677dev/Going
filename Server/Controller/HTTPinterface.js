@@ -39,7 +39,6 @@ class HTTPinterface {
             filename: function (req, file, cb) {
                 const split = file.originalname.split(".");
                 cb(null, file.fieldname + "." + split[split.length - 1])
-                //cb(null, this.controller.getFileName(file)) //assign unique name to stage img
             }
         });
 
@@ -63,28 +62,28 @@ class HTTPinterface {
         this.app.use(bodyParser.raw());
         this.app.use(cors({ origin: '*' }));
 
-        this.app.use(session({ //qui va sovrascritta la session 
+        this.app.use(session({ 
             secret: 'secret',
             resave: true,
             saveUninitialized: true
         }));
 
         //Front-end pages
-        this.app.get('/', this.home_page.bind(this)); //Homepage
-        this.app.get('/info', this.info_page.bind(this)); //info
-        this.app.get('/about', this.about_page.bind(this)); //about
-        this.app.get('/create', this.createRoadmap_page.bind(this)); //Create Roadmap
-        this.app.get('/explore', this.explore_page.bind(this)); //Esplora
-        this.app.get('/view_roadmap', this.view_roadmap.bind(this)); //Visualizza Roadmap
-        this.app.get('/signup', this.signup_page.bind(this)); //Registrati
-        this.app.get('/profile', this.profile_page.bind(this)); //Profilo
-        this.app.get('/adminPanel', this.admin_page.bind(this)); //Admin
-        this.app.use('/view', express.static('View')); //HTML e CSS pages
-        this.app.use('/storage', express.static('storage')); //Assets
+        this.app.get('/', this.home_page.bind(this)); 
+        this.app.get('/info', this.info_page.bind(this)); 
+        this.app.get('/about', this.about_page.bind(this)); 
+        this.app.get('/create', this.createRoadmap_page.bind(this));
+        this.app.get('/explore', this.explore_page.bind(this));
+        this.app.get('/view_roadmap', this.view_roadmap.bind(this)); 
+        this.app.get('/signup', this.signup_page.bind(this)); 
+        this.app.get('/profile', this.profile_page.bind(this)); 
+        this.app.get('/adminPanel', this.admin_page.bind(this)); 
+        this.app.use('/view', express.static('View')); 
+        this.app.use('/storage', express.static('storage'));
 
         //Back-end calls
         this.app.post('/register', this.register.bind(this));
-        this.app.post('/auth', this.login.bind(this)); //Login
+        this.app.post('/auth', this.login.bind(this)); 
         this.app.post('/logout', this.logout.bind(this));
         this.app.post('/searchRoadmap', this.searchRoadmap.bind(this));
         this.app.get('/searchUser', this.searchUser.bind(this));
@@ -166,7 +165,7 @@ class HTTPinterface {
     //backend rest api calls
     async register(req, res) {
         const r = await this.controller.register(req.body.username, req.body.password, req.body.email, req.body.birthdate);
-        return res.send(JSON.stringify(r));; //ritorna il risultato della send se ha avuto errori o no??
+        return res.send(JSON.stringify(r));; 
     }
 
     async login(req, res) {
@@ -183,8 +182,6 @@ class HTTPinterface {
                 req.session.avatar = r.data.avatar;
                 req.session.placeDetails = {}
                 req.session.distanceDetails = {}
-                //req.session.userType = 0, 1, 2, 3.  
-                //Questa info ce l'ha il server quindi non ci sono problemi di sicurezza!
             }
         } else {
             r = { ok: false, error: -1, data: {} }
@@ -193,13 +190,12 @@ class HTTPinterface {
         return res.send(JSON.stringify(r));
     }
 
-    async getRoadmapData(req, res) { //era viewrm
+    async getRoadmapData(req, res) { 
         const r = await this.controller.getRoadmapData(req.query.id, req.session.user_id || 0,req.session.isAdmin || 0);
 
-        if (req.session.loggedin && r.ok) { //salva info per eventuale fork
-            req.session.placeDetails = {}; //reset
+        if (req.session.loggedin && r.ok) { 
+            req.session.placeDetails = {}; 
             req.session.distanceDetails = {};
-            //vanno popolati placeDetails & distanceDetails
             const stages = r.data.roadmap.stages;
             var stage;
             for (var i = 0; i < stages.length; i++) {
@@ -265,11 +261,6 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    /*async getMap(req, res) {
-        const r = await this.controller.getMap();
-        return res.send(r);
-    }*/
-
     async deleteUser(req, res) {
         var r = { ok: false, error: -1, data: {} }
         if (req.session.isAdmin) {
@@ -302,26 +293,18 @@ class HTTPinterface {
         return res.send(JSON.stringify(r))
     }
 
-    async logout(req, res) { //logout body.id redundant. session already has ur id.
-        if (req.session.user_id !== undefined && req.session.user_id > 0 && req.session.loggedin) { //richiesta giusta
-            req.session.loggedin = false //elimino la sessione. come se avessimo eliminato l'oggetto Utente Autenticato
+    async logout(req, res) { 
+        if (req.session.user_id !== undefined && req.session.user_id > 0 && req.session.loggedin) {
+            req.session.loggedin = false 
             req.session.username = ''
-            req.session.user_id = 0 //era '0'
+            req.session.user_id = 0 
             req.session.isAdmin = 0;
-            //non uso req.session = {} perché nella sessione possono esserci anche altre info!
             return res.send({ ok: true, error: 0, data: {} })
         }
         return res.send({ ok: false, error: -1, data: {} })
-        //nessuna chiamata al DB.
     }
 
     async createRoadmap(req, res) {
-        //create roadmap deve fare 3 cose
-        /*
-        1) aggiungere roadmap con i parametri specificati dall'utente all'entità ROADMAP
-        2) aggiungere tutti i nuovi stage (ex novo + google) mai aggiunti al db all'entità STAGE
-        3) aggiungere i link tra roadmap e stage in stage_in_roadmap entity. + route
-        */
         if (req.session.loggedin) { 
 
             req.body.stages = JSON.parse(req.body.stages);
@@ -329,21 +312,20 @@ class HTTPinterface {
             if (r.ok) {
                 console.log("OK ROADMAP")
             }
-            //qua si svuota tutto!
-            req.session.placeDetails = {} //svuotamento session troppo piccola?
+            req.session.placeDetails = {} 
             req.session.distanceDetails = {}
 
             return res.send(JSON.stringify(r))
         }
-        return res.send(JSON.stringify({ ok: false, error: -666 })) //USER IS NOT LOGGED IN!
+        return res.send(JSON.stringify({ ok: false, error: -666 }))
     }
 
-    async getDataUser(req, res) { //getDataUser != isLogWho!
+    async getDataUser(req, res) { 
         const r = await this.controller.getDataUser(req.query.id, req.session.user_id);
         return res.send(JSON.stringify(r));
     }
 
-    async getUserStatus(req, res) { //getDataUser != isLogWho!
+    async getUserStatus(req, res) { 
         const isLogged = req.session.user_id !== undefined && req.session.user_id > 0;
         const r = await this.controller.getUserStatus(req.session.user_id);
         r.data.logged = isLogged;
@@ -367,7 +349,6 @@ class HTTPinterface {
     }
 
     async deleteRoadmap(req, res) { 
-        //if roadmap è sua oppure è admin.bisogna passar enelal deleteroadmap anche user id per semplificare molto il lavoro
         const r = await this.controller.deleteRoadmap(req.body.roadmap_id, req.session.user_id, req.session.isAdmin);
         return res.send(JSON.stringify(r));
     }
@@ -391,7 +372,6 @@ class HTTPinterface {
             const isExNovo = 1;
             const r = await this.controller.getPlaceFromCoords(req.query.lat, req.query.lng);
             if (r.ok) {
-                //console.log(r.data.place_id)
                 if (req.session.placeDetails === undefined)
                     req.session.placeDetails = {}
                 req.session.placeDetails[r.data.place_id] = [r.data, isExNovo];

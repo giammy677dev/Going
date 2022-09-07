@@ -11,14 +11,11 @@ const receivedUserInfo = new CustomEvent('receivedUserInfo');
 function caricaHeader() {
   fetch('/View/static/header.html')
     .then(function(response) {
-        // When the page is loaded convert it to text
         return response.text()
     })
     .then(function(html) {
-        // Initialize the DOM parser
         var parser = new DOMParser();
 
-        // Parse the text
         var doc = parser.parseFromString(html, "text/html");
         document.getElementsByTagName("body")[0].appendChild(doc.getElementById("log"));
         document.getElementsByTagName("body")[0].appendChild(doc.getElementById("logout"));

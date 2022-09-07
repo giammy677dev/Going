@@ -262,8 +262,6 @@ body {
     bottom: 110%;
     left: 50%;
     margin-left: -60px;
-    
-    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
     opacity: 0;
     transition: opacity 1s;
   }
@@ -271,7 +269,7 @@ body {
   .tooltip .tooltiptext::after {
     content: " ";
     position: absolute;
-    top: 100%; /* At the bottom of the tooltip */
+    top: 100%; 
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
@@ -303,7 +301,6 @@ body {
 }
 
 #adminButton:hover {
-    /*box-shadow: 0 0px 4px 0 rgba(253, 253, 253, 0.908);*/
     background-color: #07b7c4;
     border: thin #000000 solid;
 }
@@ -353,7 +350,6 @@ body {
 }
 
 .buttonSegnalazione:hover {
-    /*box-shadow: 0px 0px 10px #18d26e;*/
     box-shadow: 0px 0px 10px white;
 }
 

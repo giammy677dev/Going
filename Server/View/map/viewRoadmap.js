@@ -57,12 +57,6 @@ document.addEventListener('receivedRoadmapData', (e) => {
   document.getElementById("rating").innerHTML += roadmap.punteggio != null ? generateRating(roadmap.punteggio, 35, 'auto') : ""
 }, false);
 
-
-//isMe permette di customizzare la recensione o il commento esteticamente in base al flag se sei tu o no.
-// per come è pensato, i tuoi commenti e recensioni vanno tutti al top grazie all'if in drawCommentiERecensioni()
-
-//popups for recensioni e commenti
-
 function openSegnalazionePopup(oggetto, tipo) {
   if (user_id > 0) {
     document.getElementById('segnal_rm').setAttribute('style', 'display:block');
@@ -74,22 +68,19 @@ function openSegnalazionePopup(oggetto, tipo) {
 }
 
 function openRecensionePopup() {
-  if (user_id > 0) { //loggato. qua va il popup per aggiungere recensioni
+  if (user_id > 0) { 
     document.getElementById('popupRecensione').setAttribute('style', 'display:block');
-    //createRecensione(roadmap_id,"test",5)
   } else {
-    //classico popup di login
     document.getElementById('log').setAttribute('style', 'display:block');
   }
 }
 
 function writeCommento() {
-  if (user_id > 0) { //loggato. qua va il popup per aggiungere commenti
+  if (user_id > 0) {
 
     document.getElementById('ins_com').style.display = 'block';
 
   } else {
-    //classico popup di login
     document.getElementById('log').setAttribute('style', 'display:block');
   }
 }
@@ -110,13 +101,12 @@ function pressSeguitaButton(roadmap_id, value) {
   }
 }
 
-//build di HTML di recensione e commento
 
 function generateRecensione(recensione, isMe) {
   recensioneObj = ""
   date = new Date(recensione.dataPubblicazione);
   const dataPubblicazione = ' 🗓 ' + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-  const ratingHtml = generateRating(recensione.valutazione, 25) //cursore?
+  const ratingHtml = generateRating(recensione.valutazione, 25) 
   var opinione = recensione.opinione
   var location = "location.href='/profile?id="
   location += recensione.idUtente + "'"
@@ -170,12 +160,10 @@ function generateRating(punteggio, grandezza, cursore) {
       ratingObj += html_cocktailPieno
     }
   } else {
-    for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) {  //iteratorInt parte da 1 così da non inserire interi fino a 0.75
+    for (var iteratorInt = 1; iteratorInt < punteggio; iteratorInt++) { 
       counterStamp++;
       ratingObj += html_cocktailPieno
     }
-
-    //Inizio controllo sul decimale
     var decimal = punteggio - Math.floor(punteggio);
     decimal = decimal.toFixed(2);
 
@@ -196,7 +184,6 @@ function generateRating(punteggio, grandezza, cursore) {
   return ratingObj
 }
 
-//stampare/modificare/rimuovere da HTML gli oggetti
 
 function drawVisualFavouriteSeguitaBottoni(roadmap_id) {
   var favouriteObj = document.getElementById("favorite")
@@ -221,7 +208,7 @@ function drawVisualStage(stage) {
 }
 
 function drawVisualRecensione(recensione, isMe) {
-  if (isMe) { //è tuo
+  if (isMe) { 
     document.getElementById("recensioni").innerHTML += generateRecensione(recensione, true)
   } else {
     document.getElementById("recensioni").innerHTML = generateRecensione(recensione, false) + document.getElementById("recensioni").innerHTML
@@ -229,7 +216,7 @@ function drawVisualRecensione(recensione, isMe) {
 }
 
 function drawVisualCommento(commento, isMe) {
-  if (isMe) { //tuo commento va sopra
+  if (isMe) {
     document.getElementById("commenti").innerHTML += generateCommento(commento, true)
   } else {
     document.getElementById("commenti").innerHTML = generateCommento(commento, false) + document.getElementById("commenti").innerHTML
@@ -250,7 +237,6 @@ function updateVisualCommento(idCommento, messaggio, dataPubblicazione) {
 
 function removeVisualRecensione(idRecensione) {
   document.getElementById('recensione' + idRecensione).remove();
-  //<div class="recensione" id="recensione'+recensione.idRecensione+'">
 }
 
 function updateVisualRecensione(idRecensione, messaggio, dataPubblicazione, valutazione) {
@@ -263,7 +249,7 @@ function updateVisualRecensione(idRecensione, messaggio, dataPubblicazione, valu
 
 //richiesta backend di commenti e recensioni
 
-function drawCommentiERecensioni() { //prende da backend i commenti e recensioni e li stampa a video. nome da cambiare
+function drawCommentiERecensioni() { 
   var xhr = new XMLHttpRequest();
 
   xhr.open("GET", '/getCommentiRecensioni?id=' + roadmapId, true);
@@ -331,7 +317,6 @@ function getPreferredFavouriteStatusByUserByRoadmap(user_id, roadmap_id) {
 }
 
 function setRoadmapAsFavourite(roadmap_id, value) {
-  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
   xhr.open("POST", '/setRoadmapAsFavourite', true);
@@ -369,7 +354,6 @@ function setRoadmapAsFavourite(roadmap_id, value) {
 }
 
 function setRoadmapAsSeguita(roadmap_id, value) {
-  //chiamate a db, con user, roadmap per inserire value la se c'è riga, se no update
   var xhr = new XMLHttpRequest();
 
   xhr.open("POST", '/setRoadmapAsSeguita', true);
@@ -405,7 +389,6 @@ function setRoadmapAsSeguita(roadmap_id, value) {
   }));
 }
 
-//funzioni su recensione backend
 
 function createRecensione() {
   var valutazione = document.getElementById("ratingRecensione").value
@@ -546,7 +529,6 @@ function updateCommento(id_commento) {
     if (r.ok == true) {
       updateVisualCommento(id_commento, messaggioCommento, r.data.now);
       document.getElementById('modif_com').setAttribute('style', 'display:none')
-      //qui va cambiata dinamicamente la pagina aggiungendo il commento con codice idCommento 
 
     }
     else if (r.ok == false) {
@@ -591,18 +573,13 @@ function deleteCommento(idCommento) {
 function segnalaOggetto(id_oggetto, tipo) {
   var motivazione = document.getElementById("motiv_rm").value;
 
-  /*testo = document.getElementById("motiv_rec" + id_rec).value
-  if (testo == ' ' || testo == '') {
-    testo = null
-  }*/
-
   /*
-  TYPE ENUM:
+  TYPE :
     1 : ROADMAP
     2 : PROFILO
     3: RECENSIONE 
     4 : COMMENTO
-    5 : stage
+    5 : STAGE
     */
   var xhr = new XMLHttpRequest();
   xhr.open("POST", '/report', true);
@@ -618,7 +595,6 @@ function segnalaOggetto(id_oggetto, tipo) {
       console.log(r)
       alert("Hai già segnalato!")
     }
-    //ATTENZIONE: nella segnalazione dello stage il parametro idOggetto è il placeId. come stringa.
     document.getElementById('segnal_rm').setAttribute('style', 'display:none');
 
 
@@ -663,7 +639,7 @@ function showVisualAchievementPopup(testo, immagine) {
   setTimeout(closeVisualPopup, 5000);
 }
 
-function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { //NON VIENE CHIAMATA DA NESSUNA PARTE, chiedere a Matteo dove inserirla
+function getFollowedRoadmapAchievementPopup(numeroRoadmapSeguiteDaQuery) { 
   if (numeroRoadmapSeguiteDaQuery == numeroRoadmapSeguite) {
     testoAchievement = "Hai completato " + numeroRoadmapSeguite + " roadmap!";
     immagineAchievement = '/storage/achievements/followRoadmap.png';
@@ -692,8 +668,6 @@ function closeVisualPopup() {
   document.getElementById("roadmapAchievementPopup").style.display = "none";
 }
 
-//other
-
 function forkaggio() {
   location.href = "/create?id=" + roadmapId
 }
@@ -710,7 +684,7 @@ var ClickEventHandler = (function () {
     if ("placeId" in event) { //POI
       console.log(event)
       console.log("You clicked on place:" + event.placeId);
-      event.stop(); //fa fare la chiamata di default se non stoppiamo. 
+      event.stop(); 
       if (event.placeId) {
         this.openInfoBox(event.placeId, event.latLng);
       }

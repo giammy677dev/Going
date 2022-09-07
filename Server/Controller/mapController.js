@@ -45,7 +45,7 @@ class MapController {
 
             const roadmap_id = data1[2].insertId
 
-            var stages_img_dict = {} //ex novo imgs handle
+            var stages_img_dict = {}
             var stages = roadmap.stages;
             var route;
             var reachTime;
@@ -64,7 +64,7 @@ class MapController {
                 if (!isExNovo) {
                     await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stored_stage.name, stored_stage.website, stored_stage.foto, stored_stage.localita)
                 }
-                else //è exnovo!
+                else
                 {
                     stage.fotoURL = stages_img_dict[stage.placeId] || null;
                     await this.dao.createStage(stage.placeId, isExNovo, stored_stage.latitudine, stored_stage.longitudine, stored_stage.formatted_address, stage.nome, stage.website, stage.fotoURL, stored_stage.localita)
@@ -78,10 +78,9 @@ class MapController {
                 await this.dao.addStageInstanceToRoadmap(roadmap_id, user_id, stage.placeId, stage.durata, i, reachTime, route)
 
             }
-            //console.log(roadmap_id)
             return { ok: true, error: 0, data: { roadmapId: roadmap_id } }
         }
-        return { ok: false, error: -5, data: {} } //return error!
+        return { ok: false, error: -5, data: {} }
     }
     async searchRoadmap(ricerca, time, distance) {
         const data = await this.dao.searchRoadmap(ricerca, time, distance);
@@ -108,19 +107,11 @@ class MapController {
             }
         }
     }
-    
-    /*async getExNovoStages() {
-        const data = await this.dao.getExNovoStages();
-        return { ok: data[0], error: data[1], data: data[2] }
-    }*/
 
     async getPlaceInfo(id) {
-        //qua ci vuole la query mancante al db!! select place info from places e se il risultato sta lì è inutile fare la chiamta
-        //a google maps api!!
         
         const localHit = await this.dao.placeIDExists(id);
         if (localHit[0] && localHit[2].found) {
-            //console.log("place exists in db!")
             return { ok: localHit[0], error: localHit[1], data: localHit[2].result }
         }
         const data = await this.mapsHandler.getPlaceDetails(id);
@@ -137,9 +128,6 @@ class MapController {
 
     
     async getPlaceFromCoords(lat, lng) {
-        //stesso discorso di placeinfo!! c'è bisogno di una chiamata al db pe vedere se già esiste. se già esiste è inutile 
-        //fare chiamate a google
-
         const data = await this.mapsHandler.getPlaceFromCoords(lat, lng);
         return { ok: data[0], error: data[1], data: data[2] }
     }

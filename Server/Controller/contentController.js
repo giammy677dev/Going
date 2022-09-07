@@ -143,14 +143,7 @@ class ContentController {
         if (!idUtente || !tipo || !idOggetto) {
             return { ok: false, error: -1, data: {} }
         }
-        /*var data;
-        if (tipo == 5) //stage reporting. transform place id to stageId
-        {
-            var idOggetto = (await this.dao.getStageIdFromPlaceId(idOggetto))[2];
-            data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione); //ora idOggetto è valido (intero)
-        } else {*/
         const data = await this.dao.aggiungiReport(idUtente, tipo, idOggetto, motivazione);
-        //}
         return { ok: data[0], error: data[1], data: data[2] }
     }
     async getSegnalazioni() {

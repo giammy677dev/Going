@@ -82,14 +82,14 @@ function MouseOut() {
 }
 
 function convertHMS(value) {
-  const sec = parseInt(value, 10); // convert value to number if it's string
-  let hours = Math.floor(sec / 3600); // get hours
-  let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-  let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
-  // add 0 if value < 10; Example: 2 => 02
+  const sec = parseInt(value, 10); 
+  let hours = Math.floor(sec / 3600); 
+  let minutes = Math.floor((sec - (hours * 3600)) / 60); 
+  let seconds = sec - (hours * 3600) - (minutes * 60); 
+
   if (minutes < 10) { minutes = "0" + minutes; }
   if (seconds < 10) { seconds = "0" + seconds; }
-  return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
+  return hours + ':' + minutes + ':' + seconds;
 }
 
 function convertKM(value) {
@@ -292,12 +292,8 @@ function roadmap_preferite() {
   xhr.send();
 }
 
-// Funzioni Calcolo Cocktail, conMouseOver, conMouseOut
 
 function printCocktail(media_valutazioni, number, i) {
-  /* prendo tutto il numero intero e stampo i cocktail pieni
-    verifico poi se c'è parte decimale faccio il controllo e decido se aggiungere un cocktail pieno o mezzo
-    verifico se ho fatto riferimento a 5 elementi, in caso contrario arrivo a 5 mettendo cocktail vuoti*/
   var spazioRoadmap = document.getElementById("divRoadmap_" + number + "_" + i);
   const html_cocktailPieno = '<img src="/storage/cocktailPieno.png" style="width:25px;height: 25px;">'
   const html_cocktailMezzo = '<img src="/storage/cocktailMezzo.png" style="width:25px;height: 25px;">'
@@ -335,7 +331,6 @@ function printCocktail(media_valutazioni, number, i) {
   }
 }
 
-//text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
 
 function conMouseOver(target) {
   document.getElementById(target).firstChild.childNodes[0].style.fontSize = '30px';
@@ -420,13 +415,11 @@ function load_choice_avatar() {
 }
 
 function choice(id) {
-  //document.getElementById("avatar_choice").setAttribute("src", "/storage/avatar/" + id + ".png")
   document.getElementById("avatar_choice").setAttribute("src", "/storage/avatar/Avatar_" + id + ".png")
   document.getElementById("avatar_choice").setAttribute("avatarIndex", id)
 }
 
 function change_avatar() {
-  //var new_avatar = document.getElementById("avatar_choice").getAttribute("src");
   var new_avatar_index = document.getElementById("avatar_choice").getAttribute("avatarIndex");
   var xhr = new XMLHttpRequest();
 
@@ -450,23 +443,18 @@ function change_avatar() {
 // Script Creazione Blocco Roadmap
 
 function open_view(pageName, elmnt, color) {
-  // Hide all elements with class="tabcontent" by default */
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
   }
 
-  // Remove the background color of all tablinks/buttons
   tablinks = document.getElementsByClassName("tablink");
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].style.backgroundColor = "";
   }
 
-  // Show the specific tab content
   document.getElementById(pageName).style.display = "block";
-
-  // Add the specific color to the button used to open the tab content
   elmnt.style.backgroundColor = color;
 }
 
