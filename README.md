@@ -1,19 +1,19 @@
 
 # Software Architecture Design Project
 
-Repository del progetto realizzato per l'esame di Software Architecture Design, per il corso di laurea magistrale in Ingegneria Informatica dell'Università Federico II di Napoli.
+Repository del progetto realizzato per l'esame di Software Architecture Design, per il corso di Laurea Magistrale in Ingegneria Informatica dell'Università Federico II di Napoli.
 
 ### Sviluppatori
 
 - Matteo Maraniello ([@matemmequadro](https://github.com/matemmequadro))
 - Valerio Mennillo ([@valeriomennillo](https://github.com/valeriomennillo))
-- Gian Marco Orlando ([@giammy677dev](https://github.com/giammy677dev))
+- Gian Marco Orlando ([@giammy677dev](https://github.com/giammy677dev)), ([@giammy677](https://github.com/giammy677))
 - Marco Perillo ([@Mav3rick26](https://github.com/Mav3rick26))
 - Diego Russo ([@diegorusso95](https://github.com/diegorusso95))
 
 ## Obiettivo del Progetto 🚩
 
-L'obiettivo è creare una Web App che permetta agli Utenti non registrati di cercare Roadmap create dagli Utenti Registrati e poi visualizzarle. Gli Utenti Non Registrati potranno effettuare tale ricerca dall’apposita barra presente direttamente in homepage oppure visitando la pagina “Esplora”. Sarà possibile visitare la pagina “Esplora” anche non effettuando alcuna ricerca. In questo caso verranno mostrate alcune Roadmap suggerite selezionate in base ad alcuni criteri di qualità tra quelle presenti nella piattaforma. Effettuando, invece, una ricerca per parole chiave, verranno mostrate tutte le Roadmap ed i profili degli Utenti Registrati che corrispondono a tali parametri. Tramite gli appositi campi presenti subito sotto la barra di ricerca, sarà possibile filtrare i risultati inserendo ulteriori parametri. Quando si farà riferimento ad alcune funzionalità riservate agli utenti registrati, il sistema rileva che l’Utente non è attualmente Autenticato all’interno del sistema ed apparirà a video un popup che invita ad effettuare il login o la registrazione. L’Utente Non Registrato potrà, dunque, decidere di iscriversi premendo sull’apposito bottone. Si verrà, dunque, re-indirizzati alla pagina di registrazione nella quale sarà possibile inserire i propri dati. Una volta completata la fase di registrazione, il sito effettuerà il redirect sulla homepage. Da qui, tramite l’apposito bottone, sarà possibile effettuare il login.
+L'obiettivo è creare una Web App che permetta agli Utenti Non Registrati di cercare Roadmap create dagli Utenti Registrati e poi visualizzarle. Gli Utenti Non Registrati potranno effettuare tale ricerca dall’apposita barra presente direttamente in homepage oppure visitando la pagina “Esplora”. Sarà possibile visitare la pagina “Esplora” anche non effettuando alcuna ricerca. In questo caso verranno mostrate alcune Roadmap suggerite selezionate in base ad alcuni criteri di qualità tra quelle presenti nella piattaforma. Effettuando, invece, una ricerca per parole chiave, verranno mostrate tutte le Roadmap ed i profili degli Utenti Registrati che corrispondono a tali parametri. Tramite gli appositi campi presenti subito sotto la barra di ricerca, sarà possibile filtrare i risultati inserendo ulteriori parametri. Quando si farà riferimento ad alcune funzionalità riservate agli utenti registrati, il sistema rileva che l’Utente non è attualmente Autenticato all’interno del sistema ed apparirà a video un popup che invita ad effettuare il login o la registrazione. L’Utente Non Registrato potrà, dunque, decidere di iscriversi premendo sull’apposito bottone. Si verrà, dunque, re-indirizzati alla pagina di registrazione nella quale sarà possibile inserire i propri dati. Una volta completata la fase di registrazione, il sito effettuerà il redirect sulla homepage. Da qui, tramite l’apposito bottone, sarà possibile effettuare il login.
 
 Il sistema poi dovrà permettere dopo il Login di creare una Roadmap visitando l’apposita pagina "crea" accessibile tramite Homepage o ancora attraverso la barra di navigazione presente nelle altre pagine. L'Utente inserirà titolo, visibilità (pubblica di default o privata) e modalità di percorrenza (a piedi di default o in macchina); tramite poi un tasto "salva impostazioni" permetterà l'accesso alla descrizione (facoltativa) e alla mappa.
 
@@ -49,7 +49,8 @@ Ulteriori funzionalità esclusive degli Utenti Autenticati che il sistema dovrà
 
 ## Documentazione 📄
 
-Il documento prodotto suddiviso in capitoli; nel <b>capitolo 1</b> parte dall'Avvio del progetto, dove si ha il glossario, le parti interessate nell'applicazione, la tabella Attori-Obiettivi, le storie Utente, requisiti generali e di qualità, i vincoli, la stima dei costi e il System Context Diagram.<br>
+Il documento prodotto è stato suddiviso in capitoli:
+Nel <b>capitolo 1</b> parte dall'Avvio del progetto, dove si ha il glossario, le parti interessate nell'applicazione, la tabella Attori-Obiettivi, le storie Utente, requisiti generali e di qualità, i vincoli, la stima dei costi e il System Context Diagram.<br>
  Nel <b>capitolo 2</b>, il Processo di sviluppo vediamo UP (Unified Process), eXtreme Programming, Scrum e tool utilizzati per la condivisione del lavori e tool e tecnologie utilizzate per lo sviluppo.<br> 
 Nel <b>capitolo 3</b>, la Fase di analisi, si è esposta la Analisi e Specifica dei Requisiti, il  Modello dei Casi d’Uso, il Diagramma delle Classi e i System Sequence Diagram dei casi d'uso più rilevanti.<br> 
 Nel <b>capitolo 4</b>, Architettura e Progettazione, andiamo ad esporre i Pattern Architetturali e gli Stili Architetturali utilizzati, con la Vista Componenti e Connettori e la Dinamica dei componenti, i System Sequence Diagram raffinati e il Diagramma delle Classi raffinato e il Context Diagram with Boundary <br> 
