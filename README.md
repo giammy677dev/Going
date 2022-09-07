@@ -7,7 +7,7 @@ Repository of the project carried out for the Software Architecture Design exam,
 
 - Matteo Maraniello ([@giammy677dev](https://github.com/giammy677dev))
 - Valerio Mennillo ([@giammy677dev](https://github.com/giammy677dev))
-- Gian Marco Orlando ([@giammy677dev](https://github.com/giammy677dev))
+- Gian Marco Orlando ([@giammy677dev](https://github.com/giammy677dev)), ([@giammy677](https://github.com/giammy677))
 - Marco Perillo ([@giammy677dev](https://github.com/giammy677dev))
 - Diego Russo ([@giammy677dev](https://github.com/giammy677dev))
 
