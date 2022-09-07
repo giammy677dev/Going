@@ -134,7 +134,8 @@ function loadMapInfo() {
 
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
-            if (r.ok) {
+            console.log(r)
+            if (r.ok == true) {
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
@@ -149,6 +150,10 @@ function loadMapInfo() {
                 roadmapCreator = r.data.user[0].username;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
+            }
+            else {
+                alert("Problemi nel caricamento della Roadmap, verrai reindirizzato alla Homepage")
+                location.href = '/'
             }
         }
         xhr.send()
@@ -227,8 +232,8 @@ function convertHMS(d) {
 
     var h = Math.floor(d / 3600);
     var m = Math.floor(d % 3600 / 60);
-  
+
     var hDisplay = h > 0 ? h + (h == 1 ? " ora " : " ore ") : "";
     var mDisplay = m > 0 ? m + (m == 1 ? " minuto " : " minuti ") : "";
     return hDisplay + mDisplay;
-  }
+}

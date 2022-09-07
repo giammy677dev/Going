@@ -92,3 +92,21 @@ function logout() {
     
   }));
 }
+function enterLogin() {
+  var us_in = document.getElementById("username_login");
+  us_in.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("log_puls").click();
+      }
+
+  });
+  var pw_in = document.getElementById("password_login");
+  pw_in.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("log_puls").click();
+      }
+
+  });
+}

@@ -1,7 +1,8 @@
 // Script Avvio Pagina
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const id = urlParams.get('id')
+const id = urlParams.get('id').replace("/","")
+
 const number_create = 50;
 const number_seguite = 10;
 const number_reviews = 10;
@@ -509,7 +510,7 @@ function segnalaProfilo() {
   if (user_id > 0) {
     document.getElementById('segnalaProfilo').setAttribute('style', 'display:block');
     document.getElementById("motiv_profilo").value = "";
-    document.getElementById('inviaSegnalazione').setAttribute("onclick", "inviaSegnalazione(" + id + ",2)");
+    document.getElementById('inviaSegnalazione').setAttribute("onclick", "inviaSegnalazione("+id+",2)");
   } else {
     document.getElementById('log').style.display = 'block';
   }
