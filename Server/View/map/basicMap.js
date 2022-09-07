@@ -135,13 +135,12 @@ function loadMapInfo() {
 
         xhr.onload = function (event) {
             const r = JSON.parse(event.target.responseText);
-            if (r.ok) {
+            console.log(r)
+            if (r.ok == true) {
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
-                console.log(roadmap)
-                console.log(stage_index)
-                console.log(stages_list)
+
 
 
                 if (document.getElementById("somma_totale") != undefined) {
@@ -152,7 +151,7 @@ function loadMapInfo() {
                     let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
                     if (minutes < 10) { minutes = "0" + minutes; }
                     if (seconds < 10) { seconds = "0" + seconds; }
-                    durata= hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
+                    durata = hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
                     document.getElementById("somma_totale").innerText = durata;
                 }
                 //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;// MATT questo va messo
@@ -161,6 +160,10 @@ function loadMapInfo() {
                 roadmapCreator = r.data.user[0].username;
                 document.dispatchEvent(receivedRoadmapData)
                 drawObjects(stages_list);
+            }
+            else {
+                alert("Problemi nel caricamento della Roadmap, verrai reindirizzato alla Homepage")
+                location.href = '/'
             }
         }
         xhr.send()
@@ -235,8 +238,8 @@ function convertHMS(d) {
     d = Number(d);
     var h = Math.floor(d / 3600);
     var m = Math.floor(d % 3600 / 60);
-  
+
     var hDisplay = h > 0 ? h + (h == 1 ? " ora " : " ore ") : "";
     var mDisplay = m > 0 ? m + (m == 1 ? " minuto " : " minuti ") : "";
     return hDisplay + mDisplay;
-  }
+}
