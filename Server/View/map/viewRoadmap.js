@@ -1,7 +1,7 @@
 const numeroRoadmapCreate = 50;
 const numeroRoadmapSeguite = 10;
 const numeroCommenti = 10;
-const numeroRecensioni = 3;
+const numeroRecensioni = 10;
 var testoAchievement = '';
 var immagineAchievement = '';
 

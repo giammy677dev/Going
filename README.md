@@ -1,65 +1,66 @@
 
 # Software Architecture Design Project
 
-Repository of the project carried out for the Software Architecture Design exam, for the Master's Degree course in Computer Engineering at the Federico II University of Naples.
+Repository del progetto realizzato per l'esame di Software Architecture Design, per il corso di Laurea Magistrale in Ingegneria Informatica dell'Università Federico II di Napoli.
 
-### Contributors
+### Sviluppatori
 
-- Matteo Maraniello ([@giammy677dev](https://github.com/giammy677dev))
-- Valerio Mennillo ([@giammy677dev](https://github.com/giammy677dev))
+- Matteo Maraniello ([@matemmequadro](https://github.com/matemmequadro))
+- Valerio Mennillo ([@valeriomennillo](https://github.com/valeriomennillo))
 - Gian Marco Orlando ([@giammy677dev](https://github.com/giammy677dev)), ([@giammy677](https://github.com/giammy677))
-- Marco Perillo ([@giammy677dev](https://github.com/giammy677dev))
-- Diego Russo ([@giammy677dev](https://github.com/giammy677dev))
+- Marco Perillo ([@Mav3rick26](https://github.com/Mav3rick26))
+- Diego Russo ([@diegorusso95](https://github.com/diegorusso95))
 
-## Project Goal 🚩
+## Obiettivo del Progetto 🚩
 
-The goal is to create an open source instant messaging application based on the security and privacy of the users who are using it. The application allows users to subscribe to the service, to send and receive messages from other subscribed users; to guarantee delivery of the message sent even if the receiver is offline; to guarantee that registration and communication take place in total security, through encrypted management of access keys.
+L'obiettivo è creare una Web App che permetta agli Utenti Non Registrati di cercare Roadmap create dagli Utenti Registrati e poi visualizzarle. Gli Utenti Non Registrati potranno effettuare tale ricerca dall’apposita barra presente direttamente in Homepage oppure visitando la pagina “Esplora”. Sarà possibile visitare la pagina “Esplora” anche non effettuando alcuna ricerca. In questo caso verranno mostrate alcune Roadmap suggerite selezionate in base ad alcuni criteri di qualità tra quelle presenti nella piattaforma. Effettuando, invece, una ricerca per parole chiave, verranno mostrate tutte le Roadmap ed i profili degli Utenti Registrati che corrispondono a tali parametri. Tramite gli appositi campi presenti subito sotto la barra di ricerca, sarà possibile filtrare i risultati inserendo ulteriori parametri. Quando si farà riferimento ad alcune funzionalità riservate agli utenti registrati, il sistema rileva che l’Utente non è attualmente Autenticato all’interno del sistema ed apparirà a video un popup che invita ad effettuare il login o la registrazione. L’Utente Non Registrato potrà, dunque, decidere di iscriversi premendo sull’apposito bottone. Si verrà, dunque, re-indirizzati alla pagina di registrazione nella quale sarà possibile inserire i propri dati. Una volta completata la fase di registrazione, il sito effettuerà il redirect sulla homepage. Da qui, tramite l’apposito bottone, sarà possibile effettuare il login.
 
-## Skills acquired ✅
+Il sistema, a valle del login, permetterà di creare una Roadmap visitando l’apposita pagina "Crea" accessibile tramite Homepage o, ancora, tramite la barra di navigazione presente nelle altre pagine. L'Utente inserirà titolo, visibilità (pubblica di default o privata) e modalità di percorrenza (a piedi di default o in macchina); tramite poi un tasto "salva impostazioni" permetterà l'accesso alla descrizione (facoltativa) ed alla mappa.
 
-- Writing a Design Document (DD)
-- Working with Agile methods and techniques
-- Developing a Smartphone App with React Native framework
-- Implementing a microservice architecture via API REST
-- Analysing a software system according to different architectural views
-- Performing Component and Functional Testing
+Interagendo con la mappa sarà possibile aggiungere Stage alla propria Roadmap. Uno Stage è punto di interesse già presente su Google Maps oppure punti di interesse creati ex-novo. Per entrambi si dovrà inserire obbligatoriamente la durata di sosta. Una volta terminata la propria Roadmap, l’Utente Autenticato potrà pubblicarla tramite l’apposito bottone di conferma. Alla pressione di tale bottone, l’Utente Autenticato sarà automaticamente indirizzato alla pagina di visualizzazione della Roadmap appena creata.
 
-## Tech Stack ⚙
+Ulteriori funzionalità esclusive degli Utenti Autenticati che il sistema dovrà offrire è quella di aggiungere una Roadmap al proprio elenco di Roadmap Preferite e/o Seguite, di pubblicare un commento o una recensione ad una Roadmap nella pagina di visualizzazione di una Roadmap. Interagendo in questi ed altri modi, gli Utenti Autenticati potranno guadagnare diversi achievement relativi, ad esempio, alla pubblicazione di un certo numero di nuove Roadmap, all’aggiunta di un certo numero di Roadmap ai Preferiti o ai Seguiti o alla pubblicazione di un certo numero di commenti o recensioni. Inoltre - accedendo al proprio profilo premendo sul proprio avatar presente in alto a destra su qualsiasi pagina del sito una volta che si è effettuato l’accesso - ogni Utente Autenticato potrà visualizzare le proprie Roadmap private o, ancora, modificare il proprio avatar facendo click su quello corrente.
+
+
+## Tecnologie Utilizzate ⚙
 
 | Backend   |                                               |
 | --------- | --------------------------------------------- |
-| Language  | JavaScript ([NodeJS](https://nodejs.org/en/)) |
-| Framework | [Express](https://expressjs.com/)             |
-| Testing   | [Jest](https://jestjs.io/)                    |
-| Database  | [MySQL](https://www.mysql.com/) <br> [SQLite](https://www.sqlite.org/index.html)|
+| Language  | JavaScript  |
+| Framework | Express            |
+| Testing   | Jest                    |
+| | Postman
+| Database  | Azure Database MySQL|
+| Hosting   | Azure Hosting
+| API esterne|Google Maps API
 
-| Frontend      |                                                                                                         |
+|  Frontend      |                                                                                                         |
 | ------------- | ------------------------------------------------------------------------------------------------------- |
-| Language      | JavaScript                                                                                              |
-| JS Framework  | [ReactNative](https://reactnative.dev/)   |
+| Language      | JavaScript  
+| |HTML
+| |CSS 
+
 
 | Tools                  |                                    |
 | ---------------------- | ---------------------------------- |
-| Packet Manager         | [Yarn](https://yarnpkg.com/)       |
-| Bundler                | [Expo](https://docs.expo.dev/)     |
-| UML Design             | [VisualParadigm](https://www.visual-paradigm.com/)|
+| Code Editor            |Visual Studio Code|
+| UML Design             | VisualParadigm|
+| Graphic Design         | Photoshop
 
-## Documentation 📄
+## Documentazione 📄
 
-- Documents produced at the start of the project (e.g. Vision document and description of Objectives, Stakeholders, General and Quality Requirements, Constraints,
-etc....), glossary, cost estimates and Draft Architecture (from context diagram). [Chapter 1](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
+Il documento prodotto è stato suddiviso in capitoli:
+Nel <b>capitolo 1</b> si ha una descrizione riguardante l'avvio del progetto, il glossario dei termini, le parti interessate nell'applicazione, la tabella Attori-Obiettivi, le storie Utente, requisiti generali e di qualità, i vincoli, la stima dei costi e il System Context Diagram;<br>
+Nel <b>capitolo 2</b> riportiamo il processo di sviluppo tra cui UP (Unified Process), eXtreme Programming, Scrum ed i tool utilizzati per la condivisione del lavoro ed tool e le tecnologie utilizzate per lo sviluppo;<br> 
+Nel <b>capitolo 3</b> riportiamo la fase di analisi, si è esposta l'Analisi e Specifica dei Requisiti, il  Modello dei Casi d’Uso, il Diagramma delle Classi ed i System Sequence Diagram dei casi d'uso più rilevanti;<br> 
+Nel <b>capitolo 4</b>, Architettura e Progettazione, andiamo ad esporre i Pattern Architetturali e gli Stili Architetturali utilizzati, con la Vista Componenti e Connettori e la Dinamica dei componenti, i System Sequence Diagram raffinati, il Diagramma delle Classi raffinato ed il Context Diagram with Boundary;<br> 
+Nel <b>capitolo 5</b> descriviamo la fase di Implementazione ed in particolare abbiamo esposto come abbiamo organizzato il codice, la descrizione dei file realizzati uno per uno, i Design Pattern utilizzati, le motivazioni e l'uso di AJAX, Google Maps API e le relative key, il diagramma Entità Relazione ed un manuale di utilizzo corredato da immagini ed un video demo su Youtube;<br>
+Nel <b>capitolo 6</b> infine, si è esposto il Testing, il Test suite ed i risultati ottenuti.
 
-- Description and justification of the type of development process adopted (UP, Scrum, eXtreme Programming) and the organisational and project planning choices made,
-with an indication of the tools and any agile techniques/practices used. [Chapter 2](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
+[//link doc caricato](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
 
-- Requirements Specification and Requirements Analysis documents, including textual analysis, mockup and design concepts, use case model, use case diagram, system sequence diagrams, system domain model, draft architectural diagram, activity diagrams, communication diagrams and state machine diagrams. [Chapter 3](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
-
-- Project documentation relating to the Software Architecture, the design choices made and the requirements design implemented, including C&C view, design sequence diagrams, class diagrams and deployment diagram. [Chapter 4](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
-
-- Documentation of the implementation of the software developed and instructions for the configuration, installation and execution of the software produced, including descriptions of the files created and design patterns implemented, detailed sequence diagrams, E-R models. [Chapter 5](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
-
-- Description of tests performed, including component and functional tests. [Chapter 6](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
+## Link al nosto sito 🌐
+[Going](https://going-app.azurewebsites.net/)
 
 ## Video Demo 📹
-
-[YouTube Link](https://youtu.be/vwgRXt8sa4k)
+[YouTube Link](https://www.youtube.com/watch?v=pHQr3rZmKuY)
