@@ -32,20 +32,21 @@ function drawDeletableStage(stage_index, stage) {
         var fotoPath = "/storage/loghetto.jpg"
     }
     if (stage_index == 0) {
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
     }
     else {
         var durataBetween= convertHMS(stage.reachTime);
         document.getElementById('cards').innerHTML += '<div class="boxFreccia" id="boxFreccia' + (stage_index) + '"><img class="imgFreccia" src="/storage/ArrowDown.png"/><span class="tempoPercorrenza" id="tempoPercorrenza' + (stage_index) + '">'+durataBetween+'</span></div>'
 
-        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + stage.durata / 60 + ' mins </div></p></div></div>'
+        document.getElementById('cards').innerHTML += '<div class="card" id="card' + stage_index + '"> <div class="fotoStageBox"><img src="' + fotoPath + '"/> </div> <div class="infoStageBox"> <a class="boxclose" id="boxclose' + stage_index + '" onclick="deleteStage(' + stage_index + ')"">x</a><h4>' + stage.nome + '</h4><p>' + stage.indirizzo + ' con durata di visita: <div id="durata' + stage_index + '">' + convertHMS(stage.durata) + '</div></p></div></div>'
     }
-
 }
 
 function addDurata(durata) {
+    console.log(durataComplessiva)
     durataComplessiva += durata;
-    document.getElementById('somma_totale').innerText = convertHMS(durataComplessiva); //minuti o qua va la funzione di diego che da m va a ore etc
+    console.log(durataComplessiva)
+    document.getElementById('somma_totale').innerText = convertHMS(durataComplessiva);
 }
 
 function blurIfNotLoggedIn(user_id, logged) {
@@ -67,17 +68,16 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
 
     circles.splice(toDeleteIndex, 1);
     if (!invalidPath) {
+        addDurata(0 || -stages_list[toDeleteIndex].durata);
         if (toDeleteIndex == 0) {
             if (stages_list.length > 1) {
                 addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
                 distance_renderers[toDeleteIndex].setMap(null);
-
                 distance_renderers.splice(toDeleteIndex, 1);
                 lastPlaceId = 0
             }
         } else if (toDeleteIndex == stages_list.length - 1) {
-            
-            //addDurata(0 || -distance_renderers[toDeleteIndex].directions.routes[0].legs[0].distance.value);
+            addDurata(-distance_renderers[toDeleteIndex - 1].directions.routes[0].legs[0].distance.value)
             distance_renderers[toDeleteIndex - 1].setMap(null);
             distance_renderers.splice(toDeleteIndex - 1, 1);
             lastPlaceId = stages_list[toDeleteIndex - 1].placeId
@@ -93,16 +93,7 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
         }
     }
     stages_list.splice(toDeleteIndex, 1); //4) eliminare istanza nella stages_list
-    //tolto un elemento!
-    var timeStage = parseInt(document.getElementById("durata" + toDeleteIndex).innerText)
-    console.log("timestage: ", timeStage)
 
-
-    //document.getElementById("dot" + toDeleteIndex).remove();
-    var allTime = parseInt(document.getElementById("somma_totale").innerText)
-    console.log("alltime: ", allTime)
-    allTime = allTime - timeStage
-    document.getElementById("somma_totale").innerText = allTime
     const remainingCards = stages_list.length - toDeleteIndex;
     for (var i = 0; i < remainingCards; i++) {
         var oldIndex = toDeleteIndex + i + 1;
@@ -139,8 +130,6 @@ function deleteStage(toDeleteIndex, invalidPath = false) {
 
 function requestDistance(marker1, marker2) {
     var selectedMode = percorrenza
-    console.log('Modalità: ' + selectedMode);
-
     const route = {
         origin: marker1.placeId,
         destination: marker2.placeId,
@@ -174,15 +163,14 @@ function requestDistance(marker1, marker2) {
                     map: map,
                     preserveViewport: true
                 });
-                addDurata(r.data.routes[0].legs[0].duration.value);
-                document.getElementById('tempoPercorrenza' + (stage_index - 1)).innerText = r.data.routes[0].legs[0].duration.text
+                addDurata(distance_renderers[stage_index - 2].directions.routes[0].legs[0].distance.value)
+                document.getElementById('tempoPercorrenza' + (stage_index - 1)).innerText = convertHMS(r.data.routes[0].legs[0].duration.value)
             }
         }
         else {
             deleteStage(stage_index - 1,true)
         }
     }
-
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(route));
 }
@@ -288,9 +276,6 @@ var ClickEventHandler = (function () {
         }
         xhr.send();
 
-        //costruzione sottopagina per inserimento nodo ex novo. qui va fatto la customizzazione grafica.
-        //volendo al posto di tutto ciò si può importare una pagina HTML pronta da fare a parte.
-
         var StageTitle = document.createElement('p');
         StageTitle.textContent = 'Stai creando un nuovo stage! Descrivilo:';
 
@@ -381,17 +366,12 @@ var ClickEventHandler = (function () {
                 addDurata(stage.durata)
                 stage.placeId = placeId;
 
-
-                console.log(PhotoFile.files)
                 stage.foto = PhotoFile.files[0];
                 stage.latitudine = latLng.lat();
                 stage.longitudine = latLng.lng();
 
                 stages_info[placeId] = stage;
-                console.log(stage.foto)
-                console.log(stage.foto)
-                console.log(stage.foto)
-                console.log(stage.foto)
+
                 to_send_stage.placeId = stage.placeId;
                 to_send_stage.titolo = stage.titolo;
                 to_send_stage.foto = stage.foto;
@@ -408,10 +388,6 @@ var ClickEventHandler = (function () {
                 }
 
                 stage_index++;
-
-                var prec = parseInt(document.getElementById("somma_totale").innerText)
-                prec = stage.durata + prec
-                document.getElementById("somma_totale").innerText = prec
 
                 infoWindow.close();
             }
@@ -484,10 +460,6 @@ var ClickEventHandler = (function () {
                 }
 
                 stage_index++;
-
-                var prec = parseInt(document.getElementById("somma_totale").innerText)
-                prec = (stage.durata / 60) + prec
-                document.getElementById("somma_totale").innerText = prec
 
                 infoWindow.close();
             }

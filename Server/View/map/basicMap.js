@@ -3,7 +3,6 @@ var roadmap;
 let customMarker = './storage/marker.png'
 var db_markers = {};
 var stages_info = {}; //cache hit cache miss to make less server calls & on top of that save local new ex novo info (server doesnt have them yet)
-
 var stage_index = 0;
 var infoWindow;
 var circles = [];
@@ -139,21 +138,10 @@ function loadMapInfo() {
                 roadmap = r.data.roadmap
                 stage_index = roadmap.stages.length;
                 stages_list = roadmap.stages;
-                console.log(roadmap)
-                console.log(stage_index)
-                console.log(stages_list)
-
 
                 if (document.getElementById("somma_totale") != undefined) {
-                    var durata
-                    const sec = parseInt(roadmap.durata, 10); // convert value to number if it's string
-                    let hours = Math.floor(sec / 3600); // get hours
-                    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-                    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
-                    if (minutes < 10) { minutes = "0" + minutes; }
-                    if (seconds < 10) { seconds = "0" + seconds; }
-                    durata= hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
-                    document.getElementById("somma_totale").innerText = durata;
+                    document.getElementById("somma_totale").innerText = convertHMS(roadmap.durata);
+                    durataComplessiva = roadmap.durata;
                 }
                 //document.getElementById("somma_totale").innerText = roadmap.durataComplessiva;// MATT questo va messo
                 //con lo stesso nome come fatto nel create_roadmap.js!
@@ -230,9 +218,13 @@ function initMap() {
     new ClickEventHandler(map, origin);
 }
 
-
 function convertHMS(d) {
     d = Number(d);
+
+    if (d < 60) {
+        return "0 minuti"
+    }
+
     var h = Math.floor(d / 3600);
     var m = Math.floor(d % 3600 / 60);
   
