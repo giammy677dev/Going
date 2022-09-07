@@ -612,11 +612,11 @@ function segnalaOggetto(id_oggetto, tipo) {
 
     console.log(r)
     if (r.ok) {
-      alert("Hai segnalato questo oggetto!!")
+      alert("Hai segnalato questo oggetto: grazie!")
     }
     else {
       console.log(r)
-      alert("Hai già segnalato!")
+      alert("Hai già segnalato questo oggetto!")
     }
     //ATTENZIONE: nella segnalazione dello stage il parametro idOggetto è il placeId. come stringa.
     document.getElementById('segnal_rm').setAttribute('style', 'display:none');
