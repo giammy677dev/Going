@@ -90,21 +90,17 @@ class HTTPinterface {
         this.app.get('/searchUser', this.searchUser.bind(this));
         this.app.post('/suggestedRoadmap', this.suggestedRoadmap.bind(this));
         this.app.get('/getBestRoadmap', this.getBestRoadmap.bind(this));
-        //this.app.get('/getMap', this.getMap.bind(this));
         this.app.get('/getDataUser', this.getDataUser.bind(this));
         this.app.get('/getUserStatus', this.getUserStatus.bind(this));
         this.app.get('/getRoadmapCreate', this.getRoadmapCreate.bind(this));
         this.app.get('/getRoadmapSeguite', this.getRoadmapSeguite.bind(this));
         this.app.get('/getRoadmapPreferite', this.getRoadmapPreferite.bind(this));
         this.app.post('/deleteRoadmap', this.deleteRoadmap.bind(this));
-        /*this.app.get('/updateRoadmapSeguite', this.updateRoadmapSeguite.bind(this));
-        this.app.get('/updateRoadmapPreferite', this.updateRoadmapPreferite.bind(this));*/
         this.app.get('/getPlaceInfo', this.getPlaceInfo.bind(this));
         this.app.get('/getPlaceFromCoords', this.getPlaceFromCoords.bind(this));
         this.app.post('/getRoute', this.getRoute.bind(this));
         this.app.get('/getRoadmapData', this.getRoadmapData.bind(this));
         this.app.get('/getCommentiRecensioni', this.getCommentiRecensioni.bind(this));
-        //this.app.get('/getCommmentsReviewByUserRoad', this.getCommmentsReviewByUserRoad.bind(this));
         this.app.post('/createCommento', this.createCommento.bind(this));
         this.app.post('/updateCommento', this.updateCommento.bind(this));
         this.app.post('/deleteCommento', this.deleteCommento.bind(this));
@@ -148,8 +144,7 @@ class HTTPinterface {
     }
 
     async view_roadmap(req, res) {
-        //return res.sendFile('viewRoadmap.html', { root: path.join(__dirname, '../View/map') });
-        return res.sendFile('newView.html', { root: path.join(__dirname, '../View/map') });
+        return res.sendFile('viewRoadmap.html', { root: path.join(__dirname, '../View/map') });
     }
 
     async signup_page(req, res) {
