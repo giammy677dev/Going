@@ -149,7 +149,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
 
     test("Test delete commento valida di un altro utente", async () => {
 
-        var commentoAltruiId = 8;
+        var commentoAltruiId = 50;
         const res = await agent.post("/deleteCommento").send({ idCommento: commentoAltruiId });
 
         expect(res.statusCode).toEqual(200);
@@ -160,7 +160,7 @@ describe("Test User Autenticato (SEZIONE COMMENTI/RECENSIONI) (block #2)", () =>
     });
 
     test("Test delete recensione valida di un altro utente", async () => {
-        var recensioneAltruiId = 21;
+        var recensioneAltruiId = 43;
         const res = await agent.post("/deleteRecensione").send({ idRecensione: recensioneAltruiId });
 
         expect(res.statusCode).toEqual(200);
