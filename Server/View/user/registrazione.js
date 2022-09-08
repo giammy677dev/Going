@@ -85,6 +85,7 @@ function validation_registration() {
 
             if (r.ok == true) {
                 document.getElementById('errorBox').remove();
+                document.getElementById('infoBox').remove();
                 document.getElementById('infoH').innerHTML = "Registrazione avvenuta con successo!";
                 document.getElementById('inputText').remove();
                 document.getElementById('infoH').style.setProperty("padding", "0px");
