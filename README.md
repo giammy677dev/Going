@@ -63,4 +63,4 @@ Nel <b>capitolo 6</b> infine, si è esposto il Testing, il Test suite ed i risul
 [Going](https://going-app.azurewebsites.net/)
 
 ## Video Demo 📹
-[YouTube Link](https://www.youtube.com/watch?v=pHQr3rZmKuY)
+[YouTube Link](https://www.youtube.com/watch?v=jMba2l-n3x8)
