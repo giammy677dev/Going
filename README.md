@@ -57,7 +57,7 @@ Nel <b>capitolo 4</b>, Architettura e Progettazione, andiamo ad esporre i Patter
 Nel <b>capitolo 5</b> descriviamo la fase di Implementazione ed in particolare abbiamo esposto come abbiamo organizzato il codice, la descrizione dei file realizzati uno per uno, i Design Pattern utilizzati, le motivazioni e l'uso di AJAX, Google Maps API e le relative key, il diagramma Entità Relazione ed un manuale di utilizzo corredato da immagini ed un video demo su Youtube;<br>
 Nel <b>capitolo 6</b> infine, si è esposto il Testing, il Test suite ed i risultati ottenuti.
 
-[//link doc caricato](https://github.com/mconti99/Software_Architecture_Design_2022/blob/main/Documentazione_SAD.pdf)
+
 
 ## Link al nosto sito 🌐
 [Going](https://going-app.azurewebsites.net/)
